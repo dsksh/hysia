@@ -1,0 +1,82 @@
+{
+  open Lexing
+  open Parser
+    
+  exception Lexical_error of string
+
+  let id_or_keyword = 
+    let h = Hashtbl.create 2 in
+      List.iter (fun (s,k) -> Hashtbl.add h s k)
+	[ "sqrt", SQRT;
+	  "exp", EXP;
+	  "log", LOG;
+	  "sin", SIN;
+	  "cos", COS;
+	  "atan", ATAN;
+	  "asin", ASIN;
+	  "acos", ACOS;
+
+	  "fun", FUN;
+	  "val", VAL;
+	  "param", PARAM;
+	];
+      fun s -> 
+	try Hashtbl.find h s with Not_found -> ID s
+
+  let newline lexbuf =
+    let pos = lexbuf.lex_curr_p in
+    lexbuf.lex_curr_p <- 
+      { pos with pos_lnum = pos.pos_lnum + 1; 
+	pos_bol = pos.pos_cnum + 1; (*pos_cnum=0*) }
+
+}
+
+let delim  = [' ' '\t' '\r']
+let ws     = delim+
+let digit  = ['0'-'9']
+let letter = ['a'-'z' 'A'-'Z']
+let ident  = letter (letter | digit | '_')*
+let number = digit+
+
+rule token = parse
+  | '\n' 
+      { newline lexbuf; token lexbuf }
+  | ws
+      { token lexbuf }
+  | ident
+      { id_or_keyword (Lexing.lexeme lexbuf) }
+  | number
+      { INT (int_of_string (Lexing.lexeme lexbuf)) }
+  (*| '"' 
+      { string (Buffer.create 1024) lexbuf }*)
+
+  | "="  { EQ }
+  | "("  { LP }
+  | ")"  { RP }
+  | ","  { COM }
+  | ";"  { SCOL }
+
+  | "-"  { MIN }
+  | "+"  { PLUS }
+  | "*"  { MUL }
+  | "/"  { DIV }
+  | "^"  { POW }
+
+  | "#" { comment lexbuf }
+
+  | eof   
+      { EOF }
+  | _ 
+      { raise (Lexical_error ("illegal character: " ^ lexeme lexbuf)) }
+
+and string buf = parse
+  | '"'    { STRING (Buffer.contents buf) }
+  | '\n'   { newline lexbuf; Buffer.add_char buf '\n' ; string buf lexbuf}
+  | "\\\"" { Buffer.add_char buf '"'; string buf lexbuf }
+  | _ as c { Buffer.add_char buf c; string buf lexbuf }
+  | eof    { raise (Lexical_error ("unterminated string")) }
+
+and comment = parse
+  | '\n' { newline lexbuf; token lexbuf }
+  | _    { comment lexbuf }
+  | eof  { EOF }
