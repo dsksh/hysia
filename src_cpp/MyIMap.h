@@ -18,7 +18,7 @@
 #include "capd/map/C2Coeff.hpp"
 #include "capd/map/BasicFunction.hpp"
 #include "capd/map/CnMap.h"
-#include "capd/map/Parser.h"
+#include "capd/map/Node.h"
 
 namespace capd{ 
 
@@ -26,8 +26,25 @@ class MyIMap : public capd::map::CnMap<capd::IMatrix,1>
 {
 public:
 	MyIMap();
+	MyIMap(int, int);
 	MyIMap(const MyIMap&);
 	~MyIMap();
+
+	void setup();
+	void setup1();
+
+	void putVariable(const char *name);
+	void putTree(capd::map::Node<ScalarType> *node);
+
+	NodeType *createVarNode(int index);
+
+	void compDiff();
+
+	template<typename T>
+	NodeType *compDiffNode(T& node, const int index);
+
+private:
+	int m_trees_idx;
 };
 
 } // the end of the namespace capd

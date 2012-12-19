@@ -3,7 +3,10 @@
 #include "capd/dynset/C1Pped2Set.h"
 
 #include "MyIMap.h"
+#include "NodeVisitor.h"
+#include "NodeVisitorDiff.h"
 #include "util.h"
+#include "nodebuilder.h"
 
 using namespace capd;
 //using namespace capd::dynset;
@@ -48,9 +51,27 @@ int main()
 
 	try{
 
-	IMap vectorField("var:t,x,v; fun:1,v,-sin(x);");
+	//IMap vectorField("var:t,x,v; fun:1,v,-sin(x);");
 	//IMap vectorField("var:t,x,v; fun:1,v,-10.0;");
 	//MyIMap vectorField;
+	//vectorField.setup();
+
+	init(3);
+	putVariable("t");
+	putVariable("x");
+	putVariable("v");
+	putScalarNode(1.0);
+	putTree();
+	putVarNode(2);
+	putTree();
+	putScalarNode(0.);
+	putVarNode(1);
+	putSinNode();
+	putDifNode();
+	putTree();
+	// compute deriv
+	//getIMap()->setup1();
+	getIMap()->compDiff();
 
 	IVector x(3);
 	x[0]=0.0;
@@ -81,7 +102,8 @@ int main()
 	// The time step (when step control is turned off) will be 0.1.
 	// The time step control is turned on by default but the solver must know if we want to 
 	// integrate forwards or backwards (then put negative number).
-	ITaylor solver(vectorField, 20, 0.1);
+	//ITaylor solver(vectorField, 20, 0.1);
+	ITaylor solver(*getIMap(), 20, 0.1);
 	ITimeMap timeMap(solver);
 
 	// define a doubleton representation of the interval vector x

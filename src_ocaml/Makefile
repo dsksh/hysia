@@ -20,8 +20,8 @@ endif
 #DATADIR = $(DESTDIR)${prefix}/share
 #MANDIR  = $(DESTDIR)${datarootdir}/man
 
-INCLUDES = -I /opt/local/lib/ocaml/site-lib/oUnit
-#INCLUDES = -I /usr/lib/ocaml/oUnit
+#OINCLUDES = -I /usr/lib/ocaml/oUnit
+#OINCLUDES = -I /opt/local/lib/ocaml/site-lib/oUnit
 
 # OS specific stuff
 EXE   = 
@@ -40,8 +40,8 @@ OCAMLBEST = opt
 
 CAMLP5O   = camlp5o
 
-BFLAGS = -w Aer-29 -dtypes -g -I . $(INCLUDES)
-OFLAGS = -w Aer-29 -dtypes    -I . $(INCLUDES)
+BFLAGS = -w Aer-29 -dtypes -g -I . $(OINCLUDES)
+OFLAGS = -w Aer-29 -dtypes    -I . $(OINCLUDES)
 
 ifeq (no,yes)
 OFLAGS += -g -p
@@ -51,10 +51,22 @@ endif
 # external libraries common to all binaries
 
 EXTOBJS =
-EXTLIBS = str unix nums dynlink oUnit
+EXTLIBS = str unix nums dynlink
 
 EXTCMA	= $(addsuffix .cma,$(EXTLIBS)) $(addsuffix .cmo,$(EXTOBJS))
 EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(addsuffix .cmx,$(EXTOBJS))
+
+# C/C++
+CC  = gcc
+CXX = g++
+
+CAPD_DIR := /usr/local
+
+INCLUDES := -I$(OCAMLLIB) -I$(CAPD_DIR)/include
+LDFLAGS := -L$(CAPD_DIR)/lib -lcapd
+
+CFLAGS   = -O3 -g -ansi -pedantic -Wall -frounding-math
+CXXFLAGS = $(CFLAGS)
 
 ###############
 # main target
@@ -76,23 +88,27 @@ LIBGENERATED = lexer.ml parser.mli parser.ml
 LIBMODULES = ptree util parser lexer pretty
 
 LIBML  = $(addsuffix .ml,  $(LIBMODULES))
-LIBMLI = $(addsuffix .mli, $(LIBMODULES))
-LIBCMO = $(addsuffix .cmo, $(LIBMODULES))
-LIBCMX = $(addsuffix .cmx, $(LIBMODULES))
+LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_stubs.mli
+LIBCMO = $(addsuffix .cmo, $(LIBMODULES)) capd_stubs.cmi
+LIBCMX = $(addsuffix .cmx, $(LIBMODULES)) capd_stubs.cmi
 
-#$(LIBCMO) $(LIBCMX): INCLUDES += $(LIBINCLUDES)
+#$(LIBCMO) $(LIBCMX): OINCLUDES += $(LIBINCLUDES)
 $(LIBCMX): OFLAGS += -for-pack Hss
+
+COBJS = capd_stubs.o capd_integrator.o
 
 # build targets
 
 byte: hss.cma
 opt:  hss.cmxa
 
-hss.cma: hss.cmo
-	$(OCAMLC) -a $(BFLAGS) -o $@ $^
+CCLIBFLAGS := -cclib -lstdc++ -cclib -L$(CAPD_DIR)/lib -cclib -lcapd
 
-hss.cmxa: hss.cmx
-	$(OCAMLOPT) -a $(OFLAGS) -o $@ $^
+hss.cma: hss.cmo $(COBJS)
+	$(OCAMLC) -a $(BFLAGS) -o $@ $(CCLIBFLAGS) $^
+
+hss.cmxa: hss.cmx $(COBJS)
+	$(OCAMLOPT) -a $(OFLAGS) -o $@ $(CCLIBFLAGS) $^
 
 hss.cmo: $(LIBCMO)
 	$(OCAMLC) $(BFLAGS) -pack -o $@ $^
@@ -133,7 +149,7 @@ clean::
 byte: hss.byte
 opt:  hss.opt
 
-hss.opt: hss.cmxa main.cmx
+hss.opt: hss.cmxa main.cmx 
 	$(if $(QUIET),@echo 'Linking  $@' &&) \
 	    $(OCAMLOPT) $(OFLAGS) -o $@ $(EXTCMXA) $^
 	$(STRIP) $@
@@ -174,29 +190,11 @@ clean::
 %.ml %.mli: %.mly
 	$(OCAMLYACC) -v $<
 
-# .ml4.ml:
-# 	$(CAMLP4) pr_o.cmo -impl $< > $@
+.c.o: 
+	$(if $(QUIET),@echo 'Compiling $<' &&) $(CC) $(CFLAGS) -c -o $@ $<
 
-# lib/coq/%.vo: lib/coq/%.v
-# 	$(COQC8) -I lib/coq $<
-
-# lib/coq-v7/%.vo: lib/coq-v7/%.v
-# 	$(COQC7) -I lib/coq-v7 $<
-
-# jc/jc_ai.ml: jc/jc_annot_inference.ml jc/jc_annot_fail.ml Makefile
-# 	if test "@enable_apron@" = "yes" ; then \
-# 	  echo "# 1 \"jc/jc_annot_inference.ml\"" > jc/jc_ai.ml; \
-# 	  cat jc/jc_annot_inference.ml >> jc/jc_ai.ml; \
-# 	else \
-# 	  echo "# 1 \"jc/jc_annot_fail.ml\"" > jc/jc_ai.ml; \
-# 	  cat jc/jc_annot_fail.ml >> jc/jc_ai.ml; \
-# 	fi
-
-# %_why.v: %.mlw $(BINARY)
-# 	$(BINARY) -coq $*.mlw
-
-# %_why.pvs: %.mlw $(BINARY)
-# 	$(BINARY) -pvs $*.mlw
+.cpp.o:
+	$(if $(QUIET),@echo 'Compiling $<' &&) $(CXX) $(CXXFLAGS) -c -o $@ $<
 
 ###################
 # clean and depend

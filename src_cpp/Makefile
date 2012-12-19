@@ -2,7 +2,7 @@ TARGET	:= integrate
 
 CAPD_DIR := /usr/local
 
-INCLUDES := -I$(CAPD_DIR)/include
+INCLUDES := -I$(CAPD_DIR)/include -I/opt/local/include
 CFLAGS	:= -O3 -g -ansi -pedantic -Wall -frounding-math $(INCLUDES)
 LDFLAGS := -L$(CAPD_DIR)/lib -lcapd
 
@@ -10,15 +10,17 @@ CXX     := g++ #@CXX@
 SED     := sed #@SED@
 MV      := mv #@MV@
 AR      := ar #@AR@
+RANLIB  := ranlib #@RANLIB@
 RM      := rm #@RM@
 LN      := ln #@LN@
 LEX     := flex #@FLEX@
 YACC    := bison #@BISON@
 DOXYGEN := doxygen #@DOXYGEN@
 
-SRC     := $(wildcard *.c) $(wildcard *.cc) $(wildcard *.cpp) $(wildcard *.h)
+SRC     := $(wildcard *.c) $(wildcard *.cc) $(wildcard *.cpp)
+SRC_EX  := $(SRC) $(wildcard *.h)
 OBJECT  := $(foreach file, $(SRC), $(basename $(file)).o)
-OBJ_COMMON := MyIMap.o
+OBJ_COMMON := MyIMap.o nodebuilder.o
 
 all: 
 	@for t in $(TARGET); do \
@@ -29,6 +31,10 @@ clean:
 	-$(RM) -f $(TARGET) $(OBJECT) $(DEP_FILE) *~
 
 $(OBJECT): util.h
+
+libmycapd.a:
+	$(AR) cru $@ $(OBJECT)
+	$(RANLIB) $@
 
 trajectory.o: MyIMap.h MyIMap.o
 

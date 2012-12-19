@@ -26,7 +26,9 @@ let report (b,e) =
 
 
 let () =
-  let lb = from_channel cin in 
+  Capd_stubs.test1 "var:t,x,v; fun:1,v,-sin(x);"
+
+(*  let lb = from_channel cin in 
   try 
     let ptree = Parser.main Lexer.token lb in
       printf "@[%a@]@." Pretty.print_ptree ptree
@@ -43,3 +45,4 @@ let () =
     | _ ->
         printf "unexpected error\n@.";
 	exit 1
+*)
