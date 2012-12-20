@@ -38,6 +38,15 @@ let letter = ['a'-'z' 'A'-'Z']
 let ident  = letter (letter | digit | '_')*
 let number = digit+
 
+let mk     = '.'
+let exp    = ('e' | 'E')
+let plus   = '+'
+let min    = '-'
+let sign   = (plus|min)
+let float1 = digit+ mk digit*
+let float2 = digit+ mk digit* exp digit+
+let float3 = digit+ mk digit* exp sign digit+
+
 rule token = parse
   | '\n' 
       { newline lexbuf; token lexbuf }
@@ -45,6 +54,12 @@ rule token = parse
       { token lexbuf }
   | ident
       { id_or_keyword (Lexing.lexeme lexbuf) }
+  | float1
+      { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
+  | float2
+      { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
+  | float3
+      { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
   | number
       { INT (int_of_string (Lexing.lexeme lexbuf)) }
   (*| '"' 
@@ -56,8 +71,8 @@ rule token = parse
   | ","  { COM }
   | ";"  { SCOL }
 
-  | "-"  { MIN }
-  | "+"  { PLUS }
+  | min  { MIN }
+  | plus { PLUS }
   | "*"  { MUL }
   | "/"  { DIV }
   | "^"  { POW }

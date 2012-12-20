@@ -18,6 +18,7 @@
 %}
 
 %token <int> INT
+%token <float> FLOAT
 %token <string> STRING
 %token <string> ID
 %token EQ
@@ -63,7 +64,7 @@ statements :
     { let _,vs,ps = $6 in (mk_vf $2 $4),vs,ps }
   | VAL integer EQ ratio_vec SCOL statements
     { let fs,_,ps = $6 in fs,(mk_iv $2 $4),ps }
-  | PARAM ID EQ rational SCOL statements
+  | PARAM ID EQ integer SCOL statements
     { let fs,vs,ps = $6 in (fs,vs,(mk_param $2 $4)::ps) }
   | { (dummy_vf,dummy_iv,[]) }
 ;
@@ -91,11 +92,11 @@ var_vec :
 ;
 
 ratio_vec :
-  | LP rational ratio_vec_rest RP
+  | LP float ratio_vec_rest RP
     { $2::$3 }
 ;
 ratio_vec_rest :
-  | COM rational ratio_vec_rest
+  | COM float ratio_vec_rest
     { $2::$3 }
   | { [] }
 ;
@@ -116,8 +117,8 @@ term :
 
 factor :
   | LP expr RP { $2 }
-  | factor POW factor
-    { match $3 with (_,Pint 2) -> mk_expr (Papp (Osqr,$1)) | _ -> mk_expr (Papp2 (Opow,$1,$3)) }
+  | factor POW integer
+    { match $3 with 2 -> mk_expr (Papp (Osqr,$1)) | _ -> mk_expr (Papp2 (Opow,$1,(mk_expr (Pint $3)))) }
   | SQRT factor { mk_expr (Papp (Osqrt,$2)) }
   | EXP factor { mk_expr (Papp (Oexp,$2)) }
   | LOG factor { mk_expr (Papp (Olog,$2)) }
@@ -127,8 +128,8 @@ factor :
   | ASIN factor { mk_expr (Papp (Oasin,$2)) }
   | ACOS factor { mk_expr (Papp (Oacos,$2)) }
   | ID { mk_expr (Pvar $1) }
-  | integer { mk_expr (Pint $1) }
-  | MIN factor { mk_expr (Papp2 (Osub,(mk_expr (Pint 0)),$2)) }
+  | float { mk_expr (Pval $1) }
+  | MIN factor { mk_expr (Papp2 (Osub,(mk_expr (Pval 0.)),$2)) }
 ;
 
 rational :
@@ -138,4 +139,9 @@ rational :
 integer :
   | INT { $1 }
   | MIN INT { -$2 }
+;
+float :
+  | FLOAT { $1 }
+  | MIN FLOAT { -.$2 }
+  | integer { float_of_int $1 }
 ;

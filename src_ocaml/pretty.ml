@@ -33,6 +33,7 @@ let sprint_un_op = function
 let rec print_expr fmt = function
   | _, Pvar id -> fprintf fmt "%s" id
   | _, Pint v  -> fprintf fmt "%d" v
+  | _, Pval v  -> fprintf fmt "%f" v
   | _, Papp (op,e) -> 
       fprintf fmt "%s %a" (sprint_un_op op) print_expr e
   | _, Papp2 (op,e1,e2) -> 
@@ -41,6 +42,9 @@ let rec print_expr fmt = function
 
 let print_var fmt (_,id) =
   fprintf fmt "%s" id
+
+let print_float fmt v =
+  fprintf fmt "%f" v
 
 let print_rational fmt = function
   | _,(n,1) ->
@@ -56,10 +60,10 @@ let print_vf fmt (_,(var,def)) =
 
 let print_iv fmt (_,(t,v)) =
   fprintf fmt "iv%@%d:@ %a;" t 
-    (print_list "," print_rational) v
+    (print_list "," print_float) v
 
 let print_param fmt (_,(id,v)) =
-  fprintf fmt "%s:=%a@," id print_rational v
+  fprintf fmt "%s:=%d@," id v
 
 
 let print_ptree fmt (_,(vf,iv,ps)) =

@@ -26,12 +26,16 @@ let report (b,e) =
 
 
 let () =
-  Capd_stubs.test1 "var:t,x,v; fun:1,v,-sin(x);"
+(*  Capd_stubs.test1 "var:t,x,v; fun:1,v,-sin(x);"*)
 
-(*  let lb = from_channel cin in 
+  let lb = from_channel cin in 
   try 
     let ptree = Parser.main Lexer.token lb in
-      printf "@[%a@]@." Pretty.print_ptree ptree
+      printf "@[%a@]@." Pretty.print_ptree ptree;
+      Capd_stubs.init 3;
+      Capd_sending.send_ptree ptree;
+      Capd_stubs.integrate ();
+      ()
   with
     | Lexer.Lexical_error s -> 
 	report (lexeme_start_p lb, lexeme_end_p lb);
@@ -45,4 +49,3 @@ let () =
     | _ ->
         printf "unexpected error\n@.";
 	exit 1
-*)

@@ -1,4 +1,11 @@
-TARGET	:= integrate
+.SUFFIXES: 
+.SUFFIXES: .o .cpp .h .d .l .y
+.PHONY : doc clean
+
+CMD		:= integrate
+LIB		:= libmycapd.a
+
+TARGET	:= $(CMD) $(LIB)
 
 CAPD_DIR := /usr/local
 
@@ -22,6 +29,8 @@ SRC_EX  := $(SRC) $(wildcard *.h)
 OBJECT  := $(foreach file, $(SRC), $(basename $(file)).o)
 OBJ_COMMON := MyIMap.o nodebuilder.o
 
+DEP_FILE := $(OBJECT:.o=.d)
+
 all: 
 	@for t in $(TARGET); do \
 	if [ ! -z $$t ]; then ${MAKE} $$t; fi \
@@ -30,16 +39,27 @@ all:
 clean:
 	-$(RM) -f $(TARGET) $(OBJECT) $(DEP_FILE) *~
 
-$(OBJECT): util.h
+ifneq "$(MAKECMDGOALS)" "clean"
+  -include $(DEP_FILE)
+endif
 
-libmycapd.a:
-	$(AR) cru $@ $(OBJECT)
+$(CMD): $(OBJECT)
+	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $@.o $(OBJ_COMMON) $(LIBS)
+
+$(LIB): $(OBJECT)
+	$(AR) cru $@ $(OBJ_COMMON)
+#	$(AR) d $@ integrate.o
 	$(RANLIB) $@
 
-trajectory.o: MyIMap.h MyIMap.o
+#$(OBJECT): util.h
+
+#trajectory.o: MyIMap.h MyIMap.o
 
 .c.o .cc.o .cpp.o:
 	$(CXX) $(CFLAGS) -c $<
 
-$(TARGET): $(OBJECT)
-	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $@.o $(OBJ_COMMON) $(LIBS)
+.c.d .cc.d .cpp.d:
+	$(CXX) $(CFLAGS) -M $< | \
+	$(SED) 's,\($(notdir $*)\.o\) *:,$(dir $@)\1 $@: $(MAKE_INC) $(MAKE_CFG) ,' >$@.tmp
+	$(MV) $@.tmp $@
+

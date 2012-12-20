@@ -2,7 +2,7 @@
 extern "C" {
 #endif
 
-int integrate(const char *input);
+int test(const char *input);
 
 #ifdef __cplusplus
 }

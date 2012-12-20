@@ -44,7 +44,9 @@ inline MyIMap::MyIMap(const MyIMap&)
 {}
 
 MyIMap::~MyIMap() 
-{}
+{
+	cout << "dismiss MyIMap: " << m_trees_idx << endl;
+}
 
 void MyIMap::setup()
 {
@@ -231,14 +233,16 @@ void MyIMap::setup1() {
 */
 }
 
-void MyIMap::putVariable(const char *name) 
+int MyIMap::putVariable(const char *name) 
 {
-	m_var.push_back(name);	
+	m_var.push_back(name);
+	return m_var.size() -2; // TODO
 }
 
 void MyIMap::putTree(Node<ScalarType> *node) 
 {
 	m_trees(m_trees_idx) = node;
+	++(m_trees(m_trees_idx)->m_links);
 	++(m_trees(m_trees_idx)->m_links);
 	++m_trees_idx;
 }

@@ -23,6 +23,9 @@ endif
 #OINCLUDES = -I /usr/lib/ocaml/oUnit
 #OINCLUDES = -I /opt/local/lib/ocaml/site-lib/oUnit
 
+CXXDIR  = ../src_cpp
+LIBNAME = mycapd
+
 # OS specific stuff
 EXE   = 
 STRIP = strip
@@ -62,7 +65,7 @@ CXX = g++
 
 CAPD_DIR := /usr/local
 
-INCLUDES := -I$(OCAMLLIB) -I$(CAPD_DIR)/include
+INCLUDES := -I$(OCAMLLIB) -I$(CAPD_DIR)/include -I../src_cpp
 LDFLAGS := -L$(CAPD_DIR)/lib -lcapd
 
 CFLAGS   = -O3 -g -ansi -pedantic -Wall -frounding-math
@@ -85,7 +88,7 @@ plugins: plugins.opt
 
 LIBGENERATED = lexer.ml parser.mli parser.ml
 
-LIBMODULES = ptree util parser lexer pretty
+LIBMODULES = ptree util parser lexer pretty capd_sending
 
 LIBML  = $(addsuffix .ml,  $(LIBMODULES))
 LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_stubs.mli
@@ -102,7 +105,7 @@ COBJS = capd_stubs.o capd_integrator.o
 byte: hss.cma
 opt:  hss.cmxa
 
-CCLIBFLAGS := -cclib -lstdc++ -cclib -L$(CAPD_DIR)/lib -cclib -lcapd
+CCLIBFLAGS := -cclib -lstdc++ -cclib -L$(CAPD_DIR)/lib -cclib -lcapd -cclib -L$(CXXDIR) -cclib -l$(LIBNAME)
 
 hss.cma: hss.cmo $(COBJS)
 	$(OCAMLC) -a $(BFLAGS) -o $@ $(CCLIBFLAGS) $^
@@ -119,6 +122,8 @@ hss.cmx: $(LIBCMX)
 # depend target
 
 include .depend.lib
+
+hss.cma hss.cmxa: $(CXXDIR)/lib$(LIBNAME).a
 
 .depend.lib: $(LIBGENERATED)
 	$(OCAMLDEP) -slash -I . $(LIBML) $(LIBMLI) > $@
@@ -191,10 +196,10 @@ clean::
 	$(OCAMLYACC) -v $<
 
 .c.o: 
-	$(if $(QUIET),@echo 'Compiling $<' &&) $(CC) $(CFLAGS) -c -o $@ $<
+	$(if $(QUIET),@echo 'Compiling $<' &&) $(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
 .cpp.o:
-	$(if $(QUIET),@echo 'Compiling $<' &&) $(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(if $(QUIET),@echo 'Compiling $<' &&) $(CXX) $(CXXFLAGS) $(INCLUDES) -c -o $@ $<
 
 ###################
 # clean and depend

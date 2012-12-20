@@ -33,7 +33,7 @@ public:
 	void setup();
 	void setup1();
 
-	void putVariable(const char *name);
+	int putVariable(const char *name);
 	void putTree(capd::map::Node<ScalarType> *node);
 
 	NodeType *createVarNode(int index);

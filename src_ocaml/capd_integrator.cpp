@@ -17,7 +17,7 @@
 using namespace std;
 using namespace capd;
 
-int integrate(const char *input) {
+int test(const char *input) {
 
 	cout.precision(17);
 	cout.setf(ios::fixed,ios::floatfield);
