@@ -63,7 +63,7 @@ let print_iv fmt (_,(t,v)) =
     (print_list "," print_float) v
 
 let print_param fmt (_,(id,v)) =
-  fprintf fmt "%s:=%d@," id v
+  fprintf fmt "%s:=%f@," id v
 
 
 let print_ptree fmt (_,(vf,iv,ps)) =

@@ -27,6 +27,7 @@ type vf = loc * (var list * expr list)
 
 type iv = loc * (int * float list)
 
-type param = loc * (string * int)
+type param = loc * (string * float)
 
-type model = loc * (vf * iv * param list)
+module SM = Map.Make(String)
+type model = (loc * (vf * iv * param list)) * float SM.t

@@ -36,7 +36,8 @@ inline void dumpPipe(std::ostream& out,
 }
 
 inline void dumpPipe1(std::ostream& out,
-					  const interval& time, const capd::IVector& value)
+					  const interval& time, const capd::IVector& value,
+					  bool print_comma = true)
 {
 	out << "{ " << std::endl;
 
@@ -49,7 +50,7 @@ inline void dumpPipe1(std::ostream& out,
 		out << '{' << value[i].leftBound() << ',' << value[i].rightBound() << '}';
 	}
 
-	out << std::endl << " }," << std::endl;
+	out << std::endl << (print_comma ? " }," : " }") << std::endl;
 	out.flush();
 }
 

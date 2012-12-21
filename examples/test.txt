@@ -1,6 +1,7 @@
 fun t x v = (1, v, -sin(x));
 val 0 = (0, 1, 1);
 
-order = 5;
-t_max = 10;
+order = 10;
+t_end = 5;
+h_min = 0.1;
 h_max = 1;

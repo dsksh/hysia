@@ -25,16 +25,23 @@ let report (b,e) =
     printf "File \"%s\", line %d, characters %d-%d:" !file l fc lc
 
 
+let integrate env =
+  let a1 = try Ptree.SM.find "t_end" env with Not_found -> 1. in
+  let a2 = try Ptree.SM.find "order" env with Not_found -> 10. in
+  let a3 = try Ptree.SM.find "h_min" env with Not_found -> 0.1 in
+  let a4 = try Ptree.SM.find "h_max" env with Not_found -> 1. in
+  Capd_stubs.integrate a1 a2 a3 a4
+
+
 let () =
 (*  Capd_stubs.test1 "var:t,x,v; fun:1,v,-sin(x);"*)
 
   let lb = from_channel cin in 
   try 
-    let ptree = Parser.main Lexer.token lb in
-      printf "@[%a@]@." Pretty.print_ptree ptree;
-      Capd_stubs.init 3;
+    let ptree,env = Parser.main Lexer.token lb in
+      (*printf "@[%a@]@." Pretty.print_ptree ptree;*)
       Capd_sending.send_ptree ptree;
-      Capd_stubs.integrate ();
+      integrate env;
       ()
   with
     | Lexer.Lexical_error s -> 
@@ -45,6 +52,10 @@ let () =
 	let  loc = (lexeme_start_p lb, lexeme_end_p lb) in
 	report loc;
         printf "syntax error\n@.";
+	exit 1
+    | Util.Error(e,l) -> 
+	report l; 
+	printf "lint error: %a\n@." Util.report e;
 	exit 1
     | _ ->
         printf "unexpected error\n@.";

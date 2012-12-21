@@ -15,10 +15,8 @@ using namespace capd::map;
 
 //typedef boost::shared_ptr<MyIMap> MapPtr;
 typedef auto_ptr<MyIMap> MapPtr;
-//typedef MyIMap *MapPtr;
 typedef list<MyIMap::NodeType *> NodeList;
 typedef auto_ptr<IVector> IVecPtr;
-//typedef IVector *IVecPtr;
 
 MapPtr g_map;
 NodeList g_stack;
@@ -160,57 +158,57 @@ void putTree()
 	g_map->putTree(g_stack.front()); g_stack.pop_front();
 }
 
-void integrate()
+
+void integrate(const float t_end, const float order, const float h_min, const float h_max)
 {
 	try{
 
 	getIMap()->compDiff();
 
-	ITaylor solver(*g_map, 20, 0.1);
+	// The solver:
+	ITaylor solver(*g_map, order, h_min);
 	ITimeMap timeMap(solver);
 
+	// The initial value:
 	C0Rect2Set s(*g_ivec);
 
-	// Here we start to integrate. The time of integration is set to T=10. 
-	double T=1;
-	//double T=0.1;
+	cout << '{' << endl;
+	dumpPipe1(cout, 0, s);
+
+	// Here we start to integrate.
+	// The time of integration:
+	double T(t_end);
 	timeMap.stopAfterStep(true);
 	interval prevTime(0.);
-
-	cout << '{' << endl;
 
 	//try{
 	do 
 	{
 		//IVector v = timeMap(T,s);
 		timeMap.moveSet(T, s);
-		//cout << s.show();
-		//dumpPped(cout, s);
-		//dumpPipe(cout, timeMap.getCurrentTime(), s);
-		//cout << endl;
 
-		interval stepMade = solver.getStep();
-		//cout << endl << "step made: " << stepMade << endl;
+		interval stepMade(solver.getStep());
 		const ITaylor::CurveType& curve = solver.getCurve();
 
-		//int grid=5;
-		int grid=1;
+		int grid(stepMade.rightBound()/h_max + 0.99999999999);
+		if (grid==0) grid = 1;
+//cout << stepMade.rightBound()/h_max << endl;
 		for(int i=0;i<grid;++i)
 		{
-			interval subsetOfDomain = interval(0,1)*stepMade;
+			interval subsetOfDomain = interval(i,i+1)*stepMade/grid;
 
 			IVector v = curve(subsetOfDomain);
 			dumpPipe1(cout, prevTime+subsetOfDomain, v);
 		}
 		prevTime = timeMap.getCurrentTime();
-		//cout << endl << "current time: " << prevTime << endl << endl;
 
 	} while(!timeMap.completed());
+
+	dumpPipe1(cout, timeMap.getCurrentTime(), s, false);
+	cout << "}" << endl;
 
 	} catch(exception& e)
 	{
 		cout << "\n\nException caught!\n" << e.what() << endl << endl;
 	}
-
-	cout << "{} }" << endl;
 }

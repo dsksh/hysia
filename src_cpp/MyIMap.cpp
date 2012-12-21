@@ -45,7 +45,7 @@ inline MyIMap::MyIMap(const MyIMap&)
 
 MyIMap::~MyIMap() 
 {
-	cout << "dismiss MyIMap: " << m_trees_idx << endl;
+	//cout << "dismiss MyIMap: " << m_trees_idx << endl;
 }
 
 void MyIMap::setup()

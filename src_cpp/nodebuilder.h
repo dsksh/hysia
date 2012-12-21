@@ -29,7 +29,7 @@ void putPowNode();
 
 void putTree();
 
-void integrate();
+void integrate(const float, const float, const float, const float);
 
 #ifdef __cplusplus
 }

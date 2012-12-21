@@ -1,6 +1,6 @@
-fun t x v = (1, v, -sin(x));
-val 0 = (0, 1, 1);
+fun x v = (v, -sin(x));
+val 0 = (1, 1);
 
 order = 5;
-t_max = 10;
+t_end = 10;
 h_max = 1;

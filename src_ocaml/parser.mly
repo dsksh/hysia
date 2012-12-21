@@ -1,7 +1,6 @@
 %{
   open Ptree
 
-  module SM = Map.Make(String)
   let env = ref SM.empty
   let set_param id v = env := SM.add id v !env
 
@@ -14,7 +13,7 @@
   let mk_param id v = loc (), (id, v)
   let mk_var id = loc (), id
 
-  let mk_model nd = loc (), nd
+  let mk_model nd = (loc (), nd), !env
 %}
 
 %token <int> INT
@@ -64,13 +63,13 @@ statements :
     { let _,vs,ps = $6 in (mk_vf $2 $4),vs,ps }
   | VAL integer EQ ratio_vec SCOL statements
     { let fs,_,ps = $6 in fs,(mk_iv $2 $4),ps }
-  | PARAM ID EQ integer SCOL statements
+  | PARAM ID EQ float SCOL statements
     { let fs,vs,ps = $6 in (fs,vs,(mk_param $2 $4)::ps) }
   | { (dummy_vf,dummy_iv,[]) }
 ;
 
 solver_params :
-  | ID EQ integer SCOL solver_params
+  | ID EQ float SCOL solver_params
     { set_param $1 $3 }
   | { }
 

@@ -1,10 +1,10 @@
 open Capd_stubs
 open Ptree
+open Util
 
 module SM = Map.Make(String)
 
 let send_var env (_,id) =
-  Printf.printf "send var: %s\n" id; 
   let index = put_variable id in
   SM.add id index env
 
@@ -40,12 +40,17 @@ let rec send_expr env = function
       send_expr env e1;
       send_expr env e2;
       fun_bin_op op ()
+  | Pint _ -> assert false
 
 let send_tree env (_,expr) =
   send_expr env expr;
   put_tree ()
 
-let send_vf env (_,(var,def)) =
+let send_vf env (loc,(var,def)) =
+  let nv,nd = List.length var, List.length def in
+  if nv <> nd then error (DimMismatch (nv,nd)) loc
+  else
+  init nv;
   let env = List.fold_left send_var env var in
   List.map (send_tree env) def
 

@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       145,          7]
-NotebookDataLength[    169658,       3557]
-NotebookOptionsPosition[    167840,       3492]
-NotebookOutlinePosition[    168236,       3509]
-CellTagsIndexPosition[    168193,       3506]
+NotebookDataLength[    183235,       3671]
+NotebookOptionsPosition[    181173,       3599]
+NotebookOutlinePosition[    181569,       3616]
+CellTagsIndexPosition[    181526,       3613]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -333,13 +333,1017 @@ Cell[BoxData[{
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"list", " ", "=", " ", 
-   RowBox[{"<<", "tmp.dat"}]}], ";"}]}], "Input",
+   RowBox[{"<<", "test.dat"}]}], ";"}]}], "Input",
  CellChangeTimes->{{3.499670157443179*^9, 3.4996701837503433`*^9}, {
-  3.563413603207659*^9, 3.563413603663431*^9}, {3.563413657293169*^9, 
-  3.563413657515974*^9}, {3.5635071088707247`*^9, 3.563507109107153*^9}, {
-  3.563507264593524*^9, 3.563507265662498*^9}}],
+   3.563413603207659*^9, 3.563413603663431*^9}, {3.563413657293169*^9, 
+   3.563413657515974*^9}, {3.5635071088707247`*^9, 3.563507109107153*^9}, {
+   3.563507264593524*^9, 3.563507265662498*^9}, {3.565055969317807*^9, 
+   3.565055971128552*^9}, 3.5650563219152946`*^9, 3.565058296345615*^9}],
 
 Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"sol", "=", 
+  RowBox[{"First", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"x", ",", "v"}], "}"}], "/.", 
+    RowBox[{"DSolve", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"x", "'"}], "[", "t", "]"}], "\[Equal]", 
+         RowBox[{"v", "[", "t", "]"}]}], "&&", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"v", "'"}], "[", "t", "]"}], "\[Equal]", 
+         RowBox[{"-", 
+          RowBox[{"Sin", "[", "t", "]"}]}]}], "&&", 
+        RowBox[{
+         RowBox[{"x", "[", "0", "]"}], "\[Equal]", "1"}], "&&", 
+        RowBox[{
+         RowBox[{"v", "[", "0", "]"}], "\[Equal]", "1"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"x", ",", "v"}], "}"}], ",", "t"}], "]"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Plot", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"sol", "[", 
+     RowBox[{"[", "1", "]"}], "]"}], "[", "t", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"t", ",", "0", ",", "5"}], "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.565056417519765*^9, 3.5650564650914793`*^9}, {
+  3.565056495878551*^9, 3.565056583906146*^9}, {3.5650567306412477`*^9, 
+  3.565056732489581*^9}, {3.565056769005282*^9, 3.565056770128983*^9}, {
+  3.565056872320876*^9, 3.5650568842401667`*^9}, {3.5650570275783253`*^9, 
+  3.565057054880807*^9}, {3.565057515145013*^9, 3.5650575153364353`*^9}, {
+  3.565058369622335*^9, 3.565058372080934*^9}, {3.56505842348403*^9, 
+  3.565058424220388*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"Function", "[", 
+    RowBox[{
+     RowBox[{"{", "t", "}"}], ",", 
+     RowBox[{"1", "+", 
+      RowBox[{"Sin", "[", "t", "]"}]}]}], "]"}], ",", 
+   RowBox[{"Function", "[", 
+    RowBox[{
+     RowBox[{"{", "t", "}"}], ",", 
+     RowBox[{"Cos", "[", "t", "]"}]}], "]"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.565056466289577*^9, {3.5650564979883413`*^9, 3.565056584322751*^9}, 
+   3.56505662305138*^9, 3.56505673293978*^9, 3.56505677187527*^9, {
+   3.5650568752217293`*^9, 3.565056884909239*^9}, {3.5650570382162857`*^9, 
+   3.565057055718643*^9}, 3.565057515719432*^9, 3.565058374659904*^9, 
+   3.565058424634067*^9}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {}, 
+   {Hue[0.67, 0.6, 0.6], LineBox[CompressedData["
+1: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
+aM6FOoocHcdRPF+LguH1efA/Nx5hhw==
+     "]]}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesOrigin->{0, 0},
+  PlotRange->{{0, 5}, {0., 1.9999998405767352`}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{
+    Scaled[0.02], 
+    Scaled[0.02]}]], "Output",
+ CellChangeTimes->{
+  3.565056466289577*^9, {3.5650564979883413`*^9, 3.565056584322751*^9}, 
+   3.56505662305138*^9, 3.56505673293978*^9, 3.56505677187527*^9, {
+   3.5650568752217293`*^9, 3.565056884909239*^9}, {3.5650570382162857`*^9, 
+   3.565057055718643*^9}, 3.565057515719432*^9, 3.565058374659904*^9, 
+   3.565058424641321*^9},
+ ImageCache->GraphicsData["CompressedBitmap", "\<\
+eJztWwmUk1WWflIszUx3z3T3TLe9DuP09Gw9NT329LTTo2BcEFGMKCJiRBCN
+oCgli20Et7gR97hAqUCxBYQqKIqt2IolbFEoigpLWAKEggIsoArCEiHg7fe9
+/77UX9V5+eOcmTNn5ljnEPLf/97vbffdd5eXHgNGDHrosQEjBg8c0OmmYQOK
+Bg0eOLxT16HDJKngMiEuGySEONRJtJXfSX61f+BvMD6E2Kn+K6B0KkmptHoj
+XrTRkklFFB0s9p7qv7ZEyRgF3BLOHaBIItmZJYgaKOiyWmmjPgsoFE8R/4mr
+1Wc7iha75VsPBYJ+CpZWk2xDXKsxUhFyu4KUlE+dmT9R6pX8heQP+MkXqFTv
+2ls9uoPFkpEAuQLV6qkLi1GqmopkDxMYg+xxRWUsA4nBpblfYZ+bSuIpcY16
+B+AU1cfjFIvJf9UhcokiOcrGzhnYJDXyoOorisgbiv9Rb6plb/wR9aQHlk5U
+kKeoVGKTuI5pVT45qHCjbXLkRKejskVBHr+f/EUeTCN5g1VKTmOlogEq9IV1
+h0xNu5jWUOUnT7F9ctpSQ7SS/B6XmteKRFoPrqEqSMGwnGCKqmWwt5pujJK/
+UPYsFGs94FR1MNNqZz2N6ZTWKbUULuGleJq6ZJQlTfFKP7l8Vc0rJmkVPh+F
+42HyyNYbbUpAqRj5LOUi4SmWqpZRgp4ZjW2k6pBXKkKEIcEQp4AvBChK11dI
+bhdVJ0mjxipK0Sn5lyCvnAo59MwUUTpOfrToKoZ4Z02W+lfi8VBFrB7j69Cq
+Dw0xKilykTsY4YmTkxoOUqG1+8gTDCt9zwyrISyV1K2WXHhCSrczyxwvIVFo
+TYPuVDJaQkJjlUR5Bj7QkyrnPGlNevOOku01NibV0ysaOdW8K9taEH/Or7SF
+wJP67P0//P4qXql0+pK0N1/Ivp6jEyfO0qlTKTp//uLllnhHFhHifnxcZgb9
+kzxpf/q/xPd1X7LztWPuL75I07q1CQq+vZb6319KN980kR4fMk/xzqvYQdWb
+DtGhQ6fo7NkLbAAsmcOHk4qnctEuGjc2QiOGL6Qet0yie+6eQWNeXUVVy+PQ
+L9b3lm3zNvpanf7/9KUNv4FqYOlHPb1EqdKwJxbQJzNqaefOBvryyy8tZiG+
+aYToSIn9jTRn9jYFccvNJfTE0Pk0b94OZa1YXHzD+vK1Bv1f7ktHO4127z5G
+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\
+\>"]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Graphics", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Box2g", "[", 
+     RowBox[{"1", ",", "4", ",", "#"}], "]"}], "&"}], " ", "/@", " ", 
+   "list"}], "]"}]], "Input",
+ CellChangeTimes->{{3.565058306948731*^9, 3.5650583071790247`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{RectangleBox[{0, 0.99155}, {0.0100098, 1}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.0050049, 0.9957750000000001}]}}, {
+    RectangleBox[{0.0100098, 0.97491}, {0.029541, 0.99155}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.0197754, 0.98323}]}}, {
+    RectangleBox[{0.029541, 0.957657}, {0.0495605, 0.974912}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.03955075, 0.9662845}]}}, {
+    RectangleBox[{0.0495605, 0.939784}, {0.0700684, 0.957659}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.059814450000000005`, 0.9487215}]}}, {
+    RectangleBox[{0.0700684, 0.921289}, {0.0910645, 0.939786}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.08056645000000001, 0.9305375}]}}, {
+    RectangleBox[{0.0910645, 0.903042}, {0.111572, 0.921291}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.10131825, 0.9121665}]}}, {
+    RectangleBox[{0.111572, 0.885065}, {0.131592, 0.903043}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.121582, 0.894054}]}}, {
+    RectangleBox[{0.131592, 0.867378}, {0.151123, 0.885066}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.1413575, 0.8762220000000001}]}}, {
+    RectangleBox[{0.151123, 0.849554}, {0.170654, 0.86738}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.1608885, 0.8584670000000001}]}}, {
+    RectangleBox[{0.170654, 0.83205}, {0.189697, 0.849555}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.1801755, 0.8408024999999999}]}}, {
+    RectangleBox[{0.189697, 0.814429}, {0.20874, 0.832051}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.19921850000000002`, 0.82324}]}}, {
+    RectangleBox[{0.20874, 0.796699}, {0.227783, 0.814431}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.2182615, 0.8055650000000001}]}}, {
+    RectangleBox[{0.227783, 0.778865}, {0.246826, 0.7967}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.2373045, 0.7877825}]}}, {
+    RectangleBox[{0.246826, 0.760934}, {0.265869, 0.778866}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.2563475, 0.7699}]}}, {
+    RectangleBox[{0.265869, 0.742912}, {0.284912, 0.760935}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.2753905, 0.7519235}]}}, {
+    RectangleBox[{0.284912, 0.724805}, {0.303955, 0.742913}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.2944335, 0.733859}]}}, {
+    RectangleBox[{0.303955, 0.706618}, {0.322998, 0.724806}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.3134765, 0.7157119999999999}]}}, {
+    RectangleBox[{0.322998, 0.688357}, {0.342041, 0.706619}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.33251949999999997`, 0.697488}]}}, {
+    RectangleBox[{0.342041, 0.670027}, {0.361084, 0.688358}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.3515625, 0.6791925000000001}]}}, {
+    RectangleBox[{0.361084, 0.651632}, {0.380127, 0.670028}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.37060550000000003`, 0.66083}]}}, {
+    RectangleBox[{0.380127, 0.633178}, {0.39917, 0.651633}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.3896485, 0.6424055}]}}, {
+    RectangleBox[{0.39917, 0.614668}, {0.418213, 0.633178}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.4086915, 0.623923}]}}, {
+    RectangleBox[{0.418213, 0.596107}, {0.437256, 0.614669}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.4277345, 0.605388}]}}, {
+    RectangleBox[{0.437256, 0.577021}, {0.456787, 0.596108}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.44702149999999996`, 0.5865644999999999}]}}, {
+    RectangleBox[{0.456787, 0.55789}, {0.476318, 0.577022}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.46655250000000004`, 0.567456}]}}, {
+    RectangleBox[{0.476318, 0.538717}, {0.49585, 0.557891}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.486084, 0.548304}]}}, {
+    RectangleBox[{0.49585, 0.519506}, {0.515381, 0.538718}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.5056155, 0.529112}]}}, {
+    RectangleBox[{0.515381, 0.499779}, {0.5354, 0.519507}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.5253905, 0.5096430000000001}]}}, {
+    RectangleBox[{0.5354, 0.480018}, {0.55542, 0.49978}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.54541, 0.489899}]}}, {
+    RectangleBox[{0.55542, 0.460228}, {0.575439, 0.480019}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.5654295, 0.4701235}]}}, {
+    RectangleBox[{0.575439, 0.439927}, {0.595947, 0.460229}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.585693, 0.450078}]}}, {
+    RectangleBox[{0.595947, 0.419601}, {0.616455, 0.439927}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.606201, 0.42976400000000003`}]}}, {
+    RectangleBox[{0.616455, 0.398767}, {0.637451, 0.419601}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.626953, 0.409184}]}}, {
+    RectangleBox[{0.637451, 0.377912}, {0.658447, 0.398767}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.647949, 0.3883395}]}}, {
+    RectangleBox[{0.658447, 0.356553}, {0.679932, 0.377912}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.6691895, 0.3672325}]}}, {
+    RectangleBox[{0.679932, 0.335176}, {0.701416, 0.356553}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.690674, 0.3458645}]}}, {
+    RectangleBox[{0.701416, 0.313299}, {0.723389, 0.335177}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.7124025, 0.324238}]}}, {
+    RectangleBox[{0.723389, 0.290921}, {0.74585, 0.313299}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.7346195, 0.30211}]}}, {
+    RectangleBox[{0.74585, 0.268531}, {0.768311, 0.290921}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.7570805, 0.27972600000000003`}]}}, {
+    RectangleBox[{0.768311, 0.245644}, {0.79126, 0.268531}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.7797855, 0.2570875}]}}, {
+    RectangleBox[{0.79126, 0.22226}, {0.814697, 0.245644}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.8029785, 0.233952}]}}, {
+    RectangleBox[{0.814697, 0.198868}, {0.838135, 0.22226}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.826416, 0.210564}]}}, {
+    RectangleBox[{0.838135, 0.174983}, {0.862061, 0.198869}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.850098, 0.18692599999999998`}]}}, {
+    RectangleBox[{0.862061, 0.150604}, {0.886475, 0.174983}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.874268, 0.16279349999999998`}]}}, {
+    RectangleBox[{0.886475, 0.12622}, {0.910889, 0.150604}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.898682, 0.13841199999999998`}]}}, {
+    RectangleBox[{0.910889, 0.101833}, {0.935303, 0.12622}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.9230959999999999, 0.1140265}]}}, {
+    RectangleBox[{0.935303, 0.076955}, {0.960205, 0.101833}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{0.947754, 0.089394}]}}, {
+    RectangleBox[{0.960205, 0.052075}, {0.985107, 0.0769551}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.972656, 0.06451505}]}}, {
+    RectangleBox[{0.985107, 0.0271938}, {1.01001, 0.0520752}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{0.9975585, 0.0396345}]}}, {
+    RectangleBox[{1.01001, 0.0023118}, {1.03491, 0.0271939}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.0224600000000001`, 0.01475285}]}}, {
+    RectangleBox[{1.03491, -0.0225702}, {1.05981, 0.0023119}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.0473599999999998`, -0.01012915}]}}, {
+    RectangleBox[{1.05981, -0.0469641}, {1.08423, -0.0225701}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.07202, -0.0347671}]}}, {
+    RectangleBox[{1.08423, -0.0718447}, {1.10913, -0.0469637}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.09668, -0.0594042}]}}, {
+    RectangleBox[{1.10913, -0.0967234}, {1.13403, -0.071844}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.12158, -0.0842837}]}}, {
+    RectangleBox[{1.13403, -0.121599}, {1.15894, -0.0967224}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.1464850000000002`, -0.1091607}]}}, {
+    RectangleBox[{1.15894, -0.146472}, {1.18384, -0.121598}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.1713900000000002`, -0.134035}]}}, {
+    RectangleBox[{1.18384, -0.170852}, {1.20825, -0.14647}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.196045, -0.158661}]}}, {
+    RectangleBox[{1.20825, -0.195227}, {1.23267, -0.17085}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.22046, -0.1830385}]}}, {
+    RectangleBox[{1.23267, -0.219595}, {1.25708, -0.195224}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.244875, -0.20740950000000002`}]}}, {
+    RectangleBox[{1.25708, -0.243468}, {1.28101, -0.219591}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.269045, -0.2315295}]}}, {
+    RectangleBox[{1.28101, -0.26733}, {1.30493, -0.243463}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.29297, -0.2553965}]}}, {
+    RectangleBox[{1.30493, -0.290695}, {1.32837, -0.267325}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.31665, -0.27901}]}}, {
+    RectangleBox[{1.32837, -0.31356}, {1.35132, -0.290689}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.339845, -0.3021245}]}}, {
+    RectangleBox[{1.35132, -0.33641}, {1.37427, -0.313553}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.3627950000000002`, -0.32498150000000003`}]}}, {
+    RectangleBox[{1.37427, -0.358758}, {1.39673, -0.336403}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.3855, -0.3475805}]}}, {
+    RectangleBox[{1.39673, -0.380601}, {1.4187, -0.358749}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.407715, -0.369675}]}}, {
+    RectangleBox[{1.4187, -0.402424}, {1.44067, -0.380592}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.429685, -0.39150799999999997`}]}}, {
+    RectangleBox[{1.44067, -0.423739}, {1.46216, -0.402414}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.451415, -0.41307649999999996`}]}}, {
+    RectangleBox[{1.46216, -0.444545}, {1.48315, -0.423728}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.472655, -0.43413650000000004`}]}}, {
+    RectangleBox[{1.48315, -0.465325}, {1.50415, -0.444533}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.4936500000000001`, -0.45492900000000003`}]}}, {
+    RectangleBox[{1.50415, -0.485591}, {1.52466, -0.465311}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.514405, -0.47545099999999996`}]}}, {
+    RectangleBox[{1.52466, -0.505825}, {1.54517, -0.485576}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.5349149999999998`, -0.4957005}]}}, {
+    RectangleBox[{1.54517, -0.525543}, {1.56519, -0.505809}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.55518, -0.515676}]}}, {
+    RectangleBox[{1.56519, -0.545224}, {1.58521, -0.525525}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.5752000000000002`, -0.5353745000000001}]}}, {
+    RectangleBox[{1.58521, -0.564863}, {1.60522, -0.545204}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.595215, -0.5550335}]}}, {
+    RectangleBox[{1.60522, -0.583979}, {1.62476, -0.564842}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.6149900000000001`, -0.5744104999999999}]}}, {
+    RectangleBox[{1.62476, -0.603049}, {1.64429, -0.583957}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.634525, -0.5935029999999999}]}}, {
+    RectangleBox[{1.64429, -0.622069}, {1.66382, -0.603025}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.654055, -0.612547}]}}, {
+    RectangleBox[{1.66382, -0.641032}, {1.68335, -0.622042}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.673585, -0.631537}]}}, {
+    RectangleBox[{1.68335, -0.659463}, {1.70239, -0.641004}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.69287, -0.6502335}]}}, {
+    RectangleBox[{1.70239, -0.677833}, {1.72144, -0.659434}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.711915, -0.6686335}]}}, {
+    RectangleBox[{1.72144, -0.696137}, {1.74048, -0.677802}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.73096, -0.6869695}]}}, {
+    RectangleBox[{1.74048, -0.71437}, {1.75952, -0.696103}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.75, -0.7052365}]}}, {
+    RectangleBox[{1.75952, -0.732527}, {1.77856, -0.714334}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.76904, -0.7234305000000001}]}}, {
+    RectangleBox[{1.77856, -0.750601}, {1.79761, -0.732487}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.788085, -0.741544}]}}, {
+    RectangleBox[{1.79761, -0.768588}, {1.81665, -0.750559}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.80713, -0.7595735}]}}, {
+    RectangleBox[{1.81665, -0.786482}, {1.83569, -0.768543}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.82617, -0.7775125}]}}, {
+    RectangleBox[{1.83569, -0.804276}, {1.85474, -0.786434}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.845215, -0.795355}]}}, {
+    RectangleBox[{1.85474, -0.821964}, {1.87378, -0.804225}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.86426, -0.8130945}]}}, {
+    RectangleBox[{1.87378, -0.839539}, {1.89282, -0.82191}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.8833, -0.8307245000000001}]}}, {
+    RectangleBox[{1.89282, -0.856995}, {1.91187, -0.839482}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.902345, -0.8482384999999999}]}}, {
+    RectangleBox[{1.91187, -0.874324}, {1.93091, -0.856934}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.92139, -0.865629}]}}, {
+    RectangleBox[{1.93091, -0.89152}, {1.94995, -0.87426}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{1.94043, -0.88289}]}}, {
+    RectangleBox[{1.94995, -0.909013}, {1.96948, -0.891452}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.959715, -0.9002325}]}}, {
+    RectangleBox[{1.96948, -0.926346}, {1.98901, -0.908938}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.979245, -0.9176420000000001}]}}, {
+    RectangleBox[{1.98901, -0.943944}, {2.00903, -0.926266}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{1.99902, -0.9351050000000001}]}}, {
+    RectangleBox[{2.00903, -0.961781}, {2.02954, -0.943855}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.019285, -0.9528179999999999}]}}, {
+    RectangleBox[{2.02954, -0.978989}, {2.04956, -0.961683}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.03955, -0.970336}]}}, {
+    RectangleBox[{2.04956, -0.996415}, {2.07007, -0.978891}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.059815, -0.987653}]}}, {
+    RectangleBox[{2.07007, -1.0132}, {2.09009, -0.996306}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.0800799999999997`, -1.004753}]}}, {
+    RectangleBox[{2.09009, -1.02936}, {2.10962, -1.01309}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.099855, -1.021225}]}}, {
+    RectangleBox[{2.10962, -1.0449}, {2.12866, -1.02925}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.11914, -1.037075}]}}, {
+    RectangleBox[{2.12866, -1.05982}, {2.14722, -1.04479}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.13794, -1.052305}]}}, {
+    RectangleBox[{2.14722, -1.07414}, {2.16528, -1.05971}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.15625, -1.066925}]}}, {
+    RectangleBox[{2.16528, -1.08825}, {2.18335, -1.07404}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.174315, -1.081145}]}}, {
+    RectangleBox[{2.18335, -1.10176}, {2.20093, -1.08814}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.19214, -1.09495}]}}, {
+    RectangleBox[{2.20093, -1.11506}, {2.21851, -1.10165}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.20972, -1.108355}]}}, {
+    RectangleBox[{2.21851, -1.12776}, {2.2356, -1.11494}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.227055, -1.12135}]}}, {
+    RectangleBox[{2.2356, -1.14024}, {2.25269, -1.12765}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.2441449999999996`, -1.133945}]}}, {
+    RectangleBox[{2.25269, -1.15249}, {2.26978, -1.14013}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.261235, -1.1463100000000002`}]}}, {
+    RectangleBox[{2.26978, -1.16451}, {2.28687, -1.15238}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.2783249999999997`, -1.158445}]}}, {
+    RectangleBox[{2.28687, -1.17594}, {2.30347, -1.16439}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.2951699999999997`, -1.170165}]}}, {
+    RectangleBox[{2.30347, -1.18714}, {2.32007, -1.17582}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.31177, -1.18148}]}}, {
+    RectangleBox[{2.32007, -1.1981}, {2.33667, -1.18702}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.3283699999999996`, -1.1925599999999998`}]}}, {
+    RectangleBox[{2.33667, -1.20881}, {2.35327, -1.19798}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.34497, -1.203395}]}}, {
+    RectangleBox[{2.35327, -1.21926}, {2.36987, -1.20868}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.3615700000000004`, -1.21397}]}}, {
+    RectangleBox[{2.36987, -1.22945}, {2.38647, -1.21913}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.37817, -1.2242899999999999`}]}}, {
+    RectangleBox[{2.38647, -1.23937}, {2.40308, -1.22931}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.394775, -1.23434}]}}, {
+    RectangleBox[{2.40308, -1.24901}, {2.41968, -1.23923}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.4113800000000003`, -1.2441200000000001`}]}}, {
+    RectangleBox[{2.41968, -1.25837}, {2.43628, -1.24887}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.42798, -1.25362}]}}, {
+    RectangleBox[{2.43628, -1.26744}, {2.45288, -1.25823}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.44458, -1.262835}]}}, {
+    RectangleBox[{2.45288, -1.27622}, {2.46948, -1.26729}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.4611799999999997`, -1.271755}]}}, {
+    RectangleBox[{2.46948, -1.28469}, {2.48608, -1.27607}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.47778, -1.28038}]}}, {
+    RectangleBox[{2.48608, -1.29311}, {2.50317, -1.28454}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.494625, -1.288825}]}}, {
+    RectangleBox[{2.50317, -1.30118}, {2.52026, -1.29294}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.5117149999999997`, -1.29706}]}}, {
+    RectangleBox[{2.52026, -1.30892}, {2.53735, -1.30101}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.528805, -1.3049650000000002`}]}}, {
+    RectangleBox[{2.53735, -1.31653}, {2.55493, -1.30875}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.5461400000000003`, -1.31264}]}}, {
+    RectangleBox[{2.55493, -1.32376}, {2.57251, -1.31635}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.56372, -1.320055}]}}, {
+    RectangleBox[{2.57251, -1.33081}, {2.59058, -1.32358}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.581545, -1.3271950000000001`}]}}, {
+    RectangleBox[{2.59058, -1.33764}, {2.60913, -1.33062}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.599855, -1.33413}]}}, {
+    RectangleBox[{2.60913, -1.3442}, {2.62817, -1.33743}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.6186499999999997`, -1.340815}]}}, {
+    RectangleBox[{2.62817, -1.35028}, {2.64722, -1.34397}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.637695, -1.3471250000000001`}]}}, {
+    RectangleBox[{2.64722, -1.35575}, {2.66577, -1.35005}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.656495, -1.3529}]}}, {
+    RectangleBox[{2.66577, -1.36065}, {2.68384, -1.35553}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.674805, -1.3580899999999998`}]}}, {
+    RectangleBox[{2.68384, -1.365}, {2.70142, -1.36044}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.6926300000000003`, -1.36272}]}}, {
+    RectangleBox[{2.70142, -1.36884}, {2.71851, -1.3648}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.7099650000000004`, -1.3668200000000001`}]}}, {
+    RectangleBox[{2.71851, -1.3723}, {2.7356, -1.36864}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.727055, -1.37047}]}}, {
+    RectangleBox[{2.7356, -1.37527}, {2.7522, -1.3721}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.7439, -1.373685}]}}, {
+    RectangleBox[{2.7522, -1.37788}, {2.7688, -1.37508}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.7605000000000004`, -1.37648}]}}, {
+    RectangleBox[{2.7688, -1.38004}, {2.78491, -1.37769}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.7768550000000003`, -1.378865}]}}, {
+    RectangleBox[{2.78491, -1.38186}, {2.80103, -1.37986}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.79297, -1.3808600000000002`}]}}, {
+    RectangleBox[{2.80103, -1.38332}, {2.81714, -1.38168}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.809085, -1.3825}]}}, {
+    RectangleBox[{2.81714, -1.38442}, {2.83325, -1.38314}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.825195, -1.38378}]}}, {
+    RectangleBox[{2.83325, -1.38516}, {2.84937, -1.38424}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.84131, -1.3847}]}}, {
+    RectangleBox[{2.84937, -1.38554}, {2.86548, -1.38498}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.857425, -1.3852600000000002`}]}}, {
+    RectangleBox[{2.86548, -1.38557}, {2.88159, -1.38536}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.873535, -1.385465}]}}, {
+    RectangleBox[{2.88159, -1.38539}, {2.89722, -1.38507}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.889405, -1.38523}]}}, {
+    RectangleBox[{2.89722, -1.38507}, {2.91333, -1.38438}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.905275, -1.384725}]}}, {
+    RectangleBox[{2.91333, -1.38438}, {2.92944, -1.38334}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.921385, -1.3838599999999999`}]}}, {
+    RectangleBox[{2.92944, -1.38334}, {2.94556, -1.38194}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.9375, -1.3826399999999999`}]}}, {
+    RectangleBox[{2.94556, -1.38194}, {2.96167, -1.38018}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.953615, -1.38106}]}}, {
+    RectangleBox[{2.96167, -1.38018}, {2.97778, -1.37807}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{2.969725, -1.379125}]}}, {
+    RectangleBox[{2.97778, -1.37807}, {2.9939, -1.3756}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{2.98584, -1.3768349999999998`}]}}, {
+    RectangleBox[{2.9939, -1.3756}, {3.01001, -1.37278}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.0019549999999997`, -1.37419}]}}, {
+    RectangleBox[{3.01001, -1.37278}, {3.02661, -1.3695}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.0183099999999996`, -1.37114}]}}, {
+    RectangleBox[{3.02661, -1.3695}, {3.04321, -1.36586}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.03491, -1.36768}]}}, {
+    RectangleBox[{3.04321, -1.36586}, {3.05981, -1.36185}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.0515100000000004`, -1.363855}]}}, {
+    RectangleBox[{3.05981, -1.36185}, {3.0769, -1.35735}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.0683550000000004`, -1.3596}]}}, {
+    RectangleBox[{3.0769, -1.35735}, {3.09399, -1.35246}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.085445, -1.354905}]}}, {
+    RectangleBox[{3.09399, -1.35246}, {3.11157, -1.34704}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.10278, -1.34975}]}}, {
+    RectangleBox[{3.11157, -1.34704}, {3.12964, -1.34106}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.1206050000000003`, -1.34405}]}}, {
+    RectangleBox[{3.12964, -1.34106}, {3.14819, -1.33449}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.138915, -1.337775}]}}, {
+    RectangleBox[{3.14819, -1.33449}, {3.16724, -1.3273}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.157715, -1.330895}]}}, {
+    RectangleBox[{3.16724, -1.3273}, {3.18628, -1.31967}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.17676, -1.3234849999999998`}]}}, {
+    RectangleBox[{3.18628, -1.31967}, {3.20483, -1.31182}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.1955549999999997`, -1.315745}]}}, {
+    RectangleBox[{3.20483, -1.31182}, {3.2229, -1.30378}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.213865, -1.3077999999999999`}]}}, {
+    RectangleBox[{3.2229, -1.30378}, {3.24048, -1.29559}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.23169, -1.299685}]}}, {
+    RectangleBox[{3.24048, -1.29559}, {3.25757, -1.2873}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.2490249999999996`, -1.291445}]}}, {
+    RectangleBox[{3.25757, -1.2873}, {3.27466, -1.27867}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.266115, -1.282985}]}}, {
+    RectangleBox[{3.27466, -1.27868}, {3.29175, -1.26973}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.2832049999999997`, -1.274205}]}}, {
+    RectangleBox[{3.29175, -1.26973}, {3.30835, -1.26074}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.3000499999999997`, -1.265235}]}}, {
+    RectangleBox[{3.30835, -1.26075}, {3.32495, -1.25147}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.31665, -1.25611}]}}, {
+    RectangleBox[{3.32495, -1.25147}, {3.34155, -1.2419}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.3332499999999996`, -1.246685}]}}, {
+    RectangleBox[{3.34155, -1.24191}, {3.35815, -1.23206}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.34985, -1.236985}]}}, {
+    RectangleBox[{3.35815, -1.23207}, {3.37476, -1.22195}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.366455, -1.22701}]}}, {
+    RectangleBox[{3.37476, -1.22195}, {3.39136, -1.21158}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.3830600000000004`, -1.216765}]}}, {
+    RectangleBox[{3.39136, -1.21158}, {3.40796, -1.20094}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.39966, -1.2062599999999999`}]}}, {
+    RectangleBox[{3.40796, -1.20094}, {3.42456, -1.19006}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.4162600000000003`, -1.1955}]}}, {
+    RectangleBox[{3.42456, -1.19006}, {3.44116, -1.17892}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.43286, -1.1844899999999998`}]}}, {
+    RectangleBox[{3.44116, -1.17892}, {3.45776, -1.16755}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.44946, -1.173235}]}}, {
+    RectangleBox[{3.45776, -1.16755}, {3.47437, -1.15595}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.466065, -1.16175}]}}, {
+    RectangleBox[{3.47437, -1.15595}, {3.49097, -1.14412}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.4826699999999997`, -1.150035}]}}, {
+    RectangleBox[{3.49097, -1.14412}, {3.50806, -1.13171}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.4995149999999997`, -1.137915}]}}, {
+    RectangleBox[{3.50806, -1.13171}, {3.52515, -1.11908}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.516605, -1.1253950000000001`}]}}, {
+    RectangleBox[{3.52515, -1.11908}, {3.54224, -1.10623}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.533695, -1.1126550000000002`}]}}, {
+    RectangleBox[{3.54224, -1.10624}, {3.55933, -1.09317}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.5507850000000003`, -1.099705}]}}, {
+    RectangleBox[{3.55933, -1.09318}, {3.5769, -1.07953}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.568115, -1.0863550000000002`}]}}, {
+    RectangleBox[{3.5769, -1.07953}, {3.59448, -1.06568}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.58569, -1.072605}]}}, {
+    RectangleBox[{3.59448, -1.06568}, {3.61206, -1.05162}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.60327, -1.05865}]}}, {
+    RectangleBox[{3.61206, -1.05163}, {3.63013, -1.03698}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.621095, -1.044305}]}}, {
+    RectangleBox[{3.63013, -1.03698}, {3.64819, -1.02214}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.63916, -1.02956}]}}, {
+    RectangleBox[{3.64819, -1.02214}, {3.66675, -1.0067}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.65747, -1.0144199999999999`}]}}, {
+    RectangleBox[{3.66675, -1.00671}, {3.68579, -0.990665}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.6762699999999997`, -0.9986875}]}}, {
+    RectangleBox[{3.68579, -0.990666}, {3.70532, -0.974016}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.6955549999999997`, -0.982341}]}}, {
+    RectangleBox[{3.70532, -0.974017}, {3.72534, -0.956752}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.71533, -0.9653845000000001}]}}, {
+    RectangleBox[{3.72534, -0.956754}, {3.74585, -0.93887}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.735595, -0.947812}]}}, {
+    RectangleBox[{3.74585, -0.938871}, {3.76685, -0.920364}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.75635, -0.9296175}]}}, {
+    RectangleBox[{3.76685, -0.920366}, {3.78735, -0.902108}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.7771, -0.9112370000000001}]}}, {
+    RectangleBox[{3.78735, -0.90211}, {3.80737, -0.884123}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.7973600000000003`, -0.8931165}]}}, {
+    RectangleBox[{3.80737, -0.884124}, {3.8269, -0.866429}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.8171350000000004`, -0.8752765}]}}, {
+    RectangleBox[{3.8269, -0.86643}, {3.84644, -0.848598}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.83667, -0.857514}]}}, {
+    RectangleBox[{3.84644, -0.848599}, {3.86548, -0.831087}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.8559599999999996`, -0.839843}]}}, {
+    RectangleBox[{3.86548, -0.831088}, {3.88452, -0.81346}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.875, -0.822274}]}}, {
+    RectangleBox[{3.88452, -0.813461}, {3.90356, -0.795724}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.8940400000000004`, -0.8045925}]}}, {
+    RectangleBox[{3.90356, -0.795725}, {3.92261, -0.777885}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.913085, -0.786805}]}}, {
+    RectangleBox[{3.92261, -0.777886}, {3.94165, -0.759949}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.93213, -0.7689174999999999}]}}, {
+    RectangleBox[{3.94165, -0.75995}, {3.96069, -0.741922}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.9511700000000003`, -0.750936}]}}, {
+    RectangleBox[{3.96069, -0.741923}, {3.97974, -0.72381}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{3.970215, -0.7328665}]}}, {
+    RectangleBox[{3.97974, -0.723811}, {3.99878, -0.705619}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{3.98926, -0.714715}]}}, {
+    RectangleBox[{3.99878, -0.70562}, {4.01782, -0.687354}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.0083, -0.6964870000000001}]}}, {
+    RectangleBox[{4.01782, -0.687355}, {4.03687, -0.66902}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.027345, -0.6781874999999999}]}}, {
+    RectangleBox[{4.03687, -0.669021}, {4.05591, -0.650622}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.046390000000001, -0.6598215000000001}]}}, {
+    RectangleBox[{4.05591, -0.650623}, {4.07495, -0.632165}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.06543, -0.641394}]}}, {
+    RectangleBox[{4.07495, -0.632165}, {4.09399, -0.613652}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.08447, -0.6229085}]}}, {
+    RectangleBox[{4.09399, -0.613653}, {4.11304, -0.595088}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.103515, -0.6043704999999999}]}}, {
+    RectangleBox[{4.11304, -0.595089}, {4.13257, -0.576}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.122805, -0.5855444999999999}]}}, {
+    RectangleBox[{4.13257, -0.576001}, {4.1521, -0.556867}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.142335, -0.566434}]}}, {
+    RectangleBox[{4.1521, -0.556867}, {4.17163, -0.537692}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.161865000000001, -0.5472794999999999}]}}, {
+    RectangleBox[{4.17163, -0.537692}, {4.19116, -0.518479}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.181395, -0.5280855}]}}, {
+    RectangleBox[{4.19116, -0.518479}, {4.21118, -0.498749}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.201169999999999, -0.508614}]}}, {
+    RectangleBox[{4.21118, -0.49875}, {4.2312, -0.478987}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.22119, -0.48886850000000004`}]}}, {
+    RectangleBox[{4.2312, -0.478988}, {4.25122, -0.459195}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.241210000000001, -0.4690915}]}}, {
+    RectangleBox[{4.25122, -0.459196}, {4.27173, -0.438893}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.261475, -0.44904449999999996`}]}}, {
+    RectangleBox[{4.27173, -0.438893}, {4.29224, -0.418565}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.281985, -0.428729}]}}, {
+    RectangleBox[{4.29224, -0.418566}, {4.31323, -0.39773}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.302735, -0.40814799999999996`}]}}, {
+    RectangleBox[{4.31323, -0.397731}, {4.33423, -0.376874}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.323729999999999, -0.3873025}]}}, {
+    RectangleBox[{4.33423, -0.376875}, {4.35571, -0.355514}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.34497, -0.3661945}]}}, {
+    RectangleBox[{4.35571, -0.355515}, {4.3772, -0.334137}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.366455, -0.344826}]}}, {
+    RectangleBox[{4.3772, -0.334138}, {4.39917, -0.312259}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.388185, -0.3231985}]}}, {
+    RectangleBox[{4.39917, -0.312259}, {4.42163, -0.289881}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.4104, -0.30107}]}}, {
+    RectangleBox[{4.42163, -0.289881}, {4.44409, -0.26749}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.43286, -0.27868550000000003`}]}}, {
+    RectangleBox[{4.44409, -0.267491}, {4.46704, -0.244602}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.455565, -0.2560465}]}}, {
+    RectangleBox[{4.46704, -0.244603}, {4.49048, -0.221218}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.478759999999999, -0.2329105}]}}, {
+    RectangleBox[{4.49048, -0.221219}, {4.51392, -0.197826}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.5022, -0.2095225}]}}, {
+    RectangleBox[{4.51392, -0.197827}, {4.53784, -0.17394}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.52588, -0.1858835}]}}, {
+    RectangleBox[{4.53784, -0.173941}, {4.56226, -0.149561}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.550050000000001, -0.161751}]}}, {
+    RectangleBox[{4.56226, -0.149561}, {4.58667, -0.125177}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.574465, -0.13736900000000002`}]}}, {
+    RectangleBox[{4.58667, -0.125178}, {4.61108, -0.10079}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.598875, -0.112984}]}}, {
+    RectangleBox[{4.61108, -0.10079}, {4.63599, -0.0759121}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.623535, -0.08835105}]}}, {
+    RectangleBox[{4.63599, -0.0759122}, {4.66089, -0.0510321}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.64844, -0.06347215}]}}, {
+    RectangleBox[{4.66089, -0.0510322}, {4.68579, -0.0261508}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.67334, -0.0385915}]}}, {
+    RectangleBox[{4.68579, -0.0261509}, {4.71069, -0.00126881}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.69824, -0.013709855}]}}, {
+    RectangleBox[{4.71069, -0.00126891}, {4.7356, 0.0236132}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.723145, 0.011172145}]}}, {
+    RectangleBox[{4.7356, 0.0236131}, {4.76001, 0.0480071}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.747805, 0.0358101}]}}, {
+    RectangleBox[{4.76001, 0.0480067}, {4.78491, 0.0728876}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.772460000000001, 0.06044715}]}}, {
+    RectangleBox[{4.78491, 0.0728869}, {4.80981, 0.0977662}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.797359999999999, 0.08532655}]}}, {
+    RectangleBox[{4.80981, 0.0977651}, {4.83472, 0.122642}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.822265, 0.11020355}]}}, {
+    RectangleBox[{4.83472, 0.122641}, {4.85962, 0.147515}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.84717, 0.135078}]}}, {
+    RectangleBox[{4.85962, 0.147513}, {4.88403, 0.171895}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.871824999999999, 0.159704}]}}, {
+    RectangleBox[{4.88403, 0.171892}, {4.90845, 0.196269}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.896240000000001, 0.18408049999999998`}]}}, {
+    RectangleBox[{4.90845, 0.196266}, {4.93286, 0.220637}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.920655, 0.2084515}]}}, {
+    RectangleBox[{4.93286, 0.220633}, {4.95679, 0.244509}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.944825, 0.232571}]}}, {
+    RectangleBox[{4.95679, 0.244504}, {4.98071, 0.268371}], 
+    {RGBColor[1, 0, 0], PointSize[Large], PointBox[{4.96875, 0.2564375}]}}, {
+    RectangleBox[{4.98071, 0.268366}, {5, 0.287597}], 
+    {RGBColor[1, 0, 0], PointSize[Large], 
+     PointBox[{4.990355, 0.2779815}]}}}]], "Output",
+ CellChangeTimes->{{3.5650582907999763`*^9, 3.565058307605626*^9}}]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{"Graphics", "[", 
@@ -348,903 +1352,6 @@ Cell[BoxData[
     RowBox[{"Pped2g", "[", 
      RowBox[{"1", ",", "2", ",", "#"}], "]"}], "&"}], " ", "/@", " ", 
    "list"}], "]"}]], "Input"],
-
-Cell[BoxData[
- GraphicsBox[{{
-    GeometricTransformationBox[
-     RectangleBox[{0., 0.}, {0., 0.}], {{{0., 0.}, {1., 0.}}, {0.044921875, 
-      1.9981519253068394`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.044921875, 1.9981519253068394`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.4*^-16}, {0., 2.2*^-16}], {{{0., 0.}, {
-      0.9999964840172292, 0.00265178301891319}}, {0.099609375, 
-      1.991792694374829}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.099609375, 1.991792694374829}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., 0.}, {0., 0.}], {{{0., 0.}, {1., 0.}}, {0.158203125, 
-      1.9813138112114579`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.158203125, 1.9813138112114579`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.5*^-16}, {0., 2.2*^-16}], {{{0., 0.}, {
-      0.9991817936075079, -0.04044432374614679}}, {0.21875, 
-      1.9676372818592038`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.21875, 1.9676372818592038`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -9.1*^-16}, {0., 4.6*^-16}], {{{0., 0.}, {
-      0.9964304098535836, -0.08441823451730843}}, {0.283203125, 
-      1.9508077394119274`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.283203125, 1.9508077394119274`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., 0.}, {0., 0.}], {{{0., 0.}, {1., 0.}}, {0.3515625, 
-      1.931113654135272}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.3515625, 1.931113654135272}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.5*^-16}, {0., 2.3*^-16}], {{{0., 0.}, {
-      0.9964610969771275, -0.08405523309788117}}, {0.42578125, 
-      1.9081529085234687`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.42578125, 1.9081529085234687`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -9.3*^-16}, {0., 4.8*^-16}], {{{0., 0.}, {
-      0.9888710978617868, -0.1487748359556286}}, {0.50390625, 
-      1.882631239378197}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.50390625, 1.882631239378197}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.42*^-15}, {0., 7.5*^-16}], {{{0., 0.}, {
-      0.9801045614349048, -0.19848185976177415`}}, {0.5859375, 
-      1.854632534242375}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.5859375, 1.854632534242375}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.92*^-15}, {0., 1.02*^-15}], {{{0., 0.}, {
-      0.9715672928429886, -0.23676358562444985`}}, {0.669921875, 
-      1.8248693436891272`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.669921875, 1.8248693436891272`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.44*^-15}, {0., 1.3*^-15}], {{{0., 0.}, {
-      0.9633121147158853, -0.26838362401906873`}}, {0.7578125, 
-      1.7926261598054467`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.7578125, 1.7926261598054467`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., 0.}, {0., 0.}], {{{0., 0.}, {1., 0.}}, {0.84765625, 
-      1.7585364642531154`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.84765625, 1.7585364642531154`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.5*^-16}, {0., 2.3*^-16}], {{{0., 0.}, {
-      0.9913222559433503, -0.13145411698150258`}}, {0.939453125, 
-      1.7225028288866397`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{0.939453125, 1.7225028288866397`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -9.4*^-16}, {0., 4.9*^-16}], {{{0., 0.}, {
-      0.9745549143938859, -0.22414887648776086`}}, {1.033203125, 
-      1.6843821828302346`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{1.033203125, 1.6843821828302346`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.46*^-15}, {0., 7.7*^-16}], {{{0., 0.}, {
-      0.9568105794602383, -0.29071208270892857`}}, {1.126953125, 
-      1.644826487325318}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{1.126953125, 1.644826487325318}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.99*^-15}, {0., 1.07*^-15}], {{{0., 0.}, {
-      0.9393340894014987, -0.34300359836050903`}}, {1.22265625, 
-      1.6028287580497047`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{1.22265625, 1.6028287580497047`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.56*^-15}, {0., 1.38*^-15}], {{{0., 0.}, {
-      0.9222709826238237, -0.38654396206652436`}}, {1.318359375, 
-      1.5590224271425808`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{1.318359375, 1.5590224271425808`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.18*^-15}, {0., 1.72*^-15}], {{{0., 0.}, {
-      0.9045400310301147, -0.4263887102914888}}, {1.416015625, 
-      1.5122360891641862`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{1.416015625, 1.5122360891641862`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.92*^-15}, {0., 2.15*^-15}], {{{0., 0.}, {
-      0.8856766061968518, -0.4643026483185584}}, {1.513671875, 
-      1.4630686990577257`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{1.513671875, 1.4630686990577257`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.74*^-15}, {0., 2.64*^-15}], {{{0., 0.}, {
-      0.8649291495767689, -0.5018939790557438}}, {1.611328125, 
-      1.4111838465743427`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{1.611328125, 1.4111838465743427`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -5.69*^-15}, {0., 3.2*^-15}], {{{0., 0.}, {
-      0.8416290832294426, -0.5400560028944851}}, {1.708984375, 
-      1.356168074777736}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{1.708984375, 1.356168074777736}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., 0.}, {0., 0.}], {{{0., 0.}, {1., 0.}}, {1.806640625, 
-      1.2975085135502924`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{1.806640625, 1.2975085135502924`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.8*^-16}, {0., 2.6*^-16}], {{{0., 0.}, {
-      0.9790877526258966, -0.20343837557838207`}}, {1.904296875, 
-      1.2345619870885942`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{1.904296875, 1.2345619870885942`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.07*^-15}, {0., 6.*^-16}], {{{0., 0.}, {
-      0.9291812133186167, -0.36962450245586187`}}, {2., 
-      1.1679294032569014`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2., 1.1679294032569014`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.78*^-15}, {0., 1.*^-15}], {{{0., 0.}, {
-      0.8659945237862479, -0.500053481911915}}, {2.09375, 
-      1.0969576248422337`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.09375, 1.0969576248422337`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.61*^-15}, {0., 1.48*^-15}], {{{0., 0.}, {
-      0.7989913047933628, -0.6013425769597559}}, {2.185546875, 
-      1.020842697741915}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.185546875, 1.020842697741915}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.43*^-15}, {0., 1.95*^-15}], {{{0., 0.}, {
-      0.734519262296814, -0.6785878375825377}}, {2.2734375, 
-      0.9404726798652256}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.2734375, 0.9404726798652256}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.54*^-15}, {0., 2.72*^-15}], {{{0., 0.}, {
-      0.6776610397374919, -0.7353744047911251}}, {2.353515625, 
-      0.8594418985658308}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.353515625, 0.8594418985658308}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -5.86*^-15}, {0., 3.48*^-15}], {{{0., 0.}, {
-      0.6265383225121273, -0.7793906147906132}}, {2.4296875, 
-      0.7739304148721711}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.4296875, 0.7739304148721711}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.41*^-15}, {0., 4.42*^-15}], {{{0., 0.}, {
-      0.5828593071395266, -0.8125730909160305}}, {2.5, 
-      0.6861330518046543}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.5, 0.6861330518046543}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -9.29*^-15}, {0., 5.56*^-15}], {{{0., 0.}, {
-      0.5445244414911082, -0.8387449747204433}}, {2.568359375, 
-      0.5908978900858528}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.568359375, 0.5908978900858528}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.135*^-14}, {0., 6.76*^-15}], {{{0., 0.}, {
-      0.5139274081531394, -0.8578336780221427}}, {2.630859375, 
-      0.49359060138894334`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.630859375, 0.49359060138894334`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.366*^-14}, {0., 8.13*^-15}], {{{0., 0.}, {
-      0.48972111226511794`, -0.8718791385288537}}, {2.6904296875, 
-      0.3900082752267296}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.6904296875, 0.3900082752267296}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.655*^-14}, {0., 9.78*^-15}], {{{0., 0.}, {
-      0.4724147406127884, -0.8813763741170695}}, {2.7470703125, 
-      0.27999303076506693`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.7470703125, 0.27999303076506693`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., 0.}, {0., 0.}], {{{0., 0.}, {1., 0.}}, {2.8017578125, 
-      0.16141907152715076`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.8017578125, 0.16141907152715076`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.*^-17}, {0., 7.*^-17}], {{{0., 0.}, {
-      0.9988347529922866, 0.04826112529601177}}, {2.8525390625, 
-      0.03898262481834345}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.8525390625, 0.03898262481834345}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.1*^-16}, {0., 1.9*^-16}], {{{0., 0.}, {
-      0.9959125019022054, 0.09032324482041798}}, {
-      2.9013671875, -0.09112141448309137}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.9013671875, -0.09112141448309137}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.*^-16}, {0., 3.9*^-16}], {{{0., 0.}, {
-      0.9920505589335527, 0.12583993213453884`}}, {
-      2.9453125, -0.21927745359506587`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.9453125, -0.21927745359506587`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -5.9*^-16}, {0., 6.*^-16}], {{{0., 0.}, {
-      0.9868890809608738, 0.1613999438667839}}, {
-      2.9892578125, -0.35812955562072224`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{2.9892578125, -0.35812955562072224`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -8.2*^-16}, {0., 8.5*^-16}], {{{0., 0.}, {
-      0.9804324188096828, 0.19685596802483357`}}, {
-      3.029296875, -0.49361287254767006`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.029296875, -0.49361287254767006`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.3*^-15}, {0., 1.34*^-15}], {{{0., 0.}, {
-      0.9713995293265114, 0.23745095161786917`}}, {
-      3.0673828125, -0.6295561254415667}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.0673828125, -0.6295561254415667}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.78*^-15}, {0., 1.85*^-15}], {{{0., 0.}, {
-      0.9565826918439847, 0.2914610671505121}}, {
-      3.10546875, -0.7709158638257662}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.10546875, -0.7709158638257662}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.43*^-15}, {0., 2.56*^-15}], {{{0., 0.}, {
-      0.9305059202449059, 0.3662768521066816}}, {
-      3.1416015625, -0.9080779876287993}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.1416015625, -0.9080779876287993}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.8*^-15}, {0., 3.78*^-15}], {{{0., 0.}, {
-      0.8744246861009924, 0.4851612807481447}}, {
-      3.177734375, -1.0457653586445417`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.177734375, -1.0457653586445417`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -5.9*^-15}, {0., 5.7*^-15}], {{{0., 0.}, {
-      0.7348949407890198, 0.6781809684757475}}, {
-      3.212890625, -1.1775409679551596`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.212890625, -1.1775409679551596`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -9.76*^-15}, {0., 9.2*^-15}], {{{0., 0.}, {
-      0.5404684931379348, 0.8413642540096469}}, {
-      3.24609375, -1.2974751043758028`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.24609375, -1.2974751043758028`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.566*^-14}, {0., 1.445*^-14}], {{{0., 0.}, {
-      0.40823150832901445`, 0.9128784341890311}}, {
-      3.2802734375, -1.413903697054515}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.2802734375, -1.413903697054515}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.126*^-14}, {0., 1.973*^-14}], {{{0., 0.}, {
-      0.32761933015309325`, 0.9448098086440666}}, {
-      3.3125, -1.5152258432070607`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.3125, -1.5152258432070607`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.626*^-14}, {0., 2.438*^-14}], {{{0., 0.}, {
-      0.27310868880608585`, 0.9619831828564469}}, {
-      3.3447265625, -1.6069412854159748`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.3447265625, -1.6069412854159748`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.055*^-14}, {0., 2.79*^-14}], {{{0., 0.}, {
-      0.2348315161907257, 0.9720360893524296}}, {
-      3.376953125, -1.688203494524041}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.376953125, -1.688203494524041}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.342*^-14}, {0., 3.012*^-14}], {{{0., 0.}, {
-      0.2069486257854126, 0.9783518111014713}}, {
-      3.4091796875, -1.7587044590970207`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.4091796875, -1.7587044590970207`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.439*^-14}, {0., 3.06*^-14}], {{{0., 0.}, {
-      0.1853202246658402, 0.9826781845191244}}, {
-      3.4423828125, -1.8202790857479287`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.4423828125, -1.8202790857479287`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.397*^-14}, {0., 2.988*^-14}], {{{0., 0.}, {
-      0.16841323176388073`, 0.9857164822436747}}, {
-      3.4755859375, -1.8712475048311354`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.4755859375, -1.8712475048311354`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.242*^-14}, {0., 2.821*^-14}], {{{0., 0.}, {
-      0.1541451312616448, 0.9880482166920448}}, {
-      3.509765625, -1.9136107210116646`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.509765625, -1.9136107210116646`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.971*^-14}, {0., 2.556*^-14}], {{{0., 0.}, {
-      0.14105156835367014`, 0.990002250030256}}, {
-      3.5458984375, -1.9485504462543852`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.5458984375, -1.9485504462543852`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.649*^-14}, {0., 2.256*^-14}], {{{0., 0.}, {
-      0.12846370205033333`, 0.9917142114820795}}, {
-      3.5830078125, -1.975408069763809}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.5830078125, -1.975408069763809}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.285*^-14}, {0., 1.934*^-14}], {{{0., 0.}, {
-      0.1149192552812429, 0.9933748359836805}}, {
-      3.6220703125, -1.9954494440218133`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.6220703125, -1.9954494440218133`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.923*^-14}, {0., 1.611*^-14}], {{{0., 0.}, {
-      0.0990374273006508, 0.9950837090384245}}, {
-      3.6630859375, -2.0091199819678467`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.6630859375, -2.0091199819678467`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.566*^-14}, {0., 1.299*^-14}], {{{0., 0.}, {
-      0.0784744062822376, 0.9969161286480673}}, {
-      3.70703125, -2.017142820268527}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.70703125, -2.017142820268527}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.221*^-14}, {0., 1.004*^-14}], {{{0., 0.}, {
-      0.04958060334082199, 0.9987701255906485}}, {
-      3.7548828125, -2.0198859009040824`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.7548828125, -2.0198859009040824`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -9.05*^-15}, {0., 7.45*^-15}], {{{0., 0.}, {
-      0.0091476534975023, 0.9999581593424243}}, {
-      3.8046875, -2.017762314882332}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.8046875, -2.017762314882332}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -6.57*^-15}, {0., 5.45*^-15}], {{{0., 0.}, {
-      0.00589402733852097, 0.9999826300700091}}, {
-      3.8583984375, -2.011297261726484}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.8583984375, -2.011297261726484}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.71*^-15}, {0., 3.93*^-15}], {{{0., 0.}, {
-      0.02659935392578407, 0.9996461745891546}}, {
-      3.916015625, -2.0008887031324183`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.916015625, -2.0008887031324183`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.35*^-15}, {0., 2.83*^-15}], {{{0., 0.}, {
-      0.05970607968018419, 0.9982160006978565}}, {
-      3.9765625, -1.9871931028174186`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{3.9765625, -1.9871931028174186`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.44*^-15}, {0., 2.06*^-15}], {{{0., 0.}, {
-      0.0976472377897675, 0.99522108948315}}, {
-      4.041015625, -1.970411598954772}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.041015625, -1.970411598954772}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.8*^-15}, {0., 1.52*^-15}], {{{0., 0.}, {
-      0.1353224825673028, 0.9908016076449521}}, {
-      4.109375, -1.9508385043132401`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.109375, -1.9508385043132401`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.37*^-15}, {0., 1.15*^-15}], {{{0., 0.}, {
-      0.17000824195592867`, 0.9854426404753623}}, {
-      4.181640625, -1.9286956871940033`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.181640625, -1.9286956871940033`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.09*^-15}, {0., 9.*^-16}], {{{0., 0.}, {
-      0.2007675171426344, 0.9796389151418914}}, {
-      4.2578125, -1.9041288822985252`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.2578125, -1.9041288822985252`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -8.6*^-16}, {0., 7.4*^-16}], {{{0., 0.}, {
-      0.22779199252082005`, 0.973709817216297}}, {
-      4.337890625, -1.8772110591964306`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.337890625, -1.8772110591964306`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.7*^-16}, {0., 6.4*^-16}], {{{0., 0.}, {
-      0.25186043652048196`, 0.9677635664333061}}, {
-      4.421875, -1.8479486775038396`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.421875, -1.8479486775038396`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.2*^-16}, {0., 5.8*^-16}], {{{0., 0.}, {
-      0.2739761968689461, 0.9617364730263838}}, {
-      4.509765625, -1.8162878821381758`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.509765625, -1.8162878821381758`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.1*^-16}, {0., 5.5*^-16}], {{{0., 0.}, {
-      0.29472576593262045`, 0.9555818766047367}}, {
-      4.599609375, -1.7828575390139216`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.599609375, -1.7828575390139216`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.1*^-16}, {0., 5.8*^-16}], {{{0., 0.}, {
-      0.3150905898203891, 0.9490615997956292}}, {
-      4.69140625, -1.7475689728792378`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.69140625, -1.7475689728792378`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.3*^-16}, {0., 5.7*^-16}], {{{0., 0.}, {
-      0.3354289806646612, 0.9420654960936982}}, {
-      4.783203125, -1.7110808572021272`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.783203125, -1.7110808572021272`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.5*^-16}, {0., 6.2*^-16}], {{{0., 0.}, {
-      0.3567945102033164, 0.9341828929544661}}, {
-      4.876953125, -1.6724893840091135`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.876953125, -1.6724893840091135`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.9*^-16}, {0., 6.6*^-16}], {{{0., 0.}, {
-      0.37971037591803525`, 0.9251054158419915}}, {
-      4.97265625, -1.6315879972061624`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{4.97265625, -1.6315879972061624`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -8.3*^-16}, {0., 7.1*^-16}], {{{0., 0.}, {
-      0.40411911455991795`, 0.9147063688677955}}, {
-      5.068359375, -1.5890096626926846`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{5.068359375, -1.5890096626926846`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -8.9*^-16}, {0., 7.*^-16}], {{{0., 0.}, {
-      0.43030971415796354`, 0.9026813113725637}}, {
-      5.1640625, -1.544564530299402}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{5.1640625, -1.544564530299402}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -9.4*^-16}, {0., 7.1*^-16}], {{{0., 0.}, {
-      0.45909248858801294`, 0.888388477481594}}, {
-      5.26171875, -1.4970500989581748`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{5.26171875, -1.4970500989581748`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.11*^-15}, {0., 8.3*^-16}], {{{0., 0.}, {
-      0.4900963039686173, 0.8716682928937477}}, {
-      5.359375, -1.447058628684858}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{5.359375, -1.447058628684858}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.26*^-15}, {0., 9.3*^-16}], {{{0., 0.}, {
-      0.5233661277177605, 0.8521079135636027}}, {
-      5.45703125, -1.3942305596623075`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{5.45703125, -1.3942305596623075`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.41*^-15}, {0., 1.03*^-15}], {{{0., 0.}, {
-      0.5588205419957772, 0.8292886119099583}}, {
-      5.5546875, -1.338123291599923}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{5.5546875, -1.338123291599923}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.55*^-15}, {0., 1.12*^-15}], {{{0., 0.}, {
-      0.596216700088351, 0.8028235463261881}}, {
-      5.65234375, -1.2781863256391235`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{5.65234375, -1.2781863256391235`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.69*^-15}, {0., 1.21*^-15}], {{{0., 0.}, {
-      0.6351146496800366, 0.7724178802706498}}, {
-      5.75, -1.2137269538612414`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{5.75, -1.2137269538612414`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.76*^-15}, {0., 1.3*^-15}], {{{0., 0.}, {
-      0.6740544688299945, 0.7386816452642595}}, {
-      5.845703125, -1.1453196018172216`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{5.845703125, -1.1453196018172216`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.94*^-15}, {0., 1.39*^-15}], {{{0., 0.}, {
-      0.712182306555502, 0.7019945599712897}}, {
-      5.939453125, -1.0722473389157408`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{5.939453125, -1.0722473389157408`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.88*^-15}, {0., 1.41*^-15}], {{{0., 0.}, {
-      0.7478290452964376, 0.6638913457871087}}, {
-      6.029296875, -0.9953805153039962}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.029296875, -0.9953805153039962}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.94*^-15}, {0., 1.54*^-15}], {{{0., 0.}, {
-      0.7795427516525056, 0.6263490227868478}}, {
-      6.11328125, -0.9161413723529598}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.11328125, -0.9161413723529598}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.03*^-15}, {0., 1.71*^-15}], {{{0., 0.}, {
-      0.8069700387603347, 0.5905923776541172}}, {
-      6.19140625, -0.8346154082239464}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.19140625, -0.8346154082239464}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.12*^-15}, {0., 1.87*^-15}], {{{0., 0.}, {
-      0.8306341022932263, 0.5568186312503609}}, {
-      6.265625, -0.7486741838258556}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.265625, -0.7486741838258556}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., 0.}, {0., 0.}], {{{0., 0.}, {1., 0.}}, {
-      6.333984375, -0.6606525337613889}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.333984375, -0.6606525337613889}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.5*^-16}, {0., 1.4*^-16}], {{{0., 0.}, {
-      0.9979942653156572, 0.06330439476893815}}, {
-      6.400390625, -0.565327157258262}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.400390625, -0.565327157258262}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.8*^-16}, {0., 2.4*^-16}], {{{0., 0.}, {
-      0.9932955884342455, 0.11560222314932245`}}, {
-      6.462890625, -0.4650217530729915}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.462890625, -0.4650217530729915}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -5.5*^-16}, {0., 3.6*^-16}], {{{0., 0.}, {
-      0.9874437476295407, 0.15797102667048657`}}, {
-      6.5224609375, -0.35806215901501404`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.5224609375, -0.35806215901501404`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -6.8*^-16}, {0., 5.8*^-16}], {{{0., 0.}, {
-      0.9814824159446509, 0.19155225707741155`}}, {
-      6.578125, -0.2463736722275567}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.578125, -0.2463736722275567}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -8.2*^-16}, {0., 8.2*^-16}], {{{0., 0.}, {
-      0.975499298977379, 0.22000254020043028`}}, {
-      6.6318359375, -0.1262055620454298}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.6318359375, -0.1262055620454298}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.07*^-15}, {0., 1.07*^-15}], {{{0., 0.}, {
-      0.9693896389530411, 0.2455274483443599}}, {6.6826171875, 
-      0.00003128781184938}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.6826171875, 0.00003128781184938}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.38*^-15}, {0., 1.35*^-15}], {{{0., 0.}, {
-      0.9625417862194322, 0.2711333800576834}}, {6.73046875, 
-      0.1312803025392025}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.73046875, 0.1312803025392025}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.67*^-15}, {0., 1.77*^-15}], {{{0., 0.}, {
-      0.9541410883329362, 0.29935728411855833`}}, {6.7744140625, 
-      0.2628890527496809}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.7744140625, 0.2628890527496809}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.03*^-15}, {0., 2.23*^-15}], {{{0., 0.}, {
-      0.9421667534891722, 0.3351444593301109}}, {6.81640625, 
-      0.39859678711307855`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.81640625, 0.39859678711307855`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.6*^-15}, {0., 2.89*^-15}], {{{0., 0.}, {
-      0.923853762081496, 0.3827456417620788}}, {6.85546875, 
-      0.5330753476348155}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.85546875, 0.5330753476348155}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.38*^-15}, {0., 3.82*^-15}], {{{0., 0.}, {
-      0.8902383929377695, 0.45549489979535057`}}, {6.89453125, 
-      0.6744044251718208}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.89453125, 0.6744044251718208}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.49*^-15}, {0., 5.18*^-15}], {{{0., 0.}, {
-      0.8260902046016648, 0.5635379080959672}}, {6.9306640625, 
-      0.8096801165297136}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.9306640625, 0.8096801165297136}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -6.21*^-15}, {0., 7.41*^-15}], {{{0., 0.}, {
-      0.6747340457980918, 0.738060951033814}}, {6.966796875, 
-      0.9472589145468381}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{6.966796875, 0.9472589145468381}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.019*^-14}, {0., 1.152*^-14}], {{{0., 0.}, {
-      0.5028931043237174, 0.864348613479338}}, {7.0009765625, 
-      1.0772227870841395`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.0009765625, 1.0772227870841395`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.7*^-14}, {0., 1.752*^-14}], {{{0., 0.}, {
-      0.37664642798515646`, 0.9263570954475502}}, {7.0361328125, 
-      1.2080756647972994`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.0361328125, 1.2080756647972994`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.469*^-14}, {0., 2.411*^-14}], {{{0., 0.}, {
-      0.29227302376301273`, 0.9563349201929336}}, {7.0703125, 
-      1.329919971794361}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.0703125, 1.329919971794361}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.161*^-14}, {0., 3.027*^-14}], {{{0., 0.}, {
-      0.23429050329244547`, 0.9721666318419759}}, {7.103515625, 
-      1.4408919669960927`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.103515625, 1.4408919669960927`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.772*^-14}, {0., 3.519*^-14}], {{{0., 0.}, {
-      0.19262261321079463`, 0.981272912537508}}, {7.1357421875, 
-      1.5398475862257264`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.1357421875, 1.5398475862257264`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.226*^-14}, {0., 3.862*^-14}], {{{0., 0.}, {
-      0.16021917181283118`, 0.9870814642083043}}, {7.16796875, 
-      1.628926191129164}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.16796875, 1.628926191129164}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.492*^-14}, {0., 4.037*^-14}], {{{0., 0.}, {
-      0.13362755855076006`, 0.991031621894964}}, {7.2001953125, 
-      1.7074214831928491`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.2001953125, 1.7074214831928491`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.526*^-14}, {0., 4.006*^-14}], {{{0., 0.}, {
-      0.11036096076358388`, 0.9938915727277994}}, {7.232421875, 
-      1.775158405128721}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.232421875, 1.775158405128721}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.368*^-14}, {0., 3.83*^-14}], {{{0., 0.}, {
-      0.08782598356321204, 0.9961358324099951}}, {7.265625, 
-      1.8340051660165682`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.265625, 1.8340051660165682`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.093*^-14}, {0., 3.54*^-14}], {{{0., 0.}, {
-      0.0642714251944322, 0.9979324545797056}}, {7.2998046875, 
-      1.8837313287236592`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.2998046875, 1.8837313287236592`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.716*^-14}, {0., 3.175*^-14}], {{{0., 0.}, {
-      0.03774239223545216, 0.9992875020875348}}, {7.3349609375, 
-      1.9245083481028302`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.3349609375, 1.9245083481028302`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.257*^-14}, {0., 2.748*^-14}], {{{0., 0.}, {
-      0.00590265018463965, 0.9999825792086567}}, {7.37109375, 
-      1.9568329387277101`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.37109375, 1.9568329387277101`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.766*^-14}, {0., 2.31*^-14}], {{{0., 
-      0.}, {-0.03531880949822662, 0.9993760962198504}}, {7.4091796875, 
-      1.9819727756683267`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.4091796875, 1.9819727756683267`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.264*^-14}, {0., 1.887*^-14}], {{{0., 
-      0.}, {-0.09045929721201804, 0.9959001534028935}}, {7.44921875, 
-      2.0002406991901642`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.44921875, 2.0002406991901642`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.783*^-14}, {0., 1.492*^-14}], {{{0., 
-      0.}, {-0.16513456752249234`, 0.9862710452046937}}, {7.4912109375, 
-      2.0121768410206546`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.4912109375, 2.0121768410206546`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.416*^-14}, {0., 1.23*^-14}], {{{0., 
-      0.}, {-0.2672918668934635, 0.9636156172938496}}, {7.5361328125, 
-      2.018534374600575}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.5361328125, 2.018534374600575}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.082*^-14}, {0., 9.53*^-15}], {{{0., 
-      0.}, {-0.24975247431184314`, 0.9683097136635117}}, {7.5849609375, 
-      2.0197123489426563`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.5849609375, 2.0197123489426563`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -8.23*^-15}, {0., 7.37*^-15}], {{{0., 
-      0.}, {-0.20536058335264581`, 0.9786863802082162}}, {7.6357421875, 
-      2.0162192027409187`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.6357421875, 2.0162192027409187`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -6.14*^-15}, {0., 5.6*^-15}], {{{0., 
-      0.}, {-0.14350473953521142`, 0.9896496297836579}}, {7.6904296875, 
-      2.0085336242492255`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.6904296875, 2.0085336242492255`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -4.45*^-15}, {0., 4.11*^-15}], {{{0., 
-      0.}, {-0.07360339168239058, 0.9972875917872681}}, {7.7490234375, 
-      1.9970558532186717`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.7490234375, 1.9970558532186717`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -3.22*^-15}, {0., 2.98*^-15}], {{{0., 
-      0.}, {-0.00496637113299054, 0.9999876675028394}}, {7.810546875, 
-      1.9824377698682976`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.810546875, 1.9824377698682976`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.29*^-15}, {0., 2.17*^-15}], {{{0., 0.}, {
-      0.0571221133502296, 0.998367199063753}}, {7.875, 1.9651175502947607`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.875, 1.9651175502947607`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.68*^-15}, {0., 1.63*^-15}], {{{0., 0.}, {
-      0.1124148198373136, 0.9936613649935997}}, {7.9453125, 
-      1.944539247641075}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{7.9453125, 1.944539247641075}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.28*^-15}, {0., 1.21*^-15}], {{{0., 0.}, {
-      0.15840370031228873`, 0.9873744313720982}}, {8.01953125, 
-      1.921412056520125}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.01953125, 1.921412056520125}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.03*^-15}, {0., 9.4*^-16}], {{{0., 0.}, {
-      0.19616892597745644`, 0.9805701160451764}}, {8.09765625, 
-      1.8958674990909246`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.09765625, 1.8958674990909246`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -8.7*^-16}, {0., 7.6*^-16}], {{{0., 0.}, {
-      0.22746752293696354`, 0.973785667387296}}, {8.1796875, 
-      1.8679618495384542`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.1796875, 1.8679618495384542`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.8*^-16}, {0., 6.5*^-16}], {{{0., 0.}, {
-      0.25417956207564174`, 0.9671570452739485}}, {8.265625, 
-      1.8376838770550632`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.265625, 1.8376838770550632`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.3*^-16}, {0., 6.4*^-16}], {{{0., 0.}, {
-      0.27754368811168895`, 0.9607130170812516}}, {8.353515625, 
-      1.805684263087438}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.353515625, 1.805684263087438}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.1*^-16}, {0., 5.9*^-16}], {{{0., 0.}, {
-      0.29914324743746346`, 0.9542082149680793}}, {8.443359375, 
-      1.7719064856525168`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.443359375, 1.7719064856525168`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.2*^-16}, {0., 5.6*^-16}], {{{0., 0.}, {
-      0.3201721767032385, 0.9473593707063387}}, {8.53515625, 
-      1.736248940870906}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.53515625, 1.736248940870906}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.3*^-16}, {0., 5.6*^-16}], {{{0., 0.}, {
-      0.34154130883085476`, 0.9398667641544234}}, {8.62890625, 
-      1.6985693160660178`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.62890625, 1.6985693160660178`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -7.6*^-16}, {0., 5.6*^-16}], {{{0., 0.}, {
-      0.3634985792512576, 0.9315947524982721}}, {8.72265625, 
-      1.6595134600285768`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.72265625, 1.6595134600285768`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -8.*^-16}, {0., 6.3*^-16}], {{{0., 0.}, {
-      0.3870402548812899, 0.9220628184139223}}, {8.818359375, 
-      1.6180915566395748`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.818359375, 1.6180915566395748`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -8.5*^-16}, {0., 6.3*^-16}], {{{0., 0.}, {
-      0.41210922548012724`, 0.9111344501631847}}, {8.9140625, 
-      1.5749355437735613`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{8.9140625, 1.5749355437735613`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -9.*^-16}, {0., 6.5*^-16}], {{{0., 0.}, {
-      0.4395645999078059, 0.8982109788395432}}, {9.01171875, 
-      1.5289017098154536`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.01171875, 1.5289017098154536`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.06*^-15}, {0., 8.8*^-16}], {{{0., 0.}, {
-      0.46912856293218985`, 0.8831298836757693}}, {9.109375, 
-      1.480593089600653}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.109375, 1.480593089600653}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.21*^-15}, {0., 9.6*^-16}], {{{0., 0.}, {
-      0.5009241709476746, 0.8654911755531562}}, {9.20703125, 
-      1.4296949769272083`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.20703125, 1.4296949769272083`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.35*^-15}, {0., 1.04*^-15}], {{{0., 0.}, {
-      0.534963602940992, 0.8448751052838476}}, {9.3046875, 
-      1.3758222975882204`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.3046875, 1.3758222975882204`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.39*^-15}, {0., 1.11*^-15}], {{{0., 0.}, {
-      0.5711191983400936, 0.8208671398511262}}, {9.40234375, 
-      1.318499471703968}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.40234375, 1.318499471703968}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.55*^-15}, {0., 1.19*^-15}], {{{0., 0.}, {
-      0.6090881393871815, 0.7931025396869315}}, {9.5, 1.257132745893237}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.5, 1.257132745893237}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.71*^-15}, {0., 1.28*^-15}], {{{0., 0.}, {
-      0.6475655721573259, 0.7620097307492567}}, {9.595703125, 
-      1.1923478946991355`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.595703125, 1.1923478946991355`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.87*^-15}, {0., 1.36*^-15}], {{{0., 0.}, {
-      0.6866022705248288, 0.727033233153856}}, {9.69140625, 
-      1.1220583266898114`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.69140625, 1.1220583266898114`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.03*^-15}, {0., 1.45*^-15}], {{{0., 0.}, {
-      0.7245267212697724, 0.689246712118435}}, {9.78515625, 
-      1.0467480266398463`}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.78515625, 1.0467480266398463`}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -1.98*^-15}, {0., 1.47*^-15}], {{{0., 0.}, {
-      0.7589198407581096, 0.6511840563954904}}, {9.873046875, 
-      0.9690747775327572}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.873046875, 0.9690747775327572}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.04*^-15}, {0., 1.64*^-15}], {{{0., 0.}, {
-      0.7892261877716761, 0.6141026172679824}}, {9.955078125, 
-      0.889040298478125}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{9.955078125, 0.889040298478125}]}}, {
-    GeometricTransformationBox[
-     RectangleBox[{0., -2.21*^-15}, {0., 1.88*^-15}], {{{0., 0.}, {
-      0.8048294195984012, 0.5935061965547622}}, {10., 0.8415536521973377}}], 
-    {RGBColor[1, 0, 0], PointSize[Large], 
-     PointBox[{10., 0.8415536521973377}]}}},
-  ImageSize->{519., Automatic}]], "Output",
- CellChangeTimes->{3.5635071101966677`*^9, 3.563507142665763*^9, 
-  3.563507268720446*^9}]
-}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -3510,54 +3617,61 @@ CellTagsIndex->{}
 Notebook[{
 Cell[545, 20, 12061, 306, 404, "Input",
  InitializationCell->True],
-Cell[12609, 328, 498, 11, 43, "Input"],
+Cell[12609, 328, 598, 12, 43, "Input"],
 Cell[CellGroupData[{
-Cell[13132, 343, 192, 6, 27, "Input"],
-Cell[13327, 351, 43402, 894, 238, "Output"]
+Cell[13232, 344, 1491, 39, 43, "Input"],
+Cell[14726, 385, 674, 17, 27, "Output"],
+Cell[15403, 404, 16074, 271, 243, 8492, 145, "CachedBoxData", "BoxData", \
+"Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[56766, 1250, 261, 7, 27, "Input"],
-Cell[57030, 1259, 28638, 603, 390, "Output"]
+Cell[31514, 680, 259, 7, 27, "Input"],
+Cell[31776, 689, 38091, 655, 194, "Output"]
+}, Open  ]],
+Cell[69882, 1347, 192, 6, 27, "Input"],
+Cell[CellGroupData[{
+Cell[70099, 1357, 261, 7, 27, "Input"],
+Cell[70363, 1366, 28638, 603, 390, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[85705, 1867, 502, 10, 27, "Input"],
-Cell[86210, 1879, 571, 11, 59, "Output"]
+Cell[99038, 1974, 502, 10, 27, "Input"],
+Cell[99543, 1986, 571, 11, 59, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[86818, 1895, 1165, 29, 27, "Input"],
-Cell[87986, 1926, 11486, 165, 504, "Output"]
+Cell[100151, 2002, 1165, 29, 27, "Input"],
+Cell[101319, 2033, 11486, 165, 504, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[99509, 2096, 1221, 32, 73, "Input"],
-Cell[100733, 2130, 961, 16, 447, "Output"]
+Cell[112842, 2203, 1221, 32, 73, "Input"],
+Cell[114066, 2237, 961, 16, 447, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[101731, 2151, 1831, 52, 73, "Input"],
-Cell[103565, 2205, 1038, 18, 336, "Output"]
+Cell[115064, 2258, 1831, 52, 73, "Input"],
+Cell[116898, 2312, 1038, 18, 336, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[104640, 2228, 3928, 99, 208, "Input"],
-Cell[108571, 2329, 725, 14, 209, "Output"]
+Cell[117973, 2335, 3928, 99, 208, "Input"],
+Cell[121904, 2436, 725, 14, 209, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[109333, 2348, 919, 22, 27, "Input"],
-Cell[110255, 2372, 9064, 161, 375, "Output"]
+Cell[122666, 2455, 919, 22, 27, "Input"],
+Cell[123588, 2479, 9064, 161, 375, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[119356, 2538, 2410, 60, 163, "Input"],
-Cell[121769, 2600, 548, 11, 375, "Output"]
+Cell[132689, 2645, 2410, 60, 163, "Input"],
+Cell[135102, 2707, 548, 11, 375, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[122354, 2616, 560, 16, 27, "Input"],
-Cell[122917, 2634, 12452, 200, 375, "Output"]
+Cell[135687, 2723, 560, 16, 27, "Input"],
+Cell[136250, 2741, 12452, 200, 375, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[135406, 2839, 753, 19, 27, "Input"],
-Cell[136162, 2860, 26344, 504, 375, "Output"]
+Cell[148739, 2946, 753, 19, 27, "Input"],
+Cell[149495, 2967, 26344, 504, 375, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[162543, 3369, 4300, 100, 313, "Input"],
-Cell[166846, 3471, 978, 18, 563, "Output"]
+Cell[175876, 3476, 4300, 100, 313, "Input"],
+Cell[180179, 3578, 978, 18, 563, "Output"]
 }, Open  ]]
 }
 ]

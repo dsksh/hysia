@@ -51,27 +51,26 @@ int main()
 
 	try{
 
-	//IMap vectorField("var:t,x,v; fun:1,v,-sin(x);");
+	IMap vectorField("var:t,x,v; fun:1,v,-sin(x);");
 	//IMap vectorField("var:t,x,v; fun:1,v,-10.0;");
 	//MyIMap vectorField;
 	//vectorField.setup();
 
-	init(3);
-	putVariable("t");
-	putVariable("x");
-	putVariable("v");
-	putScalarNode(1.0);
-	putTree();
-	putVarNode(2);
-	putTree();
-	putScalarNode(0.);
-	putVarNode(1);
-	putSinNode();
-	putDifNode();
-	putTree();
-	// compute deriv
-	//getIMap()->setup1();
-	getIMap()->compDiff();
+	//init(3);
+	//putVariable("t");
+	//putVariable("x");
+	//putVariable("v");
+	//putScalarNode(1.0);
+	//putTree();
+	//putVarNode(2);
+	//putTree();
+	//putScalarNode(0.);
+	//putVarNode(1);
+	//putSinNode();
+	//putDifNode();
+	//putTree();
+	//// compute deriv
+	//getIMap()->compDiff();
 
 	IVector x(3);
 	x[0]=0.0;
@@ -102,8 +101,8 @@ int main()
 	// The time step (when step control is turned off) will be 0.1.
 	// The time step control is turned on by default but the solver must know if we want to 
 	// integrate forwards or backwards (then put negative number).
-	//ITaylor solver(vectorField, 20, 0.1);
-	ITaylor solver(*getIMap(), 20, 0.1);
+	ITaylor solver(vectorField, 20, 0.1);
+	//ITaylor solver(*getIMap(), 20, 0.1);
 	ITimeMap timeMap(solver);
 
 	// define a doubleton representation of the interval vector x
@@ -114,7 +113,7 @@ int main()
 	//Pped s(x, r);
 
 	// Here we start to integrate. The time of integration is set to T=10. 
-	double T=1;
+	double T=5;
 	//double T=0.1;
 	timeMap.stopAfterStep(true);
 	interval prevTime(0.);
@@ -135,14 +134,14 @@ int main()
 			//cout << endl << "step made: " << stepMade << endl;
 			const ITaylor::CurveType& curve = solver.getCurve();
 
-			//int grid=5;
-			int grid=1;
+			int grid=5;
+			//int grid=1;
 			for(int i=0;i<grid;++i)
 			{
-				//interval subsetOfDomain = interval(i,i+1)*stepMade/grid;
+				interval subsetOfDomain = interval(i,i+1)*stepMade/grid;
 				//intersection(domain,subsetOfDomain,subsetOfDomain);
 				//interval subsetOfDomain = stepMade;
-				interval subsetOfDomain = interval(0,1)*stepMade;
+				//interval subsetOfDomain = interval(0,1)*stepMade;
 
 				IVector v = curve(subsetOfDomain);
 				//std::cout << "\nenclosure for t=" << prevTime + subsetOfDomain << ":  " << v;
