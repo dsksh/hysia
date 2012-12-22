@@ -16,9 +16,16 @@
 	  "asin", ASIN;
 	  "acos", ACOS;
 
+	  "var", VAR;
+	  "der", DER;
+	  "init", INIT;
+	  "grd_h", GRD_H;
+	  "grd_g", GRD_G;
+	  "jump", JUMP;
+	  "param", PARAM;
+
 	  "fun", FUN;
 	  "val", VAL;
-	  "param", PARAM;
 	];
       fun s -> 
 	try Hashtbl.find h s with Not_found -> ID s
@@ -68,6 +75,8 @@ rule token = parse
   | "="  { EQ }
   | "("  { LP }
   | ")"  { RP }
+  | "["  { LB }
+  | "]"  { RB }
   | ","  { COM }
   | ";"  { SCOL }
 

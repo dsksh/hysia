@@ -41,9 +41,9 @@ int putVariable(const char *name)
 	return g_map->putVariable(name);
 }
 
-void putValue(const double val)
+void putValue(const double l, const double u)
 {
-	(*g_ivec)[g_ivec_pos] = val;
+	(*g_ivec)[g_ivec_pos] = (l==u) ? l : interval(l, u);
 	++g_ivec_pos;
 }
 
@@ -190,7 +190,7 @@ void integrate(const float t_end, const float order, const float h_min, const fl
 		interval stepMade(solver.getStep());
 		const ITaylor::CurveType& curve = solver.getCurve();
 
-		int grid(stepMade.rightBound()/h_max + 0.99999999999);
+		int grid(stepMade.rightBound()/h_max + 0.9999999999);
 		if (grid==0) grid = 1;
 //cout << stepMade.rightBound()/h_max << endl;
 		for(int i=0;i<grid;++i)

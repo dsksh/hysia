@@ -1,9 +1,8 @@
-
 type loc = Lexing.position * Lexing.position
-let dummy_loc = Lexing.dummy_pos, Lexing.dummy_pos
 
-let dummy_vf = dummy_loc, ([],[])
-let dummy_iv = dummy_loc, (0,[])
+type interval = 
+  | Interval of float * float 
+  | Point of float
 
 type un_ops =
   | Osqr | Osqrt | Oexp | Olog | Osin | Ocos | Oatan | Oasin | Oacos
@@ -23,11 +22,22 @@ and  expr_node =
   | Papp of un_ops * expr
   | Papp2 of bin_ops * expr * expr
 
-type vf = loc * (var list * expr list)
+type vars = loc * (var list)
 
-type iv = loc * (int * float list)
+type def = expr
 
-type param = loc * (string * float)
+type def_vec = loc * (def list)
+
+type init = loc * (int * interval list)
+
+type param = loc * (string * interval)
 
 module SM = Map.Make(String)
-type model = (loc * (vf * iv * param list)) * float SM.t
+type model = (loc * (vars * def_vec * init * def * def * def_vec * param list)) * float SM.t
+
+
+let dummy_loc = Lexing.dummy_pos, Lexing.dummy_pos
+
+let dummy_vec = dummy_loc, []
+let dummy_grd  = dummy_loc, Pval (-1.)
+let dummy_init = dummy_loc, (0,[])

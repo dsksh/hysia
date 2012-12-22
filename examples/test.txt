@@ -1,5 +1,6 @@
-fun t x v = (1, v, -sin(x));
-val 0 = (0, 1, 1);
+var t, x, v;
+der 1, v, -sin(x);
+init 0, 1, 1;
 
 order = 10;
 t_end = 5;

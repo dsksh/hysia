@@ -46,20 +46,24 @@ let send_tree env (_,expr) =
   send_expr env expr;
   put_tree ()
 
-let send_vf env (loc,(var,def)) =
-  let nv,nd = List.length var, List.length def in
+let send_vf env (loc,var) (loc,der) =
+  let nv,nd = List.length var, List.length der in
   if nv <> nd then error (DimMismatch (nv,nd)) loc
   else
   init nv;
   let env = List.fold_left send_var env var in
-  List.map (send_tree env) def
+  List.map (send_tree env) der
 
 
 let send_iv (_,(_t,v)) =
-  List.map put_value v
+  let send = function
+  | Point v -> put_value v v
+  | Interval (l,u) -> put_value l u
+  in
+  List.map send v
 
 
-let send_ptree (_,(vf,iv,ps)) =
-  send_vf SM.empty vf;
+let send_ptree (_,(v,d,iv,gh,gg,jmp,ps)) =
+  send_vf SM.empty v d;
   send_iv iv;
   ()

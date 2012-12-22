@@ -8,10 +8,11 @@
   let mk_expr nd = loc (), nd
   let mk_ratio n d = loc (), (n,d)
 
-  let mk_vf args es = loc (), (args,es)
-  let mk_iv time vs = loc (), (time,vs)
-  let mk_param id v = loc (), (id, v)
   let mk_var id = loc (), id
+  let mk_var_v vs = loc (), vs
+  let mk_param id v = loc (), (id, v)
+  let mk_def_vec es = loc (), es
+  let mk_init time vs = loc (), (time,vs)
 
   let mk_model nd = (loc (), nd), !env
 %}
@@ -23,6 +24,8 @@
 %token EQ
 %token LP
 %token RP
+%token LB
+%token RB
 %token COM
 %token SCOL
 
@@ -41,9 +44,16 @@
 %token ASIN
 %token ACOS
 
+%token VAR
+%token DER
+%token INIT
+%token GRD_H
+%token GRD_G
+%token JUMP
+%token PARAM
+
 %token FUN
 %token VAL
-%token PARAM
 
 %token EOF
 
@@ -59,13 +69,39 @@ main :
 /**/
 
 statements :
-  | FUN var_vec EQ expr_vec SCOL statements
-    { let _,vs,ps = $6 in (mk_vf $2 $4),vs,ps }
-  | VAL integer EQ ratio_vec SCOL statements
-    { let fs,_,ps = $6 in fs,(mk_iv $2 $4),ps }
-  | PARAM ID EQ float SCOL statements
-    { let fs,vs,ps = $6 in (fs,vs,(mk_param $2 $4)::ps) }
-  | { (dummy_vf,dummy_iv,[]) }
+  | VAR var_vec SCOL statements
+    { let _,der,init,gh,gg,jmp,param = $4 in 
+	(mk_var_v $2),der,init,gh,gg,jmp,param }
+  | DER expr_vec SCOL statements
+    { let var,_,init,gh,gg,jmp,param = $4 in 
+	var,(mk_def_vec $2),init,gh,gg,jmp,param }
+  | INIT interval_vec SCOL statements
+    { let var,der,_,gh,gg,jmp,param = $4 in 
+	var,der,(mk_init 0 $2),gh,gg,jmp,param }
+  | GRD_H expr SCOL statements
+    { let var,der,init,_,gg,jmp,param = $4 in 
+	var,der,init,$2,gg,jmp,param }
+  | GRD_G expr SCOL statements
+    { let var,der,init,gh,_,jmp,param = $4 in 
+	var,der,init,gh,$2,jmp,param }
+  | JUMP expr_vec SCOL statements
+    { let var,der,init,gh,gg,_,param = $4 in 
+	var,der,init,gh,gg,(mk_def_vec $2),param }
+  | PARAM ID EQ interval SCOL statements
+    { let var,der,init,gh,gg,jmp,param   = $6 in 
+	var,der,init,gh,gg,jmp,((mk_param $2 $4)::param) }
+  | { (dummy_vec,dummy_vec,dummy_init,dummy_grd,dummy_grd,dummy_vec,[]) }
+
+  | FUN var_vec_old EQ expr_vec SCOL statements
+    { let var,_,init,gh,gg,jmp,param = $6 in 
+	(mk_var_v $2),(mk_def_vec $4),init,gh,gg,jmp,param }
+  | VAL integer EQ interval_vec SCOL statements
+    { let var,der,_,gh,gg,jmp,param  = $6 in 
+	var,der,(mk_init $2 $4),gh,gg,jmp,param }
+  | PARAM ID EQ interval SCOL statements
+    { let var,der,init,gh,gg,jmp,param   = $6 in 
+	var,der,init,gh,gg,jmp,((mk_param $2 $4)::param) }
+  | { dummy_vec,dummy_vec,dummy_init,dummy_grd,dummy_grd,dummy_vec,[] }
 ;
 
 solver_params :
@@ -77,6 +113,7 @@ solver_params :
 
 expr_vec :
   | expr { [$1] }
+  | expr expr_vec_rest { $1::$2 }
   | LP expr expr_vec_rest RP { $2::$3 }
 ;
 expr_vec_rest :
@@ -86,16 +123,24 @@ expr_vec_rest :
 ;
 
 var_vec :
+  | ID var_vec_rest { (mk_var $1)::$2 }
+  | { [] }
+;
+var_vec_rest :
+  | COM ID var_vec_rest { (mk_var $2)::$3 }
+  | { [] }
+;
+var_vec_old :
   | ID var_vec { (mk_var $1)::$2 }
   | { [] }
 ;
 
-ratio_vec :
-  | LP float ratio_vec_rest RP
-    { $2::$3 }
+interval_vec :
+  | interval interval_vec_rest { $1::$2 }
+  | LP interval interval_vec_rest RP { $2::$3 }
 ;
-ratio_vec_rest :
-  | COM float ratio_vec_rest
+interval_vec_rest :
+  | COM interval interval_vec_rest
     { $2::$3 }
   | { [] }
 ;
@@ -143,4 +188,8 @@ float :
   | FLOAT { $1 }
   | MIN FLOAT { -.$2 }
   | integer { float_of_int $1 }
+;
+interval :
+  | LB float COM float RB { Interval ($2,$4) }
+  | float { Point $1 }
 ;

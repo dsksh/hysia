@@ -54,10 +54,10 @@ value caml_put_variable(value name)
 	CAMLreturn(Val_int(index));
 }
 
-value caml_put_value(value val)
+value caml_put_value(value l, value u)
 {
-	CAMLparam1(val);
-	putValue(Double_val(val));
+	CAMLparam2(l, u);
+	putValue(Double_val(l), Double_val(u));
 	CAMLreturn(Val_unit);
 }
 
