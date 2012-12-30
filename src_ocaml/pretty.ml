@@ -1,5 +1,5 @@
 open Format
-open Ptree
+open Model_common
 
 let rec print_list sp fmtr fmt list =
   fprintf fmt "%a" (print_list_ sp "" fmtr) list
@@ -12,7 +12,21 @@ and print_list_ sp sp_ fmtr fmt = function
   | [] -> ()
 
 
-let sprint_bin_op = function
+let print_float fmt v =
+  fprintf fmt "%f" v
+
+let print_interval fmt = function
+  | Point v -> fprintf fmt "[%f]" v
+  | Interval (l,u) -> fprintf fmt "[%f,%f]" l u
+
+let print_rational fmt = function
+  | _,(n,1) ->
+      fprintf fmt "%d" n
+  | _,(n,d) ->
+      fprintf fmt "%d/%d" n d
+
+
+(*let sprint_bin_op = function
   | Oadd -> "+"
   | Osub -> "-"
   | Omul -> "*"
@@ -38,44 +52,30 @@ let rec print_expr fmt = function
       fprintf fmt "%s %a" (sprint_un_op op) print_expr e
   | _, Papp2 (op,e1,e2) -> 
       fprintf fmt "(%a %s %a)" print_expr e1 (sprint_bin_op op) print_expr e2
+*)
 
+module type Printer = sig
+  type var
+  type der
+  type init
+  type grd
+  type jump
+  type param
 
-let print_var fmt (_,id) =
-  fprintf fmt "%s" id
+  val print_var   : formatter -> var -> unit
+  val print_der   : formatter -> der -> unit
+  val print_init  : formatter -> init -> unit
+  val print_grd   : formatter -> grd -> unit
+  val print_jump  : formatter -> jump -> unit
+  val print_param : formatter -> param -> unit
+end
 
-let print_float fmt v =
-  fprintf fmt "%f" v
-
-let print_interval fmt = function
-  | Point v -> fprintf fmt "[%f]" v
-  | Interval (l,u) -> fprintf fmt "[%f,%f]" l u
-
-let print_rational fmt = function
-  | _,(n,1) ->
-      fprintf fmt "%d" n
-  | _,(n,d) ->
-      fprintf fmt "%d/%d" n d
-
-
-let print_v fmt (_,var) =
-  fprintf fmt "var:@ %a;" 
-    (print_list "," print_var) var
-
-let print_d fmt (_,der) =
-  fprintf fmt "der:@ %a;" 
-    (print_list "," print_expr) der
-
-let print_iv fmt (_,(t,v)) =
-  fprintf fmt "iv%@%d:@ %a;" t 
-    (print_list "," print_interval) v
-
-let print_param fmt (_,(id,v)) =
-  fprintf fmt "%s:=%a@," id print_interval v
-
-
-let print_ptree fmt (_,(v,d,iv,gh,gg,jmp,ps)) =
-  fprintf fmt "@[<hov 2>%a@]@ <hov 2>%a@]@ @[<hov 2>%a@]@ @[<hov 2>params:@ %a;@]"
-    print_v v
-    print_d d
-    print_iv iv
-    (print_list "" print_param) ps
+module Make (P : Printer) =
+struct
+  let print fmt (var,der,init,grd,jmp,ps) =
+    fprintf fmt "@[<hov 2>var:@ %a@]@ @[<hov 2>der:@ %a@]@ @[<hov 2>init:@ %a@]@ @[<hov 2>param:@ %a;@]"
+      (print_list "," P.print_var) var
+      (print_list "," P.print_der) der
+      (print_list "," P.print_init) init
+      (print_list " " P.print_param) ps
+end

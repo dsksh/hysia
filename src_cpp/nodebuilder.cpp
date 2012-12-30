@@ -158,12 +158,21 @@ void putTree()
 	g_map->putTree(g_stack.front()); g_stack.pop_front();
 }
 
+void putDTree()
+{
+	g_map->putDTree(g_stack.front()); g_stack.pop_front();
+}
+
+void doneTree()
+{
+	g_map->doneTree();
+}
 
 void integrate(const float t_end, const float order, const float h_min, const float h_max)
 {
 	try{
 
-	getIMap()->compDiff();
+	//getIMap()->compDiff();
 
 	// The solver:
 	ITaylor solver(*g_map, order, h_min);

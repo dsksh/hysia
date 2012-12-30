@@ -35,6 +35,8 @@ public:
 
 	int putVariable(const char *name);
 	void putTree(capd::map::Node<ScalarType> *node);
+	void putDTree(capd::map::Node<ScalarType> *node);
+	void doneTree();
 
 	NodeType *createVarNode(int index);
 
@@ -45,6 +47,7 @@ public:
 
 private:
 	int m_trees_idx;
+	int m_dtrees_idx;
 };
 
 } // the end of the namespace capd

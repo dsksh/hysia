@@ -1,6 +1,7 @@
 open Format
 open Lexing
 open Hss
+open Model_common
 
 let usage = "usage: hss [options] input.txt"
 
@@ -25,12 +26,16 @@ let report (b,e) =
     printf "File \"%s\", line %d, characters %d-%d:" !file l fc lc
 
 
-let integrate env =
-  let a1 = try Ptree.SM.find "t_end" env with Not_found -> 1. in
-  let a2 = try Ptree.SM.find "order" env with Not_found -> 10. in
-  let a3 = try Ptree.SM.find "h_min" env with Not_found -> 0.1 in
-  let a4 = try Ptree.SM.find "h_max" env with Not_found -> 1. in
+let integrate args =
+  let a1 = try MParam.find "t_end" args with Not_found -> 1. in
+  let a2 = try MParam.find "order" args with Not_found -> 10. in
+  let a3 = try MParam.find "h_min" args with Not_found -> 0.1 in
+  let a4 = try MParam.find "h_max" args with Not_found -> 1. in
   Capd_stubs.integrate a1 a2 a3 a4
+
+
+module PPtree = Pretty.Make(Ptree)
+module PModel = Pretty.Make(Model)
 
 
 let () =
@@ -38,11 +43,17 @@ let () =
 
   let lb = from_channel cin in 
   try 
-    let ptree,env = Parser.main Lexer.token lb in
-      (*printf "@[%a@]@." Pretty.print_ptree ptree;*)
-      Capd_sending.send_ptree ptree;
-      integrate env;
-      ()
+    let ptree,args = Parser.main Lexer.token lb in
+    let ptree = Ptree.simplify ptree in
+    printf "@[%a@]@." PPtree.print ptree;
+
+    let model = Model.make ptree in
+    printf "@[%a@]@." PModel.print model;
+
+    Capd_sending.send_model model;
+    printf "hoge@.";
+    integrate args;
+    ()
   with
     | Lexer.Lexical_error s -> 
 	report (lexeme_start_p lb, lexeme_end_p lb);

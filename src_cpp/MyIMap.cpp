@@ -23,12 +23,12 @@ using namespace map;
 
 MyIMap::MyIMap() 
   : capd::map::CnMap<capd::IMatrix,1>(),
-	m_trees_idx(0)
+	m_trees_idx(0), m_dtrees_idx(0)
 {}
 
 MyIMap::MyIMap(int dim, int order) 
   : capd::map::CnMap<capd::IMatrix,1>(),
-	m_trees_idx(0)
+	m_trees_idx(0), m_dtrees_idx(0)
 {
 	m_dim = dim; m_dim2 = dim;
 	m_indexOfFirstParam = dim;
@@ -243,8 +243,6 @@ void MyIMap::putTree(Node<ScalarType> *node)
 {
 	m_trees(m_trees_idx) = node;
 	++(m_trees(m_trees_idx)->m_links);
-	++(m_trees(m_trees_idx)->m_links);
-	++m_trees_idx;
 }
 
 MyIMap::NodeType *MyIMap::createVarNode(int index) 
@@ -256,14 +254,27 @@ MyIMap::NodeType *MyIMap::createVarNode(int index)
 void MyIMap::compDiff() 
 {
 	for (int i(0); i<m_dim2; ++i) {
-		DiffVisitor<ScalarType> visitor(m_order, i);
+		NodeEx<ScalarType> *t = dynamic_cast<NodeEx<ScalarType> *>(m_trees(i));
 		for (int j(0); j<m_dim; ++j) {
-			NodeEx<ScalarType> *t = dynamic_cast<NodeEx<ScalarType> *>(m_trees(i));
+			DiffVisitor<ScalarType> visitor(m_order, j);
 			t->accept(visitor);
 			m_trees(i,j) = visitor.getNode();
 			++(m_trees(i,j)->m_links);
 		}
 	}
+}
+
+void MyIMap::putDTree(Node<ScalarType> *node) 
+{
+	m_trees(m_trees_idx, m_dtrees_idx) = node;
+	++(m_trees(m_trees_idx, m_dtrees_idx)->m_links);
+	++m_dtrees_idx;
+}
+
+void MyIMap::doneTree()
+{
+	++m_trees_idx;
+	m_dtrees_idx = 0;
 }
 
 } // the end of the namespace capd

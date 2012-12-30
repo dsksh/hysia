@@ -24,6 +24,8 @@ external put_mul_node: unit -> unit = "caml_put_mul_node"
 external put_div_node: unit -> unit = "caml_put_div_node"
 external put_pow_node: unit -> unit = "caml_put_pow_node"
 
-external put_tree: unit -> unit = "caml_put_tree"
+external put_tree:  unit -> unit = "caml_put_tree"
+external put_dtree: unit -> unit = "caml_put_dtree"
+external done_tree: unit -> unit = "caml_done_tree"
 
 external integrate: float -> float -> float -> float -> unit = "caml_integrate"

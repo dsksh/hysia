@@ -1,20 +1,21 @@
 %{
+  open Model_common
   open Ptree
 
-  let env = ref SM.empty
-  let set_param id v = env := SM.add id v !env
+  let env = ref MParam.empty
+  let set_param id v = env := MParam.add id v !env
 
   let loc () = symbol_start_pos (), symbol_end_pos ()
   let mk_expr nd = loc (), nd
   let mk_ratio n d = loc (), (n,d)
 
   let mk_var id = loc (), id
-  let mk_var_v vs = loc (), vs
+  let mk_var_l v = loc (), v
   let mk_param id v = loc (), (id, v)
-  let mk_def_vec es = loc (), es
-  let mk_init time vs = loc (), (time,vs)
+  let mk_def_l def = loc (), def
+  let mk_init _time v = loc (), v
 
-  let mk_model nd = (loc (), nd), !env
+  let mk_ptree nd = nd, !env
 %}
 
 %token <int> INT
@@ -58,50 +59,47 @@
 %token EOF
 
 %start main
-%type <Ptree.model> main
+%type <Ptree.t * float Model_common.MParam.t> main
 
 %%
 
 main :
-  | statements solver_params { mk_model $1 }
+  | statements solver_params { mk_ptree $1 }
 ; 
 
 /**/
 
 statements :
   | VAR var_vec SCOL statements
-    { let _,der,init,gh,gg,jmp,param = $4 in 
-	(mk_var_v $2),der,init,gh,gg,jmp,param }
+    { let _,der,init,grd,jmp,param = $4 in 
+	(mk_var_l $2),der,init,grd,jmp,param }
   | DER expr_vec SCOL statements
-    { let var,_,init,gh,gg,jmp,param = $4 in 
-	var,(mk_def_vec $2),init,gh,gg,jmp,param }
+    { let var,_,init,grd,jmp,param = $4 in 
+	var,(mk_def_l $2),init,grd,jmp,param }
   | INIT interval_vec SCOL statements
-    { let var,der,_,gh,gg,jmp,param = $4 in 
-	var,der,(mk_init 0 $2),gh,gg,jmp,param }
+    { let var,der,_,grd,jmp,param = $4 in 
+	var,der,(mk_init 0 $2),grd,jmp,param }
   | GRD_H expr SCOL statements
-    { let var,der,init,_,gg,jmp,param = $4 in 
-	var,der,init,$2,gg,jmp,param }
-  | GRD_G expr SCOL statements
-    { let var,der,init,gh,_,jmp,param = $4 in 
-	var,der,init,gh,$2,jmp,param }
+    { let var,der,init,_,jmp,param = $4 in 
+	var,der,init,$2,jmp,param }
   | JUMP expr_vec SCOL statements
-    { let var,der,init,gh,gg,_,param = $4 in 
-	var,der,init,gh,gg,(mk_def_vec $2),param }
+    { let var,der,init,grd,jmp,param = $4 in 
+	var,der,init,grd,(mk_def_l $2),param }
   | PARAM ID EQ interval SCOL statements
-    { let var,der,init,gh,gg,jmp,param   = $6 in 
-	var,der,init,gh,gg,jmp,((mk_param $2 $4)::param) }
-  | { (dummy_vec,dummy_vec,dummy_init,dummy_grd,dummy_grd,dummy_vec,[]) }
+    { let var,der,init,grd,jmp,param = $6 in 
+	var,der,init,grd,jmp,((mk_param $2 $4)::param) }
 
   | FUN var_vec_old EQ expr_vec SCOL statements
-    { let var,_,init,gh,gg,jmp,param = $6 in 
-	(mk_var_v $2),(mk_def_vec $4),init,gh,gg,jmp,param }
+    { let var,_,init,grd,jmp,param = $6 in 
+	(mk_var_l $2),(mk_def_l $4),init,grd,jmp,param }
   | VAL integer EQ interval_vec SCOL statements
-    { let var,der,_,gh,gg,jmp,param  = $6 in 
-	var,der,(mk_init $2 $4),gh,gg,jmp,param }
+    { let var,der,_,grd,jmp,param  = $6 in 
+	var,der,(mk_init $2 $4),grd,jmp,param }
   | PARAM ID EQ interval SCOL statements
-    { let var,der,init,gh,gg,jmp,param   = $6 in 
-	var,der,init,gh,gg,jmp,((mk_param $2 $4)::param) }
-  | { dummy_vec,dummy_vec,dummy_init,dummy_grd,dummy_grd,dummy_vec,[] }
+    { let var,der,init,grd,jmp,param   = $6 in 
+	var,der,init,grd,jmp,((mk_param $2 $4)::param) }
+
+  | { (dummy_list,dummy_list,dummy_list,dummy_grd,dummy_list,[]) }
 ;
 
 solver_params :

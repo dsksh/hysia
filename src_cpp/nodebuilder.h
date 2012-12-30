@@ -28,6 +28,8 @@ void putDivNode();
 void putPowNode();
 
 void putTree();
+void putDTree();
+void doneTree();
 
 void integrate(const float, const float, const float, const float);
 

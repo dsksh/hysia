@@ -1,10 +1,12 @@
 open Capd_stubs
-open Ptree
+open Hashcons
+open Model_common
+open Model
 open Util
 
 module SM = Map.Make(String)
 
-let send_var env (_,id) =
+let send_var env id =
   let index = put_variable id in
   SM.add id index env
 
@@ -26,36 +28,40 @@ let fun_bin_op = function
   | Odiv -> put_div_node
   | Opow -> put_pow_node
 
-let rec send_expr env = function
-  | Pvar id -> (*Printf.printf "send var: %s %d\n" id (SM.find id env); *)
+let rec send_expr env e = match e.node with
+  | Var id -> (*Printf.printf "send var: %s %d\n" id (SM.find id env); *)
       put_var_node (SM.find id env)
-  | Pval v  -> (*Printf.printf "send val: %f\n" v; *)
+  | Val v  -> (*Printf.printf "send val: %f\n" v; *)
       put_scalar_node v
-  | Papp (op,(_,e)) -> 
+  | App (op,e) -> 
       (*fprintf fmt "%s %a" (sprint_un_op op) print_expr e*)
       send_expr env e;
       fun_un_op op ()
-  | Papp2 (op,(_,e1),(_,e2)) -> 
+  | App2 (op,e1,e2) -> 
       (*fprintf fmt "(%a %s %a)" print_expr e1 (sprint_bin_op op) print_expr e2*)
       send_expr env e1;
       send_expr env e2;
       fun_bin_op op ()
-  | Pint _ -> assert false
+  (*| Int _ -> assert false*)
 
-let send_tree env (_,expr) =
-  send_expr env expr;
-  put_tree ()
+let send_dtree env d =
+  send_expr env d;
+  put_dtree ()
 
-let send_vf env (loc,var) (loc,der) =
-  let nv,nd = List.length var, List.length der in
-  if nv <> nd then error (DimMismatch (nv,nd)) loc
-  else
-  init nv;
+let send_tree env dual =
+  let (e,d) = dual.node in
+  send_expr env e;
+  put_tree ();
+  List.map (send_dtree env) d;
+  done_tree ()
+
+let send_vf env var der =
+  init (List.length var);
   let env = List.fold_left send_var env var in
   List.map (send_tree env) der
 
 
-let send_iv (_,(_t,v)) =
+let send_init v =
   let send = function
   | Point v -> put_value v v
   | Interval (l,u) -> put_value l u
@@ -63,7 +69,7 @@ let send_iv (_,(_t,v)) =
   List.map send v
 
 
-let send_ptree (_,(v,d,iv,gh,gg,jmp,ps)) =
-  send_vf SM.empty v d;
-  send_iv iv;
+let send_model (var,der,init,grd,jump,ps) =
+  send_vf SM.empty var der;
+  send_init init;
   ()

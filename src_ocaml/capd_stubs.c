@@ -179,3 +179,17 @@ value caml_put_tree()
 	putTree();
 	CAMLreturn(Val_unit);
 }
+
+value caml_put_dtree()
+{
+	CAMLparam0();
+	putDTree();
+	CAMLreturn(Val_unit);
+}
+
+value caml_done_tree()
+{
+	CAMLparam0();
+	doneTree();
+	CAMLreturn(Val_unit);
+}

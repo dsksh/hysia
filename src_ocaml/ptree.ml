@@ -1,43 +1,73 @@
+open Format
+open Model_common
+open Pretty
+
 type loc = Lexing.position * Lexing.position
 
-type interval = 
-  | Interval of float * float 
-  | Point of float
-
-type un_ops =
-  | Osqr | Osqrt | Oexp | Olog | Osin | Ocos | Oatan | Oasin | Oacos
-
-type bin_ops =
-  | Oadd | Osub | Omul | Odiv | Opow
-
-type var = loc * string
-
-type rational = loc * (int * int)
+type var = loc * ident
 
 type expr = loc * expr_node
 and  expr_node =
-  | Pvar of string
+  | Pvar of ident
   | Pint of int
   | Pval of float
-  | Papp of un_ops * expr
-  | Papp2 of bin_ops * expr * expr
+  | Papp of un_op * expr
+  | Papp2 of bin_op * expr * expr
 
-type vars = loc * (var list)
+type var_l = loc * (var list)
+type expr_l = loc * (expr list)
+type interval_l = loc * (interval list)
 
-type def = expr
-
-type def_vec = loc * (def list)
-
-type init = loc * (int * interval list)
-
+type der   = expr
+type init  = interval
+type grd   = expr
+type jump  = expr
 type param = loc * (string * interval)
 
-module SM = Map.Make(String)
-type model = (loc * (vars * def_vec * init * def * def * def_vec * param list)) * float SM.t
+type t = var_l * expr_l * interval_l * expr * expr_l * param list
+
+let simplify ((_,var),(_,der),(_,init),grd,(_,jump),ps) =
+  (var,der,init,grd,jump,ps)
 
 
 let dummy_loc = Lexing.dummy_pos, Lexing.dummy_pos
-
-let dummy_vec = dummy_loc, []
+let dummy_list = dummy_loc, []
 let dummy_grd  = dummy_loc, Pval (-1.)
-let dummy_init = dummy_loc, (0,[])
+
+
+let rec print_expr fmt = function
+  | _, Pvar id -> fprintf fmt "%s" id
+  | _, Pint v  -> fprintf fmt "%d" v
+  | _, Pval v  -> fprintf fmt "%f" v
+  | _, Papp (op,e) -> 
+      fprintf fmt "%s %a" (sprint_un_op op) print_expr e
+  | _, Papp2 (op,e1,e2) -> 
+      fprintf fmt "(%a %s %a)" print_expr e1 (sprint_bin_op op) print_expr e2
+
+
+(*module P : Pretty.Printer =
+struct
+  type var = lvar
+  type der = lexpr
+  type init = interval
+  type grd = lexpr
+  type jump = lexpr
+  type param = string * interval
+
+  let print_var fmt (_,id) = fprintf fmt "%s" id
+  let print_der fmt e = fprintf fmt "%a" print_expr e
+  let print_init fmt v = fprintf fmt "%a" print_interval v
+  let print_grd fmt e = fprintf fmt "%a" print_expr e
+  let print_jump fmt e = fprintf fmt "%a" print_expr e
+  let print_param fmt (id,v) = fprintf fmt "%s:=%a" id print_interval v
+end
+*)
+
+let print_var fmt (_,id) = fprintf fmt "%s" id
+let print_der fmt e = fprintf fmt "%a" print_expr e
+let print_init fmt v = fprintf fmt "%a" print_interval v
+let print_grd fmt e = fprintf fmt "%a" print_expr e
+let print_jump fmt e = fprintf fmt "%a" print_expr e
+let print_param fmt (_,(id,v)) = fprintf fmt "%s:=%a" id print_interval v
+
+(*module Printer = Pretty.Make(P)*)
