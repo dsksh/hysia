@@ -54,10 +54,25 @@ value caml_put_variable(value name)
 	CAMLreturn(Val_int(index));
 }
 
-value caml_put_value(value l, value u)
+value caml_set_param(value id, value l, value u)
+{
+	CAMLparam3(id, l, u);
+	int index = setParam(String_val(id), Double_val(l), Double_val(u));
+	CAMLreturn(Val_int(index));
+}
+
+/*value caml_put_value(value l, value u)
 {
 	CAMLparam2(l, u);
 	putValue(Double_val(l), Double_val(u));
+	CAMLreturn(Val_unit);
+}
+*/
+
+value caml_put_value()
+{
+	CAMLparam0();
+	putValue();
 	CAMLreturn(Val_unit);
 }
 
@@ -68,10 +83,10 @@ value caml_put_var_node(value index)
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_scalar_node(value val)
+value caml_put_scalar_node(value l, value u)
 {
-	CAMLparam1(index);
-	putScalarNode(Double_val(val));
+	CAMLparam2(l, u);
+	putScalarNode(Double_val(l), Double_val(u));
 	CAMLreturn(Val_unit);
 }
 

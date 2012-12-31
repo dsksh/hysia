@@ -30,7 +30,6 @@ let sprint_un_op = function
   | Oexp -> "exp"
   | Olog -> "log"
   | Osin -> "sin"
-  | Ocos -> "cos"
   | Oatan -> "atan"
   | Oasin -> "asin"
   | Oacos -> "acos"

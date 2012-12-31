@@ -5,11 +5,11 @@ extern "C" {
 #endif
 
 void init(const int dim);
-int putVariable(const char *name);
-void putValue(const double l, const double u);
-void putVarNode(const int index);
-/*void putScalarNode(const int value);*/
-void putScalarNode(const double value);
+int putVariable(const char *);
+int setParam(const char *, const double, const double);
+
+void putVarNode(const int);
+void putScalarNode(const double, const double);
 
 void putSqrNode();
 void putSqrtNode();
@@ -30,6 +30,9 @@ void putPowNode();
 void putTree();
 void putDTree();
 void doneTree();
+
+/*void putValue(const double l, const double u);*/
+void putValue();
 
 void integrate(const float, const float, const float, const float);
 

@@ -51,7 +51,6 @@ let () =
     printf "@[%a@]@." PModel.print model;
 
     Capd_sending.send_model model;
-    printf "hoge@.";
     integrate args;
     ()
   with

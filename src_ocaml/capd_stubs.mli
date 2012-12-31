@@ -1,12 +1,12 @@
 external test: unit -> unit = "caml_test"
 external test1: string -> unit = "caml_test1"
 
-external init: int -> unit = "caml_init"
+external initialize: int -> unit = "caml_init"
 external put_variable: string -> int = "caml_put_variable"
-external put_value: float -> float -> unit = "caml_put_value"
+external set_param: string -> float -> float -> int = "caml_set_param"
 
 external put_var_node: int -> unit = "caml_put_var_node"
-external put_scalar_node: float -> unit = "caml_put_scalar_node"
+external put_scalar_node: float -> float -> unit = "caml_put_scalar_node"
 
 external put_sqr_node:  unit -> unit = "caml_put_sqr_node"
 external put_sqrt_node: unit -> unit = "caml_put_sqrt_node"
@@ -27,5 +27,8 @@ external put_pow_node: unit -> unit = "caml_put_pow_node"
 external put_tree:  unit -> unit = "caml_put_tree"
 external put_dtree: unit -> unit = "caml_put_dtree"
 external done_tree: unit -> unit = "caml_done_tree"
+
+(*external put_value: float -> float -> unit = "caml_put_value"*)
+external put_value: unit -> unit = "caml_put_value"
 
 external integrate: float -> float -> float -> float -> unit = "caml_integrate"

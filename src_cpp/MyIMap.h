@@ -33,12 +33,13 @@ public:
 	void setup();
 	void setup1();
 
-	int putVariable(const char *name);
+	int putVariable(const char *);
+	int setParam(const char *, const interval&);
 	void putTree(capd::map::Node<ScalarType> *node);
 	void putDTree(capd::map::Node<ScalarType> *node);
 	void doneTree();
 
-	NodeType *createVarNode(int index);
+	NodeType *createVarNode(int);
 
 	void compDiff();
 

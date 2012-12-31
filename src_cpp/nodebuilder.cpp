@@ -38,13 +38,12 @@ MyIMap *getIMap()
 
 int putVariable(const char *name)
 {
-	return g_map->putVariable(name);
+    return g_map->putVariable(name);
 }
 
-void putValue(const double l, const double u)
+int setParam(const char *id, const double l, const double u)
 {
-	(*g_ivec)[g_ivec_pos] = (l==u) ? l : interval(l, u);
-	++g_ivec_pos;
+	g_map->setParam(id, interval(l, u));
 }
 
 void putVarNode(const int index) 
@@ -58,10 +57,10 @@ void putVarNode(const int index)
 //														  MyIMap::ScalarType(val)));
 //}
 
-void putScalarNode(const double val)
+void putScalarNode(const double l, const double u)
 {
 	g_stack.push_front(new ConsNodeEx<MyIMap::ScalarType>(g_map->m_order, 
-														  MyIMap::ScalarType(val)));
+														  MyIMap::ScalarType(l,u)));
 }
 
 void putSqrNode()
@@ -166,6 +165,24 @@ void putDTree()
 void doneTree()
 {
 	g_map->doneTree();
+}
+
+/*void putValue(const double l, const double u)
+{
+	(*g_ivec)[g_ivec_pos] = (l==u) ? l : interval(l, u);
+	++g_ivec_pos;
+}
+*/
+
+void putValue()
+{
+	MyIMap::NodeType *t = g_stack.front();
+	g_stack.pop_front();
+	
+	(*g_ivec)[g_ivec_pos] = (*t)(0);
+	++g_ivec_pos;
+
+	delete t;
 }
 
 void integrate(const float t_end, const float order, const float h_min, const float h_max)

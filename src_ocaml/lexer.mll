@@ -19,8 +19,7 @@
 	  "var", VAR;
 	  "der", DER;
 	  "init", INIT;
-	  "grd_h", GRD_H;
-	  "grd_g", GRD_G;
+	  "grd", GRD;
 	  "jump", JUMP;
 	  "param", PARAM;
 
@@ -53,6 +52,8 @@ let sign   = (plus|min)
 let float1 = digit+ mk digit*
 let float2 = digit+ mk digit* exp digit+
 let float3 = digit+ mk digit* exp sign digit+
+let float4 = digit+ exp digit+
+let float5 = digit+ exp sign digit+
 
 rule token = parse
   | '\n' 
@@ -66,6 +67,10 @@ rule token = parse
   | float2
       { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
   | float3
+      { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
+  | float4
+      { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
+  | float5
       { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
   | number
       { INT (int_of_string (Lexing.lexeme lexbuf)) }

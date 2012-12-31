@@ -13,7 +13,7 @@
   let mk_var_l v = loc (), v
   let mk_param id v = loc (), (id, v)
   let mk_def_l def = loc (), def
-  let mk_init _time v = loc (), v
+  let mk_init v = loc (), v
 
   let mk_ptree nd = nd, !env
 %}
@@ -48,8 +48,7 @@
 %token VAR
 %token DER
 %token INIT
-%token GRD_H
-%token GRD_G
+%token GRD
 %token JUMP
 %token PARAM
 
@@ -76,10 +75,10 @@ statements :
   | DER expr_vec SCOL statements
     { let var,_,init,grd,jmp,param = $4 in 
 	var,(mk_def_l $2),init,grd,jmp,param }
-  | INIT interval_vec SCOL statements
+  | INIT /*interval_vec*/ expr_vec SCOL statements
     { let var,der,_,grd,jmp,param = $4 in 
-	var,der,(mk_init 0 $2),grd,jmp,param }
-  | GRD_H expr SCOL statements
+	var,der,(mk_init $2),grd,jmp,param }
+  | GRD expr SCOL statements
     { let var,der,init,_,jmp,param = $4 in 
 	var,der,init,$2,jmp,param }
   | JUMP expr_vec SCOL statements
@@ -92,9 +91,9 @@ statements :
   | FUN var_vec_old EQ expr_vec SCOL statements
     { let var,_,init,grd,jmp,param = $6 in 
 	(mk_var_l $2),(mk_def_l $4),init,grd,jmp,param }
-  | VAL integer EQ interval_vec SCOL statements
+  | VAL integer EQ /*interval_vec*/ expr_vec SCOL statements
     { let var,der,_,grd,jmp,param  = $6 in 
-	var,der,(mk_init $2 $4),grd,jmp,param }
+	var,der,(mk_init $4),grd,jmp,param }
   | PARAM ID EQ interval SCOL statements
     { let var,der,init,grd,jmp,param   = $6 in 
 	var,der,init,grd,jmp,((mk_param $2 $4)::param) }
@@ -170,8 +169,9 @@ factor :
   | ASIN factor { mk_expr (Papp (Oasin,$2)) }
   | ACOS factor { mk_expr (Papp (Oacos,$2)) }
   | ID { mk_expr (Pvar $1) }
-  | float { mk_expr (Pval $1) }
-  | MIN factor { mk_expr (Papp2 (Osub,(mk_expr (Pval 0.)),$2)) }
+  /*| float { mk_expr (Pval $1) }*/
+  | interval { mk_expr (Pval $1) }
+  | MIN factor { mk_expr (Papp2 (Osub,(mk_expr (Pval (Point 0.))),$2)) }
 ;
 
 rational :

@@ -239,6 +239,13 @@ int MyIMap::putVariable(const char *name)
 	return m_var.size() -2; // TODO
 }
 
+int MyIMap::setParam(const char *name, const interval& val) 
+{
+	m_var.push_back(name);
+	int i(m_var.size() -2); // TODO
+	m_val[i] = val;
+	return i;
+}
 void MyIMap::putTree(Node<ScalarType> *node) 
 {
 	m_trees(m_trees_idx) = node;
