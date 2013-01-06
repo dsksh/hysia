@@ -88,17 +88,17 @@ plugins: plugins.opt
 
 LIBGENERATED = lexer.ml parser.mli parser.ml
 
-LIBMODULES = hashcons model_common pretty ptree util model parser lexer capd_sending
+LIBMODULES = hashcons model_common pretty ptree util model parser lexer capd_sending simulating
 
 LIBML  = $(addsuffix .ml,  $(LIBMODULES))
-LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_stubs.mli
-LIBCMO = $(addsuffix .cmo, $(LIBMODULES)) capd_stubs.cmi
-LIBCMX = $(addsuffix .cmx, $(LIBMODULES)) capd_stubs.cmi
+LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_stubs.mli capd_simulating_stubs.mli
+LIBCMO = $(addsuffix .cmo, $(LIBMODULES)) capd_stubs.cmi capd_simulating_stubs.cmi
+LIBCMX = $(addsuffix .cmx, $(LIBMODULES)) capd_stubs.cmi capd_simulating_stubs.cmi
 
 #$(LIBCMO) $(LIBCMX): OINCLUDES += $(LIBINCLUDES)
 $(LIBCMX): OFLAGS += -for-pack Hss
 
-COBJS = capd_stubs.o capd_integrator.o
+COBJS = capd_stubs.o capd_simulating_stubs.o capd_integrator.o
 
 # build targets
 

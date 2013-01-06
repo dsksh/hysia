@@ -32,13 +32,6 @@ value caml_test1(value command)
 	CAMLreturn(Val_unit);
 }
 
-value caml_integrate(value a1, value a2, value a3, value a4)
-{
-	CAMLparam4(a1, a2, a3, a4);
-	integrate(Double_val(a1), Double_val(a2), Double_val(a3), Double_val(a4));
-	CAMLreturn(Val_unit);
-}
-
 
 value caml_init(value dim)
 {
@@ -188,23 +181,51 @@ value caml_put_pow_node()
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_tree()
+value caml_put_der_tree(value i)
 {
-	CAMLparam0();
-	putTree();
+	CAMLparam1(i);
+	putDerTree(Int_val(i));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_dtree()
+value caml_put_der_dtree(value i, value j)
 {
-	CAMLparam0();
-	putDTree();
+	CAMLparam2(i, j);
+	putDerDTree(Int_val(i), Int_val(j));
 	CAMLreturn(Val_unit);
 }
 
-value caml_done_tree()
+value caml_done_der_tree()
 {
 	CAMLparam0();
-	doneTree();
+	doneDerTree();
+	CAMLreturn(Val_unit);
+}
+
+value caml_put_grd_tree()
+{
+	CAMLparam0();
+	putGrdTree();
+	CAMLreturn(Val_unit);
+}
+
+value caml_put_grd_dtree(value j)
+{
+	CAMLparam1(j);
+	putGrdDTree(Int_val(j));
+	CAMLreturn(Val_unit);
+}
+
+value caml_put_jump_tree(value i)
+{
+	CAMLparam1(i);
+	putJumpTree(Int_val(i));
+	CAMLreturn(Val_unit);
+}
+
+value caml_put_jump_dtree(value i, value j)
+{
+	CAMLparam2(i, j);
+	putJumpDTree(Int_val(i), Int_val(j));
 	CAMLreturn(Val_unit);
 }

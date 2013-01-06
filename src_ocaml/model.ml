@@ -4,7 +4,6 @@ open Hashcons
 open Model_common
 open Ptree
 open Pretty
-open Util
 
 type expr = expr_node hash_consed
 and  expr_node =
@@ -85,7 +84,7 @@ let rec diff_expr vid expr =
   let diff = diff_expr vid in
   match expr.node with
     | Var id -> if id = vid then mk_val (Point 1.) else mk_val (Point 0.)
-    | Val v -> mk_val (Point 0.)
+    | Val _ -> mk_val (Point 0.)
 
     | App (Osqr,e) -> 
         (mk_app2 Omul (mk_val (Point 2.)) (mk_app2 Omul e (mk_app Osqr (diff e))))
@@ -121,8 +120,7 @@ let mk_dual var e =
   let de = List.map (fun v -> diff_expr v e) var in
   Hdual.hashcons (e,de)
 
-
-let rec mk_dexpr var = function
+let mk_dexpr var = function
   | _, Pvar id     -> mk_dual var (mk_var id)
   | _, Pint v      -> mk_dual var (mk_val (Point (float_of_int v)))
   | _, Pval v      -> mk_dual var (mk_val v)
@@ -136,7 +134,7 @@ let make (var,der,init,grd,jmp,ps) =
   let var = List.map snd var in
   let der = List.map (mk_dexpr var) der in
   let init = List.map mk_expr init in
-  let grd = mk_expr grd in
+  let grd = mk_dexpr var grd in
   let jmp = List.map (mk_dexpr var) jmp in
   let ps  = List.map snd ps in
   (var,der,init,grd,jmp,ps)

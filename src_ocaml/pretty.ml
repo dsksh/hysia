@@ -72,10 +72,12 @@ end
 
 module Make (P : Printer) =
 struct
-  let print fmt (var,der,init,grd,jmp,ps) =
-    fprintf fmt "@[<hov 2>var:@ %a@]@ @[<hov 2>der:@ %a@]@ @[<hov 2>init:@ %a@]@ @[<hov 2>param:@ %a;@]"
+  let print fmt (var,der,init,grd,jump,ps) =
+    fprintf fmt "@[<hov 2>var:@ %a@];@ @[<hov 2>der:@ %a@];@ @[<hov 2>init:@ %a@];@ @[<hov 2>grd:@ %a@];@ @[<hov 2>jump:@ %a@];@ @[<hov 2>param:@ %a;@]"
       (print_list "," P.print_var) var
       (print_list "," P.print_der) der
       (print_list "," P.print_init) init
+      P.print_grd grd
+      (print_list "," P.print_jump) jump
       (print_list " " P.print_param) ps
 end

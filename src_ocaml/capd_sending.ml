@@ -53,16 +53,40 @@ let rec send_expr env e = match e.node with
       fun_bin_op op ()
   (*| Int _ -> assert false*)
 
-let send_dtree env d =
-  send_expr env d;
-  put_dtree ()
 
-let send_tree env dual =
+let send_der env i dual =
   let (e,d) = dual.node in
   send_expr env e;
-  put_tree ();
-  List.map (send_dtree env) d;
-  done_tree ()
+  put_der_tree i;
+
+  let send_dtree j d =
+    send_expr env d;
+    put_der_dtree i j
+  in
+  List.mapi send_dtree d
+
+let send_grd env dual =
+  let (e,d) = dual.node in
+  send_expr env e;
+  put_grd_tree ();
+
+  let send_dtree j d =
+    send_expr env d;
+    put_grd_dtree j
+  in
+  List.mapi send_dtree d
+
+let send_jump env i dual =
+  let (e,d) = dual.node in
+  send_expr env e;
+  put_jump_tree i;
+
+  let send_dtree j d =
+    send_expr env d;
+    put_jump_dtree i j
+  in
+  List.mapi send_dtree d
+
 
 let send_init env v =
   (*let send = function
@@ -79,6 +103,8 @@ let send_model (var,der,init,grd,jump,ps) =
   initialize (List.length var);
   let env = List.fold_left send_var SM.empty var in
   let env = List.fold_left send_param env ps in
-  List.map (send_tree env) der;
+  List.mapi (send_der env) der;
   send_init env init;
+  send_grd env grd;
+  List.mapi (send_jump env) jump;
   ()

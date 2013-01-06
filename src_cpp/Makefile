@@ -27,7 +27,7 @@ DOXYGEN := doxygen #@DOXYGEN@
 SRC     := $(wildcard *.c) $(wildcard *.cc) $(wildcard *.cpp)
 SRC_EX  := $(SRC) $(wildcard *.h)
 OBJECT  := $(foreach file, $(SRC), $(basename $(file)).o)
-OBJ_COMMON := MyIMap.o nodebuilder.o
+OBJ_COMMON := MapEx.o nodebuilder.o firstzero.o
 
 DEP_FILE := $(OBJECT:.o=.d)
 
@@ -52,8 +52,6 @@ $(LIB): $(OBJECT)
 	$(RANLIB) $@
 
 #$(OBJECT): util.h
-
-#trajectory.o: MyIMap.h MyIMap.o
 
 .c.o .cc.o .cpp.o:
 	$(CXX) $(CFLAGS) -c $<

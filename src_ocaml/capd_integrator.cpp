@@ -10,7 +10,7 @@
 #include "capd/dynset/C1PpedSet.h"
 #include "capd/dynset/C1Pped2Set.h"
 
-#include "../src_cpp/MyIMap.h"
+#include "../src_cpp/MapEx.h"
 
 #include "capd_integrator.h"
 
@@ -25,7 +25,7 @@ int test(const char *input) {
 	//cout << input << endl;
 	//IMap vectorField(input);
 	//IMap vectorField("var:t,x,v; fun:1,v,-10.0;");
-	MyIMap vectorField;
+	DerMap vectorField;
 
 	IVector x(3);
 	x[0]=0.0;

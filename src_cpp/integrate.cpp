@@ -2,7 +2,7 @@
 #include "capd/dynset/C1PpedSet.h"
 #include "capd/dynset/C1Pped2Set.h"
 
-#include "MyIMap.h"
+#include "MapEx.h"
 #include "NodeVisitor.h"
 #include "NodeVisitorDiff.h"
 #include "util.h"

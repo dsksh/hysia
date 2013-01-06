@@ -1,10 +1,14 @@
 #include <list>
-#include <memory>
-//#include "boost/shared_ptr.hpp"
 
+#include "capd/capdlib.h"
 #include "capd/map/Node.h"
+#include "capd/map/CnCoeff.hpp"
+#include "capd/map/C2Coeff.hpp"
+#include "capd/map/BasicFunction.hpp"
+#include "capd/map/CnMap.h"
+#include "capd/map/Parser.h"
 
-#include "MyIMap.h"
+#include "MapEx.h"
 #include "NodeEx.h"
 #include "util.h"
 #include "nodebuilder.h"
@@ -13,174 +17,208 @@ using namespace std;
 using namespace capd;
 using namespace capd::map;
 
-//typedef boost::shared_ptr<MyIMap> MapPtr;
-typedef auto_ptr<MyIMap> MapPtr;
-typedef list<MyIMap::NodeType *> NodeList;
-typedef auto_ptr<IVector> IVecPtr;
-
-MapPtr g_map;
-NodeList g_stack;
+int g_dim;
+DMapPtr g_der;
+AuxMapPtr g_grd;
+AuxMapPtr g_jump;
 IVecPtr g_ivec;
-int g_ivec_pos;
+
+typedef list<DerMap::NodeType *> NodeList;
+NodeList g_stack;
+int ivec_pos;
 
 void init(const int dim)
 {
-	g_map = MapPtr(new MyIMap(dim, 1));
+	g_dim = dim;
+	g_der = DMapPtr(new DerMap(dim, 1));
+	g_grd = AuxMapPtr(new AuxMap(dim, 1));
+	g_jump = AuxMapPtr(new AuxMap(dim, dim));
 	g_stack.clear();
 	g_ivec = IVecPtr(new IVector(dim));
-	g_ivec_pos = 0;
+	ivec_pos = 0;
 }
 
-MyIMap *getIMap()
+/*DerMap *getIMap()
 {
-	return g_map.get();
+	return g_der.get();
 }
+
+const capd::IVector& getIVec()
+{
+	return *g_ivec;
+}
+
+const int getDim()
+{
+	return g_ivec->size();
+}
+*/
 
 int putVariable(const char *name)
 {
-    return g_map->putVariable(name);
+    return g_der->putVariable(name);
 }
 
 int setParam(const char *id, const double l, const double u)
 {
-	g_map->setParam(id, interval(l, u));
+	g_der->setParam(id, interval(l, u));
 }
 
 void putVarNode(const int index) 
 {
-	g_stack.push_front(g_map->createVarNode(index));
+	g_stack.push_front(g_der->createVarNode(index));
 }
 
 //void putScalarNode(const int val)
 //{
-//	g_stack.push_front(new ConsNodeEx<MyIMap::ScalarType>(g_map->m_order, 
-//														  MyIMap::ScalarType(val)));
+//	g_stack.push_front(new ConsNodeEx<DerMap::ScalarType>(g_der->m_order, 
+//														  DerMap::ScalarType(val)));
 //}
 
 void putScalarNode(const double l, const double u)
 {
-	g_stack.push_front(new ConsNodeEx<MyIMap::ScalarType>(g_map->m_order, 
-														  MyIMap::ScalarType(l,u)));
+	g_stack.push_front(new ConsNodeEx<DerMap::ScalarType>(g_der->m_order, 
+														  DerMap::ScalarType(l,u)));
 }
 
 void putSqrNode()
 {
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new SqrNodeEx<MyIMap::ScalarType>(g_map->m_order, l));
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new SqrNodeEx<DerMap::ScalarType>(g_der->m_order, l));
 }
 
 void putSqrtNode()
 {
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new SqrtNodeEx<MyIMap::ScalarType>(g_map->m_order, l));
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new SqrtNodeEx<DerMap::ScalarType>(g_der->m_order, l));
 }
 
 void putExpNode()
 {
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new ExpNodeEx<MyIMap::ScalarType>(g_map->m_order, l));
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new ExpNodeEx<DerMap::ScalarType>(g_der->m_order, l));
 }
 
 void putLogNode()
 {
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new LogNodeEx<MyIMap::ScalarType>(g_map->m_order, l));
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new LogNodeEx<DerMap::ScalarType>(g_der->m_order, l));
 }
 
 void putSinNode()
 {
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new SinNodeEx<MyIMap::ScalarType>(g_map->m_order, l));
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new SinNodeEx<DerMap::ScalarType>(g_der->m_order, l));
 }
 
 void putCosNode()
 {
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new CosNodeEx<MyIMap::ScalarType>(g_map->m_order, l));
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new CosNodeEx<DerMap::ScalarType>(g_der->m_order, l));
 }
 
 void putAtanNode()
 {
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new AtanNodeEx<MyIMap::ScalarType>(g_map->m_order, l));
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new AtanNodeEx<DerMap::ScalarType>(g_der->m_order, l));
 }
 
 void putAsinNode()
 {
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new AsinNodeEx<MyIMap::ScalarType>(g_map->m_order, l));
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new AsinNodeEx<DerMap::ScalarType>(g_der->m_order, l));
 }
 
 void putAcosNode()
 {
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new AcosNodeEx<MyIMap::ScalarType>(g_map->m_order, l));
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new AcosNodeEx<DerMap::ScalarType>(g_der->m_order, l));
 }
 
 void putSumNode()
 {
-	MyIMap::NodeType *r(g_stack.front()); g_stack.pop_front();
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new SumNodeEx<MyIMap::ScalarType>(g_map->m_order, l, r));
+	DerMap::NodeType *r(g_stack.front()); g_stack.pop_front();
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new SumNodeEx<DerMap::ScalarType>(g_der->m_order, l, r));
 }
 
 void putDifNode()
 {
-	MyIMap::NodeType *r(g_stack.front()); g_stack.pop_front();
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new DifNodeEx<MyIMap::ScalarType>(g_map->m_order, l, r));
+	DerMap::NodeType *r(g_stack.front()); g_stack.pop_front();
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new DifNodeEx<DerMap::ScalarType>(g_der->m_order, l, r));
 }
 
 void putMulNode()
 {
-	MyIMap::NodeType *r(g_stack.front()); g_stack.pop_front();
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new MulNodeEx<MyIMap::ScalarType>(g_map->m_order, l, r));
+	DerMap::NodeType *r(g_stack.front()); g_stack.pop_front();
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new MulNodeEx<DerMap::ScalarType>(g_der->m_order, l, r));
 }
 
 void putDivNode()
 {
-	MyIMap::NodeType *r(g_stack.front()); g_stack.pop_front();
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new DivNodeEx<MyIMap::ScalarType>(g_map->m_order, l, r));
+	DerMap::NodeType *r(g_stack.front()); g_stack.pop_front();
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new DivNodeEx<DerMap::ScalarType>(g_der->m_order, l, r));
 }
 
 void putPowNode()
 {
-	MyIMap::NodeType *r(g_stack.front()); g_stack.pop_front();
-	MyIMap::NodeType *l(g_stack.front()); g_stack.pop_front();
-	g_stack.push_front(new PowNodeEx<MyIMap::ScalarType>(g_map->m_order, l, r));
+	DerMap::NodeType *r(g_stack.front()); g_stack.pop_front();
+	DerMap::NodeType *l(g_stack.front()); g_stack.pop_front();
+	g_stack.push_front(new PowNodeEx<DerMap::ScalarType>(g_der->m_order, l, r));
 }
 
-void putTree()
+void putDerTree(const int i)
 {
-	g_map->putTree(g_stack.front()); g_stack.pop_front();
+	g_der->putTree(i, g_stack.front()); g_stack.pop_front();
 }
 
-void putDTree()
+void putDerDTree(const int i, const int j)
 {
-	g_map->putDTree(g_stack.front()); g_stack.pop_front();
+	g_der->putDTree(i, j, g_stack.front()); g_stack.pop_front();
 }
 
-void doneTree()
+void doneDerTree()
 {
-	g_map->doneTree();
+	g_der->doneTree();
+}
+
+void putGrdTree() 
+{
+	g_grd->putTree(0, g_stack.front()); g_stack.pop_front();
+}
+
+void putGrdDTree(const int j) 
+{
+	g_grd->putDTree(0, j, g_stack.front()); g_stack.pop_front();
+}
+
+void putJumpTree(const int i) 
+{
+	g_jump->putTree(i, g_stack.front()); g_stack.pop_front();
+}
+
+void putJumpDTree(const int i, const int j) 
+{
+	g_jump->putDTree(i, j, g_stack.front()); g_stack.pop_front();
 }
 
 /*void putValue(const double l, const double u)
 {
-	(*g_ivec)[g_ivec_pos] = (l==u) ? l : interval(l, u);
-	++g_ivec_pos;
+	(*g_ivec)[ivec_pos] = (l==u) ? l : interval(l, u);
+	++ivec_pos;
 }
 */
 
 void putValue()
 {
-	MyIMap::NodeType *t = g_stack.front();
+	DerMap::NodeType *t = g_stack.front();
 	g_stack.pop_front();
 	
-	(*g_ivec)[g_ivec_pos] = (*t)(0);
-	++g_ivec_pos;
+	(*g_ivec)[ivec_pos] = (*t)(0);
+	++ivec_pos;
 
 	delete t;
 }
@@ -192,7 +230,7 @@ void integrate(const float t_end, const float order, const float h_min, const fl
 	//getIMap()->compDiff();
 
 	// The solver:
-	ITaylor solver(*g_map, order, h_min);
+	ITaylor solver(*g_der, order, h_min);
 	ITimeMap timeMap(solver);
 
 	// The initial value:

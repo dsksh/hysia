@@ -24,11 +24,15 @@ external put_mul_node: unit -> unit = "caml_put_mul_node"
 external put_div_node: unit -> unit = "caml_put_div_node"
 external put_pow_node: unit -> unit = "caml_put_pow_node"
 
-external put_tree:  unit -> unit = "caml_put_tree"
-external put_dtree: unit -> unit = "caml_put_dtree"
-external done_tree: unit -> unit = "caml_done_tree"
+external put_der_tree:  int -> unit = "caml_put_der_tree"
+external put_der_dtree: int -> int -> unit = "caml_put_der_dtree"
+external done_der_tree: unit -> unit = "caml_done_der_tree"
 
 (*external put_value: float -> float -> unit = "caml_put_value"*)
 external put_value: unit -> unit = "caml_put_value"
 
-external integrate: float -> float -> float -> float -> unit = "caml_integrate"
+external put_grd_tree:  unit -> unit = "caml_put_grd_tree"
+external put_grd_dtree: int -> unit = "caml_put_grd_dtree"
+
+external put_jump_tree:  int -> unit = "caml_put_jump_tree"
+external put_jump_dtree: int -> int -> unit = "caml_put_jump_dtree"

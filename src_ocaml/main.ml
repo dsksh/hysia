@@ -1,7 +1,6 @@
 open Format
 open Lexing
 open Hss
-open Model_common
 
 let usage = "usage: hss [options] input.txt"
 
@@ -26,14 +25,6 @@ let report (b,e) =
     printf "File \"%s\", line %d, characters %d-%d:" !file l fc lc
 
 
-let integrate args =
-  let a1 = try MParam.find "t_end" args with Not_found -> 1. in
-  let a2 = try MParam.find "order" args with Not_found -> 10. in
-  let a3 = try MParam.find "h_min" args with Not_found -> 0.1 in
-  let a4 = try MParam.find "h_max" args with Not_found -> 1. in
-  Capd_stubs.integrate a1 a2 a3 a4
-
-
 module PPtree = Pretty.Make(Ptree)
 module PModel = Pretty.Make(Model)
 
@@ -45,28 +36,31 @@ let () =
   try 
     let ptree,args = Parser.main Lexer.token lb in
     let ptree = Ptree.simplify ptree in
-    printf "@[%a@]@." PPtree.print ptree;
+    if !debug then
+      printf "@[%a@]@." PPtree.print ptree;
 
     let model = Model.make ptree in
-    printf "@[%a@]@." PModel.print model;
+    if !debug then
+      printf "@[%a@]@." PModel.print model;
 
     Capd_sending.send_model model;
-    integrate args;
+    (*Simulating.integrate args;*)
+    Simulating.simulate ();
     ()
   with
     | Lexer.Lexical_error s -> 
-	report (lexeme_start_p lb, lexeme_end_p lb);
-	printf "lexical error: %s\n@." s;
-	exit 1
+	  report (lexeme_start_p lb, lexeme_end_p lb);
+	  printf "lexical error: %s\n@." s;
+ 	  exit 1
     | Parsing.Parse_error ->
-	let  loc = (lexeme_start_p lb, lexeme_end_p lb) in
-	report loc;
-        printf "syntax error\n@.";
-	exit 1
+	  let  loc = (lexeme_start_p lb, lexeme_end_p lb) in
+	  report loc;
+      printf "syntax error\n@.";
+	  exit 1
     | Util.Error(e,l) -> 
-	report l; 
-	printf "lint error: %a\n@." Util.report e;
-	exit 1
+	  report l; 
+	  printf "lint error: %a\n@." Util.report e;
+	  exit 1
     | _ ->
-        printf "unexpected error\n@.";
-	exit 1
+      printf "unexpected error\n@.";
+	  exit 1
