@@ -27,7 +27,7 @@ DOXYGEN := doxygen #@DOXYGEN@
 SRC     := $(wildcard *.c) $(wildcard *.cc) $(wildcard *.cpp)
 SRC_EX  := $(SRC) $(wildcard *.h)
 OBJECT  := $(foreach file, $(SRC), $(basename $(file)).o)
-OBJ_COMMON := MapEx.o nodebuilder.o firstzero.o
+OBJ_COMMON := MapEx.o parallelotope.o nodebuilder.o firstzero.o simulate.o
 
 DEP_FILE := $(OBJECT:.o=.d)
 

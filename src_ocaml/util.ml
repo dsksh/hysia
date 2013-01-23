@@ -5,9 +5,13 @@ type error =
   (*| Unification of Type.t * Type.t*)
   | DimMismatch of int * int
   | SyntaxError
+  | FindZeroError
+  | FindZeroMidError
 
-exception Error of error * loc
-exception Warning of error * loc
+exception LError of error * loc
+exception LWarning of error * loc
+exception Error of error
+exception Warning of error
 
 let report fmt = function
   (*| Unification(t1,t2) ->
@@ -16,6 +20,12 @@ let report fmt = function
       fprintf fmt "dimensions %d and %d mismatched" d1 d2
   | SyntaxError -> 
       fprintf fmt "syntax error"
+  | FindZeroError -> 
+      fprintf fmt "failed to find a zero crossing"
+  | FindZeroMidError -> 
+      fprintf fmt "failed to find the midpoint of the zero crossing"
 
-let error e l = raise (Error(e,l))
-let warning e l = raise (Warning(e,l))
+let error e l = raise (LError (e,l))
+let warning e l = raise (LWarning (e,l))
+let error e = raise (Error e)
+let warning e = raise (Warning e)

@@ -19,7 +19,8 @@
 	  "var", VAR;
 	  "der", DER;
 	  "init", INIT;
-	  "grd", GRD;
+	  "grd_h", GRD_H;
+	  "grd_g", GRD_G;
 	  "jump", JUMP;
 	  "param", PARAM;
 

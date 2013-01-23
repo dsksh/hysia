@@ -31,8 +31,8 @@ external done_der_tree: unit -> unit = "caml_done_der_tree"
 (*external put_value: float -> float -> unit = "caml_put_value"*)
 external put_value: unit -> unit = "caml_put_value"
 
-external put_grd_tree:  unit -> unit = "caml_put_grd_tree"
-external put_grd_dtree: int -> unit = "caml_put_grd_dtree"
+external put_grd_tree:  int -> unit = "caml_put_grd_tree"
+external put_grd_dtree: int -> int -> unit = "caml_put_grd_dtree"
 
 external put_jump_tree:  int -> unit = "caml_put_jump_tree"
 external put_jump_dtree: int -> int -> unit = "caml_put_jump_dtree"

@@ -1,5 +1,6 @@
 open Model_common
 open Capd_simulating_stubs
+open Util
 
 let integrate args =
   let a1 = try MParam.find "t_end" args with Not_found -> 1. in
@@ -10,4 +11,9 @@ let integrate args =
 
 let simulate () =
   initialize ();
-  find_zero ()
+  if find_first_zero () then
+    if find_first_zero_mid () then
+      simulate_jump ()
+
+    else error FindZeroMidError
+  else error FindZeroError

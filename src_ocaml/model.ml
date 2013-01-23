@@ -127,17 +127,18 @@ let mk_dexpr var = function
   | _, Papp (op,e) -> mk_dual var (mk_app op (mk_expr e))
   | _, Papp2 (op,e1,e2) -> mk_dual var (mk_app2 op (mk_expr e1) (mk_expr e2))
 
-let make (var,der,init,grd,jmp,ps) = 
+let make (var,der,init,grd_h,grd_g,jmp,ps) = 
   (*let nv,nd = List.length var, List.length der in
   if nv <> nd then error (DimMismatch (nv,nd)) loc
   else*)
   let var = List.map snd var in
   let der = List.map (mk_dexpr var) der in
   let init = List.map mk_expr init in
-  let grd = mk_dexpr var grd in
+  let grd_h = mk_dexpr var grd_h in
+  let grd_g = mk_dexpr var grd_g in
   let jmp = List.map (mk_dexpr var) jmp in
   let ps  = List.map snd ps in
-  (var,der,init,grd,jmp,ps)
+  (var,der,init,grd_h,grd_g,jmp,ps)
     
 
 type var   = ident

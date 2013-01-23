@@ -19,7 +19,8 @@ using namespace capd::map;
 
 int g_dim;
 DMapPtr g_der;
-AuxMapPtr g_grd;
+AuxMapPtr g_grd_h;
+AuxMapPtr g_grd_g;
 AuxMapPtr g_jump;
 IVecPtr g_ivec;
 
@@ -31,8 +32,9 @@ void init(const int dim)
 {
 	g_dim = dim;
 	g_der = DMapPtr(new DerMap(dim, 1));
-	g_grd = AuxMapPtr(new AuxMap(dim, 1));
-	g_jump = AuxMapPtr(new AuxMap(dim, dim));
+	g_grd_h = AuxMapPtr(new AuxMap(*g_der, dim, 1));
+	g_grd_g = AuxMapPtr(new AuxMap(*g_der, dim, 1));
+	g_jump = AuxMapPtr(new AuxMap(*g_der, dim, dim));
 	g_stack.clear();
 	g_ivec = IVecPtr(new IVector(dim));
 	ivec_pos = 0;
@@ -185,14 +187,22 @@ void doneDerTree()
 	g_der->doneTree();
 }
 
-void putGrdTree() 
+void putGrdTree(const int s) 
 {
-	g_grd->putTree(0, g_stack.front()); g_stack.pop_front();
+	if (s == 0)
+		g_grd_h->putTree(0, g_stack.front());
+	else
+		g_grd_g->putTree(0, g_stack.front());
+   	g_stack.pop_front();
 }
 
-void putGrdDTree(const int j) 
+void putGrdDTree(const int s, const int j) 
 {
-	g_grd->putDTree(0, j, g_stack.front()); g_stack.pop_front();
+	if (s == 0)
+		g_grd_h->putDTree(0, j, g_stack.front());
+	else
+		g_grd_g->putDTree(0, j, g_stack.front());
+   	g_stack.pop_front();
 }
 
 void putJumpTree(const int i) 

@@ -255,7 +255,7 @@ void DerMap::putTree(const int i, Node<ScalarType> *node)
 
 DerMap::NodeType *DerMap::createVarNode(int index) 
 {
-	return new VarNodeEx<ScalarType>(m_order, &m_val[index], index);
+	return new VarNodeEx<ScalarType>(m_order, &m_val[m_order*index], index);
 }
 
 
@@ -286,8 +286,8 @@ void DerMap::doneTree()
 }
 
 
-AuxMap::AuxMap(int dim_v, int dim_f) 
-	: BasicFunction<ScalarType>(), m_trees(dim_f,dim_v)
+AuxMap::AuxMap(const DerMap& dmap, int dim_v, int dim_f) 
+	: BasicFunction<ScalarType>(), m_dmap(dmap), m_trees(dim_f,dim_v)
 {
 	m_dim = dim_v;
 	m_dim2 = dim_f;
@@ -299,7 +299,7 @@ AuxMap::AuxMap(int dim_v, int dim_f)
 }
 
 inline AuxMap::AuxMap(const AuxMap& rhs)
-	: BasicFunction<ScalarType>(rhs), m_trees(rhs.m_trees)
+	: BasicFunction<ScalarType>(rhs), m_dmap(rhs.m_dmap), m_trees(rhs.m_trees)
 {}
 
 AuxMap::~AuxMap() 
@@ -319,9 +319,37 @@ void AuxMap::putDTree(const int i, const int j, Node<ScalarType> *node)
 	++(m_trees(i,j)->m_links);
 }
 
-AuxMap::VectorType AuxMap::operator()() const
+void AuxMap::reset()
 {
-	VectorType result(m_dim);
+	// propagate the current order and variable values.
+	int o(m_dmap.getOrder());
+	setOrder(o);
+	for (int i(0); i < m_dim2; ++i) 
+		m_trees(i)->setOrder(o, m_dmap.getValue());
+	for (int i(0); i < m_dim2; ++i)
+		for (int j(0); j < m_dim; ++j)
+			m_trees(i,j)->setOrder(o, m_dmap.getValue());
+
+	for (int i(0); i < m_dim2; ++i) 
+		m_trees(i)->reset();
+	for (int i(0); i < m_dim2; ++i)
+		for (int j(0); j < m_dim; ++j)
+			m_trees(i,j)->reset();
+}
+
+AuxMap::VectorType AuxMap::operator()()
+{
+	// propagate the current order and variable values.
+	int o(m_dmap.getOrder());
+	setOrder(o);
+	for (int i(0); i < m_dim2; ++i) 
+		m_trees(i)->setOrder(o, m_dmap.getValue());
+
+	// reset
+	for (int i(0); i < m_dim2; ++i) 
+		m_trees(i)->reset();
+
+	VectorType result(m_dim2);
 	//typename VectorType::iterator b=result.begin(), e=result.end();
 	for (int i(0); i < m_dim2; ++i) 
 		result[i] = (*m_trees(i))(0);
@@ -329,12 +357,24 @@ AuxMap::VectorType AuxMap::operator()() const
 	return result;
 }
 
-AuxMap::MatrixType AuxMap::der() const
+AuxMap::MatrixType AuxMap::der()
 {
-	MatrixType result(m_dim,m_dim);
-	for (int i(0); i < m_dim; ++i)
-		for (int j(0); j < m_dim2; ++j)
-			result(i+1,j+1) = (*m_trees(j,i))(0);
+	// propagate the current order and variable values.
+	int o(m_dmap.getOrder());
+	setOrder(o);
+	for (int i(0); i < m_dim2; ++i)
+		for (int j(0); j < m_dim; ++j)
+			m_trees(i,j)->setOrder(o, m_dmap.getValue());
+
+	// reset
+	for (int i(0); i < m_dim2; ++i)
+		for (int j(0); j < m_dim; ++j)
+			m_trees(i,j)->reset();
+
+	MatrixType result(m_dim2,m_dim);
+	for (int i(0); i < m_dim2; ++i)
+		for (int j(0); j < m_dim; ++j)
+			result(i+1,j+1) = (*m_trees(i,j))(0);
 
 	return result;
 }

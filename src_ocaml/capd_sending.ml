@@ -65,16 +65,19 @@ let send_der env i dual =
   in
   List.mapi send_dtree d
 
-let send_grd env dual =
+let send_grd s env dual =
   let (e,d) = dual.node in
   send_expr env e;
-  put_grd_tree ();
+  put_grd_tree s;
 
   let send_dtree j d =
     send_expr env d;
-    put_grd_dtree j
+    put_grd_dtree s j
   in
   List.mapi send_dtree d
+
+let send_grd_h env dual = send_grd 0 env dual
+let send_grd_g env dual = send_grd 1 env dual
 
 let send_jump env i dual =
   let (e,d) = dual.node in
@@ -99,12 +102,13 @@ let send_init env v =
   in
   List.map send v
 
-let send_model (var,der,init,grd,jump,ps) =
+let send_model (var,der,init,grd_h,grd_g,jump,ps) =
   initialize (List.length var);
   let env = List.fold_left send_var SM.empty var in
   let env = List.fold_left send_param env ps in
   List.mapi (send_der env) der;
   send_init env init;
-  send_grd env grd;
+  send_grd_h env grd_h;
+  send_grd_g env grd_g;
   List.mapi (send_jump env) jump;
   ()

@@ -24,10 +24,10 @@ type grd   = expr
 type jump  = expr
 type param = loc * (string * interval)
 
-type t = var_l * expr_l * (*interval_l*) expr_l * expr * expr_l * param list
+type t = var_l * expr_l * (*interval_l*) expr_l * expr * expr * expr_l * param list
 
-let simplify ((_,var),(_,der),(_,init),grd,(_,jump),ps) =
-  (var,der,init,grd,jump,ps)
+let simplify ((_,var),(_,der),(_,init),grd_h,grd_g,(_,jump),ps) =
+  (var,der,init,grd_h,grd_g,jump,ps)
 
 
 let dummy_loc = Lexing.dummy_pos, Lexing.dummy_pos

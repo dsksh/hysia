@@ -202,17 +202,17 @@ value caml_done_der_tree()
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_grd_tree()
+value caml_put_grd_tree(value s)
 {
-	CAMLparam0();
-	putGrdTree();
+	CAMLparam1(s);
+	putGrdTree(Int_val(s));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_grd_dtree(value j)
+value caml_put_grd_dtree(value s, value j)
 {
-	CAMLparam1(j);
-	putGrdDTree(Int_val(j));
+	CAMLparam2(s,j);
+	putGrdDTree(Int_val(s), Int_val(j));
 	CAMLreturn(Val_unit);
 }
 

@@ -35,6 +35,7 @@ public:
 
 	int putVariable(const char *);
 	int setParam(const char *, const interval&);
+	ScalarType *getValue() const { return m_val; }
 	void putTree(const int, capd::map::Node<ScalarType> *node);
 	void putDTree(const int, const int, capd::map::Node<ScalarType> *node);
 	void doneTree();
@@ -60,18 +61,20 @@ public:
 	typedef capd::map::Node<ScalarType> NodeType;
 	typedef capd::map::CnContainer<NodeType*> TreesContainer;
 
-    AuxMap(int, int);
+    AuxMap(const DerMap&, int, int);
 	AuxMap(const AuxMap&);
 	~AuxMap();
 
 	void putTree(const int, NodeType *node);
 	void putDTree(const int, const int, NodeType *node);
 
-	VectorType operator()() const;
+	void reset();
+	VectorType operator()();
 	//MatrixType operator[]() const;
-	MatrixType der() const;
+	MatrixType der();
 
 protected:
+	const DerMap& m_dmap;
 	TreesContainer m_trees;
 	int m_dim2;
 	const std::string& currentFormula()

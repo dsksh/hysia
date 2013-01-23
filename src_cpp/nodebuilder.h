@@ -33,8 +33,8 @@ void doneDerTree();
 /*void putValue(const double l, const double u);*/
 void putValue();
 
-void putGrdTree(); 
-void putGrdDTree(const int);
+void putGrdTree(const int); 
+void putGrdDTree(const int, const int);
 void putJumpTree(const int); 
 void putJumpDTree(const int, const int); 
 
@@ -58,7 +58,8 @@ typedef std::auto_ptr<capd::AuxMap> AuxMapPtr;
 typedef std::auto_ptr<capd::IVector> IVecPtr;
 
 extern DMapPtr g_der;
-extern AuxMapPtr g_grd;
+extern AuxMapPtr g_grd_h;
+extern AuxMapPtr g_grd_g;
 extern AuxMapPtr g_jump;
 extern IVecPtr g_ivec;
 extern int g_dim;

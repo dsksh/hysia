@@ -57,10 +57,12 @@ let () =
 	  report loc;
       printf "syntax error\n@.";
 	  exit 1
-    | Util.Error(e,l) -> 
+    | Util.LError (e,l) -> 
 	  report l; 
 	  printf "lint error: %a\n@." Util.report e;
 	  exit 1
+    | Util.Error e -> 
+	  printf "error: %a\n@." Util.report e;
     | _ ->
       printf "unexpected error\n@.";
 	  exit 1

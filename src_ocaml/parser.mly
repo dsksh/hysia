@@ -48,7 +48,8 @@
 %token VAR
 %token DER
 %token INIT
-%token GRD
+%token GRD_H
+%token GRD_G
 %token JUMP
 %token PARAM
 
@@ -70,35 +71,38 @@ main :
 
 statements :
   | VAR var_vec SCOL statements
-    { let _,der,init,grd,jmp,param = $4 in 
-	(mk_var_l $2),der,init,grd,jmp,param }
+    { let _,der,init,grd_h,grd_g,jmp,param = $4 in 
+	(mk_var_l $2),der,init,grd_h,grd_g,jmp,param }
   | DER expr_vec SCOL statements
-    { let var,_,init,grd,jmp,param = $4 in 
-	var,(mk_def_l $2),init,grd,jmp,param }
+    { let var,_,init,grd_h,grd_g,jmp,param = $4 in 
+	var,(mk_def_l $2),init,grd_h,grd_g,jmp,param }
   | INIT /*interval_vec*/ expr_vec SCOL statements
-    { let var,der,_,grd,jmp,param = $4 in 
-	var,der,(mk_init $2),grd,jmp,param }
-  | GRD expr SCOL statements
-    { let var,der,init,_,jmp,param = $4 in 
-	var,der,init,$2,jmp,param }
+    { let var,der,_,grd_h,grd_g,jmp,param = $4 in 
+	var,der,(mk_init $2),grd_h,grd_g,jmp,param }
+  | GRD_H expr SCOL statements
+    { let var,der,init,_,grd_g,jmp,param = $4 in 
+	var,der,init,$2,grd_g,jmp,param }
+  | GRD_G expr SCOL statements
+    { let var,der,init,grd_h,_,jmp,param = $4 in 
+	var,der,init,grd_h,$2,jmp,param }
   | JUMP expr_vec SCOL statements
-    { let var,der,init,grd,jmp,param = $4 in 
-	var,der,init,grd,(mk_def_l $2),param }
+    { let var,der,init,grd_h,grd_g,jmp,param = $4 in 
+	var,der,init,grd_h,grd_g,(mk_def_l $2),param }
   | PARAM ID EQ interval SCOL statements
-    { let var,der,init,grd,jmp,param = $6 in 
-	var,der,init,grd,jmp,((mk_param $2 $4)::param) }
+    { let var,der,init,grd_h,grd_g,jmp,param = $6 in 
+	var,der,init,grd_h,grd_g,jmp,((mk_param $2 $4)::param) }
 
   | FUN var_vec_old EQ expr_vec SCOL statements
-    { let var,_,init,grd,jmp,param = $6 in 
-	(mk_var_l $2),(mk_def_l $4),init,grd,jmp,param }
+    { let var,_,init,grd_h,grd_g,jmp,param = $6 in 
+	(mk_var_l $2),(mk_def_l $4),init,grd_h,grd_g,jmp,param }
   | VAL integer EQ /*interval_vec*/ expr_vec SCOL statements
-    { let var,der,_,grd,jmp,param  = $6 in 
-	var,der,(mk_init $4),grd,jmp,param }
+    { let var,der,_,grd_h,grd_g,jmp,param  = $6 in 
+	var,der,(mk_init $4),grd_h,grd_g,jmp,param }
   | PARAM ID EQ interval SCOL statements
-    { let var,der,init,grd,jmp,param   = $6 in 
-	var,der,init,grd,jmp,((mk_param $2 $4)::param) }
+    { let var,der,init,grd_h,grd_g,jmp,param   = $6 in 
+	var,der,init,grd_h,grd_g,jmp,((mk_param $2 $4)::param) }
 
-  | { (dummy_list,dummy_list,dummy_list,dummy_grd,dummy_list,[]) }
+  | { (dummy_list,dummy_list,dummy_list,dummy_grd,dummy_grd,dummy_list,[]) }
 ;
 
 solver_params :

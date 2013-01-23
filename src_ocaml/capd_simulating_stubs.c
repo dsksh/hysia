@@ -32,9 +32,23 @@ value sim_initialize()
 	CAMLreturn(Val_unit);
 }
 
-value sim_find_zero()
+value sim_find_first_zero()
 {
 	CAMLparam0();
-	int res = firstZero();
-	CAMLreturn(Val_int(res));
+	int res = findFirstZero();
+	CAMLreturn(Val_bool(res));
+}
+
+value sim_find_first_zero_mid()
+{
+	CAMLparam0();
+	int res = findFirstZeroMid();
+	CAMLreturn(Val_bool(res));
+}
+
+value sim_simulate_jump()
+{
+	CAMLparam0();
+	simulateJump();
+	CAMLreturn(Val_unit);
 }
