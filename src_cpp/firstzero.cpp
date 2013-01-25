@@ -1,20 +1,15 @@
-//#include "boost/shared_ptr.hpp"
-
-//#include "capd/dynset/C1PpedSet.h"
-//#include "capd/dynset/C1Pped2Set.h"
-//#include "capd/matrixAlgorithms/matrixAlgorithmsLib.h"
-
-#include "nodebuilder.h"
-#include "parallelotope.h"
+#include "Context.h"
+#include "Parallelepiped.h"
+#include "MapEx.h"
 #include "util.h"
 
-#include "firstzero.h"
+#include "simulate.h"
 
 using namespace std;
 using namespace capd;
-//using namespace capd::map;
 
-inline bool reduceLower(const ITaylor::CurveType& curve,
+inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMap& grd_g,
+						const ITaylor::CurveType& curve,
 						const interval& time_init, const interval& time_procd,
 						interval& time)
 {
@@ -26,23 +21,19 @@ inline bool reduceLower(const ITaylor::CurveType& curve,
 		time_old = time;
 
 		// current state
-		const IVector dx( (*g_der)(curve(time)) );
-		//const interval h ( (*g_grd_h)()(1) );
-		const interval dh( (*g_grd_h).der()(1)*dx );
-		//const interval g ( (*g_grd_g)()(1) + interval(0,INFINITY) );
-		const interval dg( (*g_grd_g).der()(1)*dx );
+		const IVector dx( der(curve(time)) );
+		const interval dh( grd_h.der()(1)*dx );
+		const interval dg( grd_g.der()(1)*dx );
 
 #ifdef HSS_DEBUG
 std::cout << std::endl << "contracting lb:\t" << time << std::endl;
-//std::cout << "h:\t\t" << h << std::endl;
-//std::cout << "g:\t\t" << g << std::endl;
 #endif
 
 		// state at the left bound.
 		const interval offset(time.left());
-		(*g_der)(curve(offset));
-		const interval h( (*g_grd_h)()(1) );
-		const interval g( (*g_grd_g)()(1) + interval(0,INFINITY) );
+		//der(curve(offset));
+		const interval h( grd_h(curve(offset))(1) );
+		const interval g( grd_g(curve(offset))(1) + interval(0,INFINITY) );
 		time -= offset;
 
 		interval *gamma_l(&time);
@@ -85,11 +76,11 @@ std::cout << "contracted lb:\t" << time_procd + time << std::endl;
 	return true;
 }
 
-inline bool verify(const ITaylor::CurveType& curve,
+inline bool verify(DerMap& der, AuxMap& grd_h,
+				   const ITaylor::CurveType& curve,
 				   const interval& time_init, const interval& time_procd,
 				   interval& time)
 {
-	//const interval time_bak(time);
 	interval time_old(UNIVERSE);
 	time = time.left();
 	double d(INFINITY), d_old(INFINITY);
@@ -102,8 +93,8 @@ std::cout << std::endl << "certifying:\t" << time+time_procd << std::endl;
 		// current state
 		interval time_tmp;
 		intersection(time_init, time, time_tmp);
-		const IVector  dx( (*g_der)(curve(time_tmp)) );
-		const interval dh( (*g_grd_h).der()(1)*dx );
+		const IVector  dx( der(curve(time_tmp)) );
+		const interval dh( grd_h.der()(1)*dx );
 #ifdef HSS_DEBUG
 std::cout << "dh: " << dh << " at " << time_tmp << std::endl;
 #endif
@@ -115,8 +106,9 @@ std::cout << "dh: " << dh << " at " << time_tmp << std::endl;
 		}
 
 		// interval Newton
-		(*g_der)(curve(time.left()));
-		const interval contracted(time.left() - (*g_grd_h)()(1) / dh);
+		//der(curve(time.left()));
+		const interval contracted(time.left() - 
+				grd_h(curve(time.left()))(1) / dh);
 #ifdef HSS_DEBUG
 std::cout << "contracted:\t" << contracted+time_procd << std::endl;
 #endif
@@ -143,7 +135,8 @@ std::cout << "inflated:\t" << time+time_procd << std::endl;
 	return false;
 }
 
-inline bool reduceUpper(const ITaylor::CurveType& curve,
+inline bool reduceUpper(DerMap& der, AuxMap& grd_h, 
+						const ITaylor::CurveType& curve,
 					    const interval& time_init, const interval& time_procd,
 					    interval& time)
 {
@@ -151,22 +144,22 @@ inline bool reduceUpper(const ITaylor::CurveType& curve,
 
 	do {
 #ifdef HSS_DEBUG
-//std::cout << std::endl << "contracting rb: " << *g_time << std::endl;
+//std::cout << std::endl << "contracting rb: " << time << std::endl;
 #endif
 
 		time_old = time;
 
 		// current state.
-		const IVector  dx = (*g_der)(curve(time));
-		const interval dh = (*g_grd_h).der()(1)*dx;
+		const IVector  dx = der(curve(time));
+		const interval dh = grd_h.der()(1)*dx;
 
 		// state at the right bound.
 		const interval offset(time.right());
-		(*g_der)( curve(offset) );
-		const interval h( (*g_grd_h)()(1) );
+		der( curve(offset) );
+		const interval h( grd_h()(1) );
 		time -= offset;
 
-		interval *gamma_l(g_time.get());
+		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
 		extDiv(dh, -h, &gamma_l, &gamma_u);
 
@@ -193,22 +186,31 @@ inline bool reduceUpper(const ITaylor::CurveType& curve,
 
 int findFirstZero()
 {
+	int dim(g_context->dim);
+	DerMap& der = g_context->der;
+	AuxMap& grd_h = g_context->grd_h;
+	AuxMap& grd_g = g_context->grd_g;
+
+	Parallelepiped& pped = g_context->pped;
+	interval& time = g_context->time;
+	double time_l = g_context->time_l;
+
 	try{
 
 	// the solver:
-	ITaylor solver(*g_der, /**/20, /**/0.01);
+	ITaylor solver(der, /**/20, /**/0.01);
 	ITimeMap timeMap(solver);
 	timeMap.stopAfterStep(true);
 
 	// the initial value:
-	///C0Rect2Set s(*g_ivec);
-	CapdPped p(P->toCapdPped());
+	///C0Rect2Set s(ivec);
+	CapdPped p(pped.toCapdPped());
 
 	cout << '{' << endl;
 	//dumpPipe1(cout, 0, s);
 
-    interval time_procd(*g_time_l);
-	IMatrix dx_prev(g_dim,g_dim);
+    interval time_procd(time_l);
+	IMatrix dx_prev(dim,dim);
 
 	while (true) {
 		// integrate 1 step.
@@ -216,78 +218,80 @@ int findFirstZero()
 		if (timeMap.completed())
 			return false;
 
-		*g_time = interval(0,1)*solver.getStep();
+		time = interval(0,1)*solver.getStep();
 #ifdef HSS_DEBUG
-std::cout << std::endl << "step made: " << time_procd + *g_time << std::endl;
+std::cout << std::endl << "step made: " << time+time_procd << std::endl;
 #endif
 		const ITaylor::CurveType& curve = solver.getCurve();
-		const interval time_init(*g_time);
+		const interval time_init(time);
 
 		// TODO: inside/outside of the loop?
-		IVector  dx( (*g_der)(curve(*g_time)) );
+		IVector  dx( der(curve(time)) );
 #ifdef HSS_DEBUG
-std::cout << "x:  " << curve(*g_time) << std::endl;
+std::cout << "x:  " << curve(time) << std::endl;
 std::cout << "dx: " << dx << std::endl; 
-//std::cout << "h:  " << (*g_grd_h)()(1) << std::endl;
-//std::cout << "dh: " << (*g_grd_h).der()(1)*dx << std::endl;
-//std::cout << "g:  " << (*g_grd_g)()(1) << std::endl;
-//std::cout << "dg: " << (*g_grd_g).der()(1)*dx << std::endl;
+//std::cout << "h:  " << grd_h()(1) << std::endl;
+//std::cout << "dh: " << grd_h.der()(1)*dx << std::endl;
+//std::cout << "g:  " << grd_g()(1) << std::endl;
+//std::cout << "dg: " << grd_g.der()(1)*dx << std::endl;
 #endif
 
+std::cout << "ffz5" << std::endl;
 		// reduce the lower bound
-		if (reduceLower(curve, time_init, time_procd, *g_time))
+		if ( reduceLower(der, grd_h, grd_g,
+					curve, time_init, time_procd, time) )
 			break;
 
-		time_procd = *g_time_l + timeMap.getCurrentTime();
+		time_procd = time_l + timeMap.getCurrentTime();
 		dx_prev = IMatrix(p);
 	}
 
 	const ITaylor::CurveType& curve = solver.getCurve();
-	const interval time_init(*g_time);
+	const interval time_init(time);
 
-//std::cout << "contracted:\t" << *g_time+time_procd << std::endl;
+//std::cout << "contracted:\t" << time+time_procd << std::endl;
 
 	// verification of the result
-	if (!verify(curve, time_init, time_procd, *g_time)) {
+	if ( !verify(der, grd_h, curve, time_init, time_procd, time) ) {
 		throw "verification failed";
 
 		// TODO
-		//time_procd = *g_time_l + timeMap.getCurrentTime();
+		//time_procd = time_l + timeMap.getCurrentTime();
 		//dx_prev = IMatrix(P);
 		//continue;
 	}
 
-	/*if (g_time.right() == time_init.right()) {
-		X  = curve(*g_time);
-		Dx = curve[*g_time]*dx_prev;
-		Dt = curve.derivative()(*g_time);
+	/*if (time.right() == time_init.right()) {
+		X  = curve(time);
+		Dx_phi = curve[time]*dx_prev;
+		Dt_phi = curve.derivative()(time);
 		Dh = guard_h[X];
-		*g_time += time_procd;
+		time += time_procd;
 		return true;
 	}*/
 
 	// TODO
-	//intersection(time_init, *g_time, *g_time);
+	//intersection(time_init, time, time);
 
 	// reduce the upper bound
-	if (!reduceUpper(curve, time_init, time_procd, *g_time))
+	if ( !reduceUpper(der, grd_h, curve, time_init, time_procd, time) )
 		throw "failed in reducing the upper bound";
 
 #ifdef HSS_DEBUG
-std::cout << "contracted ub:\t" << *g_time + time_procd << std::endl;
+std::cout << "contracted ub:\t" << time + time_procd << std::endl;
 #endif
 
-	*X = curve(*g_time);
-	*X_left = curve(g_time->left());
+	g_context->x = curve(time);
+	g_context->x_left = curve(time.left());
 #ifndef HSS_SKIP_PPED_T_INF
-	*Dx = curve[*g_time]*dx_prev;
+	g_context->dx_phi = curve[time]*dx_prev;
 #else
-	*Dx = curve[g_time->left()]*dx_prev;
+	g_context->dx_phi = curve[time.left()]*dx_prev;
 #endif
-	*Dt = curve.derivative()(*g_time);
-	*Dt = (*g_der)(*X);
-	*Dh = (*g_grd_h).der()(1);
-	*g_time += time_procd;
+	//g_context->Dt_phi = curve.derivative()(time);
+	g_context->dt_phi = der(g_context->x);
+	g_context->dh = grd_h.der()(1);
+	g_context->time += time_procd;
 
 //	dumpPipe1(cout, timeMap.getCurrentTime(), s, false);
 //	cout << "}" << endl;
@@ -304,17 +308,27 @@ std::cout << "contracted ub:\t" << *g_time + time_procd << std::endl;
 
 int findFirstZeroMid()
 {
+	int dim(g_context->dim);
+	DerMap& der = g_context->der;
+	AuxMap& grd_h = g_context->grd_h;
+	AuxMap& grd_g = g_context->grd_g;
+
+	const Parallelepiped& pped = g_context->pped;
+	const interval& time = g_context->time;
+	interval& time_mid = g_context->time_mid;
+	double time_l = g_context->time_l;
+
 	try{
 
 	// the solver:
-	ITaylor solver(*g_der, /**/20, /**/0.01);
+	ITaylor solver(der, /**/20, /**/0.01);
 	ITimeMap timeMap(solver);
 	timeMap.stopAfterStep(true);
 
 	// the initial value:
-	CapdBox p(P->x());
+	CapdBox p(pped.x());
 
-    interval time_procd(*g_time_l);
+    interval time_procd(time_l);
 
 	while (true) {
 		// integrate 1 step.
@@ -322,44 +336,45 @@ int findFirstZeroMid()
 		if (timeMap.completed())
 			return false;
 
-		*g_time_mid = interval(0,1)*solver.getStep();
+		time_mid = interval(0,1)*solver.getStep();
 #ifdef HSS_DEBUG
-std::cout << std::endl << "step made: " << time_procd + *g_time_mid << std::endl;
+std::cout << std::endl << "step made: " << time_procd + time_mid << std::endl;
 #endif
-		if (intersection(*g_time-time_procd, *g_time_mid, *g_time_mid))
+		if (intersection(time-time_procd, time_mid, time_mid))
 			break;
 
-		time_procd = *g_time_l+timeMap.getCurrentTime();
+		time_procd = time_l+timeMap.getCurrentTime();
 	}
 
 	const ITaylor::CurveType& curve = solver.getCurve();
 
 	// reduce with the interval Newton
-    //interval contracted(*g_time_mid);
+    //interval contracted(time_mid);
     interval time_old;
 	do {
-    	time_old = *g_time_mid;
+    	time_old = time_mid;
 
-		const IVector  dx( (*g_der)(curve(*g_time_mid)) );
-		const interval dh( (*g_grd_h).der()(1)*dx );
+		const IVector  dx( der(curve(time_mid)) );
+		const interval dh( grd_h.der()(1)*dx );
 #ifdef HSS_DEBUG
-std::cout << "contracting:\t" << *g_time_mid+time_procd << std::endl;
+std::cout << "contracting:\t" << time_mid+time_procd << std::endl;
 #endif
-		(*g_der)(curve(g_time_mid->mid()));
-		*g_time_mid = g_time_mid->mid() - (*g_grd_h)()(1) / dh;
+		//der(curve(time_mid.mid()));
+		time_mid = time_mid.mid() - 
+				grd_h(curve(time_mid.mid()))(1) / dh;
 #ifdef HSS_DEBUG
-std::cout << "contracted:\t" << *g_time_mid+time_procd << std::endl;
+std::cout << "contracted:\t" << time_mid+time_procd << std::endl;
 #endif
 
-		if (!intersection(*g_time-time_procd, *g_time_mid, *g_time_mid)) {
+		if (!intersection(time-time_procd, time_mid, time_mid)) {
 			throw "result becomes empty!";
 		}
-	} while (hausdorff(time_old, *g_time_mid) >= HSS_EPSILON);
+	} while (hausdorff(time_old, time_mid) >= HSS_EPSILON);
 
-	*X_mid = curve(*g_time_mid);
-	*g_time_mid += time_procd;
+	g_context->x_mid = curve(time_mid);
+	time_mid += time_procd;
 #ifdef HSS_DEBUG
-std::cout << std::endl << "mid:\t" << *X_mid << " at " << *g_time_mid << std::endl << std::endl;
+std::cout << std::endl << "mid:\t" << g_context->x_mid << " at " << time_mid << std::endl << std::endl;
 #endif
 
 	} catch(exception& e) {

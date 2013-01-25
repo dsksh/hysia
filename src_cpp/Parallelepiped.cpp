@@ -1,6 +1,6 @@
 #include "util.h"
 
-#include "parallelotope.h"
+#include "Parallelepiped.h"
 
 namespace capd{ 
 

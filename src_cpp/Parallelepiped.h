@@ -17,6 +17,9 @@ typedef capd::dynset::C0Rect2Set<IMatrix> CapdBox;
 class Parallelepiped
 {
 public:
+	Parallelepiped()
+	{}
+
 	Parallelepiped(const capd::IMatrix& A, const capd::IVector& u, const capd::IVector& x)
 		: m_A(A), m_u(u), m_x(x)
 	{}

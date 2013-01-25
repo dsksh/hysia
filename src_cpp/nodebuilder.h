@@ -43,28 +43,3 @@ void integrate(const float, const float, const float, const float);
 #ifdef __cplusplus
 }
 #endif
-
-#ifdef __cplusplus
-#include <memory>
-//#include "boost/shared_ptr.hpp"
-#include "capd/capdlib.h"
-#include "MapEx.h"
-
-//typedef boost::shared_ptr<DerMap> DMapPtr;
-typedef std::auto_ptr<capd::DerMap> DMapPtr;
-//typedef capd::map::Function<capd::DerMap::VectorType> CapdFun;
-//typedef capd::map::Map<capd::DerMap::MatrixType> CapdMap;
-typedef std::auto_ptr<capd::AuxMap> AuxMapPtr;
-typedef std::auto_ptr<capd::IVector> IVecPtr;
-
-extern DMapPtr g_der;
-extern AuxMapPtr g_grd_h;
-extern AuxMapPtr g_grd_g;
-extern AuxMapPtr g_jump;
-extern IVecPtr g_ivec;
-extern int g_dim;
-
-//capd::DerMap *getIMap();
-//const capd::IVector& getIVec();
-//const int getDim();
-#endif
