@@ -1,5 +1,4 @@
 #include "Context.h"
-#include "nodebuilder.h"
 #include "Parallelepiped.h"
 #include "util.h"
 
@@ -8,11 +7,13 @@
 using namespace std;
 using namespace capd;
 
+CtxPtr g_context;
+
 void simInitialize()
 {
 	cout.precision(17);
 	
-	g_context->initPped();
+	g_context = CtxPtr(new Context(*g_model));
 }
 
 
@@ -64,9 +65,9 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 
 void simulateJump()
 {
-	int dim(g_context->dim);
-	DerMap& der = g_context->der;
-	AuxMap& jump = g_context->jump;
+	int dim(g_model->dim);
+	DerMap& der = g_model->der;
+	AuxMap& jump = g_model->jump;
 
 	Parallelepiped& pped = g_context->pped;
 	const interval& time = g_context->time;
@@ -75,7 +76,6 @@ void simulateJump()
 
 	const IVector& x      = g_context->x;
 	const IVector& x_mid  = g_context->x_mid;
-	const IVector& x_left = g_context->x_left;
 	const IMatrix& dx_phi = g_context->dx_phi;
 	const IVector& dt_phi = g_context->dt_phi;
 	const IVector& dh     = g_context->dh;

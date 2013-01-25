@@ -68,7 +68,7 @@ public:
 	typedef DerMap::NodeType NodeType;
 	typedef DerMap::TreesContainer TreesContainer;
 
-    AuxMap(DerMap&, int, int);
+    AuxMap(DerMap&, int);
 	AuxMap(const AuxMap&);
 	~AuxMap();
 

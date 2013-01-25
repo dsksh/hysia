@@ -71,7 +71,7 @@ std::cout << "contracted lb:\t" << time_procd + time << std::endl;
 #endif
 
 	} while (//time_old != time);
-			 hausdorff(time_old, time) >= HSS_EPSILON);
+			 hausdorff(time_old, time) >= g_context->Epsilon);
 
 	return true;
 }
@@ -125,12 +125,12 @@ std::cout << "proved" << std::endl;
 		time_old = contracted;
 
 		//time = time.mid() + HSS_TAU*(contracted - time.mid());
-		time = contracted.mid() + HSS_TAU*(contracted - contracted.mid());
+		time = contracted.mid() + g_context->Tau*(contracted - contracted.mid());
 #ifdef HSS_DEBUG
 std::cout << "inflated:\t" << time+time_procd << std::endl;
 #endif
 
-	} while (hausdorff(time_old, time) <= HSS_DELTA*d_old);
+	} while (hausdorff(time_old, time) <= g_context->Tau*d_old);
 
 	return false;
 }
@@ -178,7 +178,7 @@ inline bool reduceUpper(DerMap& der, AuxMap& grd_h,
 		intersection(time_old, time, time);
 
 	} while (//time_old != time);
-			 hausdorff(time_old, time) >= HSS_EPSILON);
+			 hausdorff(time_old, time) >= g_context->Epsilon);
 
 	return true;
 }
@@ -186,10 +186,10 @@ inline bool reduceUpper(DerMap& der, AuxMap& grd_h,
 
 int findFirstZero()
 {
-	int dim(g_context->dim);
-	DerMap& der = g_context->der;
-	AuxMap& grd_h = g_context->grd_h;
-	AuxMap& grd_g = g_context->grd_g;
+	int dim(g_model->dim);
+	DerMap& der = g_model->der;
+	AuxMap& grd_h = g_model->grd_h;
+	AuxMap& grd_g = g_model->grd_g;
 
 	Parallelepiped& pped = g_context->pped;
 	interval& time = g_context->time;
@@ -214,7 +214,7 @@ int findFirstZero()
 
 	while (true) {
 		// integrate 1 step.
-		timeMap(MaxTime, p);
+		timeMap(g_context->MaxTime, p);
 		if (timeMap.completed())
 			return false;
 
@@ -236,7 +236,6 @@ std::cout << "dx: " << dx << std::endl;
 //std::cout << "dg: " << grd_g.der()(1)*dx << std::endl;
 #endif
 
-std::cout << "ffz5" << std::endl;
 		// reduce the lower bound
 		if ( reduceLower(der, grd_h, grd_g,
 					curve, time_init, time_procd, time) )
@@ -308,10 +307,8 @@ std::cout << "contracted ub:\t" << time + time_procd << std::endl;
 
 int findFirstZeroMid()
 {
-	int dim(g_context->dim);
-	DerMap& der = g_context->der;
-	AuxMap& grd_h = g_context->grd_h;
-	AuxMap& grd_g = g_context->grd_g;
+	DerMap& der = g_model->der;
+	AuxMap& grd_h = g_model->grd_h;
 
 	const Parallelepiped& pped = g_context->pped;
 	const interval& time = g_context->time;
@@ -332,7 +329,7 @@ int findFirstZeroMid()
 
 	while (true) {
 		// integrate 1 step.
-		timeMap(MaxTime, p);
+		timeMap(g_context->MaxTime, p);
 		if (timeMap.completed())
 			return false;
 
@@ -369,7 +366,7 @@ std::cout << "contracted:\t" << time_mid+time_procd << std::endl;
 		if (!intersection(time-time_procd, time_mid, time_mid)) {
 			throw "result becomes empty!";
 		}
-	} while (hausdorff(time_old, time_mid) >= HSS_EPSILON);
+	} while (hausdorff(time_old, time_mid) >= g_context->Epsilon);
 
 	g_context->x_mid = curve(time_mid);
 	time_mid += time_procd;

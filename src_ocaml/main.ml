@@ -7,6 +7,8 @@ let usage = "usage: hss [options] input.txt"
 let debug = ref false
 
 let spec = [
+  "-n",  Arg.Int (fun n -> Simulating.step_max := n), 
+                                "sets the # steps to simulate";
   "-g",  Arg.Set debug,         "sets the debug flag";
 ]
 

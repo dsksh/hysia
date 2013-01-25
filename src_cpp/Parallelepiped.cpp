@@ -1,5 +1,6 @@
 #include "util.h"
 
+#include "Context.h"
 #include "Parallelepiped.h"
 
 namespace capd{ 
@@ -26,7 +27,7 @@ DMatrix characteristic(const DMatrix& jA) {
 	DMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(B) );
 	//DMatrix B_inv( capd::matrixAlgorithms::gaussInverseMatrix(B) );
 
-	if (norm(B)*norm(B_inv) > QRThreshold) {
+	if (norm(B)*norm(B_inv) > g_context->QrThres) {
 		capd::matrixAlgorithms::QR_decompose(B, B, B_inv);
 //std::cout << "Q: " << B << std::endl;
 //std::cout << "R: " << B_inv << std::endl;

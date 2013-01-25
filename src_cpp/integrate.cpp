@@ -6,7 +6,6 @@
 #include "NodeVisitor.h"
 #include "NodeVisitorDiff.h"
 #include "util.h"
-#include "nodebuilder.h"
 
 using namespace capd;
 //using namespace capd::dynset;

@@ -118,10 +118,10 @@ void DerMap::doneTree()
 
 /* AuxMap implementation. */
 
-AuxMap::AuxMap(DerMap& dmap, int dim_v, int dim_f) 
-	: BasicFunction<ScalarType>(), m_dmap(dmap), m_trees(dim_f,dim_v)
+AuxMap::AuxMap(DerMap& dmap, int dim_f) 
+	: BasicFunction<ScalarType>(), m_dmap(dmap), m_trees(dim_f,dmap.dimension())
 {
-	m_dim = dim_v;
+	m_dim = dmap.dimension();
 	m_dim2 = dim_f;
 	m_indexOfFirstParam = m_dim;
 	m_order = 1;

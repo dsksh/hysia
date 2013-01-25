@@ -5,7 +5,7 @@ extern "C" {
 
 void init(const int dim);
 int putVariable(const char *);
-int setParam(const char *, const double, const double);
+void setParam(const char *, const double, const double);
 
 void putVarNode(const int);
 void putScalarNode(const double, const double);
