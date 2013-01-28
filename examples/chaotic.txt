@@ -1,0 +1,10 @@
+var x,y;
+der 1,y;
+init -1*[-1e-13,1e-13],0.03405097070256967;
+grd_h x-1;
+grd_g -x;
+jump -1, cos y;
+
+order = 5;
+t_end = 10;
+h_max = 1;
