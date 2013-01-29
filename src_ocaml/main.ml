@@ -38,8 +38,8 @@ let () =
   try 
     let ptree,args = Parser.main Lexer.token lb in
     let ptree = Ptree.simplify ptree in
-    if !debug then
-      printf "@[%a@]@." PPtree.print ptree;
+    (*if !debug then
+      printf "@[%a@]@." PPtree.print ptree;*)
 
     let model = Model.make ptree in
     if !debug then

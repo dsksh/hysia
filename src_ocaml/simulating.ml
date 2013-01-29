@@ -2,7 +2,7 @@ open Model_common
 open Capd_simulating_stubs
 open Util
 
-let step_max= ref 5
+let step_max = ref 5
 
 (*let integrate args =
   let a1 = try MParam.find "t_end" args with Not_found -> 1. in
@@ -14,12 +14,17 @@ let step_max= ref 5
 
 let simulate () =
   initialize ();
+  print_pped true false;
   for i = 1 to !step_max do
-    Printf.printf "step %d\n" i;
-    if find_first_zero () then
-      if find_first_zero_mid () then
-        simulate_jump ()
+    Printf.printf "step %d\n%!" i;
+    if find_first_zero () then begin
+      if find_first_zero_mid () then begin
+        (*print_pped true false;*)
+        simulate_jump ();
+        print_pped false false 
   
-      else error FindZeroMidError
-    else error FindZeroError
-  done
+      end else error FindZeroMidError
+    end else error FindZeroError
+  done;
+  print_pped true true;
+  dispose ();

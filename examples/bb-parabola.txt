@@ -1,0 +1,13 @@
+var   x,y,dx,dy;
+der   dx,dy,0,-10;
+init  1,10,0,0;
+grd_h x^2-y;
+#grd_g dy - 2*x*dx;
+grd_g dy - 2*x*dx;
+jump  x,y,
+      dx - 1.9 * ((2*x*dx - dy) / (4*x^2 +1)) * 2*x,
+      dy + 1.9 * ((2*x*dx - dy) / (4*x^2 +1));
+
+order = 5;
+t_end = 10;
+h_max = 1;

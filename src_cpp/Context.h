@@ -58,8 +58,12 @@ public:
 	const double Delta;
 	const double Tau;
 
+	std::ostream& cout;
+	std::ostream& fout;
+
 	/// constractor
 	Context(const Model& m,
+			std::ostream& co, std::ostream& fo,
 			const double maxT = 100, const int qrThres = 100,
 			const int freq = 100, const std::string dumpFile = "pped.dat",
 			const double eps = 1e-8, const double delta = 0.99, const double tau = 1.1)
@@ -73,7 +77,9 @@ public:
 
 	    MaxTime(maxT), QrThres(qrThres),
 	    PrintFreq(freq), DumpFilename(dumpFile),
-	    Epsilon(eps), Delta(delta), Tau(tau)
+	    Epsilon(eps), Delta(delta), Tau(tau),
+
+	    cout(co), fout(fo)
 	{}
 };
 

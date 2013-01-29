@@ -1,3 +1,7 @@
+#include <memory>
+#include <iostream>
+#include <fstream>
+
 #include "Context.h"
 #include "Parallelepiped.h"
 #include "util.h"
@@ -9,11 +13,26 @@ using namespace capd;
 
 CtxPtr g_context;
 
+typedef auto_ptr<ofstream> fstreamPtr;
+fstreamPtr g_fstream;
+
 void simInitialize()
 {
-	cout.precision(17);
+	std::cout.precision(17);
+	std::cout.setf(ios::fixed,ios::floatfield);
 	
-	g_context = CtxPtr(new Context(*g_model));
+	g_fstream = fstreamPtr(new ofstream("pped.dat"));
+	g_fstream->precision(17);
+	g_fstream->setf(ios::fixed,ios::floatfield);
+
+	g_context = CtxPtr(new Context(*g_model, cnull, *g_fstream));
+
+	g_context->fout << '{' << endl;
+}
+
+void simDispose()
+{
+	g_context->fout << '}' << endl;
 }
 
 
@@ -30,7 +49,7 @@ IVector simulate(IMap& der, const IVector& x, const interval& time)
 		result = timeMap(time, s);
 	} 
 	catch(std::exception& e) {
-		std::cerr << "\n\nException caught!\n" << e.what() << std::endl;
+		std::cerr << "\n\nException caught!\n" << e.what() << endl;
 	}
 
 	return result;
@@ -56,7 +75,7 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 		dt_phi = der(result);
 	} 
 	catch(std::exception& e) {
-		std::cerr << "\n\nException caught!\n" << e.what() << std::endl;
+		std::cerr << "\n\nException caught!\n" << e.what() << endl;
 	}
 
 	return result;
@@ -73,6 +92,7 @@ void simulateJump()
 	const interval& time = g_context->time;
 	const interval& time_mid = g_context->time_mid;
 	double time_l = g_context->time_l;
+	//const double time_l(g_context->time.rightBound());
 
 	const IVector& x      = g_context->x;
 	const IVector& x_mid  = g_context->x_mid;
@@ -85,15 +105,9 @@ void simulateJump()
 	IVector omega_mid( simulate(der, delta_y_mid, 
 							time.right()-time_mid) );
 
-#ifdef HSS_DEBUG
-std::cout << "omega_mid: " << omega_mid << std::endl;
-#endif
+g_context->cout << "omega_mid: " << omega_mid << endl;
 
 	// D_omega
-
-//std::cout << "Dx_phi: " << Dx_phi << std::endl;
-//std::cout << "Dh: " << Dh << std::endl;
-
 	IVector dt_num(dim);
 	const_MatrixIterator<capd::IMatrix> it(dx_phi);
 	for (int i(0); i < dim; ++i) {
@@ -104,8 +118,6 @@ std::cout << "omega_mid: " << omega_mid << std::endl;
 		}
 	}
 
-//std::cout << "Dt_num: " << Dt_num << std::endl;
-
 	interval dh_dt_phi(0);
 	for (int i(0); i < dim; ++i) {
 		dh_dt_phi += dh[i]*dt_phi[i];
@@ -113,9 +125,7 @@ std::cout << "omega_mid: " << omega_mid << std::endl;
 
 	const IVector dt( -dt_num / dh_dt_phi );
 
-#ifdef HSS_DEBUG
-std::cout << "Dt: " << dt_phi << std::endl;
-#endif
+g_context->cout << "Dt: " << dt_phi << endl;
 
 
 	IMatrix dt_phi_dt(dim,dim);
@@ -144,9 +154,59 @@ std::cout << "Dt: " << dt_phi << std::endl;
 	}
 
 	const IMatrix d_omega( dx_psi_delta - dt_psi_dt );
-#ifdef HSS_DEBUG
-std::cout << "D_omega: " << d_omega << std::endl;
-#endif
+g_context->cout << "D_omega: " << d_omega << endl;
 
 	pped = map_parallelepiped(pped, d_omega, omega_mid);
 }
+
+void integrate(const float t_end, const float order, const float h_min, const float h_max)
+{
+ 	try{
+ 
+ 	// The solver:
+ 	ITaylor solver(g_model->der, order, h_min);
+ 	ITimeMap timeMap(solver);
+ 
+ 	// The initial value:
+ 	C0Rect2Set s(g_model->x_init);
+ 
+ 	cout << '{' << endl;
+ 	printPipe(cout, 0, s);
+ 
+ 	// Here we start to integrate.
+ 	// The time of integration:
+ 	double T(t_end);
+ 	timeMap.stopAfterStep(true);
+ 	interval prevTime(0.);
+ 
+ 	//try{
+ 	do 
+ 	{
+ 		//IVector v = timeMap(T,s);
+ 		timeMap.moveSet(T, s);
+ 
+ 		interval stepMade(solver.getStep());
+ 		const ITaylor::CurveType& curve = solver.getCurve();
+ 
+ 		int grid(stepMade.rightBound()/h_max + 0.9999999999);
+ 		if (grid==0) grid = 1;
+ //cout << stepMade.rightBound()/h_max << endl;
+ 		for(int i=0;i<grid;++i)
+ 		{
+ 			interval subsetOfDomain = interval(i,i+1)*stepMade/grid;
+ 
+ 			IVector v = curve(subsetOfDomain);
+ 			printPipe(cout, prevTime+subsetOfDomain, v);
+ 		}
+ 		prevTime = timeMap.getCurrentTime();
+ 
+ 	} while(!timeMap.completed());
+ 
+ 	printPipe(cout, timeMap.getCurrentTime(), s);
+ 	cout << "}" << endl;
+ 
+ 	} catch(exception& e)
+ 	{
+ 		cout << "\n\nException caught!\n" << e.what() << endl << endl;
+ 	}
+ }

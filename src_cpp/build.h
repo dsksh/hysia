@@ -38,7 +38,7 @@ void putGrdDTree(const int, const int);
 void putJumpTree(const int); 
 void putJumpDTree(const int, const int); 
 
-void integrate(const float, const float, const float, const float);
+/*void integrate(const float, const float, const float, const float);*/
 
 #ifdef __cplusplus
 }

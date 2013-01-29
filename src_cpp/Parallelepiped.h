@@ -5,7 +5,7 @@
 #include "capd/dynset/C1Pped2Set.h"
 #include "capd/matrixAlgorithms/matrixAlgorithmsLib.h"
 
-#include "util.h"
+//#include "util.h"
 
 namespace capd{ 
 

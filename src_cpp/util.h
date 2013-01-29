@@ -7,12 +7,19 @@
 #include "capd/dynset/C1PpedSet.h"
 #include "capd/dynset/C1Pped2Set.h"
 
+#include "Parallelepiped.h"
+
+namespace capd{ 
+
 //#define INFINITY HUGE_VAL
 #define UNIVERSE interval(INFINITY, INFINITY)
 
 //#define HSS_PRINT_FREQ 72
 #define HSS_DUMP_PPED
 #define HSS_DEBUG
+
+extern std::ostream cnull;
+
 
 ////#define HSS_DUMP_FILENAME "pped.dat"
 ////#define HSS_CONF_FILENAME "hss.conf"
@@ -25,12 +32,9 @@
 //
 ////#define HSS_BOX_BASED
 ////#define HSS_SKIP_PPED_T_INF
-//
-//static int PrintFreq(100);
-//static std::string DumpFilename("pped.dat");
-//static int MaxTime(100);
-//static int QRThreshold(100);
 
+
+/// interval operators
 
 /// extended division on intervals
 inline void extDiv(const interval& denominator, const interval& numerator, 
@@ -135,63 +139,91 @@ inline double hausdorff(const interval& I1, const interval& I2)
 }	
 
 
-inline void dumpInterval(std::ostream& out, const interval& value)
+/// printing functions
+
+inline void printInterval(std::ostream& out, const interval& value)
 {
-	out << '[' << value.leftBound() << ',' << value.rightBound() << ']';
+	out << '{' << value.leftBound() << ',' << value.rightBound() << '}';
 	out.flush();
 }
 
 
-inline void dumpPipe(std::ostream& out,
-					 const interval& time, const capd::IVector& value)
-{
-	out << "{" << std::endl;
-	out << "  \"plot\":\t0," << std::endl;
-
-	// time
-	out << "  \"time\":\t";
-	out << '[' << time.leftBound() << ',' << time.rightBound() << ']';
-
-	// each axis
-	for (int i(0); i < value.size(); ++i) {
-		out << ',' << std::endl;
-
-		// name
-		out << "  \"x" << i << "\":\t";
-		// value
-		out << '[' << value[i].leftBound() << ',' << value[i].rightBound() << ']';
-	}
-
-	out << std::endl << "}" << std::endl << std::endl;
-	out.flush();
-}
-
-inline void dumpPipe1(std::ostream& out,
-					  const interval& time, const capd::IVector& value,
-					  bool print_comma = true)
-{
-	out << "{ " << std::endl;
-
-	// time
-	out << '{' << time.leftBound() << ',' << time.rightBound() << '}';
-
-	// each axis
-	for (int i(0); i < value.size(); ++i) {
-		out << ", " << std::endl;
-		out << '{' << value[i].leftBound() << ',' << value[i].rightBound() << '}';
-	}
-
-	out << std::endl << (print_comma ? " }," : " }") << std::endl;
-	out.flush();
-}
-
+/// printPped
 
 template<typename Piped>
-inline void dumpPped(std::ostream& out, const Piped& value);
+inline void printPped(std::ostream& out, const Piped& value);
 
 template<>
-inline void dumpPped(std::ostream& out, 
-					 const capd::C0Rect2Set& value)
+inline void printPped(std::ostream& out, const capd::IVector& value) {
+
+	out << "box[{" << std::endl;
+
+	// each axis
+	for (int i(0); i < value.size(); ++i) {
+		if (i>0) out << ", " << std::endl;
+		printInterval(out, value[i]);
+	}
+
+	out << "}]" << std::endl;
+	out.flush();
+}
+
+template<>
+inline void printPped(std::ostream& out, const Parallelepiped& value) {
+
+	out << "pped[" << std::endl;
+
+	// x
+	out << "{ " << std::endl;
+	bool first(true);
+	for (int i(0); i < value.x().size(); ++i) {
+		if (!first)
+			out << ", " << std::endl;
+		else
+			first = false;
+
+		//out << '{' << value.x().leftBound() << ',' << value.x().rightBound() << '}';
+		out << value.x()[i].leftBound();
+	}
+	out << std::endl << "}," << std::endl;
+
+	// B
+	out << "{ " << std::endl;
+	const_MatrixIterator<capd::IMatrix> it(value.A());
+	for (int i(0); i < value.A().numberOfRows(); ++i) {
+		it = value.A().beginOfRow(i+1);
+		if (i >= 1) out << ',' << std::endl;
+		out << '{';
+		for (int j(0); j < value.A().numberOfColumns(); ++j) {
+			if (j >= 1) out << ", ";
+			//out << '{' << (*it).leftBound() << ',' << (*it).rightBound() << '}';
+			out << (*it).leftBound();
+			it.moveToNextColumn();
+		}
+		out << '}';
+	}
+	out << std::endl << "}," << std::endl;
+
+	// r
+	out << "{" << std::endl;
+	first = true;
+	for (int i(0); i < value.u().size(); ++i) {
+		if (!first)
+			out << ", " << std::endl;
+		else
+			first = false;
+
+		out << '{' << value.u()[i].leftBound() << ',' << value.u()[i].rightBound() << '}';
+	}
+	out << std::endl << "}" << std::endl;
+
+	out << "]" << std::endl;
+	out.flush();
+}
+
+template<>
+inline void printPped(std::ostream& out, 
+					  const capd::C0Rect2Set& value)
 {
 	out << "pped[" << std::endl;
 
@@ -239,13 +271,13 @@ inline void dumpPped(std::ostream& out,
 	}
 	out << std::endl << "}" << std::endl;
 
-	out << std::endl << "]," << std::endl;
+	out << std::endl << "]" << std::endl;
 	out.flush();
 }
 
 template<>
-inline void dumpPped(std::ostream& out, 
-					 const capd::dynset::C1PpedSet<capd::IMatrix>& value)
+inline void printPped(std::ostream& out, 
+					  const capd::dynset::C1PpedSet<capd::IMatrix>& value)
 {
 	out << "pped[" << std::endl;
 
@@ -293,13 +325,13 @@ inline void dumpPped(std::ostream& out,
 	}
 	out << std::endl << "}" << std::endl;
 
-	out << std::endl << "]," << std::endl;
+	out << std::endl << "]" << std::endl;
 	out.flush();
 }
 
 template<>
-inline void dumpPped(std::ostream& out, 
-					 const capd::dynset::C1Pped2Set<capd::IMatrix>& value)
+inline void printPped(std::ostream& out, 
+				      const capd::dynset::C1Pped2Set<capd::IMatrix>& value)
 {
 	out << "pped2[" << std::endl;
 
@@ -377,29 +409,32 @@ inline void dumpPped(std::ostream& out,
 	}
 	out << std::endl << "}" << std::endl;
 
-	out << std::endl << "]," << std::endl;
+	out << std::endl << "]" << std::endl;
 	out.flush();
 }
 
 
-template<typename Piped>
-inline void dumpPipe(std::ostream& out, const interval& time, const Piped& value);
+/// dumpPipe
 
-inline void dumpPipe(std::ostream& out,
-					 const interval& time, const capd::C0Rect2Set& value)
+template<typename Piped>
+inline void printPipe(std::ostream& out, const interval& time, const Piped& value)
+//inline void printPipe(std::ostream& out,
+//					  const interval& time, const capd::C0Rect2Set& value)
 {
 	out << "{ " << std::endl;
 
 	// time
-	dumpInterval(out, time);
+	printInterval(out, time);
 
 	out << "," << std::endl;
 
 	// each axis
-	dumpPped(out, value);
+	printPped(out, value);
 
-	out << std::endl << " }," << std::endl;
+	out << "}" << std::endl;
 	out.flush();
 }
+
+} // the end of the namespace capd
 
 #endif // _CAPD_UTIL_H_

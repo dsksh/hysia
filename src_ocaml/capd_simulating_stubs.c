@@ -11,24 +11,24 @@
 #include <caml/alloc.h>
 #include <caml/custom.h>
 
-#include "capd_integrator.h"
-#include "nodebuilder.h"
+/*#include "capd_integrator.h"*/
+#include "build.h"
 #include "simulate.h"
 
 #define LOG_DEBUG(msg, sig) 1
 /*#define LOG_DEBUG(msg, sig) fprintf(stderr, "[capd_stubs] %s: %d\n", msg, sig)*/
 
-/*value sim_integrate(value a1, value a2, value a3, value a4)
-{
-	CAMLparam4(a1, a2, a3, a4);
-	integrate(Double_val(a1), Double_val(a2), Double_val(a3), Double_val(a4));
-	CAMLreturn(Val_unit);
-}*/
-
 value sim_initialize()
 {
 	CAMLparam0();
 	simInitialize();
+	CAMLreturn(Val_unit);
+}
+
+value sim_dispose()
+{
+	CAMLparam0();
+	simDispose();
 	CAMLreturn(Val_unit);
 }
 
@@ -50,5 +50,12 @@ value sim_simulate_jump()
 {
 	CAMLparam0();
 	simulateJump();
+	CAMLreturn(Val_unit);
+}
+
+value sim_print_pped(value is_lb, value is_last)
+{
+	CAMLparam2(is_lb, is_last);
+	printPped(Bool_val(is_lb), Bool_val(is_last));
 	CAMLreturn(Val_unit);
 }

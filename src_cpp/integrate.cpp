@@ -17,8 +17,8 @@ using namespace std;
 
 int main()
 {
-	cout.precision(17);
-	cout.setf(ios::fixed,ios::floatfield);
+	std::cout.precision(17);
+	std::cout.setf(ios::fixed,ios::floatfield);
 
 	//// This is vector field for the Rossler system
 	//IMap vectorField("par:a,b;var:x,y,z;fun:-(y+z),x+b*y,b+z*(x-a);");
@@ -117,7 +117,7 @@ int main()
 	timeMap.stopAfterStep(true);
 	interval prevTime(0.);
 
-	cout << '{' << endl;
+	std::cout << '{' << endl;
 
 	//try{
 		do 
@@ -145,7 +145,7 @@ int main()
 				IVector v = curve(subsetOfDomain);
 				//std::cout << "\nenclosure for t=" << prevTime + subsetOfDomain << ":  " << v;
 				//std::cout << "\ndiam(enclosure): " << diam(v);
-				dumpPipe1(cout, prevTime+subsetOfDomain, v);
+				printPipe(std::cout, prevTime+subsetOfDomain, v);
 			}
 			prevTime = timeMap.getCurrentTime();
 			//cout << endl << "current time: " << prevTime << endl << endl;
@@ -153,8 +153,8 @@ int main()
 		} while(!timeMap.completed());
 	} catch(exception& e)
 	{
-		cout << "\n\nException caught!\n" << e.what() << endl << endl;
+		std::cout << "\n\nException caught!\n" << e.what() << endl << endl;
 	}
 
-	cout << "{} }" << endl;
+	std::cout << "{} }" << endl;
 }  // END
