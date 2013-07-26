@@ -214,11 +214,11 @@ g_context->cout << "dx: " << dx << endl;
 		bool res( reduceLower(der, grd_h, grd_g, curve, time_init, time_procd, time) );
 
 		// dump the trajectory paving.
-		if (!res) time = time_init;
-		const double MaxH(0.01);
-		int grid(time.rightBound()/MaxH + 0.9999999999);
+		const double MaxH(0.03);
+		double stepW(res ? time.leftBound() : time_init.rightBound());
+		int grid(stepW/MaxH + 0.9999999999);
  		if (grid==0) grid = 1;
-		const double stepW(time.rightBound()/grid - 0.0000001);
+		stepW = stepW/grid - 0.0000001;
  		for(int i(0); i<grid; ++i)
  		{
  			const interval step( interval(i,i+1)*stepW );

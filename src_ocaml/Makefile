@@ -86,9 +86,9 @@ plugins: plugins.opt
 # hss library
 #############
 
-LIBGENERATED = lexer.ml parser.mli parser.ml
+LIBGENERATED = lexer.ml parser.mli parser.ml parser_atm.mli parser_atm.ml
 
-LIBMODULES = hashcons model_common pretty ptree util model parser lexer capd_sending simulating
+LIBMODULES = hashcons model_common pretty ptree util model parser parser_atm lexer capd_sending simulating
 
 LIBML  = $(addsuffix .ml,  $(LIBMODULES))
 LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_stubs.mli capd_simulating_stubs.mli

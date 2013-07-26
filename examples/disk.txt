@@ -1,10 +1,10 @@
-var x1, x2;
-der -x2, x1;
-init 1+[-1e-6,1e-6], [-1e-6,1e-6];
+var   x1, x2;
+der   -x2, x1;
+init  0.7+[-1e-6,1e-6], [-1e-6,1e-6];
 grd_h (x1-1)^2 + x2^2 - 1;
 grd_g -2*x2;
-jump -x1+2, -x2;
+jump  -x1+2, -x2;
 
 order = 5;
 t_end = 10;
-h_max = 1;
+h_max = 0.1;
