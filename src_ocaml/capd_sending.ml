@@ -102,7 +102,7 @@ let send_init env v =
   in
   List.map send v
 
-let send_model (var,der,init,grd_h,grd_g,jump,ps) =
+(*let send_model (var,der,init,grd_h,grd_g,jump,ps) =
   initialize (List.length var);
   let env = List.fold_left send_var SM.empty var in
   let env = List.fold_left send_param env ps in
@@ -111,4 +111,22 @@ let send_model (var,der,init,grd_h,grd_g,jump,ps) =
   send_grd_h env grd_h;
   send_grd_g env grd_g;
   List.mapi (send_jump env) jump;
+  ()
+*)
+
+let send_edge env (grd_h,grd_g,dst,jump) =
+  send_grd_h env grd_h;
+  send_grd_g env grd_g;
+  List.mapi (send_jump env) jump
+
+let send_loc env (id,der,edge::_) =
+  List.mapi (send_der env) der;
+  send_edge env edge
+
+let send_model (ps,vars,(_,iexpr),loc::_,sps) =
+  initialize (List.length vars);
+  let env = List.fold_left send_var SM.empty vars in
+  let env = List.fold_left send_param env sps in
+  send_init env iexpr;
+  send_loc env loc;
   ()

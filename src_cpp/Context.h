@@ -3,6 +3,10 @@
 
 #include <memory>
 #include <string>
+#include <utility>
+#include <list>
+
+#include <boost/shared_ptr.hpp>
 
 #include "capd/capdlib.h"
 
@@ -11,25 +15,48 @@
 
 namespace capd{ 
 
+typedef boost::shared_ptr<capd::AuxMap> AuxMapPtr;
+
+struct Edge
+{
+public:
+	std::string dest;
+	AuxMap grd_h;
+	AuxMap grd_g;
+	AuxMap jump;
+
+	/// constractor
+	Edge(capd::DerMap& der, const std::string& destination)
+	  : dest(destination),
+	    grd_h(der, 1), 
+	    grd_g(der, 1),
+		jump(der, der.m_dim)
+	{}
+};
+
+typedef boost::shared_ptr<Edge> EdgePtr;
+typedef std::list<EdgePtr> EdgeSet;
+
 struct Model
 {
 public:
 	const int dim;
+	const std::string name;
 
-	capd::DerMap der;
-	capd::AuxMap grd_h;
-	capd::AuxMap grd_g;
-	capd::AuxMap jump;
 	capd::IVector x_init;
+	capd::DerMap der;
+	EdgeSet edges;
 
 	/// constractor
-	Model(const int d)
+	Model(const int d, const std::string n = "")
 	  : dim(d),
+	    name(n),
+		x_init(d),
 		der(d, 1),
-		grd_h(der, 1), grd_g(der, 1),
-		jump(der, d),
-		x_init(d)
-	{}
+		edges()
+	{
+		edges.push_back(EdgePtr(new Edge(der, name)));
+	}
 };
 
 typedef std::auto_ptr<Model> ModelPtr;

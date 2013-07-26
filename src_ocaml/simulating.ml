@@ -27,4 +27,4 @@ let simulate () =
     end else error FindZeroError
   done;
   print_pped true true;
-  dispose ();
+  dispose ()

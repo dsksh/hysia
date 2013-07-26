@@ -167,29 +167,36 @@ void doneDerTree()
 void putGrdTree(const int s) 
 {
 	if (s == 0)
-		g_model->grd_h.putTree(0, g_stack.front());
+		//g_model->grd_h.putTree(0, g_stack.front());
+		g_model->edges.back()->grd_h.putTree(0, g_stack.front());
 	else
-		g_model->grd_g.putTree(0, g_stack.front());
+		g_model->edges.back()->grd_g.putTree(0, g_stack.front());
    	g_stack.pop_front();
 }
 
 void putGrdDTree(const int s, const int j) 
 {
 	if (s == 0)
-		g_model->grd_h.putDTree(0, j, g_stack.front());
+		//g_model->grd_h.putDTree(0, j, g_stack.front());
+		g_model->edges.back()->grd_h.putDTree(0, j, g_stack.front());
 	else
-		g_model->grd_g.putDTree(0, j, g_stack.front());
+		//g_model->grd_g.putDTree(0, j, g_stack.front());
+		g_model->edges.back()->grd_g.putDTree(0, j, g_stack.front());
    	g_stack.pop_front();
 }
 
 void putJumpTree(const int i) 
 {
-	g_model->jump.putTree(i, g_stack.front()); g_stack.pop_front();
+	//g_model->jump.putTree(i, g_stack.front()); 
+	g_model->edges.back()->jump.putTree(i, g_stack.front());
+	g_stack.pop_front();
 }
 
 void putJumpDTree(const int i, const int j) 
 {
-	g_model->jump.putDTree(i, j, g_stack.front()); g_stack.pop_front();
+	//g_model->jump.putDTree(i, j, g_stack.front()); 
+	g_model->edges.back()->jump.putDTree(i, j, g_stack.front());
+	g_stack.pop_front();
 }
 
 /*void putValue(const double l, const double u)

@@ -86,7 +86,7 @@ void simulateJump()
 {
 	int dim(g_model->dim);
 	DerMap& der = g_model->der;
-	AuxMap& jump = g_model->jump;
+	AuxMap& jump = g_model->edges.back()->jump;
 
 	Parallelepiped& pped = g_context->pped;
 	const interval& time = g_context->time;

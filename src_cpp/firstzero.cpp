@@ -172,8 +172,8 @@ int findFirstZero()
 {
 	int dim(g_model->dim);
 	DerMap& der = g_model->der;
-	AuxMap& grd_h = g_model->grd_h;
-	AuxMap& grd_g = g_model->grd_g;
+	AuxMap& grd_h = g_model->edges.back()->grd_h;
+	AuxMap& grd_g = g_model->edges.back()->grd_g;
 
 	Parallelepiped& pped = g_context->pped;
 	interval& time = g_context->time;
@@ -298,7 +298,7 @@ g_context->cout << "contracted ub:\t" << time + time_procd << endl;
 int findFirstZeroMid()
 {
 	DerMap& der = g_model->der;
-	AuxMap& grd_h = g_model->grd_h;
+	AuxMap& grd_h = g_model->edges.back()->grd_h;
 
 	const Parallelepiped& pped = g_context->pped;
 	const interval& time = g_context->time;

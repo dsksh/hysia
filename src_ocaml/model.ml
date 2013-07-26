@@ -127,26 +127,36 @@ let mk_dexpr var = function
   | _, Papp (op,e) -> mk_dual var (mk_app op (mk_expr e))
   | _, Papp2 (op,e1,e2) -> mk_dual var (mk_app2 op (mk_expr e1) (mk_expr e2))
 
-let make (var,der,init,grd_h,grd_g,jmp,ps) = 
-  (*let nv,nd = List.length var, List.length der in
-  if nv <> nd then error (DimMismatch (nv,nd)) loc
-  else*)
-  let var = List.map snd var in
-  let der = List.map (mk_dexpr var) der in
-  let init = List.map mk_expr init in
+let mk_edge var (_,(grd_h,grd_g,(_,dst),(_,jmp))) =
   let grd_h = mk_dexpr var grd_h in
   let grd_g = mk_dexpr var grd_g in
   let jmp = List.map (mk_dexpr var) jmp in
-  let ps  = List.map snd ps in
-  (var,der,init,grd_h,grd_g,jmp,ps)
-    
+  (grd_h,grd_g,dst,jmp)
 
-type var   = ident
-type der   = dual
-type init  = (*interval*) expr
-type grd   = dual
-type jump  = dual
+let mk_loc var (_,((_,id),(_,der),(_,edges))) =
+  let der = List.map (mk_dexpr var) der in
+  let edges = List.map (mk_edge var) edges in
+  (id,der,edges)
+
+let make (ps,var,(_,Pvar iloc)::ival,locs,sps) = 
+  (*let nv,nd = List.length var, List.length der in
+  if nv <> nd then error (DimMismatch (nv,nd)) loc
+  else*)
+  let ps  = List.map snd ps in
+  let var = List.map snd var in
+  let ival = List.map mk_expr ival in
+  let locs = List.map (mk_loc var) locs in
+  let sps  = List.map snd sps in
+  (ps,var,(iloc,ival),locs,sps)
+
 type param = string * interval
+type id = ident
+type init = ident * expr list
+type dexpr = dual
+type gexpr = dual
+type rexpr = dual
+type edge = dual * dual * ident * dual list
+type location = ident * dual list * edge list
 
 let rec print_expr fmt expr = match expr.node with
   | Var id -> fprintf fmt "%s" id
@@ -162,9 +172,17 @@ let print_dual fmt dual =
   let (e,d) = dual.node in
   fprintf fmt "@[(%a,@ [%a])@]" print_expr e (print_list "," print_expr) d
 
-let print_var fmt id = fprintf fmt "%s" id
-let print_der fmt e = fprintf fmt "%a" print_dual e
-let print_init fmt v = fprintf fmt "%a" print_expr v
-let print_grd fmt e = fprintf fmt "%a" print_dual e
-let print_jump fmt e = fprintf fmt "%a" print_dual e
 let print_param fmt (id,v) = fprintf fmt "%s:=%a" id print_interval v
+let print_id fmt id = fprintf fmt "%s" id
+let print_init fmt (iloc,iexpr) = fprintf fmt "%s %a" iloc (print_list "," print_expr) iexpr
+let print_dexpr fmt e = fprintf fmt "%a" print_dual e
+let print_gexpr fmt e = fprintf fmt "%a" print_dual e
+let print_rexpr fmt e = fprintf fmt "%a" print_dual e
+
+let id_of_loc      (e,_,_) = e
+let dexprs_of_loc  (_,e,_) = e
+let edges_of_loc   (_,_,e) = e
+let gh_of_edge     (e,_,_,_) = e
+let gg_of_edge     (_,e,_,_) = e
+let dst_of_edge    (_,_,e,_) = e 
+let rexprs_of_edge (_,_,_,e) = e 
