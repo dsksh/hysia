@@ -168,12 +168,12 @@ inline bool reduceUpper(DerMap& der, AuxMap& grd_h,
 }
 
 
-int findFirstZero()
+int findFirstZero(const char *lid)
 {
 	int dim(g_model->dim);
-	DerMap& der = g_model->der;
-	AuxMap& grd_h = g_model->edges.back()->grd_h;
-	AuxMap& grd_g = g_model->edges.back()->grd_g;
+	DerMap& der = g_model->locs[lid]->der;
+	AuxMap& grd_h = g_model->locs[lid]->edges.back()->grd_h;
+	AuxMap& grd_g = g_model->locs[lid]->edges.back()->grd_g;
 
 	Parallelepiped& pped = g_context->pped;
 	interval& time = g_context->time;
@@ -295,10 +295,10 @@ g_context->cout << "contracted ub:\t" << time + time_procd << endl;
 }
 
 
-int findFirstZeroMid()
+int findFirstZeroMid(const char *lid)
 {
-	DerMap& der = g_model->der;
-	AuxMap& grd_h = g_model->edges.back()->grd_h;
+	DerMap& der = g_model->locs[lid]->der;
+	AuxMap& grd_h = g_model->locs[lid]->edges.back()->grd_h;
 
 	const Parallelepiped& pped = g_context->pped;
 	const interval& time = g_context->time;

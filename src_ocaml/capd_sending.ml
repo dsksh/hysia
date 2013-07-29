@@ -54,39 +54,39 @@ let rec send_expr env e = match e.node with
   (*| Int _ -> assert false*)
 
 
-let send_der env i dual =
+let send_der lid env i dual =
   let (e,d) = dual.node in
   send_expr env e;
-  put_der_tree i;
+  put_der_tree lid i;
 
   let send_dtree j d =
     send_expr env d;
-    put_der_dtree i j
+    put_der_dtree lid i j
   in
   List.mapi send_dtree d
 
-let send_grd s env dual =
+let send_grd lid s env dual =
   let (e,d) = dual.node in
   send_expr env e;
-  put_grd_tree s;
+  put_grd_tree lid s;
 
   let send_dtree j d =
     send_expr env d;
-    put_grd_dtree s j
+    put_grd_dtree lid s j
   in
   List.mapi send_dtree d
 
-let send_grd_h env dual = send_grd 0 env dual
-let send_grd_g env dual = send_grd 1 env dual
+let send_grd_h lid env dual = send_grd lid 0 env dual
+let send_grd_g lid env dual = send_grd lid 1 env dual
 
-let send_jump env i dual =
+let send_jump lid env i dual =
   let (e,d) = dual.node in
   send_expr env e;
-  put_jump_tree i;
+  put_jump_tree lid i;
 
   let send_dtree j d =
     send_expr env d;
-    put_jump_dtree i j
+    put_jump_dtree lid i j
   in
   List.mapi send_dtree d
 
@@ -102,31 +102,23 @@ let send_init env v =
   in
   List.map send v
 
-(*let send_model (var,der,init,grd_h,grd_g,jump,ps) =
-  initialize (List.length var);
-  let env = List.fold_left send_var SM.empty var in
-  let env = List.fold_left send_param env ps in
-  List.mapi (send_der env) der;
-  send_init env init;
-  send_grd_h env grd_h;
-  send_grd_g env grd_g;
-  List.mapi (send_jump env) jump;
+let send_edge lid env (grd_h,grd_g,dst,jump) =
+  put_edge lid dst;
+  send_grd_h lid env grd_h;
+  send_grd_g lid env grd_g;
+  List.mapi (send_jump lid env) jump
+
+let send_loc env (id,der,edges) =
+  put_location id;
+  List.mapi (send_der id env) der;
+  List.map (send_edge id env) edges;
   ()
-*)
 
-let send_edge env (grd_h,grd_g,dst,jump) =
-  send_grd_h env grd_h;
-  send_grd_g env grd_g;
-  List.mapi (send_jump env) jump
-
-let send_loc env (id,der,edge::_) =
-  List.mapi (send_der env) der;
-  send_edge env edge
-
-let send_model (ps,vars,(_,iexpr),loc::_,sps) =
+let send_model (ps,vars,(_,iexpr),locs,sps) =
   initialize (List.length vars);
-  let env = List.fold_left send_var SM.empty vars in
-  let env = List.fold_left send_param env sps in
+  let env = SM.empty in
+  let env = List.fold_left send_var env vars in
+  let env = List.fold_left send_param env ps in
   send_init env iexpr;
-  send_loc env loc;
+  List.map (send_loc env) locs;
   ()

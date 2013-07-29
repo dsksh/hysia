@@ -32,24 +32,24 @@ value sim_dispose()
 	CAMLreturn(Val_unit);
 }
 
-value sim_find_first_zero()
+value sim_find_first_zero(value lid)
 {
-	CAMLparam0();
-	int res = findFirstZero();
+	CAMLparam1(lid);
+	int res = findFirstZero(String_val(lid));
 	CAMLreturn(Val_bool(res));
 }
 
-value sim_find_first_zero_mid()
+value sim_find_first_zero_mid(value lid)
 {
-	CAMLparam0();
-	int res = findFirstZeroMid();
+	CAMLparam1(lid);
+	int res = findFirstZeroMid(String_val(lid));
 	CAMLreturn(Val_bool(res));
 }
 
-value sim_simulate_jump()
+value sim_simulate_jump(value lid)
 {
-	CAMLparam0();
-	simulateJump();
+	CAMLparam1(lid);
+	simulateJump(String_val(lid));
 	CAMLreturn(Val_unit);
 }
 

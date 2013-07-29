@@ -17,10 +17,10 @@ let simulate () =
   print_pped true false;
   for i = 1 to !step_max do
     Printf.printf "step %d\n%!" i;
-    if find_first_zero () then begin
-      if find_first_zero_mid () then begin
+    if find_first_zero "L" then begin
+      if find_first_zero_mid "L" then begin
         (*print_pped true false;*)
-        simulate_jump ();
+        simulate_jump "L";
         print_pped false false 
   
       end else error FindZeroMidError

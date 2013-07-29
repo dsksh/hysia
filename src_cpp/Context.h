@@ -5,6 +5,7 @@
 #include <string>
 #include <utility>
 #include <list>
+#include <map>
 
 #include <boost/shared_ptr.hpp>
 
@@ -28,8 +29,8 @@ public:
 	/// constractor
 	Edge(capd::DerMap& der, const std::string& destination)
 	  : dest(destination),
-	    grd_h(der, 1), 
-	    grd_g(der, 1),
+	    grd_h(der, der.getOrder()), 
+	    grd_g(der, der.getOrder()),
 		jump(der, der.m_dim)
 	{}
 };
@@ -37,29 +38,57 @@ public:
 typedef boost::shared_ptr<Edge> EdgePtr;
 typedef std::list<EdgePtr> EdgeSet;
 
-struct Model
+struct Location
 {
 public:
-	const int dim;
 	const std::string name;
-
-	capd::IVector x_init;
 	capd::DerMap der;
 	EdgeSet edges;
 
 	/// constractor
-	Model(const int d, const std::string n = "")
-	  : dim(d),
-	    name(n),
-		x_init(d),
-		der(d, 1),
+	Location(const std::string n, const capd::DerMap& dm)
+	  : name(n),
+	    der(dm.dimension(), dm.getOrder()),
+		//der(dm),
+	    //der(d, Order),
 		edges()
-	{
-		edges.push_back(EdgePtr(new Edge(der, name)));
+	{ }
+
+};
+
+typedef boost::shared_ptr<Location> LocPtr;
+typedef std::map<std::string,LocPtr> LocSet;
+
+struct Model
+{
+public:
+	const int dim;
+
+	capd::IVector x_init;
+	capd::DerMap der_proto;
+
+	LocSet locs;
+
+	/// constractor
+	Model(const int d)
+	  : dim(d),
+		x_init(d),
+		der_proto(d, 1)
+	{ 
+		for (int i(0); i < dim; ++i) {
+			der_proto.putTree(i, new capd::map::ConsNode<DerMap::ScalarType>(
+						der_proto.getOrder(), 
+						DerMap::ScalarType(0.,0.) ));
+			for (int j(0); j < dim; ++j) 
+				der_proto.putDTree(i, j, new capd::map::ConsNode<DerMap::ScalarType>( 
+						der_proto.getOrder(), 
+						DerMap::ScalarType(0.,0.) ));
+		}               								  
 	}
 };
 
-typedef std::auto_ptr<Model> ModelPtr;
+//typedef std::auto_ptr<Model> ModelPtr;
+typedef boost::shared_ptr<Model> ModelPtr;
 
 struct Context
 {

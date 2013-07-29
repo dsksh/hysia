@@ -82,11 +82,11 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 }
 
 
-void simulateJump()
+void simulateJump(const char *lid)
 {
 	int dim(g_model->dim);
-	DerMap& der = g_model->der;
-	AuxMap& jump = g_model->edges.back()->jump;
+	DerMap& der = g_model->locs[lid]->der;
+	AuxMap& jump = g_model->locs[lid]->edges.back()->jump;
 
 	Parallelepiped& pped = g_context->pped;
 	const interval& time = g_context->time;
@@ -159,12 +159,13 @@ g_context->cout << "D_omega: " << d_omega << endl;
 	pped = map_parallelepiped(pped, d_omega, omega_mid);
 }
 
-void integrate(const float t_end, const float order, const float h_min, const float h_max)
+void integrate(const char *lid, 
+			   const float t_end, const float order, const float h_min, const float h_max)
 {
  	try{
  
  	// The solver:
- 	ITaylor solver(g_model->der, order, h_min);
+ 	ITaylor solver(g_model->locs[lid]->der, order, h_min);
  	ITimeMap timeMap(solver);
  
  	// The initial value:

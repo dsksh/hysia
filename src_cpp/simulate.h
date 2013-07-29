@@ -5,9 +5,9 @@ extern "C" {
 
 void simInitialize();
 void simDispose();
-int findFirstZero();
-int findFirstZeroMid();
-void simulateJump();
+int findFirstZero(const char *);
+int findFirstZeroMid(const char *);
+void simulateJump(const char *);
 void printPped(int, int);
 
 #ifdef __cplusplus

@@ -41,7 +41,7 @@ DerMap::DerMap(int dim, int order)
 	m_trees = TreesContainer(dim, 1);
 }
 
-inline DerMap::DerMap(const DerMap& rhs)
+DerMap::DerMap(const DerMap& rhs)
 	: capd::map::CnMap<capd::IMatrix,1>(rhs)
 {}
 
