@@ -21,20 +21,28 @@ DMatrix characteristic(const DMatrix& jA) {
 
 	// TODO
 	for (int i(0); i < B.numberOfColumns(); ++i) {
+		// should compute: Bcol(i) / norm(Bcol(i))
 		B.column(i).normalize();
 	}
 
-	DMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(B) );
-	//DMatrix B_inv( capd::matrixAlgorithms::gaussInverseMatrix(B) );
-
-	if (norm(B)*norm(B_inv) > g_context->QrThres) {
-		capd::matrixAlgorithms::QR_decompose(B, B, B_inv);
+	try {
+		DMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(B) );
+		//DMatrix B_inv( capd::matrixAlgorithms::gaussInverseMatrix(B) );
+	
+		if (norm(B)*norm(B_inv) > g_context->QrThres) {
+			capd::matrixAlgorithms::QR_decompose(B, B, B_inv);
 //std::cout << "Q: " << B << std::endl;
 //std::cout << "R: " << B_inv << std::endl;
-	}
+		}
 		//capd::matrixAlgorithms::orthonormalize(B);
-
-	return B;
+	
+		return B;
+	
+	} catch (std::runtime_error &e) {
+	    //std::cout << "runtime_error from CAPD: " << e.what () << std::endl;
+	
+		return DMatrix::Identity(B.numberOfColumns());
+	}
 }
 
 Parallelepiped map_parallelepiped(const Parallelepiped& piped,
@@ -53,8 +61,6 @@ Parallelepiped map_parallelepiped(const Parallelepiped& piped,
 			JA(i+1,j+1) = 0;
 			for (int k(0); k < dim; ++k) {
 				B (i+1,j+1) += (*it1).mid().leftBound() * (*it2).leftBound();
-//std::cout << (*it1).mid() << " * " << (*it2) << std::endl;
-
 				JA(i+1,j+1) += (*it1) * (*it2);
 				it1.moveToNextColumn();
 				it2.moveToNextRow();
@@ -69,8 +75,6 @@ Parallelepiped map_parallelepiped(const Parallelepiped& piped,
 #else
 	B = DMatrix::Identity(dim);
 #endif
-
-//std::cout << "B: " << B << std::endl;
 
 	IMatrix IB;
 	for (int i(0); i < dim; ++i)

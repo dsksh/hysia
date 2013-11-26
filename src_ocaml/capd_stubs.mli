@@ -31,11 +31,14 @@ external done_der_tree: string -> unit -> unit = "caml_done_der_tree"
 (*external put_value: float -> float -> unit = "caml_put_value"*)
 external put_value: unit -> unit = "caml_put_value"
 
-external put_grd_tree:  string -> int -> unit = "caml_put_grd_tree"
-external put_grd_dtree: string -> int -> int -> unit = "caml_put_grd_dtree"
+external put_grd_tree:  string -> string -> int -> unit = "caml_put_grd_tree"
+external put_grd_dtree: string -> string -> int -> int -> unit = "caml_put_grd_dtree"
 
-external put_jump_tree:  string -> int -> unit = "caml_put_jump_tree"
-external put_jump_dtree: string -> int -> int -> unit = "caml_put_jump_dtree"
+external put_jump_tree:  string -> string -> int -> unit = "caml_put_jump_tree"
+external put_jump_dtree: string -> string -> int -> int -> unit = "caml_put_jump_dtree"
 
 external put_edge: string -> string -> unit = "caml_put_edge"
 external put_location: string -> unit = "caml_put_location"
+
+
+external set_solving_param: string -> float -> unit = "caml_set_solving_param"

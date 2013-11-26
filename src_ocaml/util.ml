@@ -7,6 +7,7 @@ type error =
   | SyntaxError
   | FindZeroError
   | FindZeroMidError
+  | SelectEarliestError of (float*float) * (float*float)
 
 exception LError of error * loc
 exception LWarning of error * loc
@@ -24,6 +25,8 @@ let report fmt = function
       fprintf fmt "failed to find a zero crossing"
   | FindZeroMidError -> 
       fprintf fmt "failed to find the midpoint of the zero crossing"
+  | SelectEarliestError _ -> 
+      fprintf fmt "failed to find the earliest discrete change"
 
 let error e l = raise (LError (e,l))
 let warning e l = raise (LWarning (e,l))

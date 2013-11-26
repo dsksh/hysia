@@ -202,31 +202,31 @@ value caml_done_der_tree(value lid)
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_grd_tree(value lid, value s)
+value caml_put_grd_tree(value lid, value dst, value s)
 {
-	CAMLparam2(lid, s);
-	putGrdTree(String_val(lid), Int_val(s));
+	CAMLparam3(lid, dst, s);
+	putGrdTree(String_val(lid), String_val(dst), Int_val(s));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_grd_dtree(value lid, value s, value j)
+value caml_put_grd_dtree(value lid, value dst, value s, value j)
 {
-	CAMLparam3(lid, s, j);
-	putGrdDTree(String_val(lid), Int_val(s), Int_val(j));
+	CAMLparam4(lid, dst, s, j);
+	putGrdDTree(String_val(lid), String_val(dst), Int_val(s), Int_val(j));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_jump_tree(value lid, value i)
+value caml_put_jump_tree(value lid, value dst, value i)
 {
-	CAMLparam2(lid, i);
-	putJumpTree(String_val(lid), Int_val(i));
+	CAMLparam3(lid, dst, i);
+	putJumpTree(String_val(lid), String_val(dst), Int_val(i));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_jump_dtree(value lid, value i, value j)
+value caml_put_jump_dtree(value lid, value dst, value i, value j)
 {
-	CAMLparam3(lid, i, j);
-	putJumpDTree(String_val(lid), Int_val(i), Int_val(j));
+	CAMLparam4(lid, dst, i, j);
+	putJumpDTree(String_val(lid), String_val(dst), Int_val(i), Int_val(j));
 	CAMLreturn(Val_unit);
 }
 
@@ -241,5 +241,12 @@ value caml_put_location(value lid)
 {
 	CAMLparam1(lid);
 	putLocation(String_val(lid));
+	CAMLreturn(Val_unit);
+}
+
+value caml_set_solving_param(value id, value val)
+{
+	CAMLparam2(id, val);
+	setSolvingParam(String_val(id), Double_val(val));
 	CAMLreturn(Val_unit);
 }

@@ -10,7 +10,7 @@
 
 #include "MapEx.h"
 #include "NodeEx.h"
-#include "Context.h"
+#include "Model.h"
 #include "util.h"
 #include "build.h"
 
@@ -20,6 +20,7 @@ using namespace capd::map;
 
 // the model instance
 ModelPtr g_model;
+ParamsPtr g_params;
 
 typedef list<DerMap::NodeType *> NodeList;
 NodeList g_stack;
@@ -28,6 +29,7 @@ int ivec_pos;
 void init(const int dim)
 {
 	g_model = ModelPtr(new Model(dim));
+	g_params = ParamsPtr(new SolvingParams());
 	g_stack.clear();
 	ivec_pos = 0;
 }
@@ -172,38 +174,38 @@ void doneDerTree(const char *lid)
 	g_model->locs[lid]->der.doneTree();
 }
 
-void putGrdTree(const char *lid, const int s) 
+void putGrdTree(const char *lid, const char *dst, const int s) 
 {
 	if (s == 0)
 		//g_model->grd_h.putTree(0, g_stack.front());
-		g_model->locs[lid]->edges.back()->grd_h.putTree(0, g_stack.front());
+		g_model->locs[lid]->edges[dst]->grd_h.putTree(0, g_stack.front());
 	else
-		g_model->locs[lid]->edges.back()->grd_g.putTree(0, g_stack.front());
+		g_model->locs[lid]->edges[dst]->grd_g.putTree(0, g_stack.front());
    	g_stack.pop_front();
 }
 
-void putGrdDTree(const char *lid, const int s, const int j) 
+void putGrdDTree(const char *lid, const char *dst, const int s, const int j) 
 {
 	if (s == 0)
 		//g_model->grd_h.putDTree(0, j, g_stack.front());
-		g_model->locs[lid]->edges.back()->grd_h.putDTree(0, j, g_stack.front());
+		g_model->locs[lid]->edges[dst]->grd_h.putDTree(0, j, g_stack.front());
 	else
 		//g_model->grd_g.putDTree(0, j, g_stack.front());
-		g_model->locs[lid]->edges.back()->grd_g.putDTree(0, j, g_stack.front());
+		g_model->locs[lid]->edges[dst]->grd_g.putDTree(0, j, g_stack.front());
    	g_stack.pop_front();
 }
 
-void putJumpTree(const char *lid, const int i) 
+void putJumpTree(const char *lid, const char *dst, const int i) 
 {
 	//g_model->jump.putTree(i, g_stack.front()); 
-	g_model->locs[lid]->edges.back()->jump.putTree(i, g_stack.front());
+	g_model->locs[lid]->edges[dst]->jump.putTree(i, g_stack.front());
 	g_stack.pop_front();
 }
 
-void putJumpDTree(const char *lid, const int i, const int j) 
+void putJumpDTree(const char *lid, const char *dst, const int i, const int j) 
 {
 	//g_model->jump.putDTree(i, j, g_stack.front()); 
-	g_model->locs[lid]->edges.back()->jump.putDTree(i, j, g_stack.front());
+	g_model->locs[lid]->edges[dst]->jump.putDTree(i, j, g_stack.front());
 	g_stack.pop_front();
 }
 
@@ -227,12 +229,31 @@ void putValue()
 
 void putEdge(const char *lid, const char *dst)
 {
-	g_model->locs[lid]->edges.push_back(EdgePtr(new Edge(g_model->locs[lid]->der, dst)));
+	g_model->locs[lid]->edges.insert( pair<string,EdgePtr>(dst,
+				EdgePtr(new Edge(g_model->locs[lid]->der, dst)) ));
 }
 
 void putLocation(const char *name)
 {
 	g_model->locs.insert( pair<string,LocPtr>(name, 
-				LocPtr(new Location(name, g_model->der_proto))) );
-	//cout << g_model->der_proto.m_order << endl;
+				LocPtr(new Location(name, g_model->der_proto)) ));
+}
+
+void setSolvingParam(const char *id, const double value)
+{
+	if (strcmp(id, "order") == 0) {
+		g_params->order = value;
+	}
+	else if (strcmp(id, "t_end") == 0) {
+		g_params->t_end = value;
+	}
+	else if (strcmp(id, "h_max") == 0) {
+		g_params->h_max = value;
+	}
+	else if (strcmp(id, "h_min") == 0) {
+		g_params->h_min= value;
+	}
+	else {
+		// TODO
+	}
 }

@@ -26,7 +26,7 @@ using namespace map;
 DerMap::DerMap() 
   : capd::map::CnMap<capd::IMatrix,1>(),
 	m_trees_idx(0), m_dtrees_idx(0)
-{}
+{ }
 
 DerMap::DerMap(int dim, int order) 
   : capd::map::CnMap<capd::IMatrix,1>(),
@@ -42,8 +42,21 @@ DerMap::DerMap(int dim, int order)
 }
 
 DerMap::DerMap(const DerMap& rhs)
-	: capd::map::CnMap<capd::IMatrix,1>(rhs)
-{}
+	: capd::map::CnMap<capd::IMatrix,1>(),
+	  m_trees_idx(0), m_dtrees_idx(0)
+{
+    m_dim = rhs.m_dim; 
+	m_dim2 = rhs.m_dim2;
+    m_indexOfFirstParam = rhs.m_indexOfFirstParam;
+    m_order = rhs.m_order; 
+	m_size = rhs.m_size;
+    //m_val = rhs.m_val;
+	m_val = new ScalarType[m_size];
+	for (int i(0); i < m_size; ++i)
+		m_val[i] = m_val[i];
+	//std::fill(m_val, m_val+m_size, ScalarType(0.));
+	m_trees = TreesContainer(m_dim, 1);
+}
 
 DerMap::~DerMap() 
 {

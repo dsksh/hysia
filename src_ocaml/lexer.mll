@@ -22,7 +22,7 @@
       "wait", WAIT;
       "end", END;
       "let", LET;
-      "checking", CHECK;
+      "watch", WATCH;
       "goto", GOTO;
       "then", THEN;
 

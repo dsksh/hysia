@@ -3,7 +3,7 @@
   open Ptree
 
   let env = ref MParam.empty
-  let set_param id v = env := MParam.add id v !env
+  let set_param id v = print_endline id; env := MParam.add id v !env
 
   let loc () = symbol_start_pos (), symbol_end_pos ()
   let mk_expr nd = loc (), nd
@@ -54,7 +54,7 @@
 %token WAIT
 %token END
 %token LET
-%token CHECK
+%token WATCH
 %token GOTO
 %token THEN
 
@@ -100,9 +100,9 @@ solver_params :
 /**/
 
 edges :
-  | CHECK LP expr COM expr RP GOTO ID edges
+  | WATCH LP expr COM expr RP GOTO ID edges
     { (mk_edge $3 $5 (mk_id $8) (mk_expr_l []))::$9 }
-  | CHECK LP expr COM expr RP GOTO ID THEN expr_vec edges
+  | WATCH LP expr COM expr RP GOTO ID THEN expr_vec edges
     { (mk_edge $3 $5 (mk_id $8) (mk_expr_l $10))::$11 }
 
   | { [] }

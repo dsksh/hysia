@@ -25,7 +25,8 @@ void simInitialize()
 	g_fstream->precision(17);
 	g_fstream->setf(ios::fixed,ios::floatfield);
 
-	g_context = CtxPtr(new Context(*g_model, cnull, *g_fstream));
+	//g_context = CtxPtr(new Context(*g_model, cnull, *g_fstream));
+	g_context = CtxPtr(new Context(*g_model, cout, *g_fstream));
 
 	g_context->fout << '{' << endl;
 }
@@ -82,18 +83,20 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 }
 
 
-void simulateJump(const char *lid)
+void simulateJump(const char *lid, const char *dst, const cInterval time0)
 {
 	int dim(g_model->dim);
 	DerMap& der = g_model->locs[lid]->der;
-	AuxMap& jump = g_model->locs[lid]->edges.back()->jump;
+	AuxMap& jump = g_model->locs[lid]->edges[dst]->jump;
 
 	Parallelepiped& pped = g_context->pped;
+//g_context->time = interval(time0.l, time0.u);
 	const interval& time = g_context->time;
 	const interval& time_mid = g_context->time_mid;
 	double time_l = g_context->time_l;
-	//const double time_l(g_context->time.rightBound());
+//const double time_l(g_context->time.rightBound());
 
+	// FIXME
 	const IVector& x      = g_context->x;
 	const IVector& x_mid  = g_context->x_mid;
 	const IMatrix& dx_phi = g_context->dx_phi;

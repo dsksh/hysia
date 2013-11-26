@@ -14,81 +14,9 @@
 #include "MapEx.h"
 #include "Parallelepiped.h"
 
+#include "Model.h"
+
 namespace capd{ 
-
-typedef boost::shared_ptr<capd::AuxMap> AuxMapPtr;
-
-struct Edge
-{
-public:
-	std::string dest;
-	AuxMap grd_h;
-	AuxMap grd_g;
-	AuxMap jump;
-
-	/// constractor
-	Edge(capd::DerMap& der, const std::string& destination)
-	  : dest(destination),
-	    grd_h(der, der.getOrder()), 
-	    grd_g(der, der.getOrder()),
-		jump(der, der.m_dim)
-	{}
-};
-
-typedef boost::shared_ptr<Edge> EdgePtr;
-typedef std::list<EdgePtr> EdgeSet;
-
-struct Location
-{
-public:
-	const std::string name;
-	capd::DerMap der;
-	EdgeSet edges;
-
-	/// constractor
-	Location(const std::string n, const capd::DerMap& dm)
-	  : name(n),
-	    der(dm.dimension(), dm.getOrder()),
-		//der(dm),
-	    //der(d, Order),
-		edges()
-	{ }
-
-};
-
-typedef boost::shared_ptr<Location> LocPtr;
-typedef std::map<std::string,LocPtr> LocSet;
-
-struct Model
-{
-public:
-	const int dim;
-
-	capd::IVector x_init;
-	capd::DerMap der_proto;
-
-	LocSet locs;
-
-	/// constractor
-	Model(const int d)
-	  : dim(d),
-		x_init(d),
-		der_proto(d, 1)
-	{ 
-		for (int i(0); i < dim; ++i) {
-			der_proto.putTree(i, new capd::map::ConsNode<DerMap::ScalarType>(
-						der_proto.getOrder(), 
-						DerMap::ScalarType(0.,0.) ));
-			for (int j(0); j < dim; ++j) 
-				der_proto.putDTree(i, j, new capd::map::ConsNode<DerMap::ScalarType>( 
-						der_proto.getOrder(), 
-						DerMap::ScalarType(0.,0.) ));
-		}               								  
-	}
-};
-
-//typedef std::auto_ptr<Model> ModelPtr;
-typedef boost::shared_ptr<Model> ModelPtr;
 
 struct Context
 {
@@ -96,7 +24,7 @@ public:
 	capd::Parallelepiped pped;
 	interval time;
 	interval time_mid;
-	double time_l;
+	double time_l; // FIXME
 	capd::IVector x;
 	capd::IVector x_mid;
 	capd::IVector x_left;
@@ -144,7 +72,6 @@ typedef std::auto_ptr<Context> CtxPtr;
 
 } // the end of the namespace capd
 
-extern capd::ModelPtr g_model;
 extern capd::CtxPtr g_context;
 
 #endif // _CAPD_CONTEXT_H_ 
