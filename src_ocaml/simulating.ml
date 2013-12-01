@@ -46,7 +46,7 @@ let select_earliest earliest (dst,(l,u)) = match earliest, (l,u) with
   | None, (l,u) -> 
       if l<=u then Some (dst,(l,u)) else None
 
-let simulate (_ps,_var,(iloc,_ival),locs,_sps) =
+let simulate (_ps,_var,(iloc,_ival),locs) =
   initialize ();
   let lid = ref iloc in
   print_pped true false;

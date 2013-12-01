@@ -3,7 +3,7 @@
   open Ptree
 
   let env = ref MParam.empty
-  let set_param id v = print_endline id; env := MParam.add id v !env
+  let set_param id v = env := MParam.add id v !env
 
   let loc () = symbol_start_pos (), symbol_end_pos ()
   let mk_expr nd = loc (), nd
@@ -75,20 +75,20 @@ main :
 
 statements :
   | VAR var_vec statements
-    { let ps,_,init,locs,sps = $3 in 
-	    ps,(mk_id_l $2),init,locs,sps }
+    { let ps,_,init,locs = $3 in 
+	    ps,(mk_id_l $2),init,locs }
   | INIT expr_vec statements
-    { let ps,vs,_,locs,sps = $3 in 
-	    ps,vs,(mk_init $2),locs,sps }
+    { let ps,vs,_,locs = $3 in 
+	    ps,vs,(mk_init $2),locs }
   | AT ID WAIT expr_vec edges END statements
-    { let ps,vs,init,locs,sps = $7 in 
-        ps,vs,init,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_edge_l $5))::locs,sps }
+    { let ps,vs,init,locs = $7 in 
+        ps,vs,init,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_edge_l $5))::locs }
 
   | LET ID EQ interval statements
-    { let ps,vs,init,locs,sps = $5 in 
-        (mk_param $2 $4)::ps,vs,init,locs,sps }
+    { let ps,vs,init,locs = $5 in 
+        (mk_param $2 $4)::ps,vs,init,locs }
 
-  | { ([],dummy_list,dummy_list,[],[]) }
+  | { ([],dummy_list,dummy_list,[]) }
 ;
 
 solver_params :

@@ -39,6 +39,7 @@ module Expr_node = struct
 end
 
 module Hexpr = Make_consed(Expr_node)
+module PMap = Map.Make(String)
 
 let mk_var id        = Hexpr.hashcons (Var id)
 let mk_val v         = Hexpr.hashcons (Val v)
@@ -58,12 +59,13 @@ let mk_app2 op e1 e2 = match op,e1.node,e2.node with
   | (Omul|Odiv),_,Val (Point 1.) -> e1
   | _ -> Hexpr.hashcons (App2 (op,e1,e2))
 
-let rec mk_expr = function
-  | _, Pvar id     -> mk_var id
+let rec mk_expr pm = function
+  | _, Pvar id     -> 
+          if PMap.mem id pm then mk_val (PMap.find id pm) else mk_var id
   | _, Pint v      -> mk_val (Point (float_of_int v))
   | _, Pval v      -> mk_val v
-  | _, Papp (op,e) -> mk_app op (mk_expr e)
-  | _, Papp2 (op,e1,e2) -> mk_app2 op (mk_expr e1) (mk_expr e2)
+  | _, Papp (op,e) -> mk_app op (mk_expr pm e)
+  | _, Papp2 (op,e1,e2) -> mk_app2 op (mk_expr pm e1) (mk_expr pm e2)
 
 
 type dual = dual_node hash_consed
@@ -120,34 +122,38 @@ let mk_dual var e =
   let de = List.map (fun v -> diff_expr v e) var in
   Hdual.hashcons (e,de)
 
-let mk_dexpr var = function
-  | _, Pvar id     -> mk_dual var (mk_var id)
+let mk_dexpr pm var = function
+  | _, Pvar id     -> mk_dual var 
+    (*(mk_var id)*)
+    (if PMap.mem id pm then mk_val (PMap.find id pm) else mk_var id)
   | _, Pint v      -> mk_dual var (mk_val (Point (float_of_int v)))
   | _, Pval v      -> mk_dual var (mk_val v)
-  | _, Papp (op,e) -> mk_dual var (mk_app op (mk_expr e))
-  | _, Papp2 (op,e1,e2) -> mk_dual var (mk_app2 op (mk_expr e1) (mk_expr e2))
+  | _, Papp (op,e) -> mk_dual var (mk_app op (mk_expr pm e))
+  | _, Papp2 (op,e1,e2) -> mk_dual var (mk_app2 op (mk_expr pm e1) (mk_expr pm e2))
 
-let mk_edge var (_,(grd_h,grd_g,(_,dst),(_,jmp))) =
-  let grd_h = mk_dexpr var grd_h in
-  let grd_g = mk_dexpr var grd_g in
-  let jmp = List.map (mk_dexpr var) jmp in
+let mk_edge pm var (_,(grd_h,grd_g,(_,dst),(_,jmp))) =
+  let grd_h = mk_dexpr pm var grd_h in
+  let grd_g = mk_dexpr pm var grd_g in
+  let jmp = List.map (mk_dexpr pm var) jmp in
   (grd_h,grd_g,dst,jmp)
 
-let mk_loc var (_,((_,id),(_,der),(_,edges))) =
-  let der = List.map (mk_dexpr var) der in
-  let edges = List.map (mk_edge var) edges in
+let mk_loc pm var (_,((_,id),(_,der),(_,edges))) =
+  let der = List.map (mk_dexpr pm var) der in
+  let edges = List.map (mk_edge pm var) edges in
   (id,der,edges)
 
-let make (ps,var,(_,Pvar iloc)::ival,locs,sps) = 
+let make (ps,var,(_,Pvar iloc)::ival,locs) = 
   (*let nv,nd = List.length var, List.length der in
   if nv <> nd then error (DimMismatch (nv,nd)) loc
   else*)
   let ps  = List.map snd ps in
+  let add_param pm (id,v) = PMap.add id v pm in
+  let pm = List.fold_left add_param PMap.empty ps in
+
   let var = List.map snd var in
-  let ival = List.map mk_expr ival in
-  let locs = List.map (mk_loc var) locs in
-  let sps  = List.map snd sps in
-  (ps,var,(iloc,ival),locs,sps)
+  let ival = List.map (mk_expr pm) ival in
+  let locs = List.map (mk_loc pm var) locs in
+  ([],var,(iloc,ival),locs)
 
 type param = string * interval
 type id = ident

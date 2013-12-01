@@ -5,6 +5,7 @@ type error =
   (*| Unification of Type.t * Type.t*)
   | DimMismatch of int * int
   | SyntaxError
+  | UnknownId of string
   | FindZeroError
   | FindZeroMidError
   | SelectEarliestError of (float*float) * (float*float)
@@ -21,6 +22,8 @@ let report fmt = function
       fprintf fmt "dimensions %d and %d mismatched" d1 d2
   | SyntaxError -> 
       fprintf fmt "syntax error"
+  | UnknownId id ->
+      fprintf fmt "id %s is unknown" id
   | FindZeroError -> 
       fprintf fmt "failed to find a zero crossing"
   | FindZeroMidError -> 

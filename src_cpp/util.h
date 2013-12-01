@@ -16,7 +16,7 @@ namespace capd{
 
 //#define HSS_PRINT_FREQ 72
 #define HSS_DUMP_PPED
-#define HSS_DEBUG
+//#define HSS_DEBUG
 
 extern std::ostream cnull;
 

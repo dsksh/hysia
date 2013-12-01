@@ -37,8 +37,9 @@ let fun_bin_op = function
 
 let rec send_expr env e = match e.node with
   | Var id -> (*Printf.printf "send var: %s %d\n" id (SM.find id env); *)
-      put_var_node (SM.find id env)
-  | Val (Point v) -> (*Printf.printf "send val: %f\n" v; *)
+      if SM.mem id env then put_var_node (SM.find id env)
+      else error (UnknownId id)
+  | Val (Point v) -> (*Printf.printf "send val: %f\n" v;*)
       put_scalar_node v v
   | Val (Interval (l,u)) ->
       put_scalar_node l u
@@ -52,6 +53,9 @@ let rec send_expr env e = match e.node with
       send_expr env e2;
       fun_bin_op op ()
   (*| Int _ -> assert false*)
+  | _ ->
+      (* TODO *)
+      Printf.printf "unknown expr!"
 
 
 let send_der lid env i dual =
@@ -114,7 +118,7 @@ let send_loc env (id,der,edges) =
   List.map (send_edge id env) edges;
   ()
 
-let send_model (ps,vars,(_,iexpr),locs,sps) =
+let send_model (ps,vars,(_,iexpr),locs) =
   initialize (List.length vars);
   let env = SM.empty in
   let env = List.fold_left send_var env vars in

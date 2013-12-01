@@ -7,5 +7,5 @@ at L wait -c*x2, c*x1, 0
 end
 
 param order = 20
-param t_end = 10
-param h_max = 0.1
+param t_max = 10
+param dump_interval = 0.1

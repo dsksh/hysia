@@ -244,16 +244,29 @@ void setSolvingParam(const char *id, const double value)
 	if (strcmp(id, "order") == 0) {
 		g_params->order = value;
 	}
-	else if (strcmp(id, "t_end") == 0) {
-		g_params->t_end = value;
+	else if (strcmp(id, "qr_thres") == 0) {
+		g_params->qr_thres = value;
 	}
-	else if (strcmp(id, "h_max") == 0) {
-		g_params->h_max = value;
+	else if (strcmp(id, "t_max") == 0) {
+		g_params->t_max = value;
 	}
 	else if (strcmp(id, "h_min") == 0) {
 		g_params->h_min= value;
 	}
+	else if (strcmp(id, "epsilon") == 0) {
+		g_params->epsilon = value;
+	}
+	else if (strcmp(id, "delta") == 0) {
+		g_params->delta = value;
+	}
+	else if (strcmp(id, "tau") == 0) {
+		g_params->tau = value;
+	}
+	else if (strcmp(id, "dump_interval") == 0) {
+		g_params->dump_interval = value;
+	}
 	else {
+		std::cout << "unknown param: " << id << std::endl;
 		// TODO
 	}
 }

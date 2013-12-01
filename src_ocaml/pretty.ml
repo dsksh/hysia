@@ -68,11 +68,10 @@ struct
       (print_list "," P.print_dexpr) (P.dexprs_of_loc loc)
       (print_list "" print_edge) (P.edges_of_loc loc)
 
-  let print fmt (ps,vars,init,locs,sps) =
-    fprintf fmt "@[<hov 2>params:@ %a@];@;@[<hov 2>vars:@ %a@];@;@[<hov 2>init:@ %a@];@;@[<hov 2>locations:@ %a@];@;@[<hov 2>solver param:@ %a;@]@]"
+  let print fmt (ps,vars,init,locs) =
+    fprintf fmt "@[<hov 2>params:@ %a@];@;@[<hov 2>vars:@ %a@];@;@[<hov 2>init:@ %a@];@;@[<hov 2>locations:@ %a@]@]"
       (print_list " " P.print_param) ps
       (print_list "," P.print_id) vars
       P.print_init init
       (print_list "" print_location) locs
-      (print_list " " P.print_param) sps
 end

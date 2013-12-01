@@ -28,6 +28,8 @@ void simInitialize()
 	//g_context = CtxPtr(new Context(*g_model, cnull, *g_fstream));
 	g_context = CtxPtr(new Context(*g_model, cout, *g_fstream));
 
+	//g_fstream->open(g_context->DumpFilename.c_str());
+
 	g_context->fout << '{' << endl;
 }
 
@@ -41,7 +43,7 @@ IVector simulate(IMap& der, const IVector& x, const interval& time)
 {
 	IVector result;
 	try{
-		ITaylor solver(der, /**/20, /**/0.1);
+		ITaylor solver(der, g_params->order, g_params->h_min);
 		ITimeMap timeMap(solver);
 
 		// define a doubleton representation of the interval vector x
@@ -61,7 +63,7 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 {
 	IVector result;
 	try{
-		ITaylor solver(der, /**/20, /**/0.1);
+		ITaylor solver(der, g_params->order, g_params->h_min);
 		ITimeMap timeMap(solver);
 
 		// define a doubleton representation of the interval vector x
@@ -93,8 +95,9 @@ void simulateJump(const char *lid, const char *dst, const cInterval time0)
 //g_context->time = interval(time0.l, time0.u);
 	const interval& time = g_context->time;
 	const interval& time_mid = g_context->time_mid;
-	double time_l = g_context->time_l;
-//const double time_l(g_context->time.rightBound());
+// TODO: this doesn't work well
+//double time_l = g_context->time_l;
+const double time_l(g_context->time.rightBound());
 
 	// FIXME
 	const IVector& x      = g_context->x;
@@ -194,7 +197,7 @@ void integrate(const char *lid,
  
  		int grid(stepMade.rightBound()/h_max + 0.9999999999);
  		if (grid==0) grid = 1;
- //cout << stepMade.rightBound()/h_max << endl;
+//cout << stepMade.rightBound()/h_max << endl;
  		for(int i=0;i<grid;++i)
  		{
  			interval subsetOfDomain = interval(i,i+1)*stepMade/grid;

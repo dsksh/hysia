@@ -10,7 +10,7 @@ TARGET	:= $(CMD) $(LIB)
 CAPD_DIR := /usr/local
 
 INCLUDES := -I$(CAPD_DIR)/include -I/opt/local/include
-CFLAGS	:= -O3 -g -ansi -pedantic -Wall -frounding-math $(INCLUDES)
+CFLAGS	:= -O3 -g -ansi -pedantic -Wall -frounding-math -fno-fast-math $(INCLUDES)
 LDFLAGS := -L$(CAPD_DIR)/lib -lcapd
 
 CXX     := g++ #@CXX@

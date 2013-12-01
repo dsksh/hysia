@@ -10,5 +10,6 @@ at L wait dx,dy,0,-10
 end
 
 param order = 20
-param t_end = 10
+param t_max = 10
 param h_max = 0.01
+param dump_interval = 0.01

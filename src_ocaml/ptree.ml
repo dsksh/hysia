@@ -25,15 +25,15 @@ type edge = loc * (expr * expr * lid * expr_l)
 type edge_l = loc * (edge list)
 type location = loc * (lid * expr_l * edge_l)
 
-type t = param list * id_l * expr_l * location list * param list
+type t = param list * id_l * expr_l * location list
 
 type init = expr list
 type dexpr = expr
 type gexpr = expr
 type rexpr = expr
 
-let simplify (params,(_,vars),(_,init),locs,sparams) =
-  (params,vars,init,locs,sparams)
+let simplify (params,(_,vars),(_,init),locs) =
+  (params,vars,init,locs)
 
 
 let dummy_loc = Lexing.dummy_pos, Lexing.dummy_pos

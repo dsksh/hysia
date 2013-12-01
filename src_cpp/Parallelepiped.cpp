@@ -20,26 +20,26 @@ DMatrix characteristic(const DMatrix& jA) {
 	DMatrix B(jA);
 
 	// TODO
-	for (int i(0); i < B.numberOfColumns(); ++i) {
-		// should compute: Bcol(i) / norm(Bcol(i))
-		B.column(i).normalize();
-	}
+//	for (int i(0); i < B.numberOfColumns(); ++i) {
+//		// should compute: Bcol(i) / norm(Bcol(i))
+//		B.column(i).normalize();
+//	}
 
 	try {
 		DMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(B) );
 		//DMatrix B_inv( capd::matrixAlgorithms::gaussInverseMatrix(B) );
 	
-		if (norm(B)*norm(B_inv) > g_context->QrThres) {
-			capd::matrixAlgorithms::QR_decompose(B, B, B_inv);
-//std::cout << "Q: " << B << std::endl;
-//std::cout << "R: " << B_inv << std::endl;
-		}
+//		if (norm(B)*norm(B_inv) > g_params->qr_thres) {
+//			capd::matrixAlgorithms::QR_decompose(B, B, B_inv);
+////std::cout << "Q: " << B << std::endl;
+////std::cout << "R: " << B_inv << std::endl;
+//		}
 		//capd::matrixAlgorithms::orthonormalize(B);
 	
 		return B;
 	
 	} catch (std::runtime_error &e) {
-	    //std::cout << "runtime_error from CAPD: " << e.what () << std::endl;
+	    std::cout << "runtime_error from CAPD: " << e.what () << std::endl;
 	
 		return DMatrix::Identity(B.numberOfColumns());
 	}
@@ -49,6 +49,7 @@ Parallelepiped map_parallelepiped(const Parallelepiped& piped,
 								  const IMatrix& J, const IVector& y) {
 	int dim(y.size());
 
+	// compute B and JA
 	DMatrix B(dim,dim);
 	IMatrix JA(dim,dim);
 	const_MatrixIterator<capd::IMatrix> it1(J);
