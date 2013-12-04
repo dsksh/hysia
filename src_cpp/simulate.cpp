@@ -26,6 +26,9 @@ void simInitialize()
 	g_fstream->setf(ios::fixed,ios::floatfield);
 
 	g_context = CtxPtr(new Context(*g_model, cnull, *g_fstream));
+	//g_context = CtxPtr(new Context(*g_model, cout, *g_fstream));
+
+	//g_fstream->open(g_context->DumpFilename.c_str());
 
 	g_context->fout << '{' << endl;
 }
@@ -40,7 +43,7 @@ IVector simulate(IMap& der, const IVector& x, const interval& time)
 {
 	IVector result;
 	try{
-		ITaylor solver(der, /**/20, /**/0.1);
+		ITaylor solver(der, g_params->order, g_params->h_min);
 		ITimeMap timeMap(solver);
 
 		// define a doubleton representation of the interval vector x
@@ -60,7 +63,7 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 {
 	IVector result;
 	try{
-		ITaylor solver(der, /**/20, /**/0.1);
+		ITaylor solver(der, g_params->order, g_params->h_min);
 		ITimeMap timeMap(solver);
 
 		// define a doubleton representation of the interval vector x
@@ -82,18 +85,21 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 }
 
 
-void simulateJump()
+void simulateJump(const char *lid, const char *dst, const cInterval time0)
 {
 	int dim(g_model->dim);
-	DerMap& der = g_model->der;
-	AuxMap& jump = g_model->jump;
+	DerMap& der = g_model->locs[lid]->der;
+	AuxMap& jump = g_model->locs[lid]->edges[dst]->jump;
 
 	Parallelepiped& pped = g_context->pped;
+//g_context->time = interval(time0.l, time0.u);
 	const interval& time = g_context->time;
 	const interval& time_mid = g_context->time_mid;
-	double time_l = g_context->time_l;
-	//const double time_l(g_context->time.rightBound());
+// TODO: this doesn't work well
+//double time_l = g_context->time_l;
+const double time_l(g_context->time.rightBound());
 
+	// FIXME
 	const IVector& x      = g_context->x;
 	const IVector& x_mid  = g_context->x_mid;
 	const IMatrix& dx_phi = g_context->dx_phi;
@@ -159,12 +165,13 @@ g_context->cout << "D_omega: " << d_omega << endl;
 	pped = map_parallelepiped(pped, d_omega, omega_mid);
 }
 
-void integrate(const float t_end, const float order, const float h_min, const float h_max)
+void integrate(const char *lid, 
+			   const float t_end, const float order, const float h_min, const float h_max)
 {
  	try{
  
  	// The solver:
- 	ITaylor solver(g_model->der, order, h_min);
+ 	ITaylor solver(g_model->locs[lid]->der, order, h_min);
  	ITimeMap timeMap(solver);
  
  	// The initial value:
@@ -190,7 +197,7 @@ void integrate(const float t_end, const float order, const float h_min, const fl
  
  		int grid(stepMade.rightBound()/h_max + 0.9999999999);
  		if (grid==0) grid = 1;
- //cout << stepMade.rightBound()/h_max << endl;
+//cout << stepMade.rightBound()/h_max << endl;
  		for(int i=0;i<grid;++i)
  		{
  			interval subsetOfDomain = interval(i,i+1)*stepMade/grid;

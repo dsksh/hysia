@@ -25,7 +25,7 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMap& grd_g,
 		const interval dh( grd_h.der()(1)*dx );
 		const interval dg( grd_g.der()(1)*dx );
 
-g_context->cout << endl << "contracting lb:\t" << time << endl;
+g_context->cout << endl << "contracting lb:\t" << time+time_procd << endl;
 
 		// state at the left bound.
 		const interval offset(time.left());
@@ -33,6 +33,9 @@ g_context->cout << endl << "contracting lb:\t" << time << endl;
 		const interval h( grd_h(curve(offset))(1) );
 		const interval g( grd_g(curve(offset))(1) + interval(0,INFINITY) );
 		time -= offset;
+g_context->cout << "offset:\t" << offset << endl;
+g_context->cout << "h:\t" << h << endl;
+g_context->cout << "g:\t" << g << endl;
 
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
@@ -64,10 +67,10 @@ g_context->cout << endl << "contracting lb:\t" << time << endl;
 
 		time += offset;
 		intersection(time_init, time, time);
-g_context->cout << "contracted lb:\t" << time_procd + time << endl;
+g_context->cout << "contracted lb:\t" << time+time_procd << endl;
 
 	} while (//time_old != time);
-			 hausdorff(time_old, time) >= g_context->Epsilon);
+			 hausdorff(time_old, time) > g_params->epsilon);
 
 	return true;
 }
@@ -81,29 +84,36 @@ inline bool verify(DerMap& der, AuxMap& grd_h,
 	time = time.left();
 	double d(INFINITY), d_old(INFINITY);
 
+g_context->cout << endl << "time_init:\t" << time_init+time_procd << endl;
+
 	do {
 
-g_context->cout << endl << "certifying:\t" << time+time_procd << endl;
+g_context->cout << endl << "verifying:\t" << time+time_procd << endl;
 		// current state
 		interval time_tmp;
 		intersection(time_init, time, time_tmp);
 		const IVector  dx( der(curve(time_tmp)) );
+g_context->cout << "dx: " << dx << endl;
+g_context->cout << "x: " << curve(time_tmp) << endl;
+g_context->cout << "time_tmp: " << time_tmp << endl;
 		const interval dh( grd_h.der()(1)*dx );
-g_context->cout << "dh: " << dh << " at " << time_tmp << endl;
+g_context->cout << "dh: " << dh << " at " << time_tmp+time_procd << endl;
 		if ( dh.contains((capd::TypeTraits<interval>::zero())) ) {
 			// TODO
-			throw "zero in the derivative";
+			throw runtime_error("zero in the derivative");
 			//std::cerr << "zero in the derivative" << endl;
 			//break;
 		}
 
 		// interval Newton
 		//der(curve(time.left()));
-		const interval contracted(time.left() - 
+		interval contracted(time.left() - 
 				grd_h(curve(time.left()))(1) / dh);
+//				grd_h(curve(time_tmp.left()))(1) / dh);
 g_context->cout << "contracted:\t" << contracted+time_procd << endl;
 		if (time.containsInInterior(contracted)) {
 g_context->cout << "proved" << endl;
+			time = contracted;
 			return true;
 		}
 
@@ -113,10 +123,12 @@ g_context->cout << "proved" << endl;
 		time_old = contracted;
 
 		//time = time.mid() + HSS_TAU*(contracted - time.mid());
-		time = contracted.mid() + g_context->Tau*(contracted - contracted.mid());
+g_context->cout << "mid:\t" << contracted.mid()+time_procd << endl;
+		time = contracted.mid() + g_params->tau*(contracted - contracted.mid())
+			 + interval(-g_params->abs_infl, g_params->abs_infl);
 g_context->cout << "inflated:\t" << time+time_procd << endl;
 
-	} while (hausdorff(time_old, time) <= g_context->Delta*d_old);
+	} while (hausdorff(time_old, time) <= g_params->delta*d_old);
 
 	return false;
 }
@@ -129,6 +141,8 @@ inline bool reduceUpper(DerMap& der, AuxMap& grd_h,
 	interval time_old;
 
 	do {
+g_context->cout << endl << "contracting rb: " << time+time_procd << endl;
+//		time += time_procd;
 //g_context->cout << endl << "contracting rb: " << time << endl;
 
 		time_old = time;
@@ -162,40 +176,45 @@ inline bool reduceUpper(DerMap& der, AuxMap& grd_h,
 		intersection(time_old, time, time);
 
 	} while (//time_old != time);
-			 hausdorff(time_old, time) >= g_context->Epsilon);
+			 hausdorff(time_old, time) > g_params->epsilon);
 
 	return true;
 }
 
 
-int findFirstZero()
+cInterval findFirstZero(const int selected, const char *lid, const char *dst)
 {
 	int dim(g_model->dim);
-	DerMap& der = g_model->der;
-	AuxMap& grd_h = g_model->grd_h;
-	AuxMap& grd_g = g_model->grd_g;
+	DerMap& der = g_model->locs[lid]->der;
+	AuxMap& grd_h = g_model->locs[lid]->edges[dst]->grd_h;
+	AuxMap& grd_g = g_model->locs[lid]->edges[dst]->grd_g;
 
-	Parallelepiped& pped = g_context->pped;
-	interval& time = g_context->time;
-	const double time_l(g_context->time_l = time.rightBound());
+	//Parallelepiped& pped = g_context->pped;
+	//interval& time = g_context->time;
+Parallelepiped pped = g_context->pped;
+interval time = g_context->time;
+g_context->cout << "TIME0: " << time << endl;
+	const double time_l(time.rightBound());
+	if (selected) g_context->time_l = time_l;
 
 	try{
 
 	// the solver:
-	ITaylor solver(der, /**/20, /**/0.01);
+	ITaylor solver(der, g_params->order, g_params->h_min);
 	ITimeMap timeMap(solver);
 	timeMap.stopAfterStep(true);
 
 	// the initial value:
 	CapdPped p(pped.toCapdPped());
+printPped(cout, pped);
 
     interval time_procd(time_l);
 	IMatrix dx_prev(IMatrix::Identity(dim));
 	
 	while (true) {
 		// integrate 1 step.
-		//timeMap(g_context->MaxTime, p);
- 		timeMap.moveSet(g_context->MaxTime, p);
+		//timeMap(g_params->t_max, p);
+ 		timeMap.moveSet(g_params->t_max, p);
 
 		time = interval(0,1)*solver.getStep();
 g_context->cout << endl << "step made: " << time+time_procd << endl;
@@ -214,6 +233,7 @@ g_context->cout << "dx: " << dx << endl;
 		bool res( reduceLower(der, grd_h, grd_g, curve, time_init, time_procd, time) );
 
 		// dump the trajectory paving.
+<<<<<<< HEAD
 		const double MaxH(0.03);
 		double stepW(res ? time.leftBound() : time_init.rightBound());
 		int grid(stepW/MaxH + 0.9999999999);
@@ -221,16 +241,25 @@ g_context->cout << "dx: " << dx << endl;
 		stepW = stepW/grid - 0.0000001;
  		for(int i(0); i<grid; ++i)
  		{
+=======
+		if (!res) time = time_init;
+		int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
+ 		if (grid==0) grid = 1;
+		const double stepW(time.rightBound()/grid - 0.0000001);
+ 		for(int i(0); i<grid; ++i) {
+>>>>>>> ha
  			const interval step( interval(i,i+1)*stepW );
  			IVector v = curve(step);
+if (selected) {
  			printPipe(g_context->fout, step+time_procd, v);
 			g_context->fout << ',' << endl;
+}
  		}
 
 		if (res)
 			break;
 		else if (timeMap.completed())
-			return false;
+			return cEmpty;
 		else {
 			time_procd = time_l + timeMap.getCurrentTime();
 			dx_prev = IMatrix(p);
@@ -240,11 +269,9 @@ g_context->cout << "dx: " << dx << endl;
 	const ITaylor::CurveType& curve = solver.getCurve();
 	const interval time_init(time);
 
-//std::cout << "contracted:\t" << time+time_procd << endl;
-
 	// verification of the result
 	if ( !verify(der, grd_h, curve, time_init, time_procd, time) ) {
-		throw "verification failed";
+		throw runtime_error("verification failed");
 
 		// TODO
 		//time_procd = time_l + timeMap.getCurrentTime();
@@ -266,10 +293,14 @@ g_context->cout << "dx: " << dx << endl;
 
 	// reduce the upper bound
 	if ( !reduceUpper(der, grd_h, curve, time_init, time_procd, time) )
-		throw "failed in reducing the upper bound";
+		throw runtime_error("failed in reducing the upper bound");
 
 g_context->cout << "contracted ub:\t" << time + time_procd << endl;
 
+g_context->cout << "TIME: " << time << endl;
+g_context->cout << "GTIME: " << g_context->time << endl;
+
+if (selected) {
 	g_context->x = curve(time);
 	g_context->x_left = curve(time.left());
 //#ifndef HSS_SKIP_PPED_T_INF
@@ -280,7 +311,10 @@ g_context->cout << "contracted ub:\t" << time + time_procd << endl;
 	//g_context->Dt_phi = curve.derivative()(time);
 	g_context->dt_phi = der(g_context->x);
 	g_context->dh = grd_h.der()(1);
+g_context->time = time;
 	g_context->time += time_procd;
+g_context->pped = pped;
+}
 
 //	dumpPipe1(cout, timeMap.getCurrentTime(), s, false);
 //	cout << "}" << endl;
@@ -288,27 +322,29 @@ g_context->cout << "contracted ub:\t" << time + time_procd << endl;
 	} catch(exception& e)
 	{
 		std::cerr << "exception caught!\n" << e.what() << endl << endl;
-		return false;
+		return cEmpty;
 	}
 
-	return true;
+	cInterval res = {time.leftBound(), time.rightBound()};
+	return res;
 }
 
 
-int findFirstZeroMid()
+int findFirstZeroMid(const char *lid, const char *dst)
 {
-	DerMap& der = g_model->der;
-	AuxMap& grd_h = g_model->grd_h;
+	DerMap& der = g_model->locs[lid]->der;
+	AuxMap& grd_h = g_model->locs[lid]->edges[dst]->grd_h;
 
 	const Parallelepiped& pped = g_context->pped;
 	const interval& time = g_context->time;
 	interval& time_mid = g_context->time_mid;
 	double time_l = g_context->time_l;
+g_context->cout << "TIME0 mid: " << time << endl;
 
 	try{
 
 	// the solver:
-	ITaylor solver(der, /**/20, /**/0.01);
+	ITaylor solver(der, g_params->order, g_params->h_min);
 	ITimeMap timeMap(solver);
 	timeMap.stopAfterStep(true);
 
@@ -319,7 +355,7 @@ int findFirstZeroMid()
 
 	while (true) {
 		// integrate 1 step.
-		timeMap(g_context->MaxTime, p);
+		timeMap(g_params->t_max, p);
 
 		time_mid = interval(0,1)*solver.getStep();
 g_context->cout << endl << "step made: " << time_procd + time_mid << endl;
@@ -346,17 +382,22 @@ g_context->cout << "contracting:\t" << time_mid+time_procd << endl;
 		time_mid = time_mid.mid() - 
 				grd_h(curve(time_mid.mid()))(1) / dh;
 g_context->cout << "contracted:\t" << time_mid+time_procd << endl;
+g_context->cout << time << "-" << time_procd << " cap " << time_mid << endl;
 
+g_context->cout << "time:\t" << time << endl;
+g_context->cout << "time_procd:\t" << time_procd << endl;
+g_context->cout << "time_mid:\t" << time_mid << endl;
 		if (!intersection(time-time_procd, time_mid, time_mid)) {
-			throw "result becomes empty!";
+			//throw runtime_error("result becomes empty!");
+			continue;
 		}
-	} while (hausdorff(time_old, time_mid) >= g_context->Epsilon);
+	} while (hausdorff(time_old, time_mid) > g_params->epsilon);
 
 	g_context->x_mid = curve(time_mid);
 	time_mid += time_procd;
 g_context->cout << endl << "mid:\t" << g_context->x_mid << " at " << time_mid << endl << endl;
 
-	} catch(exception& e) {
+	} catch (exception& e) {
 		cerr << "exception caught!\n" << e.what() << endl << endl;
 		return false;
 	}

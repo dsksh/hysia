@@ -5,8 +5,10 @@ type error =
   (*| Unification of Type.t * Type.t*)
   | DimMismatch of int * int
   | SyntaxError
+  | UnknownId of string
   | FindZeroError
   | FindZeroMidError
+  | SelectEarliestError of (float*float) * (float*float)
 
 exception LError of error * loc
 exception LWarning of error * loc
@@ -20,10 +22,14 @@ let report fmt = function
       fprintf fmt "dimensions %d and %d mismatched" d1 d2
   | SyntaxError -> 
       fprintf fmt "syntax error"
+  | UnknownId id ->
+      fprintf fmt "id %s is unknown" id
   | FindZeroError -> 
       fprintf fmt "failed to find a zero crossing"
   | FindZeroMidError -> 
       fprintf fmt "failed to find the midpoint of the zero crossing"
+  | SelectEarliestError _ -> 
+      fprintf fmt "failed to find the earliest discrete change"
 
 let error e l = raise (LError (e,l))
 let warning e l = raise (LWarning (e,l))

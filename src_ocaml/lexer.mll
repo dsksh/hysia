@@ -17,15 +17,23 @@
 	  "acos", ACOS;
 
 	  "var", VAR;
-	  "der", DER;
 	  "init", INIT;
+<<<<<<< HEAD
 	  "grd_h", GRD_H;
 	  "grd_g", GRD_G;
 	  "jump", JUMP;
       "param", PARAM;
+=======
+      "at", AT;
+      "wait", WAIT;
+      "end", END;
+      "let", LET;
+      "watch", WATCH;
+      "goto", GOTO;
+      "then", THEN;
+>>>>>>> ha
 
-	  "fun", FUN;
-	  "val", VAL;
+      "param", PARAM;
 	];
       fun s -> 
 	try Hashtbl.find h s with Not_found -> ID s
@@ -33,7 +41,7 @@
   let newline lexbuf =
     let pos = lexbuf.lex_curr_p in
     lexbuf.lex_curr_p <- 
-      { pos with pos_lnum = pos.pos_lnum + 1; 
+      { pos with pos_lnum = pos.pos_lnum (*+ 1*); 
 	pos_bol = pos.pos_cnum + 1; (*pos_cnum=0*) }
 
 }

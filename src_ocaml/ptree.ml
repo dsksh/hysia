@@ -4,7 +4,10 @@ open Pretty
 
 type loc = Lexing.position * Lexing.position
 
-type var = loc * ident
+type param = loc * (string * interval)
+
+type id = loc * ident
+type lid = loc * ident
 
 type expr = loc * expr_node
 and  expr_node =
@@ -14,20 +17,23 @@ and  expr_node =
   | Papp of un_op * expr
   | Papp2 of bin_op * expr * expr
 
-type var_l = loc * (var list)
+type id_l = loc * (id list)
 type expr_l = loc * (expr list)
 type interval_l = loc * (interval list)
 
-type der   = expr
-type init  = (*interval*) expr
-type grd   = expr
-type jump  = expr
-type param = loc * (string * interval)
+type edge = loc * (expr * expr * lid * expr_l)
+type edge_l = loc * (edge list)
+type location = loc * (lid * expr_l * edge_l)
 
-type t = var_l * expr_l * (*interval_l*) expr_l * expr * expr * expr_l * param list
+type t = param list * id_l * expr_l * location list
 
-let simplify ((_,var),(_,der),(_,init),grd_h,grd_g,(_,jump),ps) =
-  (var,der,init,grd_h,grd_g,jump,ps)
+type init = expr list
+type dexpr = expr
+type gexpr = expr
+type rexpr = expr
+
+let simplify (params,(_,vars),(_,init),locs) =
+  (params,vars,init,locs)
 
 
 let dummy_loc = Lexing.dummy_pos, Lexing.dummy_pos
@@ -46,29 +52,17 @@ let rec print_expr fmt = function
       fprintf fmt "(%a %s %a)" print_expr e1 (sprint_bin_op op) print_expr e2
 
 
-(*module P : Pretty.Printer =
-struct
-  type var = lvar
-  type der = lexpr
-  type init = interval
-  type grd = lexpr
-  type jump = lexpr
-  type param = string * interval
-
-  let print_var fmt (_,id) = fprintf fmt "%s" id
-  let print_der fmt e = fprintf fmt "%a" print_expr e
-  let print_init fmt v = fprintf fmt "%a" print_interval v
-  let print_grd fmt e = fprintf fmt "%a" print_expr e
-  let print_jump fmt e = fprintf fmt "%a" print_expr e
-  let print_param fmt (id,v) = fprintf fmt "%s:=%a" id print_interval v
-end
-*)
-
-let print_var fmt (_,id) = fprintf fmt "%s" id
-let print_der fmt e = fprintf fmt "%a" print_expr e
-let print_init fmt v = fprintf fmt "%a" (*print_interval*) print_expr v
-let print_grd fmt e = fprintf fmt "%a" print_expr e
-let print_jump fmt e = fprintf fmt "%a" print_expr e
 let print_param fmt (_,(id,v)) = fprintf fmt "%s:=%a" id print_interval v
+let print_id fmt (_,id) = fprintf fmt "%s" id
+let print_init fmt e = fprintf fmt "%a" (print_list "," print_expr) e
+let print_dexpr fmt e = fprintf fmt "%a" print_expr e
+let print_gexpr fmt e = fprintf fmt "%a" print_expr e
+let print_rexpr fmt e = fprintf fmt "%a" print_expr e
 
-(*module Printer = Pretty.Make(P)*)
+let id_of_loc      (_,(e,_,_)) = e
+let dexprs_of_loc  (_,(_,e,_)) = snd e
+let edges_of_loc   (_,(_,_,e)) = snd e
+let gh_of_edge     (_,(e,_,_,_)) = e
+let gg_of_edge     (_,(_,e,_,_)) = e
+let dst_of_edge    (_,(_,_,e,_)) = e 
+let rexprs_of_edge (_,(_,_,_,e)) = snd e 

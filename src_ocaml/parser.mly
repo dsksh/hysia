@@ -9,11 +9,14 @@
   let mk_expr nd = loc (), nd
   let mk_ratio n d = loc (), (n,d)
 
-  let mk_var id = loc (), id
-  let mk_var_l v = loc (), v
+  let mk_id id = loc (), id
+  let mk_id_l v = loc (), v
   let mk_param id v = loc (), (id, v)
-  let mk_def_l def = loc (), def
+  let mk_expr_l e = loc (), e
   let mk_init v = loc (), v
+  let mk_loc id der edges = loc (), (id,der,edges)
+  let mk_edge gg gh dst rst = loc (), (gg,gh,dst,rst)
+  let mk_edge_l e = loc (), e
 
   let mk_ptree nd = nd, !env
 %}
@@ -46,15 +49,16 @@
 %token ACOS
 
 %token VAR
-%token DER
 %token INIT
-%token GRD_H
-%token GRD_G
-%token JUMP
-%token PARAM
+%token AT
+%token WAIT
+%token END
+%token LET
+%token WATCH
+%token GOTO
+%token THEN
 
-%token FUN
-%token VAL
+%token PARAM
 
 %token EOF
 
@@ -70,45 +74,39 @@ main :
 /**/
 
 statements :
-  | VAR var_vec SCOL statements
-    { let _,der,init,grd_h,grd_g,jmp,param = $4 in 
-	(mk_var_l $2),der,init,grd_h,grd_g,jmp,param }
-  | DER expr_vec SCOL statements
-    { let var,_,init,grd_h,grd_g,jmp,param = $4 in 
-	var,(mk_def_l $2),init,grd_h,grd_g,jmp,param }
-  | INIT /*interval_vec*/ expr_vec SCOL statements
-    { let var,der,_,grd_h,grd_g,jmp,param = $4 in 
-	var,der,(mk_init $2),grd_h,grd_g,jmp,param }
-  | GRD_H expr SCOL statements
-    { let var,der,init,_,grd_g,jmp,param = $4 in 
-	var,der,init,$2,grd_g,jmp,param }
-  | GRD_G expr SCOL statements
-    { let var,der,init,grd_h,_,jmp,param = $4 in 
-	var,der,init,grd_h,$2,jmp,param }
-  | JUMP expr_vec SCOL statements
-    { let var,der,init,grd_h,grd_g,jmp,param = $4 in 
-	var,der,init,grd_h,grd_g,(mk_def_l $2),param }
-  | PARAM ID EQ interval SCOL statements
-    { let var,der,init,grd_h,grd_g,jmp,param = $6 in 
-	var,der,init,grd_h,grd_g,jmp,((mk_param $2 $4)::param) }
+  | VAR var_vec statements
+    { let ps,_,init,locs = $3 in 
+	    ps,(mk_id_l $2),init,locs }
+  | INIT expr_vec statements
+    { let ps,vs,_,locs = $3 in 
+	    ps,vs,(mk_init $2),locs }
+  | AT ID WAIT expr_vec edges END statements
+    { let ps,vs,init,locs = $7 in 
+        ps,vs,init,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_edge_l $5))::locs }
 
-  | FUN var_vec_old EQ expr_vec SCOL statements
-    { let var,_,init,grd_h,grd_g,jmp,param = $6 in 
-	(mk_var_l $2),(mk_def_l $4),init,grd_h,grd_g,jmp,param }
-  | VAL integer EQ /*interval_vec*/ expr_vec SCOL statements
-    { let var,der,_,grd_h,grd_g,jmp,param  = $6 in 
-	var,der,(mk_init $4),grd_h,grd_g,jmp,param }
-  | PARAM ID EQ interval SCOL statements
-    { let var,der,init,grd_h,grd_g,jmp,param   = $6 in 
-	var,der,init,grd_h,grd_g,jmp,((mk_param $2 $4)::param) }
+  | LET ID EQ interval statements
+    { let ps,vs,init,locs = $5 in 
+        (mk_param $2 $4)::ps,vs,init,locs }
 
-  | { (dummy_list,dummy_list,dummy_list,dummy_grd,dummy_grd,dummy_list,[]) }
+  | { ([],dummy_list,dummy_list,[]) }
 ;
 
 solver_params :
-  | ID EQ float SCOL solver_params
-    { set_param $1 $3 }
+  | PARAM ID EQ float solver_params
+    { set_param $2 $4 }
   | { }
+;
+
+/**/
+
+edges :
+  | WATCH LP expr COM expr RP GOTO ID edges
+    { (mk_edge $3 $5 (mk_id $8) (mk_expr_l []))::$9 }
+  | WATCH LP expr COM expr RP GOTO ID THEN expr_vec edges
+    { (mk_edge $3 $5 (mk_id $8) (mk_expr_l $10))::$11 }
+
+  | { [] }
+;
 
 /**/
 
@@ -124,15 +122,15 @@ expr_vec_rest :
 ;
 
 var_vec :
-  | ID var_vec_rest { (mk_var $1)::$2 }
+  | ID var_vec_rest { (mk_id $1)::$2 }
   | { [] }
 ;
 var_vec_rest :
-  | COM ID var_vec_rest { (mk_var $2)::$3 }
+  | COM ID var_vec_rest { (mk_id $2)::$3 }
   | { [] }
 ;
 var_vec_old :
-  | ID var_vec { (mk_var $1)::$2 }
+  | ID var_vec { (mk_id $1)::$2 }
   | { [] }
 ;
 

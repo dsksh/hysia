@@ -39,6 +39,7 @@ module Expr_node = struct
 end
 
 module Hexpr = Make_consed(Expr_node)
+module PMap = Map.Make(String)
 
 let mk_var id        = Hexpr.hashcons (Var id)
 let mk_val v         = Hexpr.hashcons (Val v)
@@ -58,12 +59,13 @@ let mk_app2 op e1 e2 = match op,e1.node,e2.node with
   | (Omul|Odiv),_,Val (Point 1.) -> e1
   | _ -> Hexpr.hashcons (App2 (op,e1,e2))
 
-let rec mk_expr = function
-  | _, Pvar id     -> mk_var id
+let rec mk_expr pm = function
+  | _, Pvar id     -> 
+          if PMap.mem id pm then mk_val (PMap.find id pm) else mk_var id
   | _, Pint v      -> mk_val (Point (float_of_int v))
   | _, Pval v      -> mk_val v
-  | _, Papp (op,e) -> mk_app op (mk_expr e)
-  | _, Papp2 (op,e1,e2) -> mk_app2 op (mk_expr e1) (mk_expr e2)
+  | _, Papp (op,e) -> mk_app op (mk_expr pm e)
+  | _, Papp2 (op,e1,e2) -> mk_app2 op (mk_expr pm e1) (mk_expr pm e2)
 
 
 type dual = dual_node hash_consed
@@ -120,33 +122,47 @@ let mk_dual var e =
   let de = List.map (fun v -> diff_expr v e) var in
   Hdual.hashcons (e,de)
 
-let mk_dexpr var = function
-  | _, Pvar id     -> mk_dual var (mk_var id)
+let mk_dexpr pm var = function
+  | _, Pvar id     -> mk_dual var 
+    (*(mk_var id)*)
+    (if PMap.mem id pm then mk_val (PMap.find id pm) else mk_var id)
   | _, Pint v      -> mk_dual var (mk_val (Point (float_of_int v)))
   | _, Pval v      -> mk_dual var (mk_val v)
-  | _, Papp (op,e) -> mk_dual var (mk_app op (mk_expr e))
-  | _, Papp2 (op,e1,e2) -> mk_dual var (mk_app2 op (mk_expr e1) (mk_expr e2))
+  | _, Papp (op,e) -> mk_dual var (mk_app op (mk_expr pm e))
+  | _, Papp2 (op,e1,e2) -> mk_dual var (mk_app2 op (mk_expr pm e1) (mk_expr pm e2))
 
-let make (var,der,init,grd_h,grd_g,jmp,ps) = 
+let mk_edge pm var (_,(grd_h,grd_g,(_,dst),(_,jmp))) =
+  let grd_h = mk_dexpr pm var grd_h in
+  let grd_g = mk_dexpr pm var grd_g in
+  let jmp = List.map (mk_dexpr pm var) jmp in
+  (grd_h,grd_g,dst,jmp)
+
+let mk_loc pm var (_,((_,id),(_,der),(_,edges))) =
+  let der = List.map (mk_dexpr pm var) der in
+  let edges = List.map (mk_edge pm var) edges in
+  (id,der,edges)
+
+let make (ps,var,(_,Pvar iloc)::ival,locs) = 
   (*let nv,nd = List.length var, List.length der in
   if nv <> nd then error (DimMismatch (nv,nd)) loc
   else*)
-  let var = List.map snd var in
-  let der = List.map (mk_dexpr var) der in
-  let init = List.map mk_expr init in
-  let grd_h = mk_dexpr var grd_h in
-  let grd_g = mk_dexpr var grd_g in
-  let jmp = List.map (mk_dexpr var) jmp in
   let ps  = List.map snd ps in
-  (var,der,init,grd_h,grd_g,jmp,ps)
-    
+  let add_param pm (id,v) = PMap.add id v pm in
+  let pm = List.fold_left add_param PMap.empty ps in
 
-type var   = ident
-type der   = dual
-type init  = (*interval*) expr
-type grd   = dual
-type jump  = dual
+  let var = List.map snd var in
+  let ival = List.map (mk_expr pm) ival in
+  let locs = List.map (mk_loc pm var) locs in
+  ([],var,(iloc,ival),locs)
+
 type param = string * interval
+type id = ident
+type init = ident * expr list
+type dexpr = dual
+type gexpr = dual
+type rexpr = dual
+type edge = dual * dual * ident * dual list
+type location = ident * dual list * edge list
 
 let rec print_expr fmt expr = match expr.node with
   | Var id -> fprintf fmt "%s" id
@@ -162,9 +178,17 @@ let print_dual fmt dual =
   let (e,d) = dual.node in
   fprintf fmt "@[(%a,@ [%a])@]" print_expr e (print_list "," print_expr) d
 
-let print_var fmt id = fprintf fmt "%s" id
-let print_der fmt e = fprintf fmt "%a" print_dual e
-let print_init fmt v = fprintf fmt "%a" print_expr v
-let print_grd fmt e = fprintf fmt "%a" print_dual e
-let print_jump fmt e = fprintf fmt "%a" print_dual e
 let print_param fmt (id,v) = fprintf fmt "%s:=%a" id print_interval v
+let print_id fmt id = fprintf fmt "%s" id
+let print_init fmt (iloc,iexpr) = fprintf fmt "%s %a" iloc (print_list "," print_expr) iexpr
+let print_dexpr fmt e = fprintf fmt "%a" print_dual e
+let print_gexpr fmt e = fprintf fmt "%a" print_dual e
+let print_rexpr fmt e = fprintf fmt "%a" print_dual e
+
+let id_of_loc      (e,_,_) = e
+let dexprs_of_loc  (_,e,_) = e
+let edges_of_loc   (_,_,e) = e
+let gh_of_edge     (e,_,_,_) = e
+let gg_of_edge     (_,e,_,_) = e
+let dst_of_edge    (_,_,e,_) = e 
+let rexprs_of_edge (_,_,_,e) = e 

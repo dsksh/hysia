@@ -36,7 +36,7 @@ let () =
 
   let lb = from_channel cin in 
   try 
-    let ptree,args = Parser.main Lexer.token lb in
+    let ptree,params = Parser.main Lexer.token lb in
     let ptree = Ptree.simplify ptree in
     (*if !debug then
       printf "@[%a@]@." PPtree.print ptree;*)
@@ -46,8 +46,9 @@ let () =
       printf "@[%a@]@." PModel.print model;
 
     Capd_sending.send_model model;
-    (*Simulating.integrate args;*)
-    Simulating.simulate ();
+    Capd_sending.send_solving_params params;
+    (*Simulating.integrate params;*)
+    Simulating.simulate model;
     ()
   with
     | Lexer.Lexical_error s -> 

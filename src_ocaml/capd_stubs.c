@@ -12,7 +12,7 @@
 #include <caml/custom.h>
 
 #include "capd_integrator.h"
-#include "nodebuilder.h"
+#include "build.h"
 
 #define LOG_DEBUG(msg, sig) 1
 /*#define LOG_DEBUG(msg, sig) fprintf(stderr, "[capd_stubs] %s: %d\n", msg, sig)*/
@@ -181,51 +181,72 @@ value caml_put_pow_node()
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_der_tree(value i)
+value caml_put_der_tree(value lid, value i)
 {
-	CAMLparam1(i);
-	putDerTree(Int_val(i));
+	CAMLparam2(lid, i);
+	putDerTree(String_val(lid), Int_val(i));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_der_dtree(value i, value j)
+value caml_put_der_dtree(value lid, value i, value j)
 {
-	CAMLparam2(i, j);
-	putDerDTree(Int_val(i), Int_val(j));
+	CAMLparam3(lid, i, j);
+	putDerDTree(String_val(lid), Int_val(i), Int_val(j));
 	CAMLreturn(Val_unit);
 }
 
-value caml_done_der_tree()
+value caml_done_der_tree(value lid)
 {
-	CAMLparam0();
-	doneDerTree();
+	CAMLparam1(lid);
+	doneDerTree(String_val(lid));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_grd_tree(value s)
+value caml_put_grd_tree(value lid, value dst, value s)
 {
-	CAMLparam1(s);
-	putGrdTree(Int_val(s));
+	CAMLparam3(lid, dst, s);
+	putGrdTree(String_val(lid), String_val(dst), Int_val(s));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_grd_dtree(value s, value j)
+value caml_put_grd_dtree(value lid, value dst, value s, value j)
 {
-	CAMLparam2(s,j);
-	putGrdDTree(Int_val(s), Int_val(j));
+	CAMLparam4(lid, dst, s, j);
+	putGrdDTree(String_val(lid), String_val(dst), Int_val(s), Int_val(j));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_jump_tree(value i)
+value caml_put_jump_tree(value lid, value dst, value i)
 {
-	CAMLparam1(i);
-	putJumpTree(Int_val(i));
+	CAMLparam3(lid, dst, i);
+	putJumpTree(String_val(lid), String_val(dst), Int_val(i));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_jump_dtree(value i, value j)
+value caml_put_jump_dtree(value lid, value dst, value i, value j)
 {
-	CAMLparam2(i, j);
-	putJumpDTree(Int_val(i), Int_val(j));
+	CAMLparam4(lid, dst, i, j);
+	putJumpDTree(String_val(lid), String_val(dst), Int_val(i), Int_val(j));
+	CAMLreturn(Val_unit);
+}
+
+value caml_put_edge(value lid, value dst)
+{
+	CAMLparam2(lid, dst);
+	putEdge(String_val(lid), String_val(dst));
+	CAMLreturn(Val_unit);
+}
+
+value caml_put_location(value lid)
+{
+	CAMLparam1(lid);
+	putLocation(String_val(lid));
+	CAMLreturn(Val_unit);
+}
+
+value caml_set_solving_param(value id, value val)
+{
+	CAMLparam2(id, val);
+	setSolvingParam(String_val(id), Double_val(val));
 	CAMLreturn(Val_unit);
 }

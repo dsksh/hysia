@@ -37,8 +37,9 @@ let fun_bin_op = function
 
 let rec send_expr env e = match e.node with
   | Var id -> (*Printf.printf "send var: %s %d\n" id (SM.find id env); *)
-      put_var_node (SM.find id env)
-  | Val (Point v) -> (*Printf.printf "send val: %f\n" v; *)
+      if SM.mem id env then put_var_node (SM.find id env)
+      else error (UnknownId id)
+  | Val (Point v) -> (*Printf.printf "send val: %f\n" v;*)
       put_scalar_node v v
   | Val (Interval (l,u)) ->
       put_scalar_node l u
@@ -52,41 +53,44 @@ let rec send_expr env e = match e.node with
       send_expr env e2;
       fun_bin_op op ()
   (*| Int _ -> assert false*)
+  | _ ->
+      (* TODO *)
+      Printf.printf "unknown expr!"
 
 
-let send_der env i dual =
+let send_der lid env i dual =
   let (e,d) = dual.node in
   send_expr env e;
-  put_der_tree i;
+  put_der_tree lid i;
 
   let send_dtree j d =
     send_expr env d;
-    put_der_dtree i j
+    put_der_dtree lid i j
   in
   List.mapi send_dtree d
 
-let send_grd s env dual =
+let send_grd lid dst s env dual =
   let (e,d) = dual.node in
   send_expr env e;
-  put_grd_tree s;
+  put_grd_tree lid dst s;
 
   let send_dtree j d =
     send_expr env d;
-    put_grd_dtree s j
+    put_grd_dtree lid dst s j
   in
   List.mapi send_dtree d
 
-let send_grd_h env dual = send_grd 0 env dual
-let send_grd_g env dual = send_grd 1 env dual
+let send_grd_h lid dst env dual = send_grd lid dst 0 env dual
+let send_grd_g lid dst env dual = send_grd lid dst 1 env dual
 
-let send_jump env i dual =
+let send_jump lid dst env i dual =
   let (e,d) = dual.node in
   send_expr env e;
-  put_jump_tree i;
+  put_jump_tree lid dst i;
 
   let send_dtree j d =
     send_expr env d;
-    put_jump_dtree i j
+    put_jump_dtree lid dst i j
   in
   List.mapi send_dtree d
 
@@ -102,13 +106,28 @@ let send_init env v =
   in
   List.map send v
 
-let send_model (var,der,init,grd_h,grd_g,jump,ps) =
-  initialize (List.length var);
-  let env = List.fold_left send_var SM.empty var in
+let send_edge lid env (grd_h,grd_g,dst,jump) =
+  put_edge lid dst;
+  send_grd_h lid dst env grd_h;
+  send_grd_g lid dst env grd_g;
+  List.mapi (send_jump lid dst env) jump
+
+let send_loc env (id,der,edges) =
+  put_location id;
+  List.mapi (send_der id env) der;
+  List.map (send_edge id env) edges;
+  ()
+
+let send_model (ps,vars,(_,iexpr),locs) =
+  initialize (List.length vars);
+  let env = SM.empty in
+  let env = List.fold_left send_var env vars in
   let env = List.fold_left send_param env ps in
-  List.mapi (send_der env) der;
-  send_init env init;
-  send_grd_h env grd_h;
-  send_grd_g env grd_g;
-  List.mapi (send_jump env) jump;
+  send_init env iexpr;
+  List.map (send_loc env) locs;
+  ()
+
+
+let send_solving_params params =
+  Model_common.MParam.iter set_solving_param params;
   ()

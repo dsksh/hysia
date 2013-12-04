@@ -5,7 +5,7 @@ extern "C" {
 
 void init(const int dim);
 int putVariable(const char *);
-void setParam(const char *, const double, const double);
+int setParam(const char *, const double, const double);
 
 void putVarNode(const int);
 void putScalarNode(const double, const double);
@@ -26,17 +26,23 @@ void putMulNode();
 void putDivNode();
 void putPowNode();
 
-void putDerTree(const int);
-void putDerDTree(const int, const int);
-void doneDerTree();
+void putDerTree(const char *, const int);
+void putDerDTree(const char *, const int, const int);
+void doneDerTree(const char *);
 
 /*void putValue(const double l, const double u);*/
 void putValue();
 
-void putGrdTree(const int); 
-void putGrdDTree(const int, const int);
-void putJumpTree(const int); 
-void putJumpDTree(const int, const int); 
+void putGrdTree(const char *, const char *, const int); 
+void putGrdDTree(const char *, const char *, const int, const int);
+void putJumpTree(const char *, const char *, const int); 
+void putJumpDTree(const char *, const char *, const int, const int); 
+
+void putEdge(const char *, const char *);
+void putLocation(const char *);
+
+
+void setSolvingParam(const char *, const double);
 
 /*void integrate(const float, const float, const float, const float);*/
 
