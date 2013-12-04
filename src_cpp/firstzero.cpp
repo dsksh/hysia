@@ -70,7 +70,7 @@ g_context->cout << "g:\t" << g << endl;
 g_context->cout << "contracted lb:\t" << time+time_procd << endl;
 
 	} while (//time_old != time);
-			 hausdorff(time_old, time) >= g_params->epsilon);
+			 hausdorff(time_old, time) > g_params->epsilon);
 
 	return true;
 }
@@ -122,15 +122,10 @@ g_context->cout << "proved" << endl;
 		d = hausdorff(time_old, contracted);
 		time_old = contracted;
 
-		if (contracted.leftBound() == contracted.rightBound())
-			contracted += interval(-g_params->h_min, g_params->h_min);
-
 		//time = time.mid() + HSS_TAU*(contracted - time.mid());
-g_context->cout << "lb:\t" << contracted.leftBound()+time_procd << endl;
-g_context->cout << "rb:\t" << contracted.rightBound()+time_procd << endl;
 g_context->cout << "mid:\t" << contracted.mid()+time_procd << endl;
-g_context->cout << "mid':\t" << (contracted.leftBound()+contracted.rightBound())/2+time_procd << endl;
-		time = contracted.mid() + g_params->tau*(contracted - contracted.mid());
+		time = contracted.mid() + g_params->tau*(contracted - contracted.mid())
+			 + interval(-g_params->abs_infl, g_params->abs_infl);
 g_context->cout << "inflated:\t" << time+time_procd << endl;
 
 	} while (hausdorff(time_old, time) <= g_params->delta*d_old);
@@ -181,7 +176,7 @@ g_context->cout << endl << "contracting rb: " << time+time_procd << endl;
 		intersection(time_old, time, time);
 
 	} while (//time_old != time);
-			 hausdorff(time_old, time) >= g_params->epsilon);
+			 hausdorff(time_old, time) > g_params->epsilon);
 
 	return true;
 }
@@ -386,7 +381,7 @@ g_context->cout << "time_mid:\t" << time_mid << endl;
 			//throw runtime_error("result becomes empty!");
 			continue;
 		}
-	} while (hausdorff(time_old, time_mid) >= g_params->epsilon);
+	} while (hausdorff(time_old, time_mid) > g_params->epsilon);
 
 	g_context->x_mid = curve(time_mid);
 	time_mid += time_procd;

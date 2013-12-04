@@ -20,20 +20,22 @@ DMatrix characteristic(const DMatrix& jA) {
 	DMatrix B(jA);
 
 	// TODO
-//	for (int i(0); i < B.numberOfColumns(); ++i) {
-//		// should compute: Bcol(i) / norm(Bcol(i))
-//		B.column(i).normalize();
-//	}
+	for (int i(0); i < B.numberOfColumns(); ++i) {
+		// should compute: Bcol(i) / norm(Bcol(i))
+		B.column(i).normalize();
+	}
 
 	try {
 		DMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(B) );
 		//DMatrix B_inv( capd::matrixAlgorithms::gaussInverseMatrix(B) );
 	
-//		if (norm(B)*norm(B_inv) > g_params->qr_thres) {
-//			capd::matrixAlgorithms::QR_decompose(B, B, B_inv);
-////std::cout << "Q: " << B << std::endl;
-////std::cout << "R: " << B_inv << std::endl;
-//		}
+		if (g_params->char_mtx == 1 ||
+			(g_params->char_mtx < 0 && norm(B)*norm(B_inv) > g_params->qr_thres) ) {
+
+			capd::matrixAlgorithms::QR_decompose(B, B, B_inv);
+//std::cout << "Q: " << B << std::endl;
+//std::cout << "R: " << B_inv << std::endl;
+		}
 		//capd::matrixAlgorithms::orthonormalize(B);
 	
 		return B;

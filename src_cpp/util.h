@@ -21,17 +21,14 @@ namespace capd{
 extern std::ostream cnull;
 
 
-////#define HSS_DUMP_FILENAME "pped.dat"
-////#define HSS_CONF_FILENAME "hss.conf"
-//
-//#define HSS_EPSILON 1e-8
-//#define HSS_DELTA 0.99
-//#define HSS_TAU 1.1
-////#define HSS_TIME_MAX 1e1
-////#define HSS_QR_THRESHOLD 100
-//
-////#define HSS_BOX_BASED
-////#define HSS_SKIP_PPED_T_INF
+//#define HSS_DUMP_FILENAME "pped.dat"
+//#define HSS_CONF_FILENAME "hss.conf"
+
+//#define HSS_TIME_MAX 1e1
+//#define HSS_QR_THRESHOLD 100
+
+#define HSS_BOX_BASED
+//#define HSS_SKIP_PPED_T_INF
 
 
 /// interval operators

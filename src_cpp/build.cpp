@@ -256,6 +256,9 @@ void setSolvingParam(const char *id, const double value)
 	else if (strcmp(id, "epsilon") == 0) {
 		g_params->epsilon = value;
 	}
+	else if (strcmp(id, "abs_infl") == 0) {
+		g_params->abs_infl = value;
+	}
 	else if (strcmp(id, "delta") == 0) {
 		g_params->delta = value;
 	}
@@ -265,8 +268,12 @@ void setSolvingParam(const char *id, const double value)
 	else if (strcmp(id, "dump_interval") == 0) {
 		g_params->dump_interval = value;
 	}
+	else if (strcmp(id, "char_mtx") == 0) {
+std::cout << "char_mtx: " << value << std::endl;
+		g_params->char_mtx = value;
+	}
 	else {
-		std::cout << "unknown param: " << id << std::endl;
+		std::cerr << "unknown param: " << id << std::endl;
 		// TODO
 	}
 }

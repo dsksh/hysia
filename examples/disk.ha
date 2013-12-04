@@ -1,6 +1,10 @@
+#let space = [-1e-4,1e-4]
+let space = [-1e-5,1e-5]
+#let space = [-1e-6,1e-6]
+
 var   x1, x2
 
-init  L, 1+[-1e-5,1e-5], [-1e-5,1e-5]
+init  L, 1+space, space
 #init  L, 1, 0
 
 at L wait -x2, x1
@@ -8,7 +12,8 @@ at L wait -x2, x1
 end
 
 param order = 10
-param t_end = 10
-param epsilon = 0.000000000000001
-param h_min   = 0.000000000000001
-param h_max = 0.1
+param t_max = 10
+param h_min   = 1e-14
+param epsilon = 1e-14
+#param epsilon = 0
+#param char_mtx = 1
