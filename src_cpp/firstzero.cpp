@@ -233,21 +233,11 @@ g_context->cout << "dx: " << dx << endl;
 		bool res( reduceLower(der, grd_h, grd_g, curve, time_init, time_procd, time) );
 
 		// dump the trajectory paving.
-<<<<<<< HEAD
-		const double MaxH(0.03);
-		double stepW(res ? time.leftBound() : time_init.rightBound());
-		int grid(stepW/MaxH + 0.9999999999);
- 		if (grid==0) grid = 1;
-		stepW = stepW/grid - 0.0000001;
- 		for(int i(0); i<grid; ++i)
- 		{
-=======
 		if (!res) time = time_init;
 		int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
  		if (grid==0) grid = 1;
 		const double stepW(time.rightBound()/grid - 0.0000001);
  		for(int i(0); i<grid; ++i) {
->>>>>>> ha
  			const interval step( interval(i,i+1)*stepW );
  			IVector v = curve(step);
 if (selected) {

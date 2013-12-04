@@ -18,12 +18,6 @@
 
 	  "var", VAR;
 	  "init", INIT;
-<<<<<<< HEAD
-	  "grd_h", GRD_H;
-	  "grd_g", GRD_G;
-	  "jump", JUMP;
-      "param", PARAM;
-=======
       "at", AT;
       "wait", WAIT;
       "end", END;
@@ -31,7 +25,6 @@
       "watch", WATCH;
       "goto", GOTO;
       "then", THEN;
->>>>>>> ha
 
       "param", PARAM;
 	];
