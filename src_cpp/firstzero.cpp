@@ -199,14 +199,25 @@ g_context->cout << "TIME0: " << time << endl;
 
 	try{
 
+	// TODO
+	IMap vectorField("var:x,y,vx,vy; fun:vx,vy,-10*x/sqrt(x^2+y^2)^3,-10*y/sqrt(x^2+y^2)^3;");
+/*	IVector x(4);
+	x[0]=0.0;
+	x[1]=15.0;
+	x[2]=1.0;
+	x[3]=0.0;
+	IEuclNorm r;
+	C1Rect2RSet p(x, r);
+*/
 	// the solver:
 	ITaylor solver(der, g_params->order, g_params->h_min);
+	// TODO
+	//ITaylor solver(vectorField, g_params->order, g_params->h_min);
 	ITimeMap timeMap(solver);
 	timeMap.stopAfterStep(true);
 
 	// the initial value:
-	CapdPped p(pped.toCapdPped());
-printPped(cout, pped);
+	CapdPped capdPped(pped.toCapdPped());
 
     interval time_procd(time_l);
 	IMatrix dx_prev(IMatrix::Identity(dim));
@@ -214,7 +225,7 @@ printPped(cout, pped);
 	while (true) {
 		// integrate 1 step.
 		//timeMap(g_params->t_max, p);
- 		timeMap.moveSet(g_params->t_max, p);
+ 		timeMap.moveSet(g_params->t_max, capdPped);
 
 		time = interval(0,1)*solver.getStep();
 g_context->cout << endl << "step made: " << time+time_procd << endl;
@@ -234,17 +245,20 @@ g_context->cout << "dx: " << dx << endl;
 
 		// dump the trajectory paving.
 		if (!res) time = time_init;
+if (!res) {
 		int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
  		if (grid==0) grid = 1;
 		const double stepW(time.rightBound()/grid - 0.0000001);
  		for(int i(0); i<grid; ++i) {
  			const interval step( interval(i,i+1)*stepW );
  			IVector v = curve(step);
+
 if (selected) {
  			printPipe(g_context->fout, step+time_procd, v);
 			g_context->fout << ',' << endl;
 }
  		}
+}
 
 		if (res)
 			break;
@@ -252,10 +266,10 @@ if (selected) {
 			return cEmpty;
 		else {
 			time_procd = time_l + timeMap.getCurrentTime();
-			dx_prev = IMatrix(p);
+			dx_prev = IMatrix(capdPped);
 		}
 	}
-
+	
 	const ITaylor::CurveType& curve = solver.getCurve();
 	const interval time_init(time);
 
@@ -269,14 +283,14 @@ if (selected) {
 		//continue;
 	}
 
-	/*if (time.right() == time_init.right()) {
-		X  = curve(time);
-		Dx_phi = curve[time]*dx_prev;
-		Dt_phi = curve.derivative()(time);
-		Dh = guard_h[X];
-		time += time_procd;
-		return true;
-	}*/
+	//if (time.right() == time_init.right()) {
+	//	X  = curve(time);
+	//	Dx_phi = curve[time]*dx_prev;
+	//	Dt_phi = curve.derivative()(time);
+	//	Dh = guard_h[X];
+	//	time += time_procd;
+	//	return true;
+	//}
 
 	// TODO
 	//intersection(time_init, time, time);
@@ -284,11 +298,24 @@ if (selected) {
 	// reduce the upper bound
 	if ( !reduceUpper(der, grd_h, curve, time_init, time_procd, time) )
 		throw runtime_error("failed in reducing the upper bound");
-
 g_context->cout << "contracted ub:\t" << time + time_procd << endl;
 
 g_context->cout << "TIME: " << time << endl;
 g_context->cout << "GTIME: " << g_context->time << endl;
+
+		// TODO
+		int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
+ 		if (grid==0) grid = 1;
+		const double stepW(time.rightBound()/grid - 0.0000001);
+ 		for(int i(0); i<grid; ++i) {
+ 			const interval step( interval(i,i+1)*stepW );
+ 			IVector v = curve(step);
+if (selected) {
+ 			printPipe(g_context->fout, step+time_procd, v);
+			g_context->fout << ',' << endl;
+}
+		}
+
 
 if (selected) {
 	g_context->x = curve(time);
@@ -339,13 +366,15 @@ g_context->cout << "TIME0 mid: " << time << endl;
 	timeMap.stopAfterStep(true);
 
 	// the initial value:
-	CapdBox p(pped.x());
+	// TODO
+	//CapdBox capdPped(pped.x());
+	C0PpedSet capdPped(pped.x());
 
     interval time_procd(time_l);
 
 	while (true) {
 		// integrate 1 step.
-		timeMap(g_params->t_max, p);
+		timeMap(g_params->t_max, capdPped);
 
 		time_mid = interval(0,1)*solver.getStep();
 g_context->cout << endl << "step made: " << time_procd + time_mid << endl;

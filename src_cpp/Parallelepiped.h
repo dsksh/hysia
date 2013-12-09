@@ -1,6 +1,7 @@
 #ifndef _CAPD_PPED_H_
 #define _CAPD_PPED_H_
 
+#include "capd/dynset/C0Rect2Set.h"
 #include "capd/dynset/C1PpedSet.h"
 #include "capd/dynset/C1Pped2Set.h"
 #include "capd/matrixAlgorithms/matrixAlgorithmsLib.h"
@@ -11,7 +12,8 @@ namespace capd{
 
 //typedef capd::dynset::C1PpedSet<IMatrix> CapdPped;
 //typedef capd::dynset::C1Pped2Set<IMatrix> CapdPped;
-typedef capd::dynset::C1Rect2Set<IMatrix> CapdPped;
+//typedef capd::dynset::C1Rect2Set<IMatrix> CapdPped;
+typedef capd::dynset::C1Rect2RSet<IMatrix> CapdPped;
 typedef capd::dynset::C0Rect2Set<IMatrix> CapdBox;
 
 class Parallelepiped

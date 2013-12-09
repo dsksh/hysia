@@ -91,7 +91,6 @@ struct SolvingParams
 {
 public:
 	int order;
-	int qr_thres;
 	double t_max;
 	double h_min;
 	//double h_max;
@@ -105,11 +104,11 @@ public:
 	double tau;
 
 	int char_mtx;
+	int qr_thres;
 
 	/// constractor
 	SolvingParams()
 	  : order(20),
-	    qr_thres(100),
 	    t_max(100),
 	    h_min(0.01),
 		//h_max(0.1)
@@ -118,7 +117,8 @@ public:
 		abs_infl(1e-12),
 		delta(0.99),
 		tau(1.1),
-		char_mtx(-1)
+		char_mtx(-1),
+	    qr_thres(100)
 	{}
 };
 

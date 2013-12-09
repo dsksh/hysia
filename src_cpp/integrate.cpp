@@ -13,9 +13,12 @@ using namespace std;
 
 //typedef capd::dynset::C1PpedSet<IMatrix> Pped;
 //typedef capd::dynset::C1Pped2Set<IMatrix> Pped;
+//typedef capd::dynset::C1Rect2Set<IMatrix> Pped;
+typedef capd::dynset::C1Rect2RSet<IMatrix> Pped;
+//typedef capd::dynset::C1Rect2Set Pped;
 //typedef capd::vectalg::Vector<Pped, 4> PpedVector;
 
-int main()
+int main(int argc, char *argv[])
 {
 	std::cout.precision(17);
 	std::cout.setf(ios::fixed,ios::floatfield);
@@ -50,8 +53,9 @@ int main()
 
 	try{
 
-	IMap vectorField("var:t,x,v; fun:1,v,-sin(x);");
+	//IMap vectorField("var:t,x,v; fun:1,v,-sin(x);");
 	//IMap vectorField("var:t,x,v; fun:1,v,-10.0;");
+	IMap vectorField("var:x,y,vx,vy; fun:vx,vy,-10*x/sqrt(x^2+y^2)^3,-10*y/sqrt(x^2+y^2)^3;");
 	//MyIMap vectorField;
 	//vectorField.setup();
 
@@ -71,10 +75,12 @@ int main()
 	//// compute deriv
 	//getIMap()->compDiff();
 
-	IVector x(3);
+	IVector x(4);
 	x[0]=0.0;
-	x[1]=1.0;
+	//x[1]=1.0;
+	x[1]=15.0;
 	x[2]=1.0;
+	x[3]=0.0;
 
 	// Van der Pol
 	//IMap vectorField("par:mu; var:t,x,y; fun:1,y,mu*(1-x^2)*y-x;");
@@ -101,20 +107,23 @@ int main()
 	// The time step control is turned on by default but the solver must know if we want to 
 	// integrate forwards or backwards (then put negative number).
 	ITaylor solver(vectorField, 20, 0.1);
+	//ITaylor solver(vectorField, 20, 1e-14);
 	//ITaylor solver(*getIMap(), 20, 0.1);
 	ITimeMap timeMap(solver);
 
 	// define a doubleton representation of the interval vector x
-	C0Rect2Set s(x);
+	//C0Rect2Set s(x);
 	//C0PpedSet s(x);
-	//IEuclNorm r;
+	IEuclNorm r;
 	//C1Rect2Set s(x, r);
-	//Pped s(x, r);
+	Pped s(x, r);
 
 	// Here we start to integrate. The time of integration is set to T=10. 
-	double T=5;
+	double T;
+	sscanf(argv[1], "%lf", &T);
 	//double T=0.1;
 	timeMap.stopAfterStep(true);
+	//timeMap.stopAfterStep(false);
 	interval prevTime(0.);
 
 	std::cout << '{' << endl;
@@ -125,8 +134,8 @@ int main()
 			//IVector v = timeMap(T,s);
 			timeMap.moveSet(T, s);
 			//cout << s.show();
-			//dumpPped(cout, s);
-			//dumpPipe(cout, timeMap.getCurrentTime(), s);
+			//printPipe(cout, timeMap.getCurrentTime(), s);
+			//std::cout << "," << endl;
 			//cout << endl;
 
 			interval stepMade = solver.getStep();
@@ -146,6 +155,7 @@ int main()
 				//std::cout << "\nenclosure for t=" << prevTime + subsetOfDomain << ":  " << v;
 				//std::cout << "\ndiam(enclosure): " << diam(v);
 				printPipe(std::cout, prevTime+subsetOfDomain, v);
+				std::cout << "," << endl;
 			}
 			prevTime = timeMap.getCurrentTime();
 			//cout << endl << "current time: " << prevTime << endl << endl;

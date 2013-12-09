@@ -20,10 +20,10 @@ DMatrix characteristic(const DMatrix& jA) {
 	DMatrix B(jA);
 
 	// TODO
-	for (int i(0); i < B.numberOfColumns(); ++i) {
-		// should compute: Bcol(i) / norm(Bcol(i))
-		B.column(i).normalize();
-	}
+//	for (int i(0); i < B.numberOfColumns(); ++i) {
+//		// should compute: Bcol(i) / norm(Bcol(i))
+//		B.column(i).normalize();
+//	}
 
 	try {
 		DMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(B) );

@@ -1,6 +1,7 @@
 let g = 1
 #let g = 10
-let c = 0.75
+let c = 1
+#let c = 0.75
 let y0 = 10
 
 var   t, y, dy
@@ -13,9 +14,14 @@ end
 
 param order = 10
 param t_max = 10
-param h_min   = 0.000000000000001
-param epsilon = 0.000000000000001
+param h_min   = 0.1
+#param h_min   = 1e-14
+param epsilon = 1e-14
 #param epsilon = 0
-param dump_interval = 0.1
+param dump_interval = 1
 #param delta = 0.99
 #param tau = 1.01
+#param char_mtx = -1
+param char_mtx = 1
+#param char_mtx = 2
+#param qr_thres = 100

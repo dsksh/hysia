@@ -27,7 +27,7 @@ extern std::ostream cnull;
 //#define HSS_TIME_MAX 1e1
 //#define HSS_QR_THRESHOLD 100
 
-#define HSS_BOX_BASED
+//#define HSS_BOX_BASED
 //#define HSS_SKIP_PPED_T_INF
 
 
