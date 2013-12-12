@@ -69,7 +69,6 @@ public:
 	  : dim(d),
 		x_init(d),
 		der_proto(d, 1)
-		//locs()
 	{ 
 		// kludge: put dummy nodes to cheat the destractor.
 		for (int i(0); i < dim; ++i) {
