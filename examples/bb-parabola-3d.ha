@@ -19,8 +19,8 @@ at L wait vx1,vx2,vy, 0,0,-g+f*vy^2
     vy  - (2*(vy - 2*vx1*x1 - 2*vx2*x2)) / (1 + 4*x1^2 + 4*x2^2)
 end
 
-param order = 10
-param t_max = 10
+param order = 20
+param t_max = 20
 param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0

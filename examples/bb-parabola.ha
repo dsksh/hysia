@@ -20,5 +20,13 @@ end
 
 param order = 20
 param t_max = 10
-param h_max = 0.01
-param dump_interval = 0.01
+param h_min   = 1e-14
+param epsilon = 1e-14
+#param epsilon = 0
+param dump_interval = 0.02
+#param delta = 0.99
+#param tau = 1.01
+param char_mtx = -1
+#param char_mtx = 1
+#param char_mtx = 2
+param qr_thres = 100
