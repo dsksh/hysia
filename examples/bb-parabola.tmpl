@@ -1,0 +1,39 @@
+let g = 1
+#let f = 0
+let f = 0.1
+let c = 1
+
+var   {% for i in range(1,n) %}x{{i}},{% endfor %}y, 
+      {% for i in range(1,n) %}vx{{i}},{% endfor %}vy
+
+init  L,
+      -1,{% for i in range(2,n) %}0,{% endfor %}1,
+#      2/sqrt(2),{% for i in range(2,n) %}0.000{{i-1}},{% endfor %}1/sqrt(2)
+      1.4,{% for i in range(2,n) %}0.000{{i-1}},{% endfor %}0.7
+
+at L wait {% for i in range(1,n) %}vx{{i}},{% endfor %}vy,
+          {% for i in range(1,n) %}0,{% endfor %}-g+f*vy^2
+  watch (x1^2{% for i in range(2,n) %}+x{{i}}^2{% endfor %}-y,
+         vy{% for i in range(1,n) %}-2*x{{i}}*vx{{i}}{% endfor %}) goto L then 
+    x1,{% for i in range(2,n) %}x{{i}},{% endfor %}y,
+    {% for i in range(1,n) %}vx{{i}} + (4*x{{i}}*(vy{% for j in range(1,n) %} - 2*vx{{j}}*x{{j}}{% endfor %})) / (1{% for j in range(1,n) %} + 4*x{{j}}^2{% endfor %}),
+    {% endfor %}vy  - (2*(vy{% for i in range(1,n) %} - 2*vx{{i}}*x{{i}}{% endfor %})) / (1{% for i in range(1,n) %} + 4*x{{i}}^2{% endfor %})
+
+#    (vx1*(1-4*c*x1^2+4*x2^2+4*x3^2) + 2*(c+1)*x1*(vy-2*(vx2*x2+vx3*x3))) / (1 + 4*x1^2 + 4*x2^2 + 4*x3^2),
+#    (vx2*(1+4*x1^2-4*c*x2^2+4*x3^2) + 2*(c+1)*x2*(vy-2*(vx1*x1+vx3*x3))) / (1 + 4*x1^2 + 4*x2^2 + 4*x3^2),
+#    (vx3*(1+4*x1^2+4*x2^2-4*c*x3^2) + 2*(c+1)*x2*(vy-2*(vx1*x1+vx2*x2))) / (1 + 4*x1^2 + 4*x2^2 + 4*x3^2),
+#    vy  - ((c+1)*(vy - 2*vx1*x1 - 2*vx2*x2 - 2*vx3*x3)) / (1 + 4*x1^2 + 4*x2^2 + 4*x3^2)
+end
+
+param order = 20
+param t_max = 40
+param h_min   = 1e-14
+param epsilon = 1e-14
+#param epsilon = 0
+param dump_interval = 0.02
+#param delta = 0.99
+#param tau = 1.01
+param char_mtx = -1
+#param char_mtx = 1
+#param char_mtx = 2
+param qr_thres = 100

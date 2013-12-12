@@ -44,7 +44,7 @@ OCAMLBEST = opt
 CAMLP5O   = camlp5o
 
 BFLAGS = -w Aer-29 -dtypes -g -I . $(OINCLUDES)
-OFLAGS = -w Aer-29 -dtypes    -I . $(OINCLUDES)
+OFLAGS = -w Aer-29 -dtypes -g -I . $(OINCLUDES)
 
 ifeq (no,yes)
 OFLAGS += -g -p

@@ -138,9 +138,10 @@ AuxMap::AuxMap(DerMap& dmap, int dim_f)
 	m_dim2 = dim_f;
 	m_indexOfFirstParam = m_dim;
 	m_order = 1;
-	//m_size = m_dim;
-	//m_val = new ScalarType[m_size];
-	//std::fill(m_val, m_val+m_size, ScalarType(0.));
+
+	m_size = m_dim;
+	m_val = new ScalarType[m_size];
+	std::fill(m_val, m_val+m_size, ScalarType(0.));
 }
 
 inline AuxMap::AuxMap(const AuxMap& rhs)

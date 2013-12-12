@@ -1,12 +1,21 @@
-var   x,y,dx,dy
+let g = 1
+#let f = 0
+let f = 0.1
 
-init  L, 1,10,0,0
+var   x,y,vx,vy
 
-at L wait dx,dy,0,-10
-  watch (x^2-y, dy-2*x*dx) goto L then 
+#init  L, 1,10,0,0
+#init  L, -1,1, 2/sqrt(2),1/sqrt(2)
+init  L, -1,1, 1.4,0.7
+
+at L wait vx,vy,0,-g+f*vy^2
+  watch (x^2-y, vy-2*x*vx) goto L then 
     x,y,
-    dx - 1.9 * ((2*x*dx - dy) / (4*x^2 +1)) * 2*x,
-    dy + 1.9 * ((2*x*dx - dy) / (4*x^2 +1))
+    vx + (4*x*(vy - 2*x*vx)) / (4*x^2 + 1),
+    vy - (2*(vy - 2*x*vx)) / (4*x^2 + 1)
+
+#    vx - 1.9 * ((2*x*vx - vy) / (4*x^2 +1)) * 2*x,
+#    vy + 1.9 * ((2*x*vx - vy) / (4*x^2 +1))
 end
 
 param order = 20

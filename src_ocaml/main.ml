@@ -47,7 +47,6 @@ let () =
 
     Capd_sending.send_model model;
     Capd_sending.send_solving_params params;
-    (*Simulating.integrate params;*)
     Simulating.simulate model;
     ()
   with

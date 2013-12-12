@@ -198,7 +198,10 @@ void putGrdDTree(const char *lid, const char *dst, const int s, const int j)
 void putJumpTree(const char *lid, const char *dst, const int i) 
 {
 	//g_model->jump.putTree(i, g_stack.front()); 
-	g_model->locs[lid]->edges[dst]->jump.putTree(i, g_stack.front());
+	AuxMap& jump = g_model->locs[lid]->edges[dst]->jump;
+	DerMap::NodeType *n = g_stack.front();
+	//g_model->locs[lid]->edges[dst]->jump.putTree(i, g_stack.front());
+	jump.putTree(i, n);
 	g_stack.pop_front();
 }
 
@@ -269,7 +272,6 @@ void setSolvingParam(const char *id, const double value)
 		g_params->dump_interval = value;
 	}
 	else if (strcmp(id, "char_mtx") == 0) {
-std::cout << "char_mtx: " << value << std::endl;
 		g_params->char_mtx = value;
 	}
 	else {
