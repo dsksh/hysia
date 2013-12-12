@@ -1,12 +1,12 @@
 let g = 1
-#let f = 0
-let f = 0.1
+let f = 0
+#let f = 0.1
 
 var   x,y,vx,vy
 
 #init  L, 1,10,0,0
-#init  L, -1,1, 2/sqrt(2),1/sqrt(2)
-init  L, -1,1, 1.4,0.7
+init  L, -1,1, 2/sqrt(2),1/sqrt(2)
+#init  L, -1,1, 1.4,0.7
 
 at L wait vx,vy,0,-g+f*vy^2
   watch (x^2-y, vy-2*x*vx) goto L then 

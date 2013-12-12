@@ -84,9 +84,8 @@ public:
 };
 
 //typedef std::auto_ptr<Model> ModelPtr;
-// FIXME
-//typedef boost::shared_ptr<Model> ModelPtr;
-typedef Model *ModelPtr;
+typedef boost::shared_ptr<Model> ModelPtr;
+//typedef Model *ModelPtr;
 
 
 struct SolvingParams

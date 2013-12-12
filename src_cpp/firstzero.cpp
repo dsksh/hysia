@@ -200,8 +200,8 @@ g_context->cout << "TIME0: " << time << endl;
 	try{
 
 	// TODO
-	IMap vectorField("var:x,y,vx,vy; fun:vx,vy,-10*x/sqrt(x^2+y^2)^3,-10*y/sqrt(x^2+y^2)^3;");
-/*	IVector x(4);
+/*	IMap vectorField("var:x,y,vx,vy; fun:vx,vy,-10*x/sqrt(x^2+y^2)^3,-10*y/sqrt(x^2+y^2)^3;");
+	IVector x(4);
 	x[0]=0.0;
 	x[1]=15.0;
 	x[2]=1.0;
@@ -218,13 +218,10 @@ g_context->cout << "TIME0: " << time << endl;
 
 	// the initial value:
 	CapdPped capdPped(pped.toCapdPped());
-printPped(cout, pped);
 
     interval time_procd(time_l);
 	IMatrix dx_prev(IMatrix::Identity(dim));
 	
-g_context->cout << "start integ" << endl;
-
 	while (true) {
 		// integrate 1 step.
 		//timeMap(g_params->t_max, p);
