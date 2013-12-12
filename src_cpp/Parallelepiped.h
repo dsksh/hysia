@@ -14,7 +14,7 @@ namespace capd{
 //typedef capd::dynset::C1Pped2Set<IMatrix> CapdPped;
 //typedef capd::dynset::C1Rect2Set<IMatrix> CapdPped;
 typedef capd::dynset::C1Rect2RSet<IMatrix> CapdPped;
-typedef capd::dynset::C0Rect2Set<IMatrix> CapdBox;
+//typedef capd::dynset::C0Rect2Set<IMatrix> CapdBox;
 
 class Parallelepiped
 {

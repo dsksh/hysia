@@ -105,13 +105,13 @@ COBJS = capd_stubs.o capd_simulating_stubs.o capd_integrator.o
 byte: hss.cma
 opt:  hss.cmxa
 
-CCLIBFLAGS := -cclib -lstdc++ -cclib -L$(CAPD_DIR)/lib -cclib -lcapd -cclib -L$(CXXDIR) -cclib -l$(LIBNAME)
+CCLIBFLAGS := -cclib -lstdc++ -cclib -L$(CXXDIR) -cclib -l$(LIBNAME) -cclib -L$(CAPD_DIR)/lib -cclib -lcapd
 
 hss.cma: hss.cmo $(COBJS)
-	$(OCAMLC) -a $(BFLAGS) -o $@ $(CCLIBFLAGS) $^
+	$(OCAMLC) -a $(BFLAGS) -o $@ $^ $(CCLIBFLAGS)
 
 hss.cmxa: hss.cmx $(COBJS)
-	$(OCAMLOPT) -a $(OFLAGS) -o $@ $(CCLIBFLAGS) $^
+	$(OCAMLOPT) -a $(OFLAGS) -o $@ $^ $(CCLIBFLAGS)
 
 hss.cmo: $(LIBCMO)
 	$(OCAMLC) $(BFLAGS) -pack -o $@ $^

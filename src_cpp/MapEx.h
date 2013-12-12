@@ -54,6 +54,8 @@ public:
 	//template<typename T>
 	//NodeType *compDiffNode(T& node, const int index);
 
+	const int getDim() { return m_dim; }
+
 private:
 	int m_trees_idx;
 	int m_dtrees_idx;
@@ -80,6 +82,8 @@ public:
 	VectorType operator()(const VectorType& val);
 	MatrixType der();
 	MatrixType operator[](const VectorType& val);
+
+	const int getDim() { return m_dim; }
 
 protected:
 	DerMap& m_dmap;

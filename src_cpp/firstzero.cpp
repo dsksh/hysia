@@ -218,10 +218,13 @@ g_context->cout << "TIME0: " << time << endl;
 
 	// the initial value:
 	CapdPped capdPped(pped.toCapdPped());
+printPped(cout, pped);
 
     interval time_procd(time_l);
 	IMatrix dx_prev(IMatrix::Identity(dim));
 	
+g_context->cout << "start integ" << endl;
+
 	while (true) {
 		// integrate 1 step.
 		//timeMap(g_params->t_max, p);

@@ -6,6 +6,7 @@
 #include "capd/capdlib.h"
 #include "capd/dynset/C1PpedSet.h"
 #include "capd/dynset/C1Pped2Set.h"
+#include "capd/geomset/AffineSet.h"
 
 #include "Parallelepiped.h"
 
@@ -220,32 +221,32 @@ inline void printPped(std::ostream& out, const Parallelepiped& value) {
 
 template<>
 inline void printPped(std::ostream& out, 
-					  const capd::C0Rect2Set& value)
+					  const capd::geomset::AffineSet<IMatrix>& value)
 {
 	out << "pped[" << std::endl;
 
 	// x
 	out << "{ " << std::endl;
 	bool first(true);
-	for (int i(0); i < value.m_x.size(); ++i) {
+	for (int i(0); i < value.get_x().size(); ++i) {
 		if (!first)
 			out << ", " << std::endl;
 		else
 			first = false;
 
-		//out << '{' << value.m_x[i].leftBound() << ',' << value.m_x[i].rightBound() << '}';
-		out << value.m_x[i].leftBound();
+		//out << '{' << value.get_x()[i].leftBound() << ',' << value.get_x()[i].rightBound() << '}';
+		out << value.get_x()[i].leftBound();
 	}
 	out << std::endl << "}," << std::endl;
 
 	// B
 	out << "{ " << std::endl;
-	const_MatrixIterator<capd::IMatrix> it(value.m_B);
-	for (int i(1); i <= value.m_B.numberOfRows(); ++i) {
-		it = value.m_B.beginOfRow(i);
+	const_MatrixIterator<capd::IMatrix> it(value.get_B());
+	for (int i(1); i <= value.get_B().numberOfRows(); ++i) {
+		it = value.get_B().beginOfRow(i);
 		if (i > 1) out << ',' << std::endl;
 		out << '{';
-		for (int j(1); j <= value.m_B.numberOfColumns(); ++j) {
+		for (int j(1); j <= value.get_B().numberOfColumns(); ++j) {
 			it.moveToNextColumn();
 			if (j > 1) out << ", ";
 			//out << '{' << (*it).leftBound() << ',' << (*it).rightBound() << '}';
@@ -258,13 +259,13 @@ inline void printPped(std::ostream& out,
 	// r
 	out << "{" << std::endl;
 	first = true;
-	for (int i(0); i < value.m_r.size(); ++i) {
+	for (int i(0); i < value.get_r().size(); ++i) {
 		if (!first)
 			out << ", " << std::endl;
 		else
 			first = false;
 
-		out << '{' << value.m_r[i].leftBound() << ',' << value.m_r[i].rightBound() << '}';
+		out << '{' << value.get_r()[i].leftBound() << ',' << value.get_r()[i].rightBound() << '}';
 	}
 	out << std::endl << "}" << std::endl;
 
@@ -274,6 +275,60 @@ inline void printPped(std::ostream& out,
 
 template<>
 inline void printPped(std::ostream& out, 
+					  const capd::C0Rect2Set& value)
+{
+	out << "pped[" << std::endl;
+
+	// x
+	out << "{ " << std::endl;
+	bool first(true);
+	for (int i(0); i < value.get_x().size(); ++i) {
+		if (!first)
+			out << ", " << std::endl;
+		else
+			first = false;
+
+		//out << '{' << value.get_x()[i].leftBound() << ',' << value.get_x()[i].rightBound() << '}';
+		out << value.get_x()[i].leftBound();
+	}
+	out << std::endl << "}," << std::endl;
+
+	// B
+	out << "{ " << std::endl;
+	const_MatrixIterator<capd::IMatrix> it(value.get_B());
+	for (int i(1); i <= value.get_B().numberOfRows(); ++i) {
+		it = value.get_B().beginOfRow(i);
+		if (i > 1) out << ',' << std::endl;
+		out << '{';
+		for (int j(1); j <= value.get_B().numberOfColumns(); ++j) {
+			it.moveToNextColumn();
+			if (j > 1) out << ", ";
+			//out << '{' << (*it).leftBound() << ',' << (*it).rightBound() << '}';
+			out << (*it).leftBound();
+		}
+		out << '}';
+	}
+	out << std::endl << "}," << std::endl;
+
+	// r
+	out << "{" << std::endl;
+	first = true;
+	for (int i(0); i < value.get_r().size(); ++i) {
+		if (!first)
+			out << ", " << std::endl;
+		else
+			first = false;
+
+		out << '{' << value.get_r()[i].leftBound() << ',' << value.get_r()[i].rightBound() << '}';
+	}
+	out << std::endl << "}" << std::endl;
+
+	out << std::endl << "]" << std::endl;
+	out.flush();
+}
+
+/*template<>
+inline void printPped(std::ostream& out, 
 					  const capd::dynset::C1PpedSet<capd::IMatrix>& value)
 {
 	out << "pped[" << std::endl;
@@ -281,14 +336,14 @@ inline void printPped(std::ostream& out,
 	// x
 	out << "{ " << std::endl;
 	bool first(true);
-	for (int i(0); i < value.m_x.size(); ++i) {
+	for (int i(0); i < value.get_x().size(); ++i) {
 		if (!first)
 			out << ", " << std::endl;
 		else
 			first = false;
 
-		//out << '{' << value.m_x[i].leftBound() << ',' << value.m_x[i].rightBound() << '}';
-		out << value.m_x[i].leftBound();
+		//out << '{' << value.get_x()[i].leftBound() << ',' << value.get_x()[i].rightBound() << '}';
+		out << value.get_x()[i].leftBound();
 	}
 	out << std::endl << "}," << std::endl;
 
@@ -409,6 +464,7 @@ inline void printPped(std::ostream& out,
 	out << std::endl << "]" << std::endl;
 	out.flush();
 }
+*/
 
 
 /// dumpPipe

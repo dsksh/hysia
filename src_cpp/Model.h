@@ -26,7 +26,7 @@ public:
 	  : dest(destination),
 	    grd_h(der, der.getOrder()), 
 	    grd_g(der, der.getOrder()),
-		jump(der, der.m_dim)
+		jump(der, der.getDim())
 	{}
 };
 
@@ -69,6 +69,7 @@ public:
 	  : dim(d),
 		x_init(d),
 		der_proto(d, 1)
+		//locs()
 	{ 
 		// kludge: put dummy nodes to cheat the destractor.
 		for (int i(0); i < dim; ++i) {
@@ -84,7 +85,9 @@ public:
 };
 
 //typedef std::auto_ptr<Model> ModelPtr;
-typedef boost::shared_ptr<Model> ModelPtr;
+// FIXME
+//typedef boost::shared_ptr<Model> ModelPtr;
+typedef Model *ModelPtr;
 
 
 struct SolvingParams

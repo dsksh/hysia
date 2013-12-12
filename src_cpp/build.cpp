@@ -1,4 +1,5 @@
 #include <list>
+#include <cstring>
 
 #include "capd/capdlib.h"
 #include "capd/map/Node.h"
@@ -238,8 +239,13 @@ void putEdge(const char *lid, const char *dst)
 
 void putLocation(const char *name)
 {
-	g_model->locs.insert( pair<string,LocPtr>(name, 
-				LocPtr(new Location(name, g_model->der_proto)) ));
+cout << "putLoc: " << name << endl;
+cout << "dim: " << g_model->dim << endl;
+//	g_model->locs.insert( pair<string,LocPtr>(name, 
+//				LocPtr(new Location(name, g_model->der_proto)) ));
+	LocPtr lp(new Location(name, *new DerMap()));
+cout << "lp done" << endl;
+	g_model->locs.insert( pair<string,LocPtr>(name, lp));
 }
 
 void setSolvingParam(const char *id, const double value)

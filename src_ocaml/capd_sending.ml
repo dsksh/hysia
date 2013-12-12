@@ -57,7 +57,6 @@ let rec send_expr env e = match e.node with
       (* TODO *)
       Printf.printf "unknown expr!"
 
-
 let send_der lid env i dual =
   let (e,d) = dual.node in
   send_expr env e;
@@ -67,7 +66,7 @@ let send_der lid env i dual =
     send_expr env d;
     put_der_dtree lid i j
   in
-  List.mapi send_dtree d
+  mapi send_dtree d
 
 let send_grd lid dst s env dual =
   let (e,d) = dual.node in
@@ -78,7 +77,7 @@ let send_grd lid dst s env dual =
     send_expr env d;
     put_grd_dtree lid dst s j
   in
-  List.mapi send_dtree d
+  mapi send_dtree d
 
 let send_grd_h lid dst env dual = send_grd lid dst 0 env dual
 let send_grd_g lid dst env dual = send_grd lid dst 1 env dual
@@ -92,7 +91,7 @@ let send_jump lid dst env i dual =
     send_expr env d;
     put_jump_dtree lid dst i j
   in
-  List.mapi send_dtree d
+  mapi send_dtree d
 
 
 let send_init env v =
@@ -110,11 +109,11 @@ let send_edge lid env (grd_h,grd_g,dst,jump) =
   put_edge lid dst;
   send_grd_h lid dst env grd_h;
   send_grd_g lid dst env grd_g;
-  List.mapi (send_jump lid dst env) jump
+  mapi (send_jump lid dst env) jump
 
 let send_loc env (id,der,edges) =
   put_location id;
-  List.mapi (send_der id env) der;
+  mapi (send_der id env) der;
   List.map (send_edge id env) edges;
   ()
 
