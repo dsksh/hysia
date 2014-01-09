@@ -25,17 +25,29 @@ void simInitialize()
 	g_fstream->precision(17);
 	g_fstream->setf(ios::fixed,ios::floatfield);
 
+#ifndef HSS_DEBUG
 	g_context = CtxPtr(new Context(*g_model, cnull, *g_fstream));
-	//g_context = CtxPtr(new Context(*g_model, cout, *g_fstream));
+#else
+	g_context = CtxPtr(new Context(*g_model, cout, *g_fstream));
+#endif
 
 	//g_fstream->open(g_context->DumpFilename.c_str());
 
 	g_context->fout << '{' << endl;
+
+	startTimer();
 }
 
 void simDispose()
 {
 	g_context->fout << '}' << endl;
+
+	g_context->fout << "(* time: (" << g_context->time.rightBound() << ", " << (getTime()/1000.) << ") *)" << std::endl;
+}
+
+void reportStep(const int stepId, const char *lid)
+{
+	printStep(g_context->fout, stepId, lid, g_context->time.rightBound());
 }
 
 
@@ -96,8 +108,8 @@ void simulateJump(const char *lid, const char *dst, const cInterval time0)
 	const interval& time = g_context->time;
 	const interval& time_mid = g_context->time_mid;
 // TODO: this doesn't work well
-//double time_l = g_context->time_l;
-const double time_l(g_context->time.rightBound());
+//double tc_r = g_context->time_l;
+const double tc_r(g_context->time.rightBound());
 
 	// FIXME
 	const IVector& x      = g_context->x;
@@ -148,7 +160,8 @@ g_context->cout << "Dt: " << dt_phi << endl;
 	const IVector delta_y( jump(x) );
 	IMatrix dx_psi(dim,dim);
 	IVector dt_psi(dim);
-	simulate_deriv(der, delta_y, time-time_l, dx_psi, dt_psi);
+std::cout << time-tc_r << std::endl;
+	simulate_deriv(der, delta_y, time-tc_r, dx_psi, dt_psi);
 
 	IMatrix dx_psi_delta( dx_psi * delta );
 

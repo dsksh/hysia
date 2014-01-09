@@ -1,0 +1,26 @@
+let Pi = 3.141592
+let A1_1 = -1.2
+let A1_2 = 0.1
+let A2_1 = 0.1
+let A2_2 = -1.2
+{% for i in range(1,n) %}{% for j in range(1,n) %}
+let I{{i}}_{{j}} = 0{% endfor %}{% endfor %}
+
+var   x1, x2, v1, v2
+
+init  L1_{{n}}, 0.5, 0.5, 0, 0
+
+{% for i in range(1,n) %}{% for j in range(1,n) %}
+at L{{i}}_{{j}} wait v1, v2, 
+             A1_1*(v1-sin((I{{i}}_{{j}}-1)*Pi/4)) + A1_2*(v2-cos((I{{i}}_{{j}}-1)*Pi/4)), 
+             A2_1*(v1-sin((I{{i}}_{{j}}-1)*Pi/4)) + A2_2*(v2-cos((I{{i}}_{{j}}-1)*Pi/4))
+{% if j>1 %}  watch (x1+x2-{{2*(j-1)}},  v1+v2) goto L{{i}}_{{j-1}} then x1, x2, v1, v2{% endif %}
+{% if j<n %}  watch (x1+x2-{{2*j}}, -v1-v2) goto L{{i}}_{{j+1}} then x1, x2, v1, v2{% endif %}
+{% if i>1 %}  watch (x1-x2+{{2*(n-i+1)}},  v1-v2) goto L{{i-1}}_{{j}} then x1, x2, v1, v2{% endif %}
+{% if i<n %}  watch (x1-x2+{{2*(n-i)}}, -v2+v2) goto L{{i+1}}_{{j}} then x1, x2, v1, v2{% endif %}
+end
+{% endfor %}{% endfor %}
+
+param order = 20
+param t_max = 10
+param dump_interval = 0.1

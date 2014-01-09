@@ -16,4 +16,5 @@ param t_max = 10
 param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
-#param char_mtx = 1
+param char_mtx = 0
+#param char_mtx = 3

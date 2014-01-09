@@ -52,6 +52,7 @@
 %token INIT
 %token AT
 %token WAIT
+%token FLOW
 %token END
 %token LET
 %token WATCH
@@ -81,6 +82,9 @@ statements :
     { let ps,vs,_,locs = $3 in 
 	    ps,vs,(mk_init $2),locs }
   | AT ID WAIT expr_vec edges END statements
+    { let ps,vs,init,locs = $7 in 
+        ps,vs,init,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_edge_l $5))::locs }
+  | AT ID FLOW expr_vec edges END statements
     { let ps,vs,init,locs = $7 in 
         ps,vs,init,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_edge_l $5))::locs }
 

@@ -15,6 +15,7 @@ let () =
     ("-hytech", Arg.Unit (fun () -> file := "navigation_hytech.tmpl"), "generate a HyTech model");
     ("-why", Arg.Unit (fun () -> file := "navigation_.tmpl"), "generate another HyTech model");
     ("-math", Arg.Unit (fun () -> file := "navigation_math.tmpl"), "generate Mathematica model");
+    ("-rotated", Arg.Unit (fun () -> file := "nav_rotated.tmpl"), "generate pi/4 rotated model");
   ] ignore "";
 
   let result_string = 

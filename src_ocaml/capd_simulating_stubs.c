@@ -81,3 +81,10 @@ value sim_print_pped(value is_lb, value is_last)
 	printPped(Bool_val(is_lb), Bool_val(is_last));
 	CAMLreturn(Val_unit);
 }
+
+value sim_report_step(value step_id, value lid)
+{
+	CAMLparam2(step_id, lid);
+	reportStep(Int_val(step_id), String_val(lid));
+	CAMLreturn(Val_unit);
+}

@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include <sys/time.h>
+
 #include "capd/capdlib.h"
 #include "capd/dynset/C1PpedSet.h"
 #include "capd/dynset/C1Pped2Set.h"
@@ -16,7 +18,7 @@ namespace capd{
 #define UNIVERSE interval(INFINITY, INFINITY)
 
 //#define HSS_PRINT_FREQ 72
-#define HSS_DUMP_PPED
+//#define HSS_DUMP_PPED
 //#define HSS_DEBUG
 
 extern std::ostream cnull;
@@ -35,7 +37,7 @@ extern std::ostream cnull;
 /// interval operators
 
 /// extended division on intervals
-inline void extDiv(const interval& denominator, const interval& numerator, 
+inline void extDiv(const interval& numerator, const interval& denominator, 
 			interval **domain, interval **containment) 
 {
 	*containment = NULL;
@@ -137,7 +139,33 @@ inline double hausdorff(const interval& I1, const interval& I2)
 }	
 
 
+/// timer
+
+static struct timeval tstart;
+
+inline void startTimer()
+{
+    gettimeofday(&tstart, NULL);
+}
+
+inline unsigned long long getTime()
+{
+    struct timeval tfinish;
+    long sec, usec;
+
+    gettimeofday(&tfinish, NULL);
+    sec = tfinish.tv_sec - tstart.tv_sec;
+    usec = tfinish.tv_usec - tstart.tv_usec;
+    return 1e+6*sec + usec;
+}
+
+
 /// printing functions
+inline void printStep(std::ostream& out, const int stepId, const char *lid, const double sim_time)
+{
+	out << "(* step " << stepId << " at " << lid << ", time: (" << sim_time << ", " << (getTime()/1000.) << ") *)" << std::endl;
+	std::cout << "step " << stepId << " at " << lid << ", time: (" << sim_time << ", " << (getTime()/1000.) << ")" << std::endl;
+}
 
 inline void printInterval(std::ostream& out, const interval& value)
 {

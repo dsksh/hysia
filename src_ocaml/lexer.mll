@@ -20,6 +20,7 @@
 	  "init", INIT;
       "at", AT;
       "wait", WAIT;
+      "flow", FLOW;
       "end", END;
       "let", LET;
       "watch", WATCH;

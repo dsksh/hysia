@@ -51,7 +51,8 @@ let simulate (_ps,_var,(iloc,_ival),locs) =
   let lid = ref iloc in
   print_pped true false;
   for i = 1 to !step_max do
-    Printf.printf "step %d at %s\n%!" i !lid;
+    (*Printf.printf "step %d at %s\n%!" i !lid;*)
+    report_step i !lid;
     let (_,_,es) = List.find (loc_of_name !lid) locs in
     let zs = List.map (find_first_zero_ !lid) es in
     let dst = List.fold_left select_earliest None zs in

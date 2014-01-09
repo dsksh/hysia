@@ -67,4 +67,4 @@ let () =
 	  printf "error: %a\n@." Util.report e;
     | _ ->
       printf "unexpected error\n@.";
-	  exit 1
+      exit 1;

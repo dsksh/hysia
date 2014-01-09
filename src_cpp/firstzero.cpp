@@ -39,7 +39,7 @@ g_context->cout << "g:\t" << g << endl;
 
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
-		extDiv(dh, -h, &gamma_l, &gamma_u);
+		extDiv(-h, dh, &gamma_l, &gamma_u);
 
 		if (gamma_l == NULL) {
 			return false;
@@ -52,7 +52,7 @@ g_context->cout << "g:\t" << g << endl;
 			delete gamma_u;
 		}
 
-		extDiv(dg, -g, &gamma_l, &gamma_u);
+		extDiv(-g, dg, &gamma_l, &gamma_u);
 
 		if (gamma_l == NULL) {
 			return false;
@@ -107,6 +107,7 @@ g_context->cout << "dh: " << dh << " at " << time_tmp+time_procd << endl;
 
 		// interval Newton
 		//der(curve(time.left()));
+		// TODO: curve should be evaluated with the whole time interval?
 		interval contracted(time.left() - 
 				grd_h(curve(time.left()))(1) / dh);
 //				grd_h(curve(time_tmp.left()))(1) / dh);
@@ -159,7 +160,7 @@ g_context->cout << endl << "contracting rb: " << time+time_procd << endl;
 
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
-		extDiv(dh, -h, &gamma_l, &gamma_u);
+		extDiv(-h, dh, &gamma_l, &gamma_u);
 
 		if (gamma_l == NULL) {
 			//throw "gamma is empty";
@@ -244,6 +245,7 @@ g_context->cout << "dx: " << dx << endl;
 		bool res( reduceLower(der, grd_h, grd_g, curve, time_init, time_procd, time) );
 
 		// dump the trajectory paving.
+		if (g_params->dump_interval > 0) {
 		if (!res) time = time_init;
 if (!res) {
 		int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
@@ -259,6 +261,7 @@ if (selected) {
 }
  		}
 }
+		}
 
 		if (res)
 			break;
@@ -269,7 +272,7 @@ if (selected) {
 			dx_prev = IMatrix(capdPped);
 		}
 	}
-	
+
 	const ITaylor::CurveType& curve = solver.getCurve();
 	const interval time_init(time);
 
@@ -304,6 +307,7 @@ g_context->cout << "TIME: " << time << endl;
 g_context->cout << "GTIME: " << g_context->time << endl;
 
 		// TODO
+		if (g_params->dump_interval > 0) {
 		int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
  		if (grid==0) grid = 1;
 		const double stepW(time.rightBound()/grid - 0.0000001);
@@ -315,7 +319,7 @@ if (selected) {
 			g_context->fout << ',' << endl;
 }
 		}
-
+		}
 
 if (selected) {
 	g_context->x = curve(time);
@@ -330,11 +334,17 @@ if (selected) {
 	g_context->dh = grd_h.der()(1);
 g_context->time = time;
 	g_context->time += time_procd;
-g_context->pped = pped;
+//g_context->pped = pped;
+
+printPipe(g_context->fout, g_context->time, g_context->x);
+g_context->fout << ',' << std::endl;
 }
 
 //	dumpPipe1(cout, timeMap.getCurrentTime(), s, false);
 //	cout << "}" << endl;
+
+// TODO
+time += time_procd;
 
 	} catch(exception& e)
 	{

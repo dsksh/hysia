@@ -14,8 +14,8 @@ end
 
 param order = 10
 param t_max = 10
-param h_min   = 0.1
-#param h_min   = 1e-14
+#param h_min   = 0.1
+param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
 param dump_interval = 1
@@ -24,4 +24,4 @@ param dump_interval = 1
 #param char_mtx = -1
 param char_mtx = 1
 #param char_mtx = 2
-#param qr_thres = 100
+param qr_thres = 8000
