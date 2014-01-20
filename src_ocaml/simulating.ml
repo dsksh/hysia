@@ -50,7 +50,7 @@ let simulate (_ps,_var,(iloc,_ival),locs) =
   initialize ();
   let lid = ref iloc in
   print_pped true false;
-  for i = 1 to !step_max do
+  for i = 1 to (if !step_max >= 0 then !step_max else max_int) do
     (*Printf.printf "step %d at %s\n%!" i !lid;*)
     report_step i !lid;
     let (_,_,es) = List.find (loc_of_name !lid) locs in

@@ -35,9 +35,8 @@
   let newline lexbuf =
     let pos = lexbuf.lex_curr_p in
     lexbuf.lex_curr_p <- 
-      { pos with pos_lnum = pos.pos_lnum (*+ 1*); 
-	pos_bol = pos.pos_cnum + 1; (*pos_cnum=0*) }
-
+      { pos with pos_lnum = pos.pos_lnum + 1; 
+	    pos_bol = pos.pos_cnum + 1(*; pos_cnum=0*) }
 }
 
 let delim  = [' ' '\t' '\r']
@@ -80,7 +79,15 @@ rule token = parse
   (*| '"' 
       { string (Buffer.create 1024) lexbuf }*)
 
+  (*| "(*)"
+      { LP_STAR_RP }*)
+  | "(*"
+      { (*comment_start_loc := loc lexbuf;*) comment lexbuf; token lexbuf }
+
+  | "#" { (*comment lexbuf*) token lexbuf } (* TODO *)
+
   | "="  { EQ }
+
   | "("  { LP }
   | ")"  { RP }
   | "["  { LB }
@@ -93,8 +100,6 @@ rule token = parse
   | "*"  { MUL }
   | "/"  { DIV }
   | "^"  { POW }
-
-  | "#" { comment lexbuf }
 
   | eof   
       { EOF }
@@ -109,6 +114,20 @@ and string buf = parse
   | eof    { raise (Lexical_error ("unterminated string")) }
 
 and comment = parse
+  | "(*)"
+      { comment lexbuf }
+  | "*)"
+      { () }
+  | "(*"
+      { comment lexbuf; comment lexbuf }
+  | '\n'
+      { newline lexbuf; comment lexbuf }
+  | eof
+      { raise (Lexical_error ("unterminated comment")) }
+  | _
+      { comment lexbuf }
+
+(*and comment = parse
   | '\n' { newline lexbuf; token lexbuf }
   | _    { comment lexbuf }
-  | eof  { EOF }
+  | eof  { EOF }*)

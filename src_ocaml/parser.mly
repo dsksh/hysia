@@ -27,6 +27,7 @@
 %token <string> ID
 %token EQ
 %token LP
+/*%token LP_STAR_RP*/
 %token RP
 %token LB
 %token RB
