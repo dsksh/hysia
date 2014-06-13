@@ -91,6 +91,8 @@ typedef boost::shared_ptr<Model> ModelPtr;
 struct SolvingParams
 {
 public:
+	int debug;
+
 	int order;
 	double t_max;
 	double h_min;
@@ -109,7 +111,9 @@ public:
 
 	/// constractor
 	SolvingParams()
-	  : order(20),
+	  : debug(0),
+	  
+	    order(20),
 	    t_max(100),
 	    h_min(0.01),
 		//h_max(0.1)

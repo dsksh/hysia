@@ -1,5 +1,5 @@
-#let space = [-1e-4,1e-4]
-let space = [-1e-5,1e-5]
+let space = [-1e-4,1e-4]
+#let space = [-1e-5,1e-5]
 #let space = [-1e-6,1e-6]
 
 var   x1, x2

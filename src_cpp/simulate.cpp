@@ -25,11 +25,10 @@ void simInitialize()
 	g_fstream->precision(17);
 	g_fstream->setf(ios::fixed,ios::floatfield);
 
-#ifndef HSS_DEBUG
-	g_context = CtxPtr(new Context(*g_model, cnull, *g_fstream));
-#else
-	g_context = CtxPtr(new Context(*g_model, cout, *g_fstream));
-#endif
+	if (!g_params->debug)
+		g_context = CtxPtr(new Context(*g_model, cnull, *g_fstream));
+	else
+		g_context = CtxPtr(new Context(*g_model, cout, *g_fstream));
 
 	//g_fstream->open(g_context->DumpFilename.c_str());
 

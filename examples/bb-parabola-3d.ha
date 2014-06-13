@@ -1,17 +1,17 @@
 let g = 1
-#let f = 0
-let f = 0.1
+let f = 0
+#let f = 0.1
 
 var   x1,x2,y, vx1,vx2,vy
 
 #init  L, 0.668693,0.8312,3, 2.34542,0.373903,2.80361
-#init  L, 1,1,10, 0,0,0
+init  L, 1,1,10, 1,2,0
 #init  L, -1,0,1, 2/sqrt(2),0.0001,1/sqrt(2)
 #init  L, -1,0,1, 2/sqrt(2),0,1/sqrt(2)
 #init  L, -1+[-1e-5,1e-5],[-1e-8,1e-8],1, 2/sqrt(2),0,1/sqrt(2)
 #init  L, -1+[-1e-5,1e-5],[-1e-8,1e-8],1, 2/sqrt(2),0,1/sqrt(2)
 #init  L, -1+[-1e-5,1e-5],0,1, 2/sqrt(2),0.0001,1/sqrt(2)
-init  L, -1,0,1, 1.4,0.0001,0.7
+#init  L, -1,0,1, 1.4,0.0001,0.7
 
 at L wait vx1,vx2,vy, 0,0,-g+f*vy^2
   watch (x1^2+x2^2-y, vy-2*x1*vx1-2*x2*vx2) goto L then 
@@ -31,8 +31,8 @@ param t_max = 10
 param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
-#param dump_interval = 0.1
-param dump_interval = -1
+param dump_interval = 0.01
+#param dump_interval = -1
 #param delta = 0.99
 #param tau = 1.01
 param char_mtx = -1

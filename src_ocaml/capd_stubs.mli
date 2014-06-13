@@ -4,6 +4,7 @@ external test1: string -> unit = "caml_test1"
 external initialize: int -> unit = "caml_init"
 external put_variable: string -> int = "caml_put_variable"
 external set_param: string -> float -> float -> int = "caml_set_param"
+external set_debug: bool -> unit = "caml_set_debug"
 
 external put_var_node: int -> unit = "caml_put_var_node"
 external put_scalar_node: float -> float -> unit = "caml_put_scalar_node"

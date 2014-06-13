@@ -90,14 +90,14 @@ g_context->cout << endl << "time_init:\t" << time_init+time_procd << endl;
 
 g_context->cout << endl << "verifying:\t" << time+time_procd << endl;
 		// current state
-		interval time_tmp;
-		intersection(time_init, time, time_tmp);
-		const IVector  dx( der(curve(time_tmp)) );
+		//interval time_tmp;
+		//intersection(time_init, time, time_tmp);
+		const IVector  dx( der(curve(time)) );
 g_context->cout << "dx: " << dx << endl;
-g_context->cout << "x: " << curve(time_tmp) << endl;
-g_context->cout << "time_tmp: " << time_tmp << endl;
+g_context->cout << "x: " << curve(time) << endl;
+//g_context->cout << "time_tmp: " << time_tmp << endl;
 		const interval dh( grd_h.der()(1)*dx );
-g_context->cout << "dh: " << dh << " at " << time_tmp+time_procd << endl;
+g_context->cout << "dh: " << dh << " at " << time+time_procd << endl;
 		if ( dh.contains((capd::TypeTraits<interval>::zero())) ) {
 			// TODO
 			throw runtime_error("zero in the derivative");
@@ -107,10 +107,11 @@ g_context->cout << "dh: " << dh << " at " << time_tmp+time_procd << endl;
 
 		// interval Newton
 		//der(curve(time.left()));
-		// TODO: curve should be evaluated with the whole time interval?
-		interval contracted(time.left() - 
-				grd_h(curve(time.left()))(1) / dh);
-//				grd_h(curve(time_tmp.left()))(1) / dh);
+		// TODO
+		interval contracted(time.left() - grd_h(curve(time.left()))(1) / dh);
+		//interval contracted(time_tmp.left() - grd_h(curve(time_tmp.left()))(1) / dh);
+		// TODO
+		//intersection(time_init, contracted, contracted);
 g_context->cout << "contracted:\t" << contracted+time_procd << endl;
 		if (time.containsInInterior(contracted)) {
 g_context->cout << "proved" << endl;
@@ -123,9 +124,9 @@ g_context->cout << "proved" << endl;
 		d = hausdorff(time_old, contracted);
 		time_old = contracted;
 
-		//time = time.mid() + HSS_TAU*(contracted - time.mid());
-g_context->cout << "mid:\t" << contracted.mid()+time_procd << endl;
-		time = contracted.mid() + g_params->tau*(contracted - contracted.mid())
+//g_context->cout << "mid:\t" << contracted.mid()+time_procd << endl;
+		time = time.mid() + g_params->tau*(contracted - time.mid())
+//		time = contracted.mid() + g_params->tau*(contracted - contracted.mid())
 			 + interval(-g_params->abs_infl, g_params->abs_infl);
 g_context->cout << "inflated:\t" << time+time_procd << endl;
 
@@ -192,28 +193,16 @@ cInterval findFirstZero(const int selected, const char *lid, const char *dst)
 
 	//Parallelepiped& pped = g_context->pped;
 	//interval& time = g_context->time;
-Parallelepiped pped = g_context->pped;
-interval time = g_context->time;
+	Parallelepiped pped = g_context->pped;
+	interval time = g_context->time;
 g_context->cout << "TIME0: " << time << endl;
 	const double time_l(time.rightBound());
 	if (selected) g_context->time_l = time_l;
 
 	try{
 
-	// TODO
-/*	IMap vectorField("var:x,y,vx,vy; fun:vx,vy,-10*x/sqrt(x^2+y^2)^3,-10*y/sqrt(x^2+y^2)^3;");
-	IVector x(4);
-	x[0]=0.0;
-	x[1]=15.0;
-	x[2]=1.0;
-	x[3]=0.0;
-	IEuclNorm r;
-	C1Rect2RSet p(x, r);
-*/
 	// the solver:
 	ITaylor solver(der, g_params->order, g_params->h_min);
-	// TODO
-	//ITaylor solver(vectorField, g_params->order, g_params->h_min);
 	ITimeMap timeMap(solver);
 	timeMap.stopAfterStep(true);
 
@@ -230,8 +219,8 @@ g_context->cout << "TIME0: " << time << endl;
 
 		time = interval(0,1)*solver.getStep();
 g_context->cout << endl << "step made: " << time+time_procd << endl;
-		const ITaylor::CurveType& curve = solver.getCurve();
 		const interval time_init(time);
+		const ITaylor::CurveType& curve = solver.getCurve();
 
 		IVector  dx( der(curve(time)) );
 g_context->cout << "x:  " << curve(time) << endl;
@@ -272,6 +261,13 @@ if (selected) {
 			dx_prev = IMatrix(capdPped);
 		}
 	}
+
+/*if (selected) {
+Parallelepiped p(capdPped.get_B(), capdPped.get_r(), capdPped.get_x());
+printPipe(g_context->fout, timeMap.getCurrentTime(), p);
+g_context->fout << ',' << endl;
+}
+*/
 
 	const ITaylor::CurveType& curve = solver.getCurve();
 	const interval time_init(time);
@@ -377,8 +373,8 @@ g_context->cout << "TIME0 mid: " << time << endl;
 
 	// the initial value:
 	// TODO
-	//CapdBox capdPped(pped.x());
-	C0PpedSet capdPped(pped.x());
+	//C0PpedSet capdPped(pped.x());
+	C0Rect2Set capdPped(pped.x());
 
     interval time_procd(time_l);
 
@@ -400,6 +396,7 @@ g_context->cout << endl << "step made: " << time_procd + time_mid << endl;
 
 	// reduce with the interval Newton
     //interval contracted(time_mid);
+	const interval time_init(time_mid);
     interval time_old;
 	do {
     	time_old = time_mid;
@@ -410,6 +407,7 @@ g_context->cout << "contracting:\t" << time_mid+time_procd << endl;
 		//der(curve(time_mid.mid()));
 		time_mid = time_mid.mid() - 
 				grd_h(curve(time_mid.mid()))(1) / dh;
+		intersection(time_init, time_mid, time_mid);
 g_context->cout << "contracted:\t" << time_mid+time_procd << endl;
 g_context->cout << time << "-" << time_procd << " cap " << time_mid << endl;
 
@@ -417,8 +415,9 @@ g_context->cout << "time:\t" << time << endl;
 g_context->cout << "time_procd:\t" << time_procd << endl;
 g_context->cout << "time_mid:\t" << time_mid << endl;
 		if (!intersection(time-time_procd, time_mid, time_mid)) {
-			//throw runtime_error("result becomes empty!");
-			continue;
+			throw runtime_error("result becomes empty!");
+			//continue;
+			break;
 		}
 	} while (hausdorff(time_old, time_mid) > g_params->epsilon);
 

@@ -45,6 +45,11 @@ int setParam(const char *id, const double l, const double u)
 	return g_model->der_proto.setParam(id, interval(l, u));
 }
 
+void setDebug(const int debug)
+{
+	g_params->debug = debug;
+}
+
 void putVarNode(const int index) 
 {
 	g_stack.push_front(g_model->der_proto.createVarNode(index));

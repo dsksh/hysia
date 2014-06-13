@@ -47,6 +47,7 @@ let () =
 
     Capd_sending.send_model model;
     Capd_sending.send_solving_params params;
+    Capd_stubs.set_debug !debug;
     Simulating.simulate model;
     ()
   with

@@ -37,7 +37,7 @@ OCAMLDEP  = ocamldep
 OCAMLLEX  = ocamllex
 OCAMLYACC = ocamlyacc
 OCAMLDOC  = ocamldoc
-OCAMLLIB  = /opt/local/lib/ocaml
+OCAMLLIB  = /usr/local/lib/ocaml
 #OCAMLLIB  = /usr/lib/ocaml
 OCAMLBEST = opt
 
@@ -156,7 +156,7 @@ opt:  hss.opt
 
 hss.opt: hss.cmxa main.cmx 
 	$(if $(QUIET),@echo 'Linking  $@' &&) \
-	    $(OCAMLOPT) $(OFLAGS) -o $@ $(EXTCMXA) $^
+	    $(OCAMLOPT) $(OFLAGS) -o $@ $(EXTCMXA)
 	$(STRIP) $@
 
 hss.byte: hss.cma main.cmo

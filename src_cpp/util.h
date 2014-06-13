@@ -37,27 +37,27 @@ extern std::ostream cnull;
 /// interval operators
 
 /// extended division on intervals
-inline void extDiv(const interval& numerator, const interval& denominator, 
-			interval **domain, interval **containment) 
+inline void extDiv(const capd::interval& numerator, const capd::interval& denominator, 
+			capd::interval **domain, capd::interval **containment) 
 {
 	*containment = NULL;
-	if (!denominator.contains(capd::TypeTraits<interval>::zero())) {
+	if (!denominator.contains(capd::TypeTraits<capd::interval>::zero())) {
 		if (!intersection(numerator / denominator, **domain, **domain)) {
 			*domain = NULL;
 		}
 	}
-	else if (!numerator.contains((capd::TypeTraits<interval>::zero()))) {
+	else if (!numerator.contains((capd::TypeTraits<capd::interval>::zero()))) {
 //std::cout << numerator << " / " << denominator << std::endl;
 
-		interval no_domain(0);
-		if (numerator > capd::TypeTraits<interval>::zero()) {
+		capd::interval no_domain(0);
+		if (numerator > capd::TypeTraits<capd::interval>::zero()) {
 			no_domain = intervalHull(
 				denominator.left() != 0
 				? (numerator.left() / denominator.left()) : -INFINITY,
 				denominator.right() != 0
 				? (numerator.left() / denominator.right()) : INFINITY);
 		}
-		else if (numerator < capd::TypeTraits<interval>::zero()) {
+		else if (numerator < capd::TypeTraits<capd::interval>::zero()) {
 			no_domain = intervalHull(
 				denominator.right() != 0
 				? (numerator.right() / denominator.right()) : -INFINITY,
@@ -83,9 +83,9 @@ inline void extDiv(const interval& numerator, const interval& denominator,
 				(*domain)->setLeftBound(no_domain.rightBound());
 			}
 			else {
-				interval bak(**domain);
+				capd::interval bak(**domain);
 				(*domain)->setRightBound(no_domain.leftBound());
-				*containment = new interval(bak);
+				*containment = new capd::interval(bak);
 				(*containment)->setLeftBound(no_domain.rightBound());
 			}
 		}
@@ -101,11 +101,11 @@ inline void extDiv(const interval& numerator, const interval& denominator,
 		}
 
 		/*
-		interval bak(**domain);
+		capd::interval bak(**domain);
 		(*domain)->setRightBound(no_domain.leftBound());
 
 		if (bak.rightBound() >= no_domain.rightBound()) {
-			*containment = new interval(bak);
+			*containment = new capd::interval(bak);
 			(*containment)->setLeftBound(no_domain.rightBound());
 		}
 		}
@@ -120,7 +120,7 @@ inline void extDiv(const interval& numerator, const interval& denominator,
 }
 
 /// Hausdorff distance
-inline double hausdorff(const interval& I1, const interval& I2) 
+inline double hausdorff(const capd::interval& I1, const capd::interval& I2) 
 {	
 	if (std::isinf(I1.leftBound()) || std::isinf(I1.rightBound()) || 
 		std::isinf(I2.leftBound()) || std::isinf(I2.rightBound())) { 
@@ -167,7 +167,7 @@ inline void printStep(std::ostream& out, const int stepId, const char *lid, cons
 	std::cout << "step " << stepId << " at " << lid << ", time: (" << sim_time << ", " << (getTime()/1000.) << ")" << std::endl;
 }
 
-inline void printInterval(std::ostream& out, const interval& value)
+inline void printInterval(std::ostream& out, const capd::interval& value)
 {
 	out << '{' << value.leftBound() << ',' << value.rightBound() << '}';
 	out.flush();
@@ -407,9 +407,9 @@ inline void printPped(std::ostream& out,
 
 	out << std::endl << "]" << std::endl;
 	out.flush();
-}
+}*/
 
-template<>
+/*template<>
 inline void printPped(std::ostream& out, 
 				      const capd::dynset::C1Pped2Set<capd::IMatrix>& value)
 {
@@ -498,9 +498,9 @@ inline void printPped(std::ostream& out,
 /// dumpPipe
 
 template<typename Piped>
-inline void printPipe(std::ostream& out, const interval& time, const Piped& value)
+inline void printPipe(std::ostream& out, const capd::interval& time, const Piped& value)
 //inline void printPipe(std::ostream& out,
-//					  const interval& time, const capd::C0Rect2Set& value)
+//					  const capd::interval& time, const capd::C0Rect2Set& value)
 {
 	out << "{ " << std::endl;
 

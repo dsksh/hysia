@@ -79,12 +79,12 @@ rule token = parse
   (*| '"' 
       { string (Buffer.create 1024) lexbuf }*)
 
-  (*| "(*)"
-      { LP_STAR_RP }*)
+  | "(*)"
+      { (*LP_STAR_RP*) token lexbuf }
   | "(*"
       { (*comment_start_loc := loc lexbuf;*) comment lexbuf; token lexbuf }
 
-  | "#" { (*comment lexbuf*) token lexbuf } (* TODO *)
+  | "#" { lcomment lexbuf } (* TODO *)
 
   | "="  { EQ }
 
@@ -127,7 +127,7 @@ and comment = parse
   | _
       { comment lexbuf }
 
-(*and comment = parse
+and lcomment = parse
   | '\n' { newline lexbuf; token lexbuf }
-  | _    { comment lexbuf }
-  | eof  { EOF }*)
+  | _    { lcomment lexbuf }
+  | eof  { EOF }

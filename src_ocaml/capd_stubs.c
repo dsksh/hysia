@@ -54,6 +54,13 @@ value caml_set_param(value id, value l, value u)
 	CAMLreturn(Val_int(index));
 }
 
+value caml_set_debug(value debug)
+{
+	CAMLparam1(debug);
+	setDebug(Bool_val(debug));
+	CAMLreturn(Val_unit);
+}
+
 /*value caml_put_value(value l, value u)
 {
 	CAMLparam2(l, u);
