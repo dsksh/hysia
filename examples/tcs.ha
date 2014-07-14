@@ -1,11 +1,11 @@
 let Tr = 80
-#let TrI = 50
-let TrI = [50,60]
+let TrI = 50
+#let TrI = [50,60]
 let Vr = 34
 let V1 = 25
 let V2 = 10
-#let Tmax = 1100
-let Tmax = [1100,1200]
+let Tmax = 1100
+#let Tmax = [1100,1200]
 let Tmin = 250
 
 var   t, x1, x2

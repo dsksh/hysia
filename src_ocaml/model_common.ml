@@ -20,9 +20,11 @@ type rational = int * int
 
 type ident = string
 
-type un_op = Osqr | Osqrt | Oexp | Olog | Osin | Ocos | Oatan | Oasin | Oacos
+type un_op = Osqr | Osqrt | Oexp | Olog | Osin | Ocos | Oatan | Oasin | Oacos |
+             Oneg
 
-type bin_op = Oadd | Osub | Omul | Odiv | Opow
+type bin_op = Oadd | Osub | Omul | Odiv | Opow |
+              Oand | Oor
 
 let sprint_un_op = function
   | Osqr -> "sqr"
