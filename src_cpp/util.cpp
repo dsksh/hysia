@@ -2,7 +2,7 @@
 
 #include "Context.h"
 #include "util.h"
-#include "simulate.h"
+#include "simulatingHandler.h"
 
 namespace capd{ 
 

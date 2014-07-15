@@ -1,4 +1,4 @@
-open Capd_stubs
+open Capd_sending_stubs
 open Hashcons
 open Model_common
 open Model
@@ -68,28 +68,30 @@ let send_der lid env i dual =
   in
   mapi send_dtree d
 
-let send_grd lid dst s env dual =
+let send_grd lid eid s env dual =
   let (e,d) = dual.node in
   send_expr env e;
-  put_grd_tree lid dst s;
+  put_grd_tree lid eid s;
 
   let send_dtree j d =
     send_expr env d;
-    put_grd_dtree lid dst s j
+    put_grd_dtree lid eid s j
   in
   mapi send_dtree d
 
-let send_grd_h lid dst env dual = send_grd lid dst 0 env dual
-let send_grd_g lid dst env dual = send_grd lid dst 1 env dual
+let send_grd_h lid eid env dual = send_grd lid eid 0 env dual
+let send_grd_g lid eid env i dual = 
+    (* FIXME *)
+    if i = 0 then send_grd lid eid 1 env dual else []
 
-let send_jump lid dst env i dual =
+let send_jump lid eid env i dual =
   let (e,d) = dual.node in
   send_expr env e;
-  put_jump_tree lid dst i;
+  put_jump_tree lid eid i;
 
   let send_dtree j d =
     send_expr env d;
-    put_jump_dtree lid dst i j
+    put_jump_dtree lid eid i j
   in
   mapi send_dtree d
 
@@ -105,16 +107,16 @@ let send_init env v =
   in
   List.map send v
 
-let send_edge lid env (grd_h,grd_g,dst,jump) =
+let send_edge lid env eid (grd_h,grd_g,dst,jump) =
   put_edge lid dst;
-  send_grd_h lid dst env grd_h;
-  send_grd_g lid dst env grd_g;
-  mapi (send_jump lid dst env) jump
+  send_grd_h lid eid env grd_h;
+  mapi (send_grd_g lid eid env) grd_g;
+  mapi (send_jump lid eid env) jump
 
 let send_loc env (id,der,edges) =
   put_location id;
   mapi (send_der id env) der;
-  List.map (send_edge id env) edges;
+  List.mapi (send_edge id env) edges;
   ()
 
 let send_model (ps,vars,(_,iexpr),locs) =

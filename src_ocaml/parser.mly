@@ -105,10 +105,11 @@ solver_params :
 /**/
 
 edges :
-  | WATCH LP expr COM expr RP GOTO ID edges
+  /*| WATCH LP expr COM expr_vec RP GOTO ID edges
     { (mk_edge $3 $5 (mk_id $8) (mk_expr_l []))::$9 }
-  | WATCH LP expr COM expr RP GOTO ID THEN expr_vec edges
-    { (mk_edge $3 $5 (mk_id $8) (mk_expr_l $10))::$11 }
+  */
+  | WATCH LP expr COM expr_vec RP GOTO ID THEN expr_vec edges
+    { (mk_edge $3 (mk_expr_l $5) (mk_id $8) (mk_expr_l $10))::$11 }
 
   | { [] }
 ;

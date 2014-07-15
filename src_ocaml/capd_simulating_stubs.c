@@ -12,8 +12,8 @@
 #include <caml/custom.h>
 
 /*#include "capd_integrator.h"*/
-#include "build.h"
-#include "simulate.h"
+#include "sendingHandler.h"
+#include "simulatingHandler.h"
 
 #define LOG_DEBUG(msg, sig) 1
 /*#define LOG_DEBUG(msg, sig) fprintf(stderr, "[capd_stubs] %s: %d\n", msg, sig)*/
@@ -32,27 +32,12 @@ value sim_dispose()
 	CAMLreturn(Val_unit);
 }
 
-/*value sim_find_first_zero(value lid)
+value sim_find_first_zero(value do_print, value lid, value eid)
 {
-	CAMLparam1(lid);
-	int res = findFirstZero(String_val(lid));
-	CAMLreturn(Val_bool(res));
-}
-
-value sim_find_first_zero_mid(value lid)
-{
-	CAMLparam1(lid);
-	int res = findFirstZeroMid(String_val(lid));
-	CAMLreturn(Val_bool(res));
-}
-*/
-
-value sim_find_first_zero(value do_print, value lid, value dst)
-{
-	CAMLparam3(do_print, lid, dst);
+	CAMLparam3(do_print, lid, eid);
     CAMLlocal1(intv);
 
-	cInterval res = findFirstZero(Bool_val(do_print), String_val(lid), String_val(dst));
+	cInterval res = findFirstZero(Bool_val(do_print), String_val(lid), Int_val(eid));
 
     intv = caml_alloc(2, 0);
     Store_field(intv, 0, caml_copy_double(res.l));
@@ -60,18 +45,18 @@ value sim_find_first_zero(value do_print, value lid, value dst)
 	CAMLreturn(intv);
 }
 
-value sim_find_first_zero_mid(value lid, value dst)
+value sim_find_first_zero_mid(value lid, value eid)
 {
-	CAMLparam2(lid, dst);
-	int res = findFirstZeroMid(String_val(lid), String_val(dst));
+	CAMLparam2(lid, eid);
+	int res = findFirstZeroMid(String_val(lid), Int_val(eid));
 	CAMLreturn(Val_bool(res));
 }
 
-value sim_simulate_jump(value lid, value dst, value zero_l, value zero_u)
+value sim_simulate_jump(value lid, value eid, value zero_l, value zero_u)
 {
-	CAMLparam4(lid, dst, zero_l, zero_u);
+	CAMLparam4(lid, eid, zero_l, zero_u);
 	cInterval intv = { Double_val(zero_l), Double_val(zero_u) };
-	simulateJump(String_val(lid), String_val(dst), intv);
+	simulateJump(String_val(lid), Int_val(eid), intv);
 	CAMLreturn(Val_unit);
 }
 

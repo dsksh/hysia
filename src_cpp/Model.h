@@ -6,6 +6,7 @@
 #include <utility>
 #include <list>
 #include <map>
+#include <vector>
 
 #include <boost/shared_ptr.hpp>
 
@@ -31,7 +32,8 @@ public:
 };
 
 typedef boost::shared_ptr<Edge> EdgePtr;
-typedef std::map<std::string,EdgePtr> EdgeSet;
+//typedef std::map<std::string,EdgePtr> EdgeSet;
+typedef std::vector<EdgePtr> EdgeSet;
 
 struct Location
 {

@@ -57,7 +57,9 @@ EXTOBJS =
 EXTLIBS = str unix nums dynlink
 
 EXTCMA	= $(addsuffix .cma,$(EXTLIBS)) $(addsuffix .cmo,$(EXTOBJS))
-EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(addsuffix .cmx,$(EXTOBJS))
+# TODO
+EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(addsuffix .cmx,$(EXTOBJS)) \
+		  /usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 
 # C/C++
 CC  = gcc
@@ -91,14 +93,14 @@ LIBGENERATED = lexer.ml parser.mli parser.ml ba_parser.mli ba_parser.ml
 LIBMODULES = hashcons model_common pretty ptree ba_ptree util model parser lexer ba_parser ba_lexer capd_sending simulating
 
 LIBML  = $(addsuffix .ml,  $(LIBMODULES))
-LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_stubs.mli capd_simulating_stubs.mli
-LIBCMO = $(addsuffix .cmo, $(LIBMODULES)) capd_stubs.cmi capd_simulating_stubs.cmi
-LIBCMX = $(addsuffix .cmx, $(LIBMODULES)) capd_stubs.cmi capd_simulating_stubs.cmi
+LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_sending_stubs.mli capd_simulating_stubs.mli
+LIBCMO = $(addsuffix .cmo, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating_stubs.cmi
+LIBCMX = $(addsuffix .cmx, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating_stubs.cmi
 
 #$(LIBCMO) $(LIBCMX): OINCLUDES += $(LIBINCLUDES)
 $(LIBCMX): OFLAGS += -for-pack Hss
 
-COBJS = capd_stubs.o capd_simulating_stubs.o capd_integrator.o
+COBJS = capd_sending_stubs.o capd_simulating_stubs.o capd_integrator.o
 
 # build targets
 
@@ -156,7 +158,7 @@ opt:  hss.opt
 
 hss.opt: hss.cmxa main.cmx 
 	$(if $(QUIET),@echo 'Linking  $@' &&) \
-	    $(OCAMLOPT) $(OFLAGS) -o $@ $(EXTCMXA)
+	    $(OCAMLOPT) $(OFLAGS) -o $@ $(EXTCMXA) $^
 	$(STRIP) $@
 
 hss.byte: hss.cma main.cmo

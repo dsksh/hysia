@@ -13,9 +13,9 @@ const cInterval cEmpty = { 1., -1. };
 
 void simInitialize();
 void simDispose();
-cInterval findFirstZero(const int, const char *, const char *);
-int findFirstZeroMid(const char *, const char *);
-void simulateJump(const char *, const char *, const cInterval);
+cInterval findFirstZero(const int, const char *, const int);
+int findFirstZeroMid(const char *, const int);
+void simulateJump(const char *, const int, const cInterval);
 void reportStep(int, const char *);
 void printPped(int, int);
 

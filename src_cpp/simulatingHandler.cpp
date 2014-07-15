@@ -6,7 +6,7 @@
 #include "Parallelepiped.h"
 #include "util.h"
 
-#include "simulate.h"
+#include "simulatingHandler.h"
 
 using namespace std;
 using namespace capd;
@@ -95,12 +95,13 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 	return result;
 }
 
-
-void simulateJump(const char *lid, const char *dst, const cInterval time0)
+//void simulateJump(const char *lid, const char *dst, const cInterval time0)
+void simulateJump(const char *lid, const int eid, const cInterval time0)
 {
 	int dim(g_model->dim);
-	DerMap& der = g_model->locs[lid]->der;
-	AuxMap& jump = g_model->locs[lid]->edges[dst]->jump;
+	LocPtr loc = g_model->locs[lid];
+	DerMap& der = loc->der;
+	AuxMap& jump = loc->edges[eid]->jump;
 
 	Parallelepiped& pped = g_context->pped;
 //g_context->time = interval(time0.l, time0.u);

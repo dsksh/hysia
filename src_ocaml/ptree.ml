@@ -21,7 +21,7 @@ type id_l = loc * (id list)
 type expr_l = loc * (expr list)
 type interval_l = loc * (interval list)
 
-type edge = loc * (expr * expr * lid * expr_l)
+type edge = loc * (expr * expr_l * lid * expr_l)
 type edge_l = loc * (edge list)
 type location = loc * (lid * expr_l * edge_l)
 
@@ -63,6 +63,6 @@ let id_of_loc      (_,(e,_,_)) = e
 let dexprs_of_loc  (_,(_,e,_)) = snd e
 let edges_of_loc   (_,(_,_,e)) = snd e
 let gh_of_edge     (_,(e,_,_,_)) = e
-let gg_of_edge     (_,(_,e,_,_)) = e
+let gg_of_edge     (_,(_,e,_,_)) = snd e
 let dst_of_edge    (_,(_,_,e,_)) = e 
 let rexprs_of_edge (_,(_,_,_,e)) = snd e 

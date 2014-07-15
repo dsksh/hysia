@@ -34,10 +34,10 @@ void doneDerTree(const char *);
 /*void putValue(const double l, const double u);*/
 void putValue();
 
-void putGrdTree(const char *, const char *, const int); 
-void putGrdDTree(const char *, const char *, const int, const int);
-void putJumpTree(const char *, const char *, const int); 
-void putJumpDTree(const char *, const char *, const int, const int); 
+void putGrdTree(const char *, const int, const int); 
+void putGrdDTree(const char *, const int, const int, const int);
+void putJumpTree(const char *, const int, const int); 
+void putJumpDTree(const char *, const int, const int, const int); 
 
 void putEdge(const char *, const char *);
 void putLocation(const char *);

@@ -2,10 +2,10 @@
 .SUFFIXES: .o .cpp .h .d .l .y
 .PHONY : doc clean
 
-CMD		:= integrate
+#CMD		:= integrate
 LIB		:= libmycapd.a
 
-TARGET	:= $(CMD) $(LIB)
+TARGET	:= $(LIB)
 
 CAPD_DIR := /usr/local
 
@@ -29,7 +29,7 @@ DOXYGEN := doxygen #@DOXYGEN@
 SRC     := $(wildcard *.c) $(wildcard *.cc) $(wildcard *.cpp)
 SRC_EX  := $(SRC) $(wildcard *.h)
 OBJECT  := $(foreach file, $(SRC), $(basename $(file)).o)
-OBJ_COMMON := MapEx.o Parallelepiped.o util.o build.o firstzero.o simulate.o
+OBJ_COMMON := MapEx.o Parallelepiped.o util.o sendingHandler.o firstzero.o simulatingHandler.o
 
 DEP_FILE := $(OBJECT:.o=.d)
 
@@ -45,8 +45,8 @@ ifneq "$(MAKECMDGOALS)" "clean"
   -include $(DEP_FILE)
 endif
 
-$(CMD): $(OBJECT)
-	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $@.o $(OBJ_COMMON) $(LIBS)
+#$(CMD): $(OBJECT)
+#	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $@.o $(OBJ_COMMON) $(LIBS)
 
 $(LIB): $(OBJECT)
 	$(AR) cru $@ $(OBJ_COMMON)

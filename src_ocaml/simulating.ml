@@ -34,36 +34,62 @@ let step_max = ref 5
 
 let loc_of_name id (lid,_,_) = id = lid
 
-let find_first_zero_ lid (_,_,dst,_) = dst, (find_first_zero false lid dst)
+let find_first_zero_ lid eid (_,_,_dst,_) = eid, (find_first_zero false lid eid)
 
-let select_earliest earliest (dst,(l,u)) = match earliest, (l,u) with
-  | Some (dst1,(l1,u1)), (l,u) -> 
+let select_earliest earliest (eid,(l,u)) = match earliest, (l,u) with
+  | Some (eid1,(l1,u1)), (l,u) -> 
+Printf.printf "%d,[%f,%f] vs. %d,[%f,%f]\n%!" eid1 l1 u1 eid l u;
+
+      if l<=u then begin
+        if u < l1 then Some (eid,(l,u)) else begin
+          if u1 < l then Some (eid1,(l1,u1)) else 
+            error (SelectEarliestError ((l,u), (l1,u1))) end end
+      else Some (eid1,(l1,u1))
+  | None, (l,u) -> 
+      if l<=u then Some (eid,(l,u)) else None
+
+(*let simulate_edge id earliest (lid,_,es) =
+  if id = lid then
+    let (dst,(l,u)) = List.map (find_first_zero_ lid) es in
+    match earliest with
+    | Some (dst1,(l1,u1)) -> 
+Printf.printf "%s,[%f,%f] vs. %s,[%f,%f]\n%!" dst1 l1 u1 dst l u;
+
       if l<=u then begin
         if u < l1 then Some (dst,(l,u)) else begin
           if u1 < l then Some (dst1,(l1,u1)) else 
             error (SelectEarliestError ((l,u), (l1,u1))) end end
       else Some (dst1,(l1,u1))
-  | None, (l,u) -> 
+    | None -> 
       if l<=u then Some (dst,(l,u)) else None
+      (*List.fold_left select_earliest dst zs*)
+  else dst
+*)
+
+let dst_of_edge (_,_,dst,_) = dst
 
 let simulate (_ps,_var,(iloc,_ival),locs) =
   initialize ();
-  let lid = ref iloc in
+  let current = ref iloc in
   print_pped true false;
   for i = 1 to (if !step_max >= 0 then !step_max else max_int) do
-    (*Printf.printf "step %d at %s\n%!" i !lid;*)
-    report_step i !lid;
-    let (_,_,es) = List.find (loc_of_name !lid) locs in
-    let zs = List.map (find_first_zero_ !lid) es in
+    (*Printf.printf "step %d at %s\n%!" i !current;*)
+    report_step i !current;
+
+    (*let dst = List.fold_left (simulate_edge !current) None locs in*)
+
+    let (_,_,es) = List.find (loc_of_name !current) locs in
+    let zs = List.mapi (find_first_zero_ !current) es in
     let dst = List.fold_left select_earliest None zs in
+
     match dst with
-    | Some (dst,(l0,u0)) ->
+    | Some (eid,(l0,u0)) ->
       (* FIXME *)
-      find_first_zero true !lid dst;
-      if find_first_zero_mid !lid dst then begin
-        simulate_jump !lid dst l0 u0;
+      find_first_zero true !current eid;
+      if find_first_zero_mid !current eid then begin
+        simulate_jump !current eid l0 u0;
         print_pped false false;
-        lid := dst
+        current := dst_of_edge (List.nth es eid)
       end else error FindZeroMidError
     | None ->
       error FindZeroError

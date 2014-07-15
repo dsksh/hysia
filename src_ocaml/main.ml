@@ -39,13 +39,11 @@ let report (b,e) =
 
 
 module PPtree = Pretty.Make(Ptree)
-module PBa_ptree = Pretty.Make(Ba_ptree)
+(*module PBa_ptree = Pretty.Make(Ba_ptree)*)
 module PModel = Pretty.Make(Model)
 
 
 let () =
-(*  Capd_stubs.test1 "var:t,x,v; fun:1,v,-sin(x);"*)
-
   let lb = from_channel cin in 
   try 
     let ptree,params = Parser.main Lexer.token lb in
@@ -58,7 +56,7 @@ let () =
     if !debug then
       printf "@[%a@]@." PModel.print model;
 
-    (* parse MTL property file *)
+    (*(* parse MTL property file *)
     match !prop_file with
     | Some f -> 
         file := f;
@@ -84,10 +82,11 @@ let () =
     	  exit 1
         end
     | None -> print_endline "skip loading"; ();
+    *)
 
     Capd_sending.send_model model;
     Capd_sending.send_solving_params params;
-    Capd_stubs.set_debug !debug;
+    Capd_sending_stubs.set_debug !debug;
     Simulating.simulate model;
     ()
   with

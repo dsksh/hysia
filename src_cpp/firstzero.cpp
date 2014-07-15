@@ -3,7 +3,7 @@
 #include "MapEx.h"
 #include "util.h"
 
-#include "simulate.h"
+#include "simulatingHandler.h"
 
 using namespace std;
 using namespace capd;
@@ -184,12 +184,15 @@ g_context->cout << endl << "contracting rb: " << time+time_procd << endl;
 }
 
 
-cInterval findFirstZero(const int selected, const char *lid, const char *dst)
+//cInterval findFirstZero(const int selected, const char *lid, const char *dst)
+cInterval findFirstZero(const int selected, const char *lid, const int eid)
 {
 	int dim(g_model->dim);
-	DerMap& der = g_model->locs[lid]->der;
-	AuxMap& grd_h = g_model->locs[lid]->edges[dst]->grd_h;
-	AuxMap& grd_g = g_model->locs[lid]->edges[dst]->grd_g;
+	LocPtr loc = g_model->locs[lid];
+	DerMap& der = loc->der;
+	EdgePtr edge = g_model->locs[lid]->edges[eid];
+	AuxMap& grd_h = edge->grd_h;
+	AuxMap& grd_g = edge->grd_g;
 
 	//Parallelepiped& pped = g_context->pped;
 	//interval& time = g_context->time;
@@ -353,10 +356,12 @@ time += time_procd;
 }
 
 
-int findFirstZeroMid(const char *lid, const char *dst)
+//int findFirstZeroMid(const char *lid, const char *dst)
+int findFirstZeroMid(const char *lid, const int eid)
 {
-	DerMap& der = g_model->locs[lid]->der;
-	AuxMap& grd_h = g_model->locs[lid]->edges[dst]->grd_h;
+	LocPtr loc = g_model->locs[lid];
+	DerMap& der = loc->der;
+	AuxMap& grd_h = loc->edges[eid]->grd_h;
 
 	const Parallelepiped& pped = g_context->pped;
 	const interval& time = g_context->time;

@@ -131,9 +131,10 @@ let mk_dexpr pm var = function
   | _, Papp (op,e) -> mk_dual var (mk_app op (mk_expr pm e))
   | _, Papp2 (op,e1,e2) -> mk_dual var (mk_app2 op (mk_expr pm e1) (mk_expr pm e2))
 
-let mk_edge pm var (_,(grd_h,grd_g,(_,dst),(_,jmp))) =
+let mk_edge pm var (_,(grd_h,(_,grd_g),(_,dst),(_,jmp))) =
   let grd_h = mk_dexpr pm var grd_h in
-  let grd_g = mk_dexpr pm var grd_g in
+  (*let grd_g = mk_dexpr pm var grd_g in*)
+  let grd_g = List.map (mk_dexpr pm var) grd_g in
   let jmp = List.map (mk_dexpr pm var) jmp in
   (grd_h,grd_g,dst,jmp)
 
@@ -161,7 +162,7 @@ type init = ident * expr list
 type dexpr = dual
 type gexpr = dual
 type rexpr = dual
-type edge = dual * dual * ident * dual list
+type edge = dual * dual list * ident * dual list
 type location = ident * dual list * edge list
 
 let rec print_expr fmt expr = match expr.node with

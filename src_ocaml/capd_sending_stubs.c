@@ -12,7 +12,7 @@
 #include <caml/custom.h>
 
 #include "capd_integrator.h"
-#include "build.h"
+#include "sendingHandler.h"
 
 #define LOG_DEBUG(msg, sig) 1
 /*#define LOG_DEBUG(msg, sig) fprintf(stderr, "[capd_stubs] %s: %d\n", msg, sig)*/
@@ -209,31 +209,31 @@ value caml_done_der_tree(value lid)
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_grd_tree(value lid, value dst, value s)
+value caml_put_grd_tree(value lid, value eid, value s)
 {
-	CAMLparam3(lid, dst, s);
-	putGrdTree(String_val(lid), String_val(dst), Int_val(s));
+	CAMLparam3(lid, eid, s);
+	putGrdTree(String_val(lid), Int_val(eid), Int_val(s));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_grd_dtree(value lid, value dst, value s, value j)
+value caml_put_grd_dtree(value lid, value eid, value s, value j)
 {
-	CAMLparam4(lid, dst, s, j);
-	putGrdDTree(String_val(lid), String_val(dst), Int_val(s), Int_val(j));
+	CAMLparam4(lid, eid, s, j);
+	putGrdDTree(String_val(lid), Int_val(eid), Int_val(s), Int_val(j));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_jump_tree(value lid, value dst, value i)
+value caml_put_jump_tree(value lid, value eid, value i)
 {
-	CAMLparam3(lid, dst, i);
-	putJumpTree(String_val(lid), String_val(dst), Int_val(i));
+	CAMLparam3(lid, eid, i);
+	putJumpTree(String_val(lid), Int_val(eid), Int_val(i));
 	CAMLreturn(Val_unit);
 }
 
-value caml_put_jump_dtree(value lid, value dst, value i, value j)
+value caml_put_jump_dtree(value lid, value eid, value i, value j)
 {
-	CAMLparam4(lid, dst, i, j);
-	putJumpDTree(String_val(lid), String_val(dst), Int_val(i), Int_val(j));
+	CAMLparam4(lid, eid, i, j);
+	putJumpDTree(String_val(lid), Int_val(eid), Int_val(i), Int_val(j));
 	CAMLreturn(Val_unit);
 }
 
