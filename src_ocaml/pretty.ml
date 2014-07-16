@@ -30,6 +30,7 @@ module type Printer = sig
   type param
   type id
   type init
+  type final
   type dexpr
   type gexpr
   type rexpr
@@ -39,6 +40,7 @@ module type Printer = sig
   val print_param : formatter -> param -> unit
   val print_id    : formatter -> id -> unit
   val print_init  : formatter -> init -> unit
+  val print_final : formatter -> final -> unit
   val print_dexpr : formatter -> dexpr -> unit
   val print_gexpr : formatter -> gexpr -> unit
   val print_rexpr : formatter -> rexpr -> unit
@@ -48,7 +50,7 @@ module type Printer = sig
   val dexprs_of_loc  : location -> dexpr list
   val edges_of_loc : location -> edge list
   val gh_of_edge  : edge -> gexpr
-  val gg_of_edge  : edge -> gexpr list
+  val gg_of_edge  : edge -> gexpr list 
   val dst_of_edge : edge -> id
   val rexprs_of_edge : edge -> rexpr list
 end
@@ -68,10 +70,11 @@ struct
       (print_list "," P.print_dexpr) (P.dexprs_of_loc loc)
       (print_list "" print_edge) (P.edges_of_loc loc)
 
-  let print fmt (ps,vars,init,locs) =
-    fprintf fmt "@[<hov 2>params:@ %a@];@;@[<hov 2>vars:@ %a@];@;@[<hov 2>init:@ %a@];@;@[<hov 2>locations:@ %a@]@]"
+  let print fmt (ps,vars,init,final,locs) =
+    fprintf fmt "@[<hov 2>params:@ %a@];@;@[<hov 2>vars:@ %a@];@;@[<hov 2>init:@ %a@];@;@[<hov 2>final:@ %a@];@;@[<hov 2>locations:@ %a@]@]"
       (print_list " " P.print_param) ps
       (print_list "," P.print_id) vars
       P.print_init init
+      P.print_final final
       (print_list "" print_location) locs
 end

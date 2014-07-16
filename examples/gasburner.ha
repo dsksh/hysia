@@ -28,8 +28,10 @@ end
 
 
 param order = 10
-param t_max = 100
+param t_max = 80
 param h_min   = 1e-14
-param epsilon = 1e-14
+#param epsilon = 1e-14
+param epsilon = 1e-8
+#param delta = 1e-1
 param dump_interval = 10
 param char_mtx = 3

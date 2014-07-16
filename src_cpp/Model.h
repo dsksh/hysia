@@ -14,19 +14,23 @@
 
 namespace capd{ 
 
+typedef boost::shared_ptr<AuxMap> AuxMapPtr;
+typedef std::vector<AuxMapPtr> AuxMapVec;
+
 struct Edge
 {
 public:
 	std::string dest;
 	AuxMap grd_h;
-	AuxMap grd_g;
+	AuxMapVec grd_g;
 	AuxMap jump;
 
 	/// constractor
 	Edge(capd::DerMap& der, const std::string& destination)
 	  : dest(destination),
 	    grd_h(der, der.getOrder()), 
-	    grd_g(der, der.getOrder()),
+	    //grd_g(der, der.getOrder()),
+	    grd_g(),
 		jump(der, der.getDim())
 	{}
 };

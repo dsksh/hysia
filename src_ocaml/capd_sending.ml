@@ -82,7 +82,8 @@ let send_grd lid eid s env dual =
 let send_grd_h lid eid env dual = send_grd lid eid 0 env dual
 let send_grd_g lid eid env i dual = 
     (* FIXME *)
-    if i = 0 then send_grd lid eid 1 env dual else []
+    (*if i = 0 then send_grd lid eid 1 env dual else []*)
+    send_grd lid eid (i+1) env dual
 
 let send_jump lid eid env i dual =
   let (e,d) = dual.node in
@@ -119,7 +120,7 @@ let send_loc env (id,der,edges) =
   List.mapi (send_edge id env) edges;
   ()
 
-let send_model (ps,vars,(_,iexpr),locs) =
+let send_model (ps,vars,(_,iexpr),_,locs) =
   initialize (List.length vars);
   let env = SM.empty in
   let env = List.fold_left send_var env vars in

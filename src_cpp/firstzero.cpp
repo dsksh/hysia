@@ -8,7 +8,7 @@
 using namespace std;
 using namespace capd;
 
-inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMap& grd_g,
+inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 						const ITaylor::CurveType& curve,
 						const interval& time_init, const interval& time_procd,
 						interval& time)
@@ -23,7 +23,7 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMap& grd_g,
 		// current state
 		const IVector dx( der(curve(time)) );
 		const interval dh( grd_h.der()(1)*dx );
-		const interval dg( grd_g.der()(1)*dx );
+		//const interval dg( grd_g.der()(1)*dx );
 
 g_context->cout << endl << "contracting lb:\t" << time+time_procd << endl;
 
@@ -31,11 +31,10 @@ g_context->cout << endl << "contracting lb:\t" << time+time_procd << endl;
 		const interval offset(time.left());
 		//der(curve(offset));
 		const interval h( grd_h(curve(offset))(1) );
-		const interval g( grd_g(curve(offset))(1) + interval(0,INFINITY) );
 		time -= offset;
 g_context->cout << "offset:\t" << offset << endl;
 g_context->cout << "h:\t" << h << endl;
-g_context->cout << "g:\t" << g << endl;
+//g_context->cout << "g:\t" << g << endl;
 
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
@@ -52,17 +51,23 @@ g_context->cout << "g:\t" << g << endl;
 			delete gamma_u;
 		}
 
-		extDiv(-g, dg, &gamma_l, &gamma_u);
+		for (int i(0); i < grd_g.size(); i++) {
+			const interval dg( grd_g[i]->der()(1)*dx );
+			const interval g( (*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) );
+cout << "g[" << i << "]:\t" << g << endl;
 
-		if (gamma_l == NULL) {
-			return false;
-		}
-		else if (gamma_u == NULL) {
-			time = *gamma_l;
-		}
-		else {
-			time = *gamma_u;
-			delete gamma_u;
+			extDiv(-g, dg, &gamma_l, &gamma_u);
+	
+			if (gamma_l == NULL) {
+				return false;
+			}
+			else if (gamma_u == NULL) {
+				time = *gamma_l;
+			}
+			else {
+				time = *gamma_u;
+				delete gamma_u;
+			}
 		}
 
 		time += offset;
@@ -192,7 +197,7 @@ cInterval findFirstZero(const int selected, const char *lid, const int eid)
 	DerMap& der = loc->der;
 	EdgePtr edge = g_model->locs[lid]->edges[eid];
 	AuxMap& grd_h = edge->grd_h;
-	AuxMap& grd_g = edge->grd_g;
+	AuxMapVec& grd_g = edge->grd_g;
 
 	//Parallelepiped& pped = g_context->pped;
 	//interval& time = g_context->time;

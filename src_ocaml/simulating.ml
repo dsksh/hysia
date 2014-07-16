@@ -48,6 +48,16 @@ Printf.printf "%d,[%f,%f] vs. %d,[%f,%f]\n%!" eid1 l1 u1 eid l u;
   | None, (l,u) -> 
       if l<=u then Some (eid,(l,u)) else None
 
+let select_random dst_list = 
+    (*let filter dl (eid,(l,u)) = 
+        if l<=u then (eid,(l,u))::dl else dl*)
+    let filter (eid,(l,u)) = l<=u
+    in
+    let dl = List.filter filter dst_list in
+    match dl with
+    | [] -> None
+    | dl -> Some (List.nth dl (Random.int (List.length dl)))
+
 (*let simulate_edge id earliest (lid,_,es) =
   if id = lid then
     let (dst,(l,u)) = List.map (find_first_zero_ lid) es in
@@ -68,29 +78,36 @@ Printf.printf "%s,[%f,%f] vs. %s,[%f,%f]\n%!" dst1 l1 u1 dst l u;
 
 let dst_of_edge (_,_,dst,_) = dst
 
-let simulate (_ps,_var,(iloc,_ival),locs) =
+let simulate (_ps,_var,(iloc,_ival),flocs,locs) =
   initialize ();
-  let current = ref iloc in
+  let curr_loc = ref iloc in
   print_pped true false;
   for i = 1 to (if !step_max >= 0 then !step_max else max_int) do
-    (*Printf.printf "step %d at %s\n%!" i !current;*)
-    report_step i !current;
+    (*Printf.printf "step %d at %s\n%!" i !curr_loc;*)
+    report_step i !curr_loc;
 
-    (*let dst = List.fold_left (simulate_edge !current) None locs in*)
+    (*let dst = List.fold_left (simulate_edge !curr_loc) None locs in*)
 
-    let (_,_,es) = List.find (loc_of_name !current) locs in
-    let zs = List.mapi (find_first_zero_ !current) es in
-    let dst = List.fold_left select_earliest None zs in
+    let (_,_,es) = List.find (loc_of_name !curr_loc) locs in
+    let zs = List.mapi (find_first_zero_ !curr_loc) es in
+    (*let dst = List.fold_left select_earliest None zs in*)
+    let dst = select_random zs in
 
     match dst with
     | Some (eid,(l0,u0)) ->
       (* FIXME *)
-      find_first_zero true !current eid;
-      if find_first_zero_mid !current eid then begin
-        simulate_jump !current eid l0 u0;
+      find_first_zero true !curr_loc eid;
+      if find_first_zero_mid !curr_loc eid then begin
+        simulate_jump !curr_loc eid l0 u0;
         print_pped false false;
-        current := dst_of_edge (List.nth es eid)
-      end else error FindZeroMidError
+        curr_loc := dst_of_edge (List.nth es eid)
+      end else error FindZeroMidError;
+
+      begin try 
+          List.find (fun lid -> lid = !curr_loc) flocs;
+          print_endline "reached final loc!"
+        with Not_found -> ()
+      end
     | None ->
       error FindZeroError
   done;

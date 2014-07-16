@@ -72,7 +72,7 @@ Parallelepiped map_parallelepiped(const Parallelepiped& piped,
 		}
 	}
 
-std::cout << "jA: " << B << std::endl;
+//std::cout << "jA: " << B << std::endl;
 
 	if (g_params->char_mtx < 3)
 		B = characteristic(B);

@@ -38,6 +38,9 @@ let report (b,e) =
     printf "File \"%s\", line %d, characters %d-%d: " !file l fc lc
 
 
+let _ = Random.self_init ()
+
+
 module PPtree = Pretty.Make(Ptree)
 (*module PBa_ptree = Pretty.Make(Ba_ptree)*)
 module PModel = Pretty.Make(Model)

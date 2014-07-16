@@ -25,15 +25,16 @@ type edge = loc * (expr * expr_l * lid * expr_l)
 type edge_l = loc * (edge list)
 type location = loc * (lid * expr_l * edge_l)
 
-type t = param list * id_l * expr_l * location list
+type t = param list * id_l * expr_l * expr_l * location list
 
 type init = expr list
+type final = expr list
 type dexpr = expr
-type gexpr = expr
+type gexpr = expr 
 type rexpr = expr
 
-let simplify (params,(_,vars),(_,init),locs) =
-  (params,vars,init,locs)
+let simplify (params,(_,vars),(_,init),(_,final),locs) =
+  (params,vars,init,final,locs)
 
 
 let dummy_loc = Lexing.dummy_pos, Lexing.dummy_pos
@@ -55,6 +56,7 @@ let rec print_expr fmt = function
 let print_param fmt (_,(id,v)) = fprintf fmt "%s:=%a" id print_interval v
 let print_id fmt (_,id) = fprintf fmt "%s" id
 let print_init fmt e = fprintf fmt "%a" (print_list "," print_expr) e
+let print_final fmt e = print_init fmt e
 let print_dexpr fmt e = fprintf fmt "%a" print_expr e
 let print_gexpr fmt e = fprintf fmt "%a" print_expr e
 let print_rexpr fmt e = fprintf fmt "%a" print_expr e

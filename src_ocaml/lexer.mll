@@ -18,6 +18,7 @@
 
 	  "var", VAR;
 	  "init", INIT;
+	  "final", FINAL;
       "at", AT;
       "wait", WAIT;
       "flow", FLOW;

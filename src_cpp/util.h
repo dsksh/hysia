@@ -164,7 +164,7 @@ inline unsigned long long getTime()
 inline void printStep(std::ostream& out, const int stepId, const char *lid, const double sim_time)
 {
 	out << "(* step " << stepId << " at " << lid << ", time: (" << sim_time << ", " << (getTime()/1000.) << ") *)" << std::endl;
-	std::cout << "step " << stepId << " at " << lid << ", time: (" << sim_time << ", " << (getTime()/1000.) << ")" << std::endl;
+	std::cout << "step " << stepId << " at " << lid << ", time: " << sim_time << " (sim), " << (getTime()/1000.) << " (exec)" << std::endl;
 }
 
 inline void printInterval(std::ostream& out, const capd::interval& value)

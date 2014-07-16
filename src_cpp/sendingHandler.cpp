@@ -180,27 +180,27 @@ void doneDerTree(const char *lid)
 	g_model->locs[lid]->der.doneTree();
 }
 
-//void putGrdTree(const char *lid, const char *dst, const int s) 
 void putGrdTree(const char *lid, const int eid, const int s) 
 {
+	EdgePtr edge = g_model->locs[lid]->edges[eid];
 	if (s == 0)
-		//g_model->locs[lid]->edges[dst]->grd_h.putTree(0, g_stack.front());
-		g_model->locs[lid]->edges[eid]->grd_h.putTree(0, g_stack.front());
-	else
-		//g_model->locs[lid]->edges[dst]->grd_g.putTree(0, g_stack.front());
-		g_model->locs[lid]->edges[eid]->grd_g.putTree(0, g_stack.front());
+		edge->grd_h.putTree(0, g_stack.front());
+	else {
+		//g_model->locs[lid]->edges[eid]->grd_g.putTree(0, g_stack.front());
+		capd::DerMap& der(g_model->locs[lid]->der);
+		AuxMapPtr gg(new AuxMap(der, der.getOrder()));
+		edge->grd_g.push_back(gg);
+		gg->putTree(0, g_stack.front());
+	}
    	g_stack.pop_front();
 }
 
-//void putGrdDTree(const char *lid, const char *dst, const int s, const int j) 
 void putGrdDTree(const char *lid, const int eid, const int s, const int j) 
 {
 	if (s == 0)
-		//g_model->locs[lid]->edges[dst]->grd_h.putDTree(0, j, g_stack.front());
 		g_model->locs[lid]->edges[eid]->grd_h.putDTree(0, j, g_stack.front());
 	else
-		//g_model->locs[lid]->edges[dst]->grd_g.putDTree(0, j, g_stack.front());
-		g_model->locs[lid]->edges[eid]->grd_g.putDTree(0, j, g_stack.front());
+		g_model->locs[lid]->edges[eid]->grd_g[s-1]->putDTree(0, j, g_stack.front());
    	g_stack.pop_front();
 }
 

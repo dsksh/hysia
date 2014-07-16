@@ -143,7 +143,9 @@ let mk_loc pm var (_,((_,id),(_,der),(_,edges))) =
   let edges = List.map (mk_edge pm var) edges in
   (id,der,edges)
 
-let make (ps,var,(_,Pvar iloc)::ival,locs) = 
+let get_lid (_,Pvar lid) = lid
+
+let make (ps,var,iloc::ival,flocs,locs) = 
   (*let nv,nd = List.length var, List.length der in
   if nv <> nd then error (DimMismatch (nv,nd)) loc
   else*)
@@ -152,13 +154,16 @@ let make (ps,var,(_,Pvar iloc)::ival,locs) =
   let pm = List.fold_left add_param PMap.empty ps in
 
   let var = List.map snd var in
+  let iloc = get_lid iloc in
   let ival = List.map (mk_expr pm) ival in
+  let flocs = List.map (get_lid) flocs in
   let locs = List.map (mk_loc pm var) locs in
-  ([],var,(iloc,ival),locs)
+  ([],var,(iloc,ival),flocs,locs)
 
 type param = string * interval
 type id = ident
 type init = ident * expr list
+type final = ident list
 type dexpr = dual
 type gexpr = dual
 type rexpr = dual
@@ -182,6 +187,7 @@ let print_dual fmt dual =
 let print_param fmt (id,v) = fprintf fmt "%s:=%a" id print_interval v
 let print_id fmt id = fprintf fmt "%s" id
 let print_init fmt (iloc,iexpr) = fprintf fmt "%s %a" iloc (print_list "," print_expr) iexpr
+let print_final fmt ls = fprintf fmt "%a" (print_list "," print_id) ls
 let print_dexpr fmt e = fprintf fmt "%a" print_dual e
 let print_gexpr fmt e = fprintf fmt "%a" print_dual e
 let print_rexpr fmt e = fprintf fmt "%a" print_dual e
