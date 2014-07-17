@@ -38,7 +38,7 @@ g_context->cout << "h:\t" << h << endl;
 
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
-		extDiv(-h, dh, &gamma_l, &gamma_u);
+		extDiv(-h, dh, gamma_l, gamma_u);
 
 		if (gamma_l == NULL) {
 			return false;
@@ -54,9 +54,9 @@ g_context->cout << "h:\t" << h << endl;
 		for (int i(0); i < grd_g.size(); i++) {
 			const interval dg( grd_g[i]->der()(1)*dx );
 			const interval g( (*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) );
-cout << "g[" << i << "]:\t" << g << endl;
+g_context->cout << "g[" << i << "]:\t" << g << endl;
 
-			extDiv(-g, dg, &gamma_l, &gamma_u);
+			extDiv(-g, dg, gamma_l, gamma_u);
 	
 			if (gamma_l == NULL) {
 				return false;
@@ -166,7 +166,7 @@ g_context->cout << endl << "contracting rb: " << time+time_procd << endl;
 
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
-		extDiv(-h, dh, &gamma_l, &gamma_u);
+		extDiv(-h, dh, gamma_l, gamma_u);
 
 		if (gamma_l == NULL) {
 			//throw "gamma is empty";
@@ -189,7 +189,6 @@ g_context->cout << endl << "contracting rb: " << time+time_procd << endl;
 }
 
 
-//cInterval findFirstZero(const int selected, const char *lid, const char *dst)
 cInterval findFirstZero(const int selected, const char *lid, const int eid)
 {
 	int dim(g_model->dim);
@@ -242,7 +241,7 @@ g_context->cout << "dx: " << dx << endl;
 		bool res( reduceLower(der, grd_h, grd_g, curve, time_init, time_procd, time) );
 
 		// dump the trajectory paving.
-		if (g_params->dump_interval > 0) {
+		if (selected && g_params->dump_interval > 0) {
 		if (!res) time = time_init;
 if (!res) {
 		int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
@@ -252,6 +251,7 @@ if (!res) {
  			const interval step( interval(i,i+1)*stepW );
  			IVector v = curve(step);
 
+// TODO
 if (selected) {
  			printPipe(g_context->fout, step+time_procd, v);
 			g_context->fout << ',' << endl;
@@ -311,7 +311,7 @@ g_context->cout << "TIME: " << time << endl;
 g_context->cout << "GTIME: " << g_context->time << endl;
 
 		// TODO
-		if (g_params->dump_interval > 0) {
+		if (selected && g_params->dump_interval > 0) {
 		int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
  		if (grid==0) grid = 1;
 		const double stepW(time.rightBound()/grid - 0.0000001);

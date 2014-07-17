@@ -60,6 +60,13 @@ value sim_simulate_jump(value lid, value eid, value zero_l, value zero_u)
 	CAMLreturn(Val_unit);
 }
 
+value sim_simulate_cont(value lid)
+{
+	CAMLparam1(lid);
+	simulateCont(String_val(lid));
+	CAMLreturn(Val_unit);
+}
+
 value sim_print_pped(value is_lb, value is_last)
 {
 	CAMLparam2(is_lb, is_last);

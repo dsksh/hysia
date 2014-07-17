@@ -16,6 +16,7 @@ void simDispose();
 cInterval findFirstZero(const int, const char *, const int);
 int findFirstZeroMid(const char *, const int);
 void simulateJump(const char *, const int, const cInterval);
+void simulateCont(const char *);
 void reportStep(int, const char *);
 void printPped(int, int);
 

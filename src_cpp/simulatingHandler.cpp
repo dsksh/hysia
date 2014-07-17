@@ -95,7 +95,6 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 	return result;
 }
 
-//void simulateJump(const char *lid, const char *dst, const cInterval time0)
 void simulateJump(const char *lid, const int eid, const cInterval time0)
 {
 	int dim(g_model->dim);
@@ -120,8 +119,7 @@ const double tc_r(g_context->time.rightBound());
 
 	// omega_mid
 	IVector delta_y_mid( jump(x_mid) );
-	IVector omega_mid( simulate(der, delta_y_mid, 
-							time.right()-time_mid) );
+	IVector omega_mid( simulate(der, delta_y_mid, time.right()-time_mid) );
 
 g_context->cout << "omega_mid: " << omega_mid << endl;
 
@@ -178,6 +176,63 @@ g_context->cout << "D_omega: " << d_omega << endl;
 	pped = map_parallelepiped(pped, d_omega, omega_mid);
 }
 
+/// simulate and dump a continuous evolution in a location.
+void simulateCont(const char *lid)
+{
+	int dim(g_model->dim);
+	LocPtr loc = g_model->locs[lid];
+	DerMap& der = loc->der;
+
+	Parallelepiped& pped = g_context->pped;
+	interval time = g_context->time;
+
+ 	try {
+ 
+	// the solver:
+	ITaylor solver(der, g_params->order, g_params->h_min);
+	ITimeMap timeMap(solver);
+	timeMap.stopAfterStep(true);
+
+	// the initial value:
+	CapdPped capdPped(pped.toCapdPped());
+
+    interval time_procd(time.rightBound());
+	IMatrix dx_prev(IMatrix::Identity(dim));
+
+	do {
+		// integrate 1 step.
+		//timeMap(g_params->t_max, p);
+ 		timeMap.moveSet(g_params->t_max, capdPped);
+
+		time = interval(0,1)*solver.getStep();
+g_context->cout << endl << "step made: " << time+time_procd << endl;
+		const interval time_init(time);
+		const ITaylor::CurveType& curve = solver.getCurve();
+
+		IVector  dx( der(curve(time)) );
+
+		// dump the trajectory paving.
+		if (g_params->dump_interval > 0) {
+			int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
+	 		if (grid==0) grid = 1;
+			const double stepW(time.rightBound()/grid - 0.0000001);
+	 		for(int i(0); i<grid; ++i) {
+	 			const interval step( interval(i,i+1)*stepW );
+	 			IVector v = curve(step);
+	
+	 			printPipe(g_context->fout, step+time_procd, v);
+				g_context->fout << ',' << endl;
+	 		}
+		}
+
+ 	} while(!timeMap.completed());
+ 
+	} catch(exception& e)
+	{
+		std::cerr << "exception caught!\n" << e.what() << endl << endl;
+	}
+}
+
 void integrate(const char *lid, 
 			   const float t_end, const float order, const float h_min, const float h_max)
 {
@@ -229,4 +284,4 @@ void integrate(const char *lid,
  	{
  		cout << "\n\nException caught!\n" << e.what() << endl << endl;
  	}
- }
+}

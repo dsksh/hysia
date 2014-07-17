@@ -38,12 +38,12 @@ extern std::ostream cnull;
 
 /// extended division on intervals
 inline void extDiv(const capd::interval& numerator, const capd::interval& denominator, 
-			capd::interval **domain, capd::interval **containment) 
+			capd::interval *&domain, capd::interval *&containment) 
 {
-	*containment = NULL;
+	containment = NULL;
 	if (!denominator.contains(capd::TypeTraits<capd::interval>::zero())) {
-		if (!intersection(numerator / denominator, **domain, **domain)) {
-			*domain = NULL;
+		if (!intersection(numerator / denominator, *domain, *domain)) {
+			domain = NULL;
 		}
 	}
 	else if (!numerator.contains((capd::TypeTraits<capd::interval>::zero()))) {
@@ -65,55 +65,40 @@ inline void extDiv(const capd::interval& numerator, const capd::interval& denomi
 				? (numerator.right() / denominator.left()) : INFINITY);
 		}
 
-		//if (!intersection(**domain, no_domain, no_domain))
+		//if (!intersection(*domain, no_domain, no_domain))
 		//	return;
 
 //std::cout << no_domain << std::endl;
 
-		if ((*domain)->rightBound() <= no_domain.leftBound() ||
-			(*domain)->leftBound()  >= no_domain.rightBound()) {
+		if (domain->rightBound() <= no_domain.leftBound() ||
+			domain->leftBound()  >= no_domain.rightBound()) {
 
 			return;
 		}
 
-		if ((*domain)->rightBound() >= no_domain.rightBound()) {
+		if (domain->rightBound() >= no_domain.rightBound()) {
 
-			if ((*domain)->leftBound() > no_domain.leftBound()) {
+			if (domain->leftBound() > no_domain.leftBound()) {
 
-				(*domain)->setLeftBound(no_domain.rightBound());
+				domain->setLeftBound(no_domain.rightBound());
 			}
 			else {
-				capd::interval bak(**domain);
-				(*domain)->setRightBound(no_domain.leftBound());
-				*containment = new capd::interval(bak);
-				(*containment)->setLeftBound(no_domain.rightBound());
+				capd::interval bak(*domain);
+				domain->setRightBound(no_domain.leftBound());
+				containment = new capd::interval(bak);
+				containment->setLeftBound(no_domain.rightBound());
 			}
 		}
-		else { // (*domain)->rightBound() < no_domain.rightBound()
+		else { // domain->rightBound() < no_domain.rightBound()
 
-			if ((*domain)->leftBound() <= no_domain.leftBound()) {
+			if (domain->leftBound() <= no_domain.leftBound()) {
 
-				(*domain)->setRightBound(no_domain.rightBound());
+				domain->setRightBound(no_domain.rightBound());
 			}
 			else {
-				*domain = NULL;
+				domain = NULL;
 			}
 		}
-
-		/*
-		capd::interval bak(**domain);
-		(*domain)->setRightBound(no_domain.leftBound());
-
-		if (bak.rightBound() >= no_domain.rightBound()) {
-			*containment = new capd::interval(bak);
-			(*containment)->setLeftBound(no_domain.rightBound());
-		}
-		}
-		else if ((*domain)->rightBound() >= no_domain.rightBound())
-			(*domain)->setLeftBound(no_domain.rightBound());
-		else
-			*domain = NULL;
-		*/
 	}
 
 	// do nothing when numerator contains zero

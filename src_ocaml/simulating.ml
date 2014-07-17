@@ -108,7 +108,10 @@ let simulate (_ps,_var,(iloc,_ival),flocs,locs) =
           print_endline "reached final loc!"
         with Not_found -> ()
       end
+
     | None ->
+      simulate_cont !curr_loc;
+      dispose ();
       error FindZeroError
   done;
   print_pped true true;
