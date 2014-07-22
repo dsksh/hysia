@@ -68,6 +68,17 @@ let send_der lid env i dual =
   in
   mapi send_dtree d
 
+let send_inv lid env i dual =
+  let (e,d) = dual.node in
+  send_expr env e;
+  put_inv_tree lid i;
+
+  let send_dtree j d =
+    send_expr env d;
+    put_inv_dtree lid i j
+  in
+  mapi send_dtree d
+
 let send_grd lid eid s env dual =
   let (e,d) = dual.node in
   send_expr env e;
@@ -114,9 +125,10 @@ let send_edge lid env eid (grd_h,grd_g,dst,jump) =
   mapi (send_grd_g lid eid env) grd_g;
   mapi (send_jump lid eid env) jump
 
-let send_loc env (id,der,edges) =
+let send_loc env (id,der,inv,edges) =
   put_location id;
   mapi (send_der id env) der;
+  mapi (send_inv id env) inv;
   List.mapi (send_edge id env) edges;
   ()
 

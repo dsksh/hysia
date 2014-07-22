@@ -20,6 +20,8 @@
 	  "init", INIT;
 	  "final", FINAL;
       "at", AT;
+      "inv", INV;
+      "invariant", INV;
       "wait", WAIT;
       "flow", FLOW;
       "end", END;

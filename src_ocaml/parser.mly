@@ -14,7 +14,7 @@
   let mk_param id v = loc (), (id, v)
   let mk_expr_l e = loc (), e
   let mk_init v = loc (), v
-  let mk_loc id der edges = loc (), (id,der,edges)
+  let mk_loc id der inv edges = loc (), (id,der,inv,edges)
   let mk_edge gh gg dst rst = loc (), (gh,gg,dst,rst)
   let mk_edge_l e = loc (), e
 
@@ -53,6 +53,7 @@
 %token INIT
 %token FINAL
 %token AT
+%token INV
 %token WAIT
 %token FLOW
 %token END
@@ -86,12 +87,12 @@ statements :
   | FINAL expr_vec statements
     { let ps,vs,init,_,locs = $3 in 
 	    ps,vs,init,(mk_expr_l $2),locs }
-  | AT ID WAIT expr_vec edges END statements
-    { let ps,vs,init,final,locs = $7 in 
-        ps,vs,init,final,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_edge_l $5))::locs }
-  | AT ID FLOW expr_vec edges END statements
-    { let ps,vs,init,final,locs = $7 in 
-        ps,vs,init,final,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_edge_l $5))::locs }
+  | AT ID WAIT expr_vec INV expr_vec edges END statements
+    { let ps,vs,init,final,locs = $9 in 
+        ps,vs,init,final,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_expr_l $6) (mk_edge_l $7))::locs }
+  | AT ID FLOW expr_vec INV expr_vec edges END statements
+    { let ps,vs,init,final,locs = $9 in 
+        ps,vs,init,final,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_expr_l $6) (mk_edge_l $7))::locs }
 
   | LET ID EQ interval statements
     { let ps,vs,init,final,locs = $5 in 

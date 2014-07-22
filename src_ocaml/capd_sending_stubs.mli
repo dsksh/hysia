@@ -29,6 +29,9 @@ external put_der_tree:  string -> int -> unit = "caml_put_der_tree"
 external put_der_dtree: string -> int -> int -> unit = "caml_put_der_dtree"
 external done_der_tree: string -> unit -> unit = "caml_done_der_tree"
 
+external put_inv_tree:  string -> int -> unit = "caml_put_inv_tree"
+external put_inv_dtree: string -> int -> int -> unit = "caml_put_inv_dtree"
+
 (*external put_value: float -> float -> unit = "caml_put_value"*)
 external put_value: unit -> unit = "caml_put_value"
 

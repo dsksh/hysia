@@ -31,6 +31,9 @@ void putDerTree(const char *, const int);
 void putDerDTree(const char *, const int, const int);
 void doneDerTree(const char *);
 
+void putInvTree(const char *, const int);
+void putInvDTree(const char *, const int, const int);
+
 /*void putValue(const double l, const double u);*/
 void putValue();
 

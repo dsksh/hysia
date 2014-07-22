@@ -32,7 +32,7 @@ let step_max = ref 5
   dispose ()
 *)
 
-let loc_of_name id (lid,_,_) = id = lid
+let loc_of_name id (lid,_,_,_) = id = lid
 
 let find_first_zero_ lid eid (_,_,_dst,_) = eid, (find_first_zero false lid eid)
 
@@ -88,7 +88,7 @@ let simulate (_ps,_var,(iloc,_ival),flocs,locs) =
 
     (*let dst = List.fold_left (simulate_edge !curr_loc) None locs in*)
 
-    let (_,_,es) = List.find (loc_of_name !curr_loc) locs in
+    let (_,_,_,es) = List.find (loc_of_name !curr_loc) locs in
     let zs = List.mapi (find_first_zero_ !curr_loc) es in
     (*let dst = List.fold_left select_earliest None zs in*)
     let dst = select_random zs in

@@ -122,7 +122,7 @@ let mk_dual var e =
   let de = List.map (fun v -> diff_expr v e) var in
   Hdual.hashcons (e,de)
 
-let mk_dexpr pm var = function
+let mk_dual_expr pm var = function
   | _, Pvar id     -> mk_dual var 
     (*(mk_var id)*)
     (if PMap.mem id pm then mk_val (PMap.find id pm) else mk_var id)
@@ -132,16 +132,17 @@ let mk_dexpr pm var = function
   | _, Papp2 (op,e1,e2) -> mk_dual var (mk_app2 op (mk_expr pm e1) (mk_expr pm e2))
 
 let mk_edge pm var (_,(grd_h,(_,grd_g),(_,dst),(_,jmp))) =
-  let grd_h = mk_dexpr pm var grd_h in
-  (*let grd_g = mk_dexpr pm var grd_g in*)
-  let grd_g = List.map (mk_dexpr pm var) grd_g in
-  let jmp = List.map (mk_dexpr pm var) jmp in
+  let grd_h = mk_dual_expr pm var grd_h in
+  (*let grd_g = mk_dual_expr pm var grd_g in*)
+  let grd_g = List.map (mk_dual_expr pm var) grd_g in
+  let jmp = List.map (mk_dual_expr pm var) jmp in
   (grd_h,grd_g,dst,jmp)
 
-let mk_loc pm var (_,((_,id),(_,der),(_,edges))) =
-  let der = List.map (mk_dexpr pm var) der in
+let mk_loc pm var (_,((_,id),(_,der),(_,inv),(_,edges))) =
+  let der = List.map (mk_dual_expr pm var) der in
+  let inv = List.map (mk_dual_expr pm var) inv in
   let edges = List.map (mk_edge pm var) edges in
-  (id,der,edges)
+  (id,der,inv,edges)
 
 let get_lid (_,Pvar lid) = lid
 
@@ -165,10 +166,11 @@ type id = ident
 type init = ident * expr list
 type final = ident list
 type dexpr = dual
+type iexpr = dual
 type gexpr = dual
 type rexpr = dual
 type edge = dual * dual list * ident * dual list
-type location = ident * dual list * edge list
+type location = ident * dual list * dual list * edge list
 
 let rec print_expr fmt expr = match expr.node with
   | Var id -> fprintf fmt "%s" id
@@ -189,12 +191,14 @@ let print_id fmt id = fprintf fmt "%s" id
 let print_init fmt (iloc,iexpr) = fprintf fmt "%s %a" iloc (print_list "," print_expr) iexpr
 let print_final fmt ls = fprintf fmt "%a" (print_list "," print_id) ls
 let print_dexpr fmt e = fprintf fmt "%a" print_dual e
+let print_iexpr fmt e = fprintf fmt "%a" print_dual e
 let print_gexpr fmt e = fprintf fmt "%a" print_dual e
 let print_rexpr fmt e = fprintf fmt "%a" print_dual e
 
-let id_of_loc      (e,_,_) = e
-let dexprs_of_loc  (_,e,_) = e
-let edges_of_loc   (_,_,e) = e
+let id_of_loc      (e,_,_,_) = e
+let dexprs_of_loc  (_,e,_,_) = e
+let iexprs_of_loc  (_,_,e,_) = e
+let edges_of_loc   (_,_,_,e) = e
 let gh_of_edge     (e,_,_,_) = e
 let gg_of_edge     (_,e,_,_) = e
 let dst_of_edge    (_,_,e,_) = e 
