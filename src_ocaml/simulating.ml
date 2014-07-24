@@ -35,7 +35,7 @@ let step_max = ref 5
 let loc_of_name id (lid,_,_,_) = id = lid
 
 let find_inv_frontier_ lid iid _inv = 
-    Printf.printf "fif %s %d\n%!" lid iid;
+(*Printf.printf "fif %s %d\n%!" lid iid;*)
     iid, (find_inv_frontier lid iid)
 
 let select_earliest earliest (eid,(l,u)) = match earliest with
@@ -45,8 +45,11 @@ let select_earliest earliest (eid,(l,u)) = match earliest with
       if l<=u then begin
         if u < l1 then Some (eid,(l,u)) else begin
           if u1 < l then Some (eid1,(l1,u1)) else 
-            error (SelectEarliestError ((l,u), (l1,u1))) end end
-      else Some (eid1,(l1,u1))
+            error (SelectEarliestError ((l,u), (l1,u1))) end 
+      end else if l = -1. then
+        error (SelectEarliestError ((l,u), (l1,u1)))
+      else
+        Some (eid1,(l1,u1))
   | None -> 
       if l<=u then Some (eid,(l,u)) else None
 
@@ -111,7 +114,7 @@ let simulate (_ps,_var,(iloc,_ival),flocs,locs) =
     (* compute the earliest time reaching the inv frontier. *)
     let (_,_,invs,_) = List.find (loc_of_name !curr_loc) locs in
     let fs = List.mapi (find_inv_frontier_ !curr_loc) invs in
-Printf.printf "fif done\n%!";
+(*Printf.printf "fif done\n%!";*)
     let tmax = List.fold_left select_earliest None fs in
 
     (* find zero for each edge *)

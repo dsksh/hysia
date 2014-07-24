@@ -38,7 +38,6 @@ value sim_find_inv_frontier(value lid, value iid)
     CAMLlocal1(intv);
 
 	cInterval res = findInvFrontier(String_val(lid), Int_val(iid));
-printf("res: %d, %d\n", res.l, res.u);
 
     intv = caml_alloc(2, 0);
     Store_field(intv, 0, caml_copy_double(res.l));

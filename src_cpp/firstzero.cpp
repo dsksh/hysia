@@ -3,10 +3,33 @@
 #include "MapEx.h"
 #include "util.h"
 
+#include <setjmp.h>
+
 #include "simulatingHandler.h"
 
 using namespace std;
 using namespace capd;
+
+//class Exception : public std::exception { };
+
+#define EXCEPTION_HACK 1
+
+#if EXCEPTION_HACK
+jmp_buf eh_jb;
+exception *eh_ex;
+#endif
+
+#if !EXCEPTION_HACK
+#	define TRY try
+#	define CATCH catch (const exception& eh_ex)
+#	define THROW(msg) throw runtime_error(msg)
+#else
+	// emulation of exception handling to deal with a bug in Mac OS.
+	// try ... catch() is also needed for the exceptions of CAPD etc.
+#	define TRY if (setjmp(eh_jb) == 0) try
+#	define CATCH catch (exception& e) { eh_ex = &e; goto EH_HANDLER; } else EH_HANDLER:
+#	define THROW(msg) do { eh_ex = new runtime_error(msg); longjmp(eh_jb, 1); } while (0);
+#endif
 
 inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 						const ITaylor::CurveType& curve,
@@ -106,9 +129,8 @@ g_context->cout << "x: " << curve(time) << endl;
 g_context->cout << "dh: " << dh << " at " << time+time_procd << endl;
 		if ( dh.contains((capd::TypeTraits<interval>::zero())) ) {
 			// TODO
-			throw runtime_error("zero in the derivative");
-			//std::cerr << "zero in the derivative" << endl;
-			//break;
+			THROW("zero in the derivative");
+			break;
 		}
 
 		// interval Newton
@@ -138,7 +160,7 @@ g_context->cout << "inflated:\t" << time+time_procd << endl;
 
 		if ( time.contains((capd::TypeTraits<interval>::zero())) ) {
 			// TODO
-			throw runtime_error("zero in the time interval");
+			THROW("zero in the time interval");
 		}
 
 	} while (hausdorff(time_old, time) <= g_params->delta*d_old);
@@ -175,7 +197,7 @@ g_context->cout << endl << "contracting rb: " << time+time_procd << endl;
 		extDiv(-h, dh, gamma_l, gamma_u);
 
 		if (gamma_l == NULL) {
-			//throw "gamma is empty";
+			//THROW("gamma is empty");
 			return false;
 		}
 		else if (gamma_u == NULL) {
@@ -216,7 +238,7 @@ g_context->cout << "TIME0: " << time << endl;
 	const double time_l(time.rightBound());
 	if (selected) g_context->time_l = time_l;
 
-	try{
+	TRY {
 
 	// the solver:
 	ITaylor solver(der, g_params->order, g_params->h_min);
@@ -292,7 +314,7 @@ g_context->fout << ',' << endl;
 
 	// verification of the result
 	if ( !verify(der, grd_h, curve, time_init, time_procd, time) ) {
-		throw runtime_error("verification failed");
+		THROW("verification failed");
 
 		// TODO
 		//time_procd = time_l + timeMap.getCurrentTime();
@@ -314,7 +336,7 @@ g_context->fout << ',' << endl;
 
 	// reduce the upper bound
 	if ( !reduceUpper(der, grd_h, curve, time_init, time_procd, time) )
-		throw runtime_error("failed in reducing the upper bound");
+		THROW("failed in reducing the upper bound");
 g_context->cout << "contracted ub:\t" << time + time_procd << endl;
 
 g_context->cout << "TIME: " << time << endl;
@@ -360,9 +382,11 @@ g_context->fout << ',' << std::endl;
 // TODO
 time += time_procd;
 
-	} catch(exception& e)
+	} 
+	//catch(exception& e)
+	CATCH
 	{
-		std::cerr << "exception caught!\n" << e.what() << endl << endl;
+		std::cerr << "exception caught! (1)\n" << eh_ex->what() << endl << endl;
 		return cEmpty;
 	}
 
@@ -387,7 +411,7 @@ g_context->cout << endl;
 	double time_l = g_context->time_l;
 g_context->cout << "TIME0 mid: " << time << endl;
 
-	try{
+	TRY {
 
 	// the solver:
 	ITaylor solver(der, g_params->order, g_params->h_min);
@@ -438,7 +462,7 @@ g_context->cout << "time:\t" << time << endl;
 g_context->cout << "time_procd:\t" << time_procd << endl;
 g_context->cout << "time_mid:\t" << time_mid << endl;
 		if (!intersection(time-time_procd, time_mid, time_mid)) {
-			throw runtime_error("result becomes empty!");
+			THROW("result becomes empty!");
 			//continue;
 			break;
 		}
@@ -448,8 +472,11 @@ g_context->cout << "time_mid:\t" << time_mid << endl;
 	time_mid += time_procd;
 g_context->cout << endl << "mid:\t" << g_context->x_mid << " at " << time_mid << endl << endl;
 
-	} catch (exception& e) {
-		cerr << "exception caught!\n" << e.what() << endl << endl;
+	} 
+	//catch (exception& e)
+	CATCH 
+	{
+		cerr << "exception caught! (2)\n" << eh_ex->what() << endl << endl;
 		return false;
 	}
 
@@ -457,7 +484,7 @@ g_context->cout << endl << "mid:\t" << g_context->x_mid << " at " << time_mid <<
 }
 
 
-cInterval findInvFrontier_(const char *lid, const int iid)
+cInterval findInvFrontier(const char *lid, const int iid)
 {
 g_context->cout << endl;
 g_context->cout << "*** findInvFrontier: " << lid << "," << iid << endl;
@@ -485,7 +512,7 @@ g_context->cout << endl;
 g_context->cout << "TIME0: " << time << endl;
 	const double time_l(time.rightBound());
 
-	try{
+	TRY {
 
 	// the solver:
 	ITaylor solver(der, g_params->order, g_params->h_min);
@@ -499,6 +526,7 @@ g_context->cout << "TIME0: " << time << endl;
 	IMatrix dx_prev(IMatrix::Identity(dim));
 	
 	while (true) {
+
 		// integrate 1 step.
 		//timeMap(g_params->t_max, p);
  		timeMap.moveSet(g_params->t_max, capdPped);
@@ -529,12 +557,12 @@ g_context->cout << "dx: " << dx << endl;
 
 	// verification of the result
 	if ( !verify(der, invariant, curve, time_init, time_procd, time) ) {
-		throw runtime_error("verification failed");
+		THROW("verification failed");
 	}
 
 	// reduce the upper bound
 	if ( !reduceUpper(der, invariant, curve, time_init, time_procd, time) )
-		throw runtime_error("failed in reducing the upper bound");
+		THROW("failed in reducing the upper bound");
 g_context->cout << "contracted ub:\t" << time + time_procd << endl;
 
 g_context->cout << "TIME: " << time << endl;
@@ -543,19 +571,13 @@ g_context->cout << "GTIME: " << g_context->time << endl;
 // TODO
 time += time_procd;
 	} 
-	catch (const exception& e) {
-		std::cerr << "exception caught!\n" << e.what() << endl << endl;
-		return cEmpty;
+	CATCH {
+		std::cerr << "exception caught! (3)\n" << eh_ex->what() << endl << endl;
+		//return cEmpty;
+		cInterval err= {-1., -1.};
+		return err;
 	}
 
 	cInterval res = {time.leftBound(), time.rightBound()};
 	return res;
 }
-
-cInterval findInvFrontier(const char *lid, const int iid)
-{
-	cInterval res = findInvFrontier_(lid, iid);
-g_context->cout << "return empty" << endl;
-	return res;
-}
-

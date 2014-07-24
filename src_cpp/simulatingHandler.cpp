@@ -54,7 +54,7 @@ void reportStep(const int stepId, const char *lid)
 IVector simulate(IMap& der, const IVector& x, const interval& time)
 {
 	IVector result;
-	try{
+	try {
 		ITaylor solver(der, g_params->order, g_params->h_min);
 		ITimeMap timeMap(solver);
 
@@ -63,8 +63,8 @@ IVector simulate(IMap& der, const IVector& x, const interval& time)
 
 		result = timeMap(time, s);
 	} 
-	catch(std::exception& e) {
-		std::cerr << "\n\nException caught!\n" << e.what() << endl;
+	catch (std::exception& e) {
+		std::cerr << "\n\nException caught! (4)\n" << e.what() << endl;
 	}
 
 	return result;
@@ -74,7 +74,7 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 					   IMatrix& dx_phi, IVector& dt_phi)
 {
 	IVector result;
-	try{
+	try {
 		ITaylor solver(der, g_params->order, g_params->h_min);
 		ITimeMap timeMap(solver);
 
@@ -89,8 +89,8 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 		//dx_phi = der[result];
 		dt_phi = der(result);
 	} 
-	catch(std::exception& e) {
-		std::cerr << "\n\nException caught!\n" << e.what() << endl;
+	catch (std::exception& e) {
+		std::cerr << "\n\nException caught! (5)\n" << e.what() << endl;
 	}
 
 	return result;
@@ -234,7 +234,7 @@ g_context->cout << endl << "step made (4): " << time+time_procd << endl;
  
 	} catch(exception& e)
 	{
-		std::cerr << "exception caught!\n" << e.what() << endl << endl;
+		std::cerr << "exception caught! (6)\n" << e.what() << endl << endl;
 	}
 }
 
@@ -287,6 +287,6 @@ void integrate(const char *lid,
  
  	} catch(exception& e)
  	{
- 		cout << "\n\nException caught!\n" << e.what() << endl << endl;
+ 		cout << "\n\nException caught! (7)\n" << e.what() << endl << endl;
  	}
 }
