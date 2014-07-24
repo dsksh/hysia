@@ -194,6 +194,20 @@ void putInvDTree(const char *lid, const int i, const int j)
 	g_model->locs[lid]->invariant[i]->putDTree(0, j, g_stack.front()); g_stack.pop_front();
 }
 
+void putInvNormTree(const char *lid, const int i)
+{
+	capd::DerMap& der(g_model->locs[lid]->der);
+	AuxMapPtr itree(new AuxMap(der, der.getOrder()));
+	g_model->locs[lid]->invNormal.push_back(itree);
+	itree->putTree(0, g_stack.front());
+   	g_stack.pop_front();
+}
+
+void putInvNormDTree(const char *lid, const int i, const int j)
+{
+	g_model->locs[lid]->invNormal[i]->putDTree(0, j, g_stack.front()); g_stack.pop_front();
+}
+
 void putGrdTree(const char *lid, const int eid, const int s) 
 {
 	EdgePtr edge = g_model->locs[lid]->edges[eid];

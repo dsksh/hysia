@@ -39,6 +39,7 @@ g_context->cout << "h:\t" << h << endl;
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
 		extDiv(-h, dh, gamma_l, gamma_u);
+g_context->cout << "gl:\t" << gamma_l << endl;
 
 		if (gamma_l == NULL) {
 			return false;
@@ -135,6 +136,11 @@ g_context->cout << "proved" << endl;
 			 + interval(-g_params->abs_infl, g_params->abs_infl);
 g_context->cout << "inflated:\t" << time+time_procd << endl;
 
+		if ( time.contains((capd::TypeTraits<interval>::zero())) ) {
+			// TODO
+			throw runtime_error("zero in the time interval");
+		}
+
 	} while (hausdorff(time_old, time) <= g_params->delta*d_old);
 
 	return false;
@@ -191,6 +197,10 @@ g_context->cout << endl << "contracting rb: " << time+time_procd << endl;
 
 cInterval findFirstZero(const int selected, const char *lid, const int eid)
 {
+g_context->cout << endl;
+g_context->cout << "*** findFirstZero: " << lid << "," << eid << endl;
+g_context->cout << endl;
+
 	int dim(g_model->dim);
 	LocPtr loc = g_model->locs[lid];
 	DerMap& der = loc->der;
@@ -225,7 +235,7 @@ g_context->cout << "TIME0: " << time << endl;
  		timeMap.moveSet(g_params->t_max, capdPped);
 
 		time = interval(0,1)*solver.getStep();
-g_context->cout << endl << "step made: " << time+time_procd << endl;
+g_context->cout << endl << "step made (1): " << time+time_procd << endl;
 		const interval time_init(time);
 		const ITaylor::CurveType& curve = solver.getCurve();
 
@@ -361,9 +371,12 @@ time += time_procd;
 }
 
 
-//int findFirstZeroMid(const char *lid, const char *dst)
 int findFirstZeroMid(const char *lid, const int eid)
 {
+g_context->cout << endl;
+g_context->cout << "*** findFirstZeroMid: " << lid << "," << eid << endl;
+g_context->cout << endl;
+
 	LocPtr loc = g_model->locs[lid];
 	DerMap& der = loc->der;
 	AuxMap& grd_h = loc->edges[eid]->grd_h;
@@ -393,7 +406,7 @@ g_context->cout << "TIME0 mid: " << time << endl;
 		timeMap(g_params->t_max, capdPped);
 
 		time_mid = interval(0,1)*solver.getStep();
-g_context->cout << endl << "step made: " << time_procd + time_mid << endl;
+g_context->cout << endl << "step made (2): " << time_procd + time_mid << endl;
 		if (intersection(time-time_procd, time_mid, time_mid))
 			break;
 		else if (timeMap.completed())
@@ -442,3 +455,107 @@ g_context->cout << endl << "mid:\t" << g_context->x_mid << " at " << time_mid <<
 
 	return true;
 }
+
+
+cInterval findInvFrontier_(const char *lid, const int iid)
+{
+g_context->cout << endl;
+g_context->cout << "*** findInvFrontier: " << lid << "," << iid << endl;
+g_context->cout << endl;
+
+	int dim(g_model->dim);
+	Location *loc = g_model->locs[lid].get();
+	DerMap& der = loc->der;
+	AuxMap& invariant = *g_model->locs[lid]->invariant[iid];
+
+	//AuxMapVec inv_rest(g_model->locs[lid]->invariant);
+	/*AuxMapVec::iterator it(inv_rest.begin());
+	while (it != inv_rest.end()) {
+		if (it->get() == &invariant)
+			it = inv_rest.erase(it);
+		else
+			it++;
+	}*/
+
+	AuxMapVec inv_norm;
+	inv_norm.push_back(g_model->locs[lid]->invNormal[iid]);
+
+	Parallelepiped pped = g_context->pped;
+	interval time = g_context->time;
+g_context->cout << "TIME0: " << time << endl;
+	const double time_l(time.rightBound());
+
+	try{
+
+	// the solver:
+	ITaylor solver(der, g_params->order, g_params->h_min);
+	ITimeMap timeMap(solver);
+	timeMap.stopAfterStep(true);
+
+	// the initial value:
+	CapdPped capdPped(pped.toCapdPped());
+
+    interval time_procd(time_l);
+	IMatrix dx_prev(IMatrix::Identity(dim));
+	
+	while (true) {
+		// integrate 1 step.
+		//timeMap(g_params->t_max, p);
+ 		timeMap.moveSet(g_params->t_max, capdPped);
+
+		time = interval(0,1)*solver.getStep();
+g_context->cout << endl << "step made (3): " << time+time_procd << endl;
+		const interval time_init(time);
+		const ITaylor::CurveType& curve = solver.getCurve();
+
+		IVector  dx( der(curve(time)) );
+g_context->cout << "x:  " << curve(time) << endl;
+g_context->cout << "dx: " << dx << endl; 
+
+		// reduce the lower bound
+		bool res( reduceLower(der, invariant, inv_norm, curve, time_init, time_procd, time) );
+		if (res)
+			break;
+		else if (timeMap.completed())
+			return cEmpty;
+		else {
+			time_procd = time_l + timeMap.getCurrentTime();
+			dx_prev = IMatrix(capdPped);
+		}
+	}
+
+	const ITaylor::CurveType& curve = solver.getCurve();
+	const interval time_init(time);
+
+	// verification of the result
+	if ( !verify(der, invariant, curve, time_init, time_procd, time) ) {
+		throw runtime_error("verification failed");
+	}
+
+	// reduce the upper bound
+	if ( !reduceUpper(der, invariant, curve, time_init, time_procd, time) )
+		throw runtime_error("failed in reducing the upper bound");
+g_context->cout << "contracted ub:\t" << time + time_procd << endl;
+
+g_context->cout << "TIME: " << time << endl;
+g_context->cout << "GTIME: " << g_context->time << endl;
+
+// TODO
+time += time_procd;
+	} 
+	catch (const exception& e) {
+		std::cerr << "exception caught!\n" << e.what() << endl << endl;
+		return cEmpty;
+	}
+
+	cInterval res = {time.leftBound(), time.rightBound()};
+	return res;
+}
+
+cInterval findInvFrontier(const char *lid, const int iid)
+{
+	cInterval res = findInvFrontier_(lid, iid);
+g_context->cout << "return empty" << endl;
+	return res;
+}
+

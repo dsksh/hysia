@@ -53,6 +53,10 @@ public:
 		os << "u: " << m_u << std::endl;
 	}
 
+	capd::IVector hull() {
+		return m_x + m_A*m_u;
+	}
+
 private:
 	capd::IMatrix m_A;
 	capd::IVector m_u;

@@ -16,6 +16,8 @@ CtxPtr g_context;
 typedef auto_ptr<ofstream> fstreamPtr;
 fstreamPtr g_fstream;
 
+const cInterval cEmpty = { 1., -1. };
+
 void simInitialize()
 {
 	std::cout.precision(17);
@@ -48,7 +50,6 @@ void reportStep(const int stepId, const char *lid)
 {
 	printStep(g_context->fout, stepId, lid, g_context->time.rightBound());
 }
-
 
 IVector simulate(IMap& der, const IVector& x, const interval& time)
 {
@@ -179,6 +180,10 @@ g_context->cout << "D_omega: " << d_omega << endl;
 /// simulate and dump a continuous evolution in a location.
 void simulateCont(const char *lid)
 {
+g_context->cout << endl;
+g_context->cout << "*** simulateCont: " << lid << endl;
+g_context->cout << endl;
+
 	int dim(g_model->dim);
 	LocPtr loc = g_model->locs[lid];
 	DerMap& der = loc->der;
@@ -205,7 +210,7 @@ void simulateCont(const char *lid)
  		timeMap.moveSet(g_params->t_max, capdPped);
 
 		time = interval(0,1)*solver.getStep();
-g_context->cout << endl << "step made: " << time+time_procd << endl;
+g_context->cout << endl << "step made (4): " << time+time_procd << endl;
 		const interval time_init(time);
 		const ITaylor::CurveType& curve = solver.getCurve();
 

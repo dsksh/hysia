@@ -25,6 +25,7 @@
 %token <float> FLOAT
 %token <string> STRING
 %token <string> ID
+%token TRUE
 %token EQ
 %token LP
 /*%token LP_STAR_RP*/
@@ -122,6 +123,7 @@ edges :
 /**/
 
 expr_vec :
+  | TRUE { [] }
   | expr { [$1] }
   | expr expr_vec_rest { $1::$2 }
   | LP expr expr_vec_rest RP { $2::$3 }

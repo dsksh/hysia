@@ -81,7 +81,6 @@ end
 
 module Hdual = Make_consed(Dual_node)
 
-
 let rec diff_expr vid expr = 
   let diff = diff_expr vid in
   match expr.node with
@@ -122,7 +121,8 @@ let mk_dual var e =
   let de = List.map (fun v -> diff_expr v e) var in
   Hdual.hashcons (e,de)
 
-let mk_dual_expr pm var = function
+(* FIXME: use mk_expr *)
+(*let mk_dual_expr pm var = function
   | _, Pvar id     -> mk_dual var 
     (*(mk_var id)*)
     (if PMap.mem id pm then mk_val (PMap.find id pm) else mk_var id)
@@ -130,18 +130,37 @@ let mk_dual_expr pm var = function
   | _, Pval v      -> mk_dual var (mk_val v)
   | _, Papp (op,e) -> mk_dual var (mk_app op (mk_expr pm e))
   | _, Papp2 (op,e1,e2) -> mk_dual var (mk_app2 op (mk_expr pm e1) (mk_expr pm e2))
+*)
 
-let mk_edge pm var (_,(grd_h,(_,grd_g),(_,dst),(_,jmp))) =
+let mk_dual_expr pm var expr = 
+    mk_dual var (mk_expr pm expr)
+
+(* construct the normal vector i.e. Dx fun . der. *)
+let mk_normal var der dual =
+  let mk_term e0 (de,der) =
+    let (der_e,_) = der.node in
+    let e = mk_app2 Omul de der_e in
+      mk_app2 Oadd e0 e
+  in
+  let (_,de) = dual.node in
+  let e0 = mk_val (Point 0.) in
+  let es = List.combine de der in
+    mk_dual var (List.fold_left mk_term e0 es)
+
+let mk_edge pm var der (_,(grd_h,(_,grd_g),(_,dst),(_,jmp))) =
   let grd_h = mk_dual_expr pm var grd_h in
-  (*let grd_g = mk_dual_expr pm var grd_g in*)
   let grd_g = List.map (mk_dual_expr pm var) grd_g in
+  (*let gh_norm = mk_normal var der grd_h in
+  let grd_g = gh_norm::grd_g in*)
   let jmp = List.map (mk_dual_expr pm var) jmp in
   (grd_h,grd_g,dst,jmp)
 
 let mk_loc pm var (_,((_,id),(_,der),(_,inv),(_,edges))) =
   let der = List.map (mk_dual_expr pm var) der in
   let inv = List.map (mk_dual_expr pm var) inv in
-  let edges = List.map (mk_edge pm var) edges in
+  let inorm = List.map (mk_normal var der) inv in
+  let inv = List.combine inv inorm in
+  let edges = List.map (mk_edge pm var der) edges in
   (id,der,inv,edges)
 
 let get_lid (_,Pvar lid) = lid
@@ -166,11 +185,11 @@ type id = ident
 type init = ident * expr list
 type final = ident list
 type dexpr = dual
-type iexpr = dual
+type iexpr = dual * dual
 type gexpr = dual
 type rexpr = dual
-type edge = dual * dual list * ident * dual list
-type location = ident * dual list * dual list * edge list
+type edge = gexpr * gexpr list * ident * rexpr list
+type location = ident * dexpr list * iexpr list * edge list
 
 let rec print_expr fmt expr = match expr.node with
   | Var id -> fprintf fmt "%s" id
@@ -191,7 +210,7 @@ let print_id fmt id = fprintf fmt "%s" id
 let print_init fmt (iloc,iexpr) = fprintf fmt "%s %a" iloc (print_list "," print_expr) iexpr
 let print_final fmt ls = fprintf fmt "%a" (print_list "," print_id) ls
 let print_dexpr fmt e = fprintf fmt "%a" print_dual e
-let print_iexpr fmt e = fprintf fmt "%a" print_dual e
+let print_iexpr fmt (e,ne) = fprintf fmt "(%a,@ [%a]" print_dual e print_dual ne
 let print_gexpr fmt e = fprintf fmt "%a" print_dual e
 let print_rexpr fmt e = fprintf fmt "%a" print_dual e
 

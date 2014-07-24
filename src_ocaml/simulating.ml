@@ -34,19 +34,39 @@ let step_max = ref 5
 
 let loc_of_name id (lid,_,_,_) = id = lid
 
-let find_first_zero_ lid eid (_,_,_dst,_) = eid, (find_first_zero false lid eid)
+let find_inv_frontier_ lid iid _inv = 
+    Printf.printf "fif %s %d\n%!" lid iid;
+    iid, (find_inv_frontier lid iid)
 
-let select_earliest earliest (eid,(l,u)) = match earliest, (l,u) with
-  | Some (eid1,(l1,u1)), (l,u) -> 
-Printf.printf "%d,[%f,%f] vs. %d,[%f,%f]\n%!" eid1 l1 u1 eid l u;
+let select_earliest earliest (eid,(l,u)) = match earliest with
+  | Some (eid1,(l1,u1)) -> 
+(*Printf.printf "%d,[%f,%f] vs. %d,[%f,%f]\n%!" eid1 l1 u1 eid l u;*)
 
       if l<=u then begin
         if u < l1 then Some (eid,(l,u)) else begin
           if u1 < l then Some (eid1,(l1,u1)) else 
             error (SelectEarliestError ((l,u), (l1,u1))) end end
       else Some (eid1,(l1,u1))
-  | None, (l,u) -> 
+  | None -> 
       if l<=u then Some (eid,(l,u)) else None
+
+let find_first_zero_ lid eid (gh,_,_dst,_) = 
+    eid, (find_first_zero false lid eid)
+
+let filter_invariant lid invs es tmax (eid,(l,u)) =
+    match tmax with
+    | Some (iid,(lm,um)) -> 
+        (*Printf.printf "%b\n" (fst (List.nth invs iid) = gh);*)
+        let (gh,_,_,_) = List.nth es eid in
+        if (fst (List.nth invs iid) = gh) then true
+        else begin
+            if u < lm then true 
+            else 
+                (*error (SelectEarliestError ((l,u), (lm,um)))*)
+                false
+        end
+    | None -> true
+
 
 let select_random dst_list = 
     (*let filter dl (eid,(l,u)) = 
@@ -86,10 +106,18 @@ let simulate (_ps,_var,(iloc,_ival),flocs,locs) =
     (*Printf.printf "step %d at %s\n%!" i !curr_loc;*)
     report_step i !curr_loc;
 
-    (*let dst = List.fold_left (simulate_edge !curr_loc) None locs in*)
+    (* TODO: check the loc invariant *)
 
+    (* compute the earliest time reaching the inv frontier. *)
+    let (_,_,invs,_) = List.find (loc_of_name !curr_loc) locs in
+    let fs = List.mapi (find_inv_frontier_ !curr_loc) invs in
+Printf.printf "fif done\n%!";
+    let tmax = List.fold_left select_earliest None fs in
+
+    (* find zero for each edge *)
     let (_,_,_,es) = List.find (loc_of_name !curr_loc) locs in
     let zs = List.mapi (find_first_zero_ !curr_loc) es in
+    let zs = List.filter (filter_invariant !curr_loc invs es tmax) zs in
     (*let dst = List.fold_left select_earliest None zs in*)
     let dst = select_random zs in
 

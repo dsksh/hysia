@@ -31,6 +31,8 @@
       "then", THEN;
 
       "param", PARAM;
+
+      "true", TRUE;
 	];
       fun s -> 
 	try Hashtbl.find h s with Not_found -> ID s

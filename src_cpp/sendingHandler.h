@@ -34,6 +34,9 @@ void doneDerTree(const char *);
 void putInvTree(const char *, const int);
 void putInvDTree(const char *, const int, const int);
 
+void putInvNormTree(const char *, const int);
+void putInvNormDTree(const char *, const int, const int);
+
 /*void putValue(const double l, const double u);*/
 void putValue();
 

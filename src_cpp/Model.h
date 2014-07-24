@@ -45,6 +45,7 @@ public:
 	const std::string name;
 	capd::DerMap der;
 	AuxMapVec invariant;
+	AuxMapVec invNormal;
 	EdgeSet edges;
 
 	/// constractor
@@ -53,7 +54,8 @@ public:
 	    //der(dm.dimension(), dm.getOrder()),
 		der(dm),
 	    //der(d, Order),
-		//invariant(),
+		invariant(),
+		invNormal(),
 		edges()
 	{ }
 

@@ -223,6 +223,20 @@ value caml_put_inv_dtree(value lid, value i, value j)
 	CAMLreturn(Val_unit);
 }
 
+value caml_put_inv_normal_tree(value lid, value i)
+{
+	CAMLparam2(lid, i);
+	putInvNormTree(String_val(lid), Int_val(i));
+	CAMLreturn(Val_unit);
+}
+
+value caml_put_inv_normal_dtree(value lid, value i, value j)
+{
+	CAMLparam3(lid, i, j);
+	putInvNormDTree(String_val(lid), Int_val(i), Int_val(j));
+	CAMLreturn(Val_unit);
+}
+
 value caml_put_grd_tree(value lid, value eid, value s)
 {
 	CAMLparam3(lid, eid, s);

@@ -57,7 +57,18 @@ let rec send_expr env e = match e.node with
       (* TODO *)
       Printf.printf "unknown expr!"
 
-let send_der lid env i dual =
+let send_dual put_tree put_dtree env i dual =
+  let (e,d) = dual.node in
+  send_expr env e;
+  put_tree i;
+
+  let send_dtree j d =
+    send_expr env d;
+    put_dtree i j
+  in
+  mapi send_dtree d
+
+(*let send_der lid env i dual =
   let (e,d) = dual.node in
   send_expr env e;
   put_der_tree lid i;
@@ -68,8 +79,8 @@ let send_der lid env i dual =
   in
   mapi send_dtree d
 
-let send_inv lid env i dual =
-  let (e,d) = dual.node in
+let send_inv lid env i (inv,norm) =
+  let (e,d) = inv.node in
   send_expr env e;
   put_inv_tree lid i;
 
@@ -78,6 +89,14 @@ let send_inv lid env i dual =
     put_inv_dtree lid i j
   in
   mapi send_dtree d
+*)
+
+let send_der lid env i dual =
+  send_dual (put_der_tree lid) (put_der_dtree lid) env i dual
+
+let send_inv lid env i (inv,norm) =
+  send_dual (put_inv_tree lid) (put_inv_dtree lid) env i inv;
+  send_dual (put_inv_normal_tree lid) (put_inv_normal_dtree lid) env i norm 
 
 let send_grd lid eid s env dual =
   let (e,d) = dual.node in
