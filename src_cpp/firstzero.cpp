@@ -229,6 +229,10 @@ g_context->cout << endl;
 	EdgePtr edge = g_model->locs[lid]->edges[eid];
 	AuxMap& grd_h = edge->grd_h;
 	AuxMapVec& grd_g = edge->grd_g;
+//der.setParameter("hoge", interval(0.));
+//grd_h.setParameter("hoge", interval(0.));
+//for (int i(0); i < grd_g.size(); i++)
+//	grd_g[i]->setParameter("hoge", interval(0.));
 
 	//Parallelepiped& pped = g_context->pped;
 	//interval& time = g_context->time;
@@ -495,6 +499,9 @@ g_context->cout << endl;
 	DerMap& der = loc->der;
 	AuxMap& invariant = *g_model->locs[lid]->invariant[iid];
 
+//der.setParameter("hoge", interval(0.));
+//invariant.setParameter("hoge", interval(0.));
+
 	//AuxMapVec inv_rest(g_model->locs[lid]->invariant);
 	/*AuxMapVec::iterator it(inv_rest.begin());
 	while (it != inv_rest.end()) {
@@ -506,6 +513,8 @@ g_context->cout << endl;
 
 	AuxMapVec inv_norm;
 	inv_norm.push_back(g_model->locs[lid]->invNormal[iid]);
+	//for (int i(0); i < inv_norm.size(); i++)
+	//	inv_norm[i]->setParameter("hoge", interval(0.));
 
 	Parallelepiped pped = g_context->pped;
 	interval time = g_context->time;

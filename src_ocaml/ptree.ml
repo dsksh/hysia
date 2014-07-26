@@ -4,7 +4,8 @@ open Pretty
 
 type loc = Lexing.position * Lexing.position
 
-type param = loc * (string * interval)
+type pval = PVint of interval | PVrandom of float
+type param = loc * (string * pval)
 
 type id = loc * ident
 type lid = loc * ident
@@ -25,7 +26,6 @@ type edge = loc * (expr * expr_l * lid * expr_l)
 type edge_l = loc * (edge list)
 type location = loc * (lid * expr_l * expr_l * edge_l)
 
-(* params, vars, init, final, locations *)
 type t = param list * id_l * expr_l * expr_l * location list
 
 type init = expr list
@@ -55,7 +55,9 @@ let rec print_expr fmt = function
       fprintf fmt "(%a %s %a)" print_expr e1 (sprint_bin_op op) print_expr e2
 
 
-let print_param fmt (_,(id,v)) = fprintf fmt "%s:=%a" id print_interval v
+let print_param fmt (_,(id,v)) = match v with
+  | PVint v -> fprintf fmt "%s:=%a" id print_interval v
+  | PVrandom bnd -> fprintf fmt "%s:=R(%f)" id bnd
 let print_id fmt (_,id) = fprintf fmt "%s" id
 let print_init fmt e = fprintf fmt "%a" (print_list "," print_expr) e
 let print_final fmt e = print_init fmt e

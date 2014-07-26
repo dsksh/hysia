@@ -32,15 +32,16 @@ public:
 	typedef capd::map::CnContainer<NodeType*> TreesContainer;
 
 	DerMap();
-	DerMap(int, int);
+	DerMap(int, int, int = 0);
+	DerMap(const char *);
 	DerMap(const DerMap&);
 	~DerMap();
 
-	//void setup();
-	//void setup1();
+	int numParams() { return m_dim-m_indexOfFirstParam; }
 
 	int putVariable(const char *);
-	int setParam(const char *, const interval&);
+	int putParameter(const char *);
+	int putAndSetParameter(const char *, const interval&);
 	void setValue(const VectorType&);
 	ScalarType *getValue() const { return m_val; }
 	void putTree(const int, capd::map::Node<ScalarType> *node);
@@ -54,7 +55,7 @@ public:
 	//template<typename T>
 	//NodeType *compDiffNode(T& node, const int index);
 
-	const int getDim() { return m_dim; }
+	//const int getDim() { return m_dim; }
 
 private:
 	int m_trees_idx;
@@ -74,6 +75,7 @@ public:
 	AuxMap(const AuxMap&);
 	~AuxMap();
 
+	void putParameter(const char *);
 	void putTree(const int, NodeType *node);
 	void putDTree(const int, const int, NodeType *node);
 
@@ -83,12 +85,15 @@ public:
 	MatrixType der();
 	MatrixType operator[](const VectorType& val);
 
+	void setParameter(const char *name, const interval& val);
+
 	const int getDim() { return m_dim; }
 
 protected:
 	DerMap& m_dmap;
 	TreesContainer m_trees;
 	int m_dim2;
+	int m_dim_f;
 	const std::string& currentFormula()
    	{ static const std::string s(""); return s; }
 

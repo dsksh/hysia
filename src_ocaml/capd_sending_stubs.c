@@ -33,10 +33,10 @@ value caml_test1(value command)
 }
 
 
-value caml_init(value dim)
+value caml_init(value dim, value nparams)
 {
-	CAMLparam1(dim);
-	init(Int_val(dim));
+	CAMLparam2(dim, nparams);
+	init(Int_val(dim), Int_val(nparams));
 	CAMLreturn(Val_unit);
 }
 
@@ -47,12 +47,20 @@ value caml_put_variable(value name)
 	CAMLreturn(Val_int(index));
 }
 
-value caml_set_param(value id, value l, value u)
+value caml_put_param(value name)
+{
+	CAMLparam1(name);
+	int index = putParam(String_val(name));
+	CAMLreturn(Val_int(index));
+}
+
+/*value caml_set_param(value id, value l, value u)
 {
 	CAMLparam3(id, l, u);
 	int index = setParam(String_val(id), Double_val(l), Double_val(u));
 	CAMLreturn(Val_int(index));
 }
+*/
 
 value caml_set_debug(value debug)
 {

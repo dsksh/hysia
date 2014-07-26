@@ -121,17 +121,6 @@ let mk_dual var e =
   let de = List.map (fun v -> diff_expr v e) var in
   Hdual.hashcons (e,de)
 
-(* FIXME: use mk_expr *)
-(*let mk_dual_expr pm var = function
-  | _, Pvar id     -> mk_dual var 
-    (*(mk_var id)*)
-    (if PMap.mem id pm then mk_val (PMap.find id pm) else mk_var id)
-  | _, Pint v      -> mk_dual var (mk_val (Point (float_of_int v)))
-  | _, Pval v      -> mk_dual var (mk_val v)
-  | _, Papp (op,e) -> mk_dual var (mk_app op (mk_expr pm e))
-  | _, Papp2 (op,e1,e2) -> mk_dual var (mk_app2 op (mk_expr pm e1) (mk_expr pm e2))
-*)
-
 let mk_dual_expr pm var expr = 
     mk_dual var (mk_expr pm expr)
 
@@ -170,17 +159,20 @@ let make (ps,var,iloc::ival,flocs,locs) =
   if nv <> nd then error (DimMismatch (nv,nd)) loc
   else*)
   let ps  = List.map snd ps in
-  let add_param pm (id,v) = PMap.add id v pm in
-  let pm = List.fold_left add_param PMap.empty ps in
+  let add_param (ps,pm) (id,v) = match v with
+    | PVint v -> (ps, PMap.add id v pm)
+    | PVrandom bnd -> ((id,bnd)::ps, pm)
+  in
+  let ps,pm = List.fold_left add_param ([],PMap.empty) ps in
 
   let var = List.map snd var in
   let iloc = get_lid iloc in
   let ival = List.map (mk_expr pm) ival in
   let flocs = List.map (get_lid) flocs in
   let locs = List.map (mk_loc pm var) locs in
-  ([],var,(iloc,ival),flocs,locs)
+  (ps,var,(iloc,ival),flocs,locs)
 
-type param = string * interval
+type param = string * float
 type id = ident
 type init = ident * expr list
 type final = ident list
@@ -205,7 +197,7 @@ let print_dual fmt dual =
   let (e,d) = dual.node in
   fprintf fmt "@[(%a,@ [%a])@]" print_expr e (print_list "," print_expr) d
 
-let print_param fmt (id,v) = fprintf fmt "%s:=%a" id print_interval v
+let print_param fmt (id,bnd) = fprintf fmt "%s:=R(%f)" id bnd
 let print_id fmt id = fprintf fmt "%s" id
 let print_init fmt (iloc,iexpr) = fprintf fmt "%s %a" iloc (print_list "," print_expr) iexpr
 let print_final fmt ls = fprintf fmt "%a" (print_list "," print_id) ls

@@ -14,6 +14,7 @@ extern const cInterval cEmpty;
 
 void simInitialize();
 void simDispose();
+void setParam(const char *, const char *, const double);
 cInterval findInvFrontier(const char *, const int);
 cInterval findFirstZero(const int, const char *, const int);
 int findFirstZeroMid(const char *, const int);

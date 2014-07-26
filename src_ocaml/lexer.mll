@@ -30,6 +30,8 @@
       "goto", GOTO;
       "then", THEN;
 
+      "R", RANDOM;
+
       "param", PARAM;
 
       "true", TRUE;

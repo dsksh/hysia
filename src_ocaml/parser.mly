@@ -11,7 +11,8 @@
 
   let mk_id id = loc (), id
   let mk_id_l v = loc (), v
-  let mk_param id v = loc (), (id, v)
+  let mk_iparam id v = loc (), (id, PVint v)
+  let mk_rparam id v = loc (), (id, PVrandom v)
   let mk_expr_l e = loc (), e
   let mk_init v = loc (), v
   let mk_loc id der inv edges = loc (), (id,der,inv,edges)
@@ -59,6 +60,7 @@
 %token FLOW
 %token END
 %token LET
+%token RANDOM
 %token WATCH
 %token GOTO
 %token THEN
@@ -97,7 +99,10 @@ statements :
 
   | LET ID EQ interval statements
     { let ps,vs,init,final,locs = $5 in 
-        (mk_param $2 $4)::ps,vs,init,final,locs }
+        (mk_iparam $2 $4)::ps,vs,init,final,locs }
+  | LET ID EQ RANDOM float statements
+    { let ps,vs,init,final,locs = $6 in 
+        (mk_rparam $2 $5)::ps,vs,init,final,locs }
 
   | { ([],dummy_list,dummy_list,dummy_list,[]) }
 ;

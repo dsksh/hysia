@@ -32,6 +32,13 @@ value sim_dispose()
 	CAMLreturn(Val_unit);
 }
 
+value sim_set_param(value lid, value id, value v)
+{
+	CAMLparam3(lid, id, v);
+	setParam(String_val(lid), String_val(id), Double_val(v));
+	CAMLreturn(Val_unit);
+}
+
 value sim_find_inv_frontier(value lid, value iid)
 {
 	CAMLparam2(lid, iid);

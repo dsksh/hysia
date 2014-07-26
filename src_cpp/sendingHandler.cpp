@@ -27,9 +27,9 @@ typedef list<DerMap::NodeType *> NodeList;
 NodeList g_stack;
 int ivec_pos;
 
-void init(const int dim)
+void init(const int dim, const int nparams)
 {
-	g_model = ModelPtr(new Model(dim));
+	g_model = ModelPtr(new Model(dim, nparams));
 	g_params = ParamsPtr(new SolvingParams());
 	g_stack.clear();
 	ivec_pos = 0;
@@ -40,10 +40,15 @@ int putVariable(const char *name)
     return g_model->der_proto.putVariable(name);
 }
 
-int setParam(const char *id, const double l, const double u)
+int putParam(const char *name)
 {
-	return g_model->der_proto.setParam(id, interval(l, u));
+    return g_model->der_proto.putParameter(name);
 }
+
+//int setParam(const char *id, const double l, const double u)
+//{
+//	return g_model->der_proto.putAndSetParameter(id, interval(l, u));
+//}
 
 void setDebug(const int debug)
 {
@@ -183,7 +188,7 @@ void doneDerTree(const char *lid)
 void putInvTree(const char *lid, const int i)
 {
 	capd::DerMap& der(g_model->locs[lid]->der);
-	AuxMapPtr itree(new AuxMap(der, der.getOrder()));
+	AuxMapPtr itree(new AuxMap(der, 1));
 	g_model->locs[lid]->invariant.push_back(itree);
 	itree->putTree(0, g_stack.front());
    	g_stack.pop_front();
@@ -191,13 +196,14 @@ void putInvTree(const char *lid, const int i)
 
 void putInvDTree(const char *lid, const int i, const int j)
 {
-	g_model->locs[lid]->invariant[i]->putDTree(0, j, g_stack.front()); g_stack.pop_front();
+	g_model->locs[lid]->invariant[i]->putDTree(0, j, g_stack.front()); 
+	g_stack.pop_front();
 }
 
 void putInvNormTree(const char *lid, const int i)
 {
 	capd::DerMap& der(g_model->locs[lid]->der);
-	AuxMapPtr itree(new AuxMap(der, der.getOrder()));
+	AuxMapPtr itree(new AuxMap(der, 1));
 	g_model->locs[lid]->invNormal.push_back(itree);
 	itree->putTree(0, g_stack.front());
    	g_stack.pop_front();
@@ -216,7 +222,7 @@ void putGrdTree(const char *lid, const int eid, const int s)
 	else {
 		//g_model->locs[lid]->edges[eid]->grd_g.putTree(0, g_stack.front());
 		capd::DerMap& der(g_model->locs[lid]->der);
-		AuxMapPtr gg(new AuxMap(der, der.getOrder()));
+		AuxMapPtr gg(new AuxMap(der, 1));
 		edge->grd_g.push_back(gg);
 		gg->putTree(0, g_stack.front());
 	}

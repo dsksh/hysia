@@ -28,10 +28,11 @@ public:
 	/// constractor
 	Edge(capd::DerMap& der, const std::string& destination)
 	  : dest(destination),
-	    grd_h(der, der.getOrder()), 
+	    //grd_h(der, der.getOrder()), 
+	    grd_h(der, 1), 
 	    //grd_g(der, der.getOrder()),
 	    grd_g(),
-		jump(der, der.getDim())
+		jump(der, der.dimension())
 	{}
 };
 
@@ -75,10 +76,10 @@ public:
 	LocSet locs;
 
 	/// constractor
-	Model(const int d)
+	Model(const int d, const int np)
 	  : dim(d),
 		x_init(d),
-		der_proto(d, 1)
+		der_proto(d, 1, np)
 	{ 
 		// kludge: put dummy nodes to cheat the destractor.
 		for (int i(0); i < dim; ++i) {

@@ -51,6 +51,13 @@ void reportStep(const int stepId, const char *lid)
 	printStep(g_context->fout, stepId, lid, g_context->time.rightBound());
 }
 
+void setParam(const char *lid, const char *id, const double v)
+{
+	g_model->der_proto.setParameter(id, v);
+	g_model->locs[lid]->der.setParameter(id, v);
+	g_context->cout << "setParam: " << id << " := " << v << endl;
+}
+
 IVector simulate(IMap& der, const IVector& x, const interval& time)
 {
 	IVector result;

@@ -3,9 +3,10 @@
 extern "C" {
 #endif
 
-void init(const int dim);
+void init(const int dim, const int nparams);
 int putVariable(const char *);
-int setParam(const char *, const double, const double);
+int putParam(const char *);
+/*int setParam(const char *, const double, const double);*/
 void setDebug(const int);
 
 void putVarNode(const int);

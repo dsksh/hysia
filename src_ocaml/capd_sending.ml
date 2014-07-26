@@ -10,11 +10,15 @@ let send_var env id =
   let index = put_variable id in
   SM.add id index env
 
-let send_param env (id,v) =
+(*let send_param env (id,v) =
   let index = match v with
   | Point v -> set_param id v v
   | Interval (l,u) -> set_param id l u
   in
+  SM.add id index env
+*)
+let send_param env (id,_) = 
+  let index = put_param id in
   SM.add id index env
 
 let fun_un_op = function
@@ -148,11 +152,11 @@ let send_loc env (id,der,inv,edges) =
   put_location id;
   mapi (send_der id env) der;
   mapi (send_inv id env) inv;
-  List.mapi (send_edge id env) edges;
+  mapi (send_edge id env) edges;
   ()
 
 let send_model (ps,vars,(_,iexpr),_,locs) =
-  initialize (List.length vars);
+  initialize (List.length vars) (List.length ps);
   let env = SM.empty in
   let env = List.fold_left send_var env vars in
   let env = List.fold_left send_param env ps in
