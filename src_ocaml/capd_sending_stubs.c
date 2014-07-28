@@ -69,18 +69,17 @@ value caml_set_debug(value debug)
 	CAMLreturn(Val_unit);
 }
 
-/*value caml_put_value(value l, value u)
+value caml_set_param(value id, value v)
 {
-	CAMLparam2(l, u);
-	putValue(Double_val(l), Double_val(u));
+	CAMLparam2(id, v);
+	setInitParam(String_val(id), Double_val(v));
 	CAMLreturn(Val_unit);
 }
-*/
 
 value caml_put_value()
 {
 	CAMLparam0();
-	putValue();
+	putInitValue();
 	CAMLreturn(Val_unit);
 }
 

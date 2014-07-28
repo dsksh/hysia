@@ -257,14 +257,12 @@ void putJumpDTree(const char *lid, const int eid, const int i, const int j)
 	g_stack.pop_front();
 }
 
-/*void putValue(const double l, const double u)
+void setInitParam(const char *id, const double v)
 {
-	(*g_ivec)[ivec_pos] = (l==u) ? l : interval(l, u);
-	++ivec_pos;
+	g_model->der_proto.setParameter(id, v);
 }
-*/
 
-void putValue()
+void putInitValue()
 {
 	DerMap::NodeType *t = g_stack.front();
 	g_stack.pop_front();

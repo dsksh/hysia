@@ -128,8 +128,9 @@ edges :
 /**/
 
 expr_vec :
-  | TRUE { [] }
+  | TRUE { [] } /* TODO */
   | expr { [$1] }
+  | TRUE expr_vec_rest{ $2 }
   | expr expr_vec_rest { $1::$2 }
   | LP expr expr_vec_rest RP { $2::$3 }
 ;

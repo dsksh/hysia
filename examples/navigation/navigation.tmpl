@@ -14,9 +14,10 @@ init  L1_{{n}}, 0.5, 0.5, 0, 0
 at L{{i}}_{{j}} wait v1, v2, 
              A1_1*(v1-sin(I{{i}}_{{j}}*Pi/4)) + A1_2*(v2-cos(I{{i}}_{{j}}*Pi/4)), 
              A2_1*(v1-sin(I{{i}}_{{j}}*Pi/4)) + A2_2*(v2-cos(I{{i}}_{{j}}*Pi/4))
+  invariant true{% if j>1 %}, x1-{{j-1}}{% endif %}{% if j<n %}, {{j}}-x1{% endif %}{% if i>1 %}, {{n-i+1}}-x2{% endif %}{% if i<n %}, x2-{{n-i}}{% endif %}
 {% if j>1 %}  watch (x1-{{j-1}},  v1) goto L{{i}}_{{j-1}} then x1, x2, v1, v2{% endif %}
-{% if j<n %}  watch (x1-{{j}}, -v1) goto L{{i}}_{{j+1}} then x1, x2, v1, v2{% endif %}
-{% if i>1 %}  watch (x2-{{n-i+1}}, -v2) goto L{{i-1}}_{{j}} then x1, x2, v1, v2{% endif %}
+{% if j<n %}  watch ({{j}}-x1, -v1) goto L{{i}}_{{j+1}} then x1, x2, v1, v2{% endif %}
+{% if i>1 %}  watch ({{n-i+1}}-x2, -v2) goto L{{i-1}}_{{j}} then x1, x2, v1, v2{% endif %}
 {% if i<n %}  watch (x2-{{n-i}},  v2) goto L{{i+1}}_{{j}} then x1, x2, v1, v2{% endif %}
 end
 {% endfor %}{% endfor %}

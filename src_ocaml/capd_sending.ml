@@ -155,13 +155,16 @@ let send_loc env (id,der,inv,edges) =
   mapi (send_edge id env) edges;
   ()
 
-let send_model (ps,vars,(_,iexpr),_,locs) =
+let send_model (ps,vars,(iloc,iexpr),_,locs) =
   initialize (List.length vars) (List.length ps);
   let env = SM.empty in
   let env = List.fold_left send_var env vars in
   let env = List.fold_left send_param env ps in
-  send_init env iexpr;
   List.map (send_loc env) locs;
+
+  let set_param (id,bnd) = set_param id (Random.float bnd) in
+  List.map set_param ps;
+  send_init env iexpr;
   ()
 
 

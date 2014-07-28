@@ -31,9 +31,9 @@ let find_first_zero_ lid eid (gh,_,_dst,_) =
 let filter_invariant lid invs es tmax (eid,(l,u)) =
     match tmax with
     | Some (iid,(lm,um)) -> 
-(*Printf.printf "%b\n" (fst (List.nth invs iid) = gh);*)
 (*Printf.printf "%d,[%f,%f] vs. %d,[%f,%f]\n%!" iid lm um eid l u;*)
         let (gh,_,_,_) = List.nth es eid in
+(*Printf.printf "%b\n" (fst (List.nth invs iid) = gh);*)
         if (fst (List.nth invs iid) = gh) then true
         else begin
             if u < lm then true 
@@ -61,9 +61,10 @@ let set_param_ lid (id,bnd) =
 
 
 let simulate (ps,_var,(iloc,_ival),flocs,locs) =
-  initialize ();
   let curr_loc = ref iloc in
+  initialize ();
   print_pped true false;
+
   for i = 1 to (if !step_max >= 0 then !step_max else max_int) do
     (*Printf.printf "step %d at %s\n%!" i !curr_loc;*)
     report_step i !curr_loc;

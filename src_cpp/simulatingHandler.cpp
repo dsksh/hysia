@@ -55,7 +55,7 @@ void setParam(const char *lid, const char *id, const double v)
 {
 	g_model->der_proto.setParameter(id, v);
 	g_model->locs[lid]->der.setParameter(id, v);
-	g_context->cout << "setParam: " << id << " := " << v << endl;
+	//g_context->cout << "setParam: " << id << " := " << v << endl;
 }
 
 IVector simulate(IMap& der, const IVector& x, const interval& time)
@@ -166,7 +166,7 @@ g_context->cout << "Dt: " << dt_phi << endl;
 	const IVector delta_y( jump(x) );
 	IMatrix dx_psi(dim,dim);
 	IVector dt_psi(dim);
-std::cout << time-tc_r << std::endl;
+//std::cout << time-tc_r << std::endl;
 	simulate_deriv(der, delta_y, time-tc_r, dx_psi, dt_psi);
 
 	IMatrix dx_psi_delta( dx_psi * delta );
@@ -208,7 +208,8 @@ g_context->cout << endl;
 	// the initial value:
 	CapdPped capdPped(pped.toCapdPped());
 
-    interval time_procd(time.rightBound());
+	const double time_l(time.rightBound());
+    interval time_procd(time_l);
 	IMatrix dx_prev(IMatrix::Identity(dim));
 
 	do {
@@ -235,6 +236,8 @@ g_context->cout << endl << "step made (4): " << time+time_procd << endl;
 	 			printPipe(g_context->fout, step+time_procd, v);
 				g_context->fout << ',' << endl;
 	 		}
+
+			time_procd = time_l + timeMap.getCurrentTime();
 		}
 
  	} while(!timeMap.completed());
