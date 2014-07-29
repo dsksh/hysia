@@ -136,13 +136,13 @@ let mk_normal var der dual =
   let es = List.combine de der in
     mk_dual var (List.fold_left mk_term e0 es)
 
-let mk_edge pm var der (_,(grd_h,(_,grd_g),(_,dst),(_,jmp))) =
+let mk_edge pm var der (_,(forced,grd_h,(_,grd_g),(_,dst),(_,jmp))) =
   let grd_h = mk_dual_expr pm var grd_h in
   let grd_g = List.map (mk_dual_expr pm var) grd_g in
   (*let gh_norm = mk_normal var der grd_h in
   let grd_g = gh_norm::grd_g in*)
   let jmp = List.map (mk_dual_expr pm var) jmp in
-  (grd_h,grd_g,dst,jmp)
+  (forced,grd_h,grd_g,dst,jmp)
 
 let mk_loc pm var (_,((_,id),(_,der),(_,inv),(_,edges))) =
   let der = List.map (mk_dual_expr pm var) der in
@@ -180,7 +180,7 @@ type dexpr = dual
 type iexpr = dual * dual
 type gexpr = dual
 type rexpr = dual
-type edge = gexpr * gexpr list * ident * rexpr list
+type edge = bool * gexpr * gexpr list * ident * rexpr list
 type location = ident * dexpr list * iexpr list * edge list
 
 let rec print_expr fmt expr = match expr.node with
@@ -210,7 +210,7 @@ let id_of_loc      (e,_,_,_) = e
 let dexprs_of_loc  (_,e,_,_) = e
 let iexprs_of_loc  (_,_,e,_) = e
 let edges_of_loc   (_,_,_,e) = e
-let gh_of_edge     (e,_,_,_) = e
-let gg_of_edge     (_,e,_,_) = e
-let dst_of_edge    (_,_,e,_) = e 
-let rexprs_of_edge (_,_,_,e) = e 
+let gh_of_edge     (_,e,_,_,_) = e
+let gg_of_edge     (_,_,e,_,_) = e
+let dst_of_edge    (_,_,_,e,_) = e 
+let rexprs_of_edge (_,_,_,_,e) = e 

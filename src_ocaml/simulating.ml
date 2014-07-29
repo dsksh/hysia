@@ -10,38 +10,76 @@ let find_inv_frontier_ lid iid _inv =
 (*Printf.printf "fif %s %d\n%!" lid iid;*)
     iid, (find_inv_frontier lid iid)
 
-let select_earliest earliest (eid,(l,u)) = match earliest with
-  | Some (eid1,(l1,u1)) -> 
-(*Printf.printf "%d,[%f,%f] vs. %d,[%f,%f]\n%!" eid1 l1 u1 eid l u;*)
+let select_earliest earliest (id,(l,u)) = match earliest with
+  | Some (id1,(l1,u1)) ->
+(*Printf.printf "1: %d,[%f,%f] vs. %d,[%f,%f]\n%!" id1 l1 u1 id l u;*)
 
       if l<=u then begin
-        if u < l1 then Some (eid,(l,u)) else begin
-          if u1 < l then Some (eid1,(l1,u1)) else 
+        if u < l1 then Some (id,(l,u)) else begin
+          if u1 < l then Some (id1,(l1,u1)) else 
             error (SelectEarliestError ((l,u), (l1,u1))) end 
       end else if l = -1. then
         error (SelectEarliestError ((l,u), (l1,u1)))
       else
-        Some (eid1,(l1,u1))
+        Some (id1,(l1,u1))
   | None -> 
-      if l<=u then Some (eid,(l,u)) else None
+      if l<=u then Some (id,(l,u)) else None
 
-let find_first_zero_ lid eid (gh,_,_dst,_) = 
-    eid, (find_first_zero false lid eid)
+
+let find_first_zero_ lid (eid,zsf,zs) (forced,gh,_,_dst,_) = 
+    if forced then
+        eid+1, (eid,find_first_zero false lid eid)::zsf, zs
+    else
+        eid+1, zsf, (eid,find_first_zero false lid eid)::zs
+
+let select_earliest_grd lid invs es earliest (eid,(l,u)) = match earliest with
+  | Some (iid,(l1,u1)), _None ->
+(*Printf.printf "2: %d,[%f,%f] vs. %d,[%f,%f]\n%!" iid l1 u1 eid l u;*)
+
+      let (_,gh,_,_,_) = List.nth es eid in
+(*Printf.printf "%b\n" (fst (List.nth invs iid) = gh);*)
+      if (fst (List.nth invs iid) = gh) then 
+        None, Some (eid,(l,u))
+
+      else begin
+        if l<=u then begin
+          if u < l1 then None, Some (eid,(l,u)) else begin
+            if u1 < l then Some (iid,(l1,u1)), None else 
+              error (SelectEarliestError ((l,u), (l1,u1))) end 
+        end else if l = -1. then
+          error (SelectEarliestError ((l,u), (l1,u1)))
+        else
+          Some (iid,(l1,u1)), None
+      end
+
+  | _None, Some (eid1,(l1,u1)) ->
+(*Printf.printf "3: %d,[%f,%f] vs. %d,[%f,%f]\n%!" eid1 l1 u1 eid l u;*)
+      if l<=u then begin
+        if u < l1 then None, Some (eid,(l,u)) else begin
+          if u1 < l then None, Some (eid1,(l1,u1)) else 
+            error (SelectEarliestError ((l,u), (l1,u1))) end 
+      end else if l = -1. then
+        error (SelectEarliestError ((l,u), (l1,u1)))
+      else
+        None, Some (eid1,(l1,u1))
+
+  | None, None -> 
+      if l<=u then None, Some (eid,(l,u)) else None, None
 
 let filter_invariant lid invs es tmax (eid,(l,u)) =
     match tmax with
-    | Some (iid,(lm,um)) -> 
-(*Printf.printf "%d,[%f,%f] vs. %d,[%f,%f]\n%!" iid lm um eid l u;*)
-        let (gh,_,_,_) = List.nth es eid in
-(*Printf.printf "%b\n" (fst (List.nth invs iid) = gh);*)
+    | Some (iid,(lm,um)), _None -> 
+(*Printf.printf "4: %d,[%f,%f] vs. %d,[%f,%f]\n%!" iid lm um eid l u;*)
+        let (_,gh,_,_,_) = List.nth es eid in
+(*Printf.printf "%b\n%!" (fst (List.nth invs iid) = gh);*)
         if (fst (List.nth invs iid) = gh) then true
-        else begin
-            if u < lm then true 
-            else 
-                (*error (SelectEarliestError ((l,u), (lm,um)))*)
-                false
-        end
-    | None -> true
+        else 
+          l<=u && u < lm
+
+    | _None, Some t when t = (eid,(l,u)) -> true
+    | _None, Some (_,(lm,um)) -> l<=u && u < lm
+
+    | None, None -> l<=u
 
 
 let select_random dst_list = 
@@ -54,7 +92,7 @@ let select_random dst_list =
     | [] -> None
     | dl -> Some (List.nth dl (Random.int (List.length dl)))
 
-let dst_of_edge (_,_,dst,_) = dst
+let dst_of_edge (_,_,_,dst,_) = dst
 
 let set_param_ lid (id,bnd) = 
   set_param lid id (Random.float bnd)
@@ -74,13 +112,13 @@ let simulate (ps,_var,(iloc,_ival),flocs,locs) =
     (* compute the earliest time reaching the inv frontier. *)
     let (_,_,invs,_) = List.find (loc_of_name !curr_loc) locs in
     let fs = mapi (find_inv_frontier_ !curr_loc) invs in
-(*Printf.printf "fif done\n%!";*)
     let tmax = List.fold_left select_earliest None fs in
 
     (* find zero for each edge *)
     let (_,_,_,es) = List.find (loc_of_name !curr_loc) locs in
-    let zs = mapi (find_first_zero_ !curr_loc) es in
-    let zs = List.filter (filter_invariant !curr_loc invs es tmax) zs in
+    let _,zsf,zs = List.fold_left (find_first_zero_ !curr_loc) (0,[],[]) es in
+    let tmax = List.fold_left (select_earliest_grd !curr_loc invs es) (tmax,None) zsf in
+    let zs = List.filter (filter_invariant !curr_loc invs es tmax) (List.append zsf zs) in
     (*let dst = List.fold_left select_earliest None zs in*)
     let dst = select_random zs in
 

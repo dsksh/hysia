@@ -30,6 +30,8 @@ init  L, 1+pertb,2+pertb,0,0
 at L wait vx,vy,0,-g+f*vy^2
 #at L wait vx,vy, -f*vx, -g-f*vy
 #at L wait vx,vy, -f*sqrt(vx^2+vy^2)*vx, -g-f*sqrt(vx^2+vy^2)*vy
+  invariant x^2-y
+
   watch (x^2-y, vy-2*x*vx) goto L then 
     x,y,
     vx + (4*x*(vy - 2*x*vx)) / (4*x^2 + 1),

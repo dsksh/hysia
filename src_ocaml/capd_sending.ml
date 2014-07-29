@@ -142,7 +142,7 @@ let send_init env v =
   in
   List.map send v
 
-let send_edge lid env eid (grd_h,grd_g,dst,jump) =
+let send_edge lid env eid (_,grd_h,grd_g,dst,jump) =
   put_edge lid dst;
   send_grd_h lid eid env grd_h;
   mapi (send_grd_g lid eid env) grd_g;

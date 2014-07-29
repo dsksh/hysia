@@ -30,6 +30,7 @@
       "goto", GOTO;
       "then", THEN;
 
+      "F", FORCED;
       "R", RANDOM;
 
       "param", PARAM;

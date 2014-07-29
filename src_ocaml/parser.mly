@@ -16,7 +16,7 @@
   let mk_expr_l e = loc (), e
   let mk_init v = loc (), v
   let mk_loc id der inv edges = loc (), (id,der,inv,edges)
-  let mk_edge gh gg dst rst = loc (), (gh,gg,dst,rst)
+  let mk_edge f gh gg dst rst = loc (), (f,gh,gg,dst,rst)
   let mk_edge_l e = loc (), e
 
   let mk_ptree nd = nd, !env
@@ -62,6 +62,7 @@
 %token LET
 %token RANDOM
 %token WATCH
+%token FORCED
 %token GOTO
 %token THEN
 
@@ -82,27 +83,24 @@ main :
 
 statements :
   | VAR var_vec statements
-    { let ps,_,init,final,locs = $3 in 
-	    ps,(mk_id_l $2),init,final,locs }
+    { let ps,_,init,acc,locs = $3 in 
+	    ps,(mk_id_l $2),init,acc,locs }
   | INIT expr_vec statements
-    { let ps,vs,_,final,locs = $3 in 
-	    ps,vs,(mk_init $2),final,locs }
+    { let ps,vs,_,acc,locs = $3 in 
+	    ps,vs,(mk_init $2),acc,locs }
   | FINAL expr_vec statements
     { let ps,vs,init,_,locs = $3 in 
 	    ps,vs,init,(mk_expr_l $2),locs }
-  | AT ID WAIT expr_vec INV expr_vec edges END statements
-    { let ps,vs,init,final,locs = $9 in 
-        ps,vs,init,final,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_expr_l $6) (mk_edge_l $7))::locs }
-  | AT ID FLOW expr_vec INV expr_vec edges END statements
-    { let ps,vs,init,final,locs = $9 in 
-        ps,vs,init,final,(mk_loc (mk_id $2) (mk_expr_l $4) (mk_expr_l $6) (mk_edge_l $7))::locs }
+  | AT ID flow invariant edges END statements
+    { let ps,vs,init,acc,locs = $7 in 
+        ps,vs,init,acc,(mk_loc (mk_id $2) $3 $4 (mk_edge_l $5))::locs }
 
   | LET ID EQ interval statements
-    { let ps,vs,init,final,locs = $5 in 
-        (mk_iparam $2 $4)::ps,vs,init,final,locs }
+    { let ps,vs,init,acc,locs = $5 in 
+        (mk_iparam $2 $4)::ps,vs,init,acc,locs }
   | LET ID EQ RANDOM float statements
-    { let ps,vs,init,final,locs = $6 in 
-        (mk_rparam $2 $5)::ps,vs,init,final,locs }
+    { let ps,vs,init,acc,locs = $6 in 
+        (mk_rparam $2 $5)::ps,vs,init,acc,locs }
 
   | { ([],dummy_list,dummy_list,dummy_list,[]) }
 ;
@@ -115,12 +113,27 @@ solver_params :
 
 /**/
 
+flow :
+  | WAIT expr_vec
+    { mk_expr_l $2 }
+  | FLOW expr_vec
+    { mk_expr_l $2 }
+;
+
+invariant :
+  | { mk_expr_l [] }
+  | INV expr_vec
+    { mk_expr_l $2 }
+;
+
 edges :
   /*| WATCH LP expr COM expr_vec RP GOTO ID edges
     { (mk_edge $3 $5 (mk_id $8) (mk_expr_l []))::$9 }
   */
   | WATCH LP expr COM expr_vec RP GOTO ID THEN expr_vec edges
-    { (mk_edge $3 (mk_expr_l $5) (mk_id $8) (mk_expr_l $10))::$11 }
+    { (mk_edge false $3 (mk_expr_l $5) (mk_id $8) (mk_expr_l $10))::$11 }
+  | WATCH FORCED LP expr COM expr_vec RP GOTO ID THEN expr_vec edges
+    { (mk_edge true $4 (mk_expr_l $6) (mk_id $9) (mk_expr_l $11))::$12 }
 
   | { [] }
 ;
