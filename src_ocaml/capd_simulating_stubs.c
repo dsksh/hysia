@@ -52,6 +52,20 @@ value sim_find_inv_frontier(value lid, value iid)
 	CAMLreturn(intv);
 }
 
+value sim_find_prop_frontier(value lid, value apid, value polar, value time_lower, value time_max)
+{
+	CAMLparam5(lid, apid, polar, time_lower, time_max);
+    CAMLlocal1(intv);
+
+	cInterval res = findPropFrontier(String_val(lid), Int_val(apid), Bool_val(polar),
+									 Double_val(time_lower), Double_val(time_max));
+
+    intv = caml_alloc(2, 0);
+    Store_field(intv, 0, caml_copy_double(res.l));
+    Store_field(intv, 1, caml_copy_double(res.u));
+	CAMLreturn(intv);
+}
+
 value sim_find_first_zero(value do_print, value lid, value eid)
 {
 	CAMLparam3(do_print, lid, eid);

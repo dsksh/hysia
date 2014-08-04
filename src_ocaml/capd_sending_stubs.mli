@@ -49,5 +49,11 @@ external put_jump_dtree: string -> int -> int -> int -> unit = "caml_put_jump_dt
 external put_edge: string -> string -> unit = "caml_put_edge"
 external put_location: string -> unit = "caml_put_location"
 
+external put_ap_tree:  string -> int -> unit = "caml_put_ap_tree"
+external put_ap_dtree: string -> int -> int -> unit = "caml_put_ap_dtree"
+
+external put_ap_normal_tree:  string -> int -> unit = "caml_put_ap_normal_tree"
+external put_ap_normal_dtree: string -> int -> int -> unit = "caml_put_ap_normal_dtree"
+
 
 external set_solving_param: string -> float -> unit = "caml_set_solving_param"

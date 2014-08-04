@@ -34,7 +34,8 @@ exception *eh_ex;
 inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 						const ITaylor::CurveType& curve,
 						const interval& time_init, const interval& time_procd,
-						interval& time)
+						interval& time,
+						const int polar = 1)
 {
 	interval time_old;
 	//int i(0);
@@ -77,7 +78,9 @@ g_context->cout << "gl:\t" << gamma_l << endl;
 
 		for (int i(0); i < grd_g.size(); i++) {
 			const interval dg( grd_g[i]->der()(1)*dx );
-			const interval g( (*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) );
+			const interval g( polar ?
+					(*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) :
+					(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) );
 g_context->cout << "g[" << i << "]:\t" << g << endl;
 
 			extDiv(-g, dg, gamma_l, gamma_u);
@@ -184,6 +187,8 @@ g_context->cout << endl << "contracting rb: " << time+time_procd << endl;
 
 		// current state.
 		const IVector  dx = der(curve(time));
+g_context->cout << "time: " << time << endl;
+g_context->cout << "dx: " << dx << endl;
 		const interval dh = grd_h.der()(1)*dx;
 
 		// state at the right bound.
@@ -582,9 +587,109 @@ time += time_procd;
 	} 
 	CATCH {
 		std::cerr << "exception caught! (3)\n" << eh_ex->what() << endl << endl;
-		//return cEmpty;
-		cInterval err= {-1., -1.};
-		return err;
+		//cInterval err= {-1., -1.};
+		//return err;
+		return cError;
+	}
+
+	cInterval res = {time.leftBound(), time.rightBound()};
+	return res;
+}
+
+
+cInterval findPropFrontier(const char *lid, const int apid, const int polar,
+						   const double time_lower, const double time_max)
+{
+g_context->cout << endl;
+g_context->cout << "*** findPropFrontier: " << lid << "," << apid << endl;
+g_context->cout << endl;
+
+	int dim(g_model->dim);
+	Location *loc = g_model->locs[lid].get();
+	DerMap& der = loc->der;
+	//AuxMap& ap = *g_model->aps[apid];
+	AuxMap& ap = *g_model->locs[lid]->aps[apid];
+
+	AuxMapVec ap_norm;
+	ap_norm.push_back(g_model->locs[lid]->apNormals[apid]);
+
+	Parallelepiped pped = g_context->pped;
+	interval time = g_context->time;
+g_context->cout << "TIME0: " << time << endl;
+	const double time_l(g_context->time.rightBound());
+
+	//interval time;
+
+	TRY {
+
+	// the solver:
+	ITaylor solver(der, g_params->order, g_params->h_min);
+	ITimeMap timeMap(solver);
+	timeMap.stopAfterStep(true);
+
+	// the initial value:
+	CapdPped capdPped(pped.toCapdPped());
+
+    interval time_procd(time_l);
+	//IMatrix dx_prev(IMatrix::Identity(dim));
+	
+	while (true) {
+ 		timeMap.moveSet(time_lower - time_l + 0.001, capdPped); // TODO
+		time_procd = time_l + timeMap.getCurrentTime();
+		//dx_prev = IMatrix(capdPped);
+		if (timeMap.completed()) break;
+	}
+g_context->cout << "moved to time_l: " << time_lower << " - " << time_procd << endl;
+
+	while (true) {
+
+g_context->cout << "integrate: " << time_max - time_l << endl;
+		// integrate 1 step.
+ 		timeMap.moveSet(time_max - time_l, capdPped);
+
+		time = interval(0,1)*solver.getStep();
+g_context->cout << endl << "step made (4): " << time+time_procd << endl;
+		const interval time_init(time);
+		const ITaylor::CurveType& curve = solver.getCurve();
+
+		IVector  dx( der(curve(time)) );
+g_context->cout << "x:  " << curve(time) << endl;
+g_context->cout << "dx: " << dx << endl; 
+
+		// reduce the lower bound
+		bool res( reduceLower(der, ap, ap_norm, curve, time_init, time_procd, time, polar) );
+		if (res)
+			break;
+		else if (timeMap.completed())
+			return cEmpty;
+		else {
+			time_procd = time_l + timeMap.getCurrentTime();
+			//dx_prev = IMatrix(capdPped);
+		}
+	}
+
+	const ITaylor::CurveType& curve = solver.getCurve();
+	const interval time_init(time);
+
+	// verification of the result
+	if ( !verify(der, ap, curve, time_init, time_procd, time) ) {
+		THROW("verification failed");
+	}
+
+	// reduce the upper bound
+	if ( !reduceUpper(der, ap, curve, time_init, time_procd, time) )
+		THROW("failed in reducing the upper bound");
+g_context->cout << "contracted ub:\t" << time + time_procd << endl;
+
+g_context->cout << "TIME: " << time << endl;
+g_context->cout << "GTIME: " << g_context->time << endl;
+
+// TODO
+time += time_procd;
+	} 
+	CATCH {
+		std::cerr << "exception caught! (4)\n" << eh_ex->what() << endl << endl;
+		return cError;
 	}
 
 	cInterval res = {time.leftBound(), time.rightBound()};

@@ -286,6 +286,34 @@ value caml_put_location(value lid)
 	CAMLreturn(Val_unit);
 }
 
+value caml_put_ap_tree(value lid, value i)
+{
+	CAMLparam2(lid, i);
+	putAPTree(String_val(lid), Int_val(i));
+	CAMLreturn(Val_unit);
+}
+
+value caml_put_ap_dtree(value lid, value i, value j)
+{
+	CAMLparam3(lid, i, j);
+	putAPDTree(String_val(lid), Int_val(i), Int_val(j));
+	CAMLreturn(Val_unit);
+}
+
+value caml_put_ap_normal_tree(value lid, value i)
+{
+	CAMLparam2(lid, i);
+	putAPNormTree(String_val(lid), Int_val(i));
+	CAMLreturn(Val_unit);
+}
+
+value caml_put_ap_normal_dtree(value lid, value i, value j)
+{
+	CAMLparam3(lid, i, j);
+	putAPNormDTree(String_val(lid), Int_val(i), Int_val(j));
+	CAMLreturn(Val_unit);
+}
+
 value caml_set_solving_param(value id, value val)
 {
 	CAMLparam2(id, val);

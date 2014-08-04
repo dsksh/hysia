@@ -286,6 +286,39 @@ void putLocation(const char *name)
 				LocPtr(new Location(name, g_model->der_proto)) ));
 }
 
+//void putAPTree(const int i)
+void putAPTree(const char *lid, const int i)
+{
+	//capd::DerMap& der(g_model->der_proto);
+	capd::DerMap& der(g_model->locs[lid]->der);
+	AuxMapPtr ptree(new AuxMap(der, 1));
+	g_model->locs[lid]->aps.push_back(ptree);
+	ptree->putTree(0, g_stack.front());
+   	g_stack.pop_front();
+}
+
+//void putAPDTree(const int i, const int j)
+void putAPDTree(const char *lid, const int i, const int j)
+{
+	//g_model->aps[i]->putDTree(0, j, g_stack.front()); 
+	g_model->locs[lid]->aps[i]->putDTree(0, j, g_stack.front()); 
+	g_stack.pop_front();
+}
+
+void putAPNormTree(const char *lid, const int i)
+{
+	capd::DerMap& der(g_model->locs[lid]->der);
+	AuxMapPtr ptree(new AuxMap(der, 1));
+	g_model->locs[lid]->apNormals.push_back(ptree);
+	ptree->putTree(0, g_stack.front());
+   	g_stack.pop_front();
+}
+
+void putAPNormDTree(const char *lid, const int i, const int j)
+{
+	g_model->locs[lid]->apNormals[i]->putDTree(0, j, g_stack.front()); g_stack.pop_front();
+}
+
 void setSolvingParam(const char *id, const double value)
 {
 	if (strcmp(id, "order") == 0) {

@@ -47,7 +47,17 @@ void putJumpTree(const char *, const int, const int);
 void putJumpDTree(const char *, const int, const int, const int); 
 
 void putEdge(const char *, const char *);
+
+/*void putAPTree(const int);
+void putAPDTree(const int, const int); */
+void putAPTree(const char *, const int);
+void putAPDTree(const char *, const int, const int);
+
+void putAPNormTree(const char *, const int);
+void putAPNormDTree(const char *, const int, const int);
+
 void putLocation(const char *);
+
 
 
 void setSolvingParam(const char *, const double);

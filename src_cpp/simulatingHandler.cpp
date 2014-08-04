@@ -17,6 +17,16 @@ typedef auto_ptr<ofstream> fstreamPtr;
 fstreamPtr g_fstream;
 
 const cInterval cEmpty = { 1., -1. };
+const cInterval cError = { -1., -1. };
+
+///
+
+//capd::interval getCurrentTime()
+//{
+//	return g_context->time;
+//}
+
+///
 
 void simInitialize()
 {

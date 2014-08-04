@@ -38,4 +38,5 @@ let warning e = raise (Warning e)
 
 let mapi f l =
   let wrap f (i,res) elem = (i+1,(f i elem)::res) in
-  snd (List.fold_left (wrap f) (0,[]) l)
+  let _,l = List.fold_left (wrap f) (0,[]) l in
+  List.rev l

@@ -49,6 +49,9 @@ public:
 	AuxMapVec invNormal;
 	EdgeSet edges;
 
+	AuxMapVec aps;
+	AuxMapVec apNormals;
+
 	/// constractor
 	Location(const std::string n, const capd::DerMap& dm)
 	  : name(),
@@ -74,6 +77,8 @@ public:
 	capd::DerMap der_proto;
 
 	LocSet locs;
+
+	//AuxMapVec aps;
 
 	/// constractor
 	Model(const int d, const int np)

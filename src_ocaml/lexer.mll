@@ -18,7 +18,6 @@
 
 	  "var", VAR;
 	  "init", INIT;
-	  "final", FINAL;
       "at", AT;
       "inv", INV;
       "invariant", INV;
@@ -30,10 +29,15 @@
       "goto", GOTO;
       "then", THEN;
 
-      "F", FORCED;
+      "prop", PROP;
+
+      "F", CAP_F;
       "R", RANDOM;
 
       "param", PARAM;
+
+      "G", GLOBAL;
+      "U", UNTIL;
 
       "true", TRUE;
 	];
@@ -95,6 +99,15 @@ rule token = parse
   | "#" { lcomment lexbuf } (* TODO *)
 
   | "="  { EQ }
+
+  | "<>" { FINAL }
+  | "[]" { GLOBAL }
+  | "!"  { NOT }
+  | "&"  { AND }
+  | "/\\" { AND }
+  | "|"  { OR }
+  | "\\/" { OR }
+  | "->" { IMP }
 
   | "("  { LP }
   | ")"  { RP }

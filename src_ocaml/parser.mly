@@ -19,22 +19,57 @@
   let mk_edge f gh gg dst rst = loc (), (f,gh,gg,dst,rst)
   let mk_edge_l e = loc (), e
 
-  let mk_ptree nd = nd, !env
+  let mk_ptree nd prop = (nd, prop), !env
+
+  let mk_prop f = loc (), f
 %}
+
+/* tokens */
 
 %token <int> INT
 %token <float> FLOAT
 %token <string> STRING
 %token <string> ID
+
+/* keywords */
+
+%token VAR
+%token INIT
+%token AT
+%token INV
+%token WAIT
+%token FLOW
+%token END
+%token LET
+%token RANDOM
+%token WATCH
+%token CAP_F
+%token GOTO
+%token THEN
+%token PROP
+
+%token PARAM
+
+%token LB
+%token RB
+%token COM
+%token SCOL
+
+/* formula expression keywords */
+
 %token TRUE
 %token EQ
 %token LP
 /*%token LP_STAR_RP*/
 %token RP
-%token LB
-%token RB
-%token COM
-%token SCOL
+
+%token FINAL
+%token GLOBAL
+%token UNTIL
+%token NOT
+%token AND
+%token OR
+%token IMP
 
 %token MIN
 %token PLUS
@@ -51,24 +86,21 @@
 %token ASIN
 %token ACOS
 
-%token VAR
-%token INIT
-%token FINAL
-%token AT
-%token INV
-%token WAIT
-%token FLOW
-%token END
-%token LET
-%token RANDOM
-%token WATCH
-%token FORCED
-%token GOTO
-%token THEN
-
-%token PARAM
-
 %token EOF
+
+/**/
+
+%left IMP
+%left AND OR
+%left UNTIL
+%nonassoc NOT
+%nonassoc FINAL GLOBAL
+%nonassoc CAP_F RANDOM
+
+%left MIN PLUS MUL DIV POW
+%nonassoc SQRT EXP LOG SIN COS ATAN ASIN ACOS
+
+/**/
 
 %start main
 %type <Ptree.t * float Model_common.MParam.t> main
@@ -76,33 +108,35 @@
 %%
 
 main :
-  | statements solver_params { mk_ptree $1 }
+  | statements property solver_params { mk_ptree $1 $2 }
 ; 
 
 /**/
 
 statements :
   | VAR var_vec statements
-    { let ps,_,init,acc,locs = $3 in 
-	    ps,(mk_id_l $2),init,acc,locs }
+    { let ps,_,init,locs = $3 in 
+	    ps,(mk_id_l $2),init,locs }
   | INIT expr_vec statements
-    { let ps,vs,_,acc,locs = $3 in 
-	    ps,vs,(mk_init $2),acc,locs }
-  | FINAL expr_vec statements
-    { let ps,vs,init,_,locs = $3 in 
-	    ps,vs,init,(mk_expr_l $2),locs }
+    { let ps,vs,_,locs = $3 in 
+	    ps,vs,(mk_init $2),locs }
   | AT ID flow invariant edges END statements
-    { let ps,vs,init,acc,locs = $7 in 
-        ps,vs,init,acc,(mk_loc (mk_id $2) $3 $4 (mk_edge_l $5))::locs }
+    { let ps,vs,init,locs = $7 in 
+        ps,vs,init,(mk_loc (mk_id $2) $3 $4 (mk_edge_l $5))::locs }
 
   | LET ID EQ interval statements
-    { let ps,vs,init,acc,locs = $5 in 
-        (mk_iparam $2 $4)::ps,vs,init,acc,locs }
+    { let ps,vs,init,locs = $5 in 
+        (mk_iparam $2 $4)::ps,vs,init,locs }
   | LET ID EQ RANDOM float statements
-    { let ps,vs,init,acc,locs = $6 in 
-        (mk_rparam $2 $5)::ps,vs,init,acc,locs }
+    { let ps,vs,init,locs = $6 in 
+        (mk_rparam $2 $5)::ps,vs,init,locs }
 
-  | { ([],dummy_list,dummy_list,dummy_list,[]) }
+  | { ([],dummy_list,dummy_list,[]) }
+;
+
+property :
+  | PROP mitl_formula { mk_prop $2 }
+  | { dummy_prop }
 ;
 
 solver_params :
@@ -132,7 +166,7 @@ edges :
   */
   | WATCH LP expr COM expr_vec RP GOTO ID THEN expr_vec edges
     { (mk_edge false $3 (mk_expr_l $5) (mk_id $8) (mk_expr_l $10))::$11 }
-  | WATCH FORCED LP expr COM expr_vec RP GOTO ID THEN expr_vec edges
+  | WATCH CAP_F LP expr COM expr_vec RP GOTO ID THEN expr_vec edges
     { (mk_edge true $4 (mk_expr_l $6) (mk_id $9) (mk_expr_l $11))::$12 }
 
   | { [] }
@@ -208,6 +242,32 @@ factor :
   | MIN factor { mk_expr (Papp2 (Osub,(mk_expr (Pval (Point 0.))),$2)) }
 ;
 
+mitl_formula :
+  | expr
+    { Pexpr $1 }
+  | NOT mitl_formula
+    { Pnot $2 }
+  | final noun_interval mitl_formula
+    { Pnot (Puntil ($2,Ptrue,Pnot $3)) }
+  | GLOBAL noun_interval mitl_formula
+    { Pnot (Puntil ($2,Ptrue,$3)) }
+  | mitl_formula OR mitl_formula
+    { Pnot (Pand ((Pnot $1), (Pnot $3))) }
+  | mitl_formula AND mitl_formula
+    { Pand ($1,$3) }
+  | mitl_formula UNTIL noun_interval mitl_formula
+    { Puntil ($3,$1,$4) }
+  | mitl_formula IMP mitl_formula
+    { Pnot (Pand ($1, Pnot $3)) }
+  | LP mitl_formula RP
+    { $2 }
+;
+
+final :
+  | FINAL { }
+  | CAP_F { }
+;
+
 rational :
   | integer { mk_ratio $1 1 }
   | integer DIV integer { mk_ratio $1 $3 }
@@ -222,6 +282,9 @@ float :
   | integer { float_of_int $1 }
 ;
 interval :
-  | LB float COM float RB { Interval ($2,$4) }
+  | noun_interval { $1 }
   | float { Point $1 }
+;
+noun_interval :
+  | LB float COM float RB { Interval ($2,$4) }
 ;

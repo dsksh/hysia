@@ -102,6 +102,12 @@ let send_inv lid env i (inv,norm) =
   send_dual (put_inv_tree lid) (put_inv_dtree lid) env i inv;
   send_dual (put_inv_normal_tree lid) (put_inv_normal_dtree lid) env i norm 
 
+let send_ap lid env i ap =
+  send_dual (put_ap_tree lid) (put_ap_dtree lid) env i ap
+
+let send_ap_norm lid env i dual =
+  send_dual (put_ap_normal_tree lid) (put_ap_normal_dtree lid) env i dual
+
 let send_grd lid eid s env dual =
   let (e,d) = dual.node in
   send_expr env e;
@@ -148,14 +154,16 @@ let send_edge lid env eid (_,grd_h,grd_g,dst,jump) =
   mapi (send_grd_g lid eid env) grd_g;
   mapi (send_jump lid eid env) jump
 
-let send_loc env (id,der,inv,edges) =
+let send_loc env (id,der,inv,edges,aps,ap_norms) =
   put_location id;
   mapi (send_der id env) der;
   mapi (send_inv id env) inv;
   mapi (send_edge id env) edges;
+  mapi (send_ap id env) aps;
+  mapi (send_ap_norm id env) ap_norms;
   ()
 
-let send_model (ps,vars,(iloc,iexpr),_,locs) =
+let send_model (ps,vars,(iloc,iexpr),locs) (aps,_) =
   initialize (List.length vars) (List.length ps);
   let env = SM.empty in
   let env = List.fold_left send_var env vars in
@@ -165,7 +173,10 @@ let send_model (ps,vars,(iloc,iexpr),_,locs) =
   let set_param (id,bnd) = set_param id (Random.float bnd) in
   List.map set_param ps;
   send_init env iexpr;
+
+  (*mapi (send_ap env) aps;*)
   ()
+
 
 
 let send_solving_params params =

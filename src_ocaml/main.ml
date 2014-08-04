@@ -11,6 +11,8 @@ let prop_file = ref None
 let spec = [
   "-n",  Arg.Int (fun n -> Simulating.step_max := n), 
                                 "sets the # steps to simulate";
+  "-t",  Arg.Float (fun t -> Simulating.time_max := t), 
+                                "sets the max simulation time";
   "-g",  Arg.Set debug,         "sets the debug flag";
   
   "-p",  Arg.String (fun fn -> prop_file := Some fn),
@@ -49,48 +51,31 @@ module PModel = Pretty.Make(Model)
 let () =
   let lb = from_channel cin in 
   try 
-    let ptree,params = Parser.main Lexer.token lb in
+    let (ha,prop),params = Parser.main Lexer.token lb in
     close_in cin;
-    let ptree = Ptree.simplify ptree in
-    (*if !debug then
-      printf "@[%a@]@." PPtree.print ptree;*)
+    let ha = Ptree.simplify ha in
+    (*if !debug then begin
+      printf "@[%a@]@." PPtree.print_ha ha;
+      printf "@[prop: %a@]\n@." Ptree.print_prop prop
+    end *)
 
-    let model = Model.make ptree in
-    if !debug then
-      printf "@[%a@]@." PModel.print model;
+    let ha,prop = Model.make ha prop in
+    if !debug then begin
+      printf "@[%a@]@." PModel.print_ha ha;
 
-    (*(* parse MTL property file *)
-    match !prop_file with
-    | Some f -> 
-        file := f;
-        let cin = open_in f in
-        let lb = from_channel cin in
-        begin try
-          print_endline "load prop file";
-          Lexing.flush_input lb;
-          reset_lexbuf lb;
-          let locs = Ba_parser.main Ba_lexer.token lb in
-          close_in cin;
-          let ptree = [],[],(),locs in
-          printf "@[%a@]@." PBa_ptree.print ptree
-        with
-        | Ba_lexer.Lexical_error s -> 
-    	  report (lexeme_start_p lb, lexeme_end_p lb);
-    	  printf "nc lexical error: %s\n@." s;
-    	  exit 1
-        | Parsing.Parse_error ->
-    	  let  loc = (lexeme_start_p lb, lexeme_end_p lb) in
-    	  report loc;
-          printf "syntax error\n@.";
-    	  exit 1
-        end
-    | None -> print_endline "skip loading"; ();
-    *)
+      let aps,_ = prop in
+      let pp i (hash,ap) = 
+          printf "@[%d(%d): %a@]@." i hash Model.print_dual ap
+      in
+      (*Model.APMap.iter pp aps;*)
+      Util.mapi pp aps; ()
+    end;
 
-    Capd_sending.send_model model;
+    Capd_sending.send_model ha prop;
     Capd_sending.send_solving_params params;
     Capd_sending_stubs.set_debug !debug;
-    Simulating.simulate model;
+    let ap_fs = Simulating.simulate ha prop in
+    List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_fs;
     ()
   with
     | Lexer.Lexical_error s -> 
