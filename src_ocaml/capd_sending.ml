@@ -47,6 +47,7 @@ let rec send_expr env e = match e.node with
       put_scalar_node v v
   | Val (Interval (l,u)) ->
       put_scalar_node l u
+  | Val _ -> assert false
   | App (op,e) -> 
       (*fprintf fmt "%s %a" (sprint_un_op op) print_expr e*)
       send_expr env e;
@@ -163,7 +164,7 @@ let send_loc env (id,der,inv,edges,aps,ap_norms) =
   mapi (send_ap_norm id env) ap_norms;
   ()
 
-let send_model (ps,vars,(iloc,iexpr),locs) (aps,_) =
+let send_model (ps,vars,(iloc,iexpr),locs) aps =
   initialize (List.length vars) (List.length ps);
   let env = SM.empty in
   let env = List.fold_left send_var env vars in

@@ -108,7 +108,7 @@ let find_prop_frontier_ lid t0 tmax polar (apid,tlist) =
     let (l,u) = find_prop_frontier lid apid !polar !time_l tmax in
 (*Printf.printf "fpf %f %f\n%!" l u;*)
     if l > !time_l && l <= u then begin
-      tlist := ((l,u),!polar)::!tlist;
+      tlist := List.append !tlist [(Interval (l,u),!polar)];
       time_l := l;
       polar := not !polar
     end else
@@ -116,67 +116,74 @@ let find_prop_frontier_ lid t0 tmax polar (apid,tlist) =
   done;
   apid, !tlist
 
-let simulate (ps,_var,(iloc,_ival),locs) (aps,_) =
-  let curr_step = ref 0 in
-  let curr_loc = ref iloc in
-  let curr_time_l = ref 0. in
-  initialize ();
-  print_pped true false;
+let simulate (ps,_var,(iloc,_ival),locs) aps =
+    let curr_step = ref 0 in
+    let curr_loc = ref iloc in
+    let curr_time_l = ref 0. in
+    initialize ();
+    print_pped true false;
 
-  (* initialize ap frontiers list. *)
-  let ap_fs = ref (mapi (fun i _ -> i, []) aps) in
-  let curr_polar = List.map (fun _ -> ref true) aps in
+    (* initialize ap frontiers list. *)
+    let ap_fs = ref (mapi (fun i _ -> i, []) aps) in
+    let curr_polar = List.map (fun _ -> ref true) aps in
 
-  (*for i = 1 to (if !step_max >= 0 then !step_max else max_int) do*)
-  while !curr_step <= !step_max && !curr_time_l <= !time_max do
-(*Printf.printf "step %d at %s\n%!" !curr_step !curr_loc;*)
-    report_step !curr_step !curr_loc;
-    incr curr_step;
+    (*for i = 1 to (if !step_max >= 0 then !step_max else max_int) do*)
+    while !curr_step < !step_max && !curr_time_l <= !time_max do
+        (*Printf.printf "step %d at %s\n%!" !curr_step !curr_loc;*)
+        report_step !curr_step !curr_loc;
+        incr curr_step;
 
-    List.map (set_param_ !curr_loc) ps;
+        List.map (set_param_ !curr_loc) ps;
 
-    (* compute the earliest time reaching the inv frontier. *)
-    let invs = Model.iexprs_of_loc (List.find (loc_of_name !curr_loc) locs) in
-    let fs = mapi (find_inv_frontier_ !curr_loc) invs in
-    let tmax = List.fold_left select_earliest None fs in
+        (* compute the earliest time reaching the inv frontier. *)
+        let invs = Model.iexprs_of_loc (List.find (loc_of_name !curr_loc) locs) in
+        let fs = mapi (find_inv_frontier_ !curr_loc) invs in
+        let tmax = List.fold_left select_earliest None fs in
+    
+        (* find zero for each edge *)
+        let es = Model.edges_of_loc (List.find (loc_of_name !curr_loc) locs) in
+        let _,zsf,zs = List.fold_left (find_first_zero_ !curr_loc) (0,[],[]) es in
+        let tmax = List.fold_left (select_earliest_grd !curr_loc invs es) (tmax,None) zsf in
+        let zs = List.filter (filter_invariant !curr_loc invs es tmax) (List.append zsf zs) in
+        (*let dst = List.fold_left select_earliest None zs in*)
+        let dst = select_random zs in
 
-    (* find zero for each edge *)
-    let es = Model.edges_of_loc (List.find (loc_of_name !curr_loc) locs) in
-    let _,zsf,zs = List.fold_left (find_first_zero_ !curr_loc) (0,[],[]) es in
-    let tmax = List.fold_left (select_earliest_grd !curr_loc invs es) (tmax,None) zsf in
-    let zs = List.filter (filter_invariant !curr_loc invs es tmax) (List.append zsf zs) in
-    (*let dst = List.fold_left select_earliest None zs in*)
-    let dst = select_random zs in
+        match dst with
+        | Some (eid,(l0,u0)) ->
 
-    match dst with
-    | Some (eid,(l0,u0)) ->
+            (* update signal time intervals *)
+            let fpf i = find_prop_frontier_ !curr_loc !curr_time_l u0 (List.nth curr_polar i) 
+            in
+            ap_fs := mapi fpf !ap_fs;
 
-      (* update signal time intervals *)
-      let fpf i = find_prop_frontier_ !curr_loc !curr_time_l u0 (List.nth curr_polar i) 
-      in
-      ap_fs := mapi fpf !ap_fs;
+            (* FIXME *)
+            find_first_zero true !curr_loc eid;
+            if find_first_zero_mid !curr_loc eid then begin
+                simulate_jump !curr_loc eid l0 u0;
+                print_pped false false;
+                curr_loc := dst_of_edge (List.nth es eid);
+                curr_time_l := l0
+            end else error FindZeroMidError;
 
-      (* FIXME *)
-      find_first_zero true !curr_loc eid;
-      if find_first_zero_mid !curr_loc eid then begin
-        simulate_jump !curr_loc eid l0 u0;
-        print_pped false false;
-        curr_loc := dst_of_edge (List.nth es eid);
-        curr_time_l := l0
-      end else error FindZeroMidError;
+            (*begin try 
+                List.find (fun lid -> lid = !curr_loc) flocs;
+                print_endline "reached final loc!"
+            with Not_found -> ()
+            end*)
 
-      (*begin try 
-          List.find (fun lid -> lid = !curr_loc) flocs;
-          print_endline "reached final loc!"
-        with Not_found -> ()
-      end*)
+        | None ->
 
-    | None ->
-      simulate_cont !curr_loc;
-      print_pped true true;
-      dispose ();
-      error FindZeroError
-  done;
-  print_pped true true;
-  dispose ();
-  !ap_fs
+            (* update signal time intervals *)
+            let fpf i = find_prop_frontier_ !curr_loc !curr_time_l !time_max (List.nth curr_polar i) 
+            in
+            ap_fs := mapi fpf !ap_fs;
+
+            simulate_cont !curr_loc;
+            (*print_pped true true;
+            dispose ();
+            error FindZeroError*)
+            curr_step := !step_max
+    done;
+    print_pped true true;
+    dispose ();
+    !ap_fs

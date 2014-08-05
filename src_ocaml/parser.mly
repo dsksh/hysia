@@ -248,9 +248,9 @@ mitl_formula :
   | NOT mitl_formula
     { Pnot $2 }
   | final noun_interval mitl_formula
-    { Pnot (Puntil ($2,Ptrue,Pnot $3)) }
+    { Puntil ($2,Ptrue,$3) }
   | GLOBAL noun_interval mitl_formula
-    { Pnot (Puntil ($2,Ptrue,$3)) }
+    { Pnot (Puntil ($2,Ptrue,Pnot $3)) }
   | mitl_formula OR mitl_formula
     { Pnot (Pand ((Pnot $1), (Pnot $3))) }
   | mitl_formula AND mitl_formula

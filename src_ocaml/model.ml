@@ -31,6 +31,7 @@ module Expr_node = struct
     | Var n -> Hashtbl.hash n
     | Val (Point v) -> int_of_float v
     | Val (Interval (l,u)) -> int_of_float (l+.u) 
+    | Val _ -> assert false
     | App (op,e) -> 19*e.tag + (match op with
         | Osqr -> 1 | Osqrt -> 2 | Oexp -> 3| Olog -> 4 | Osin -> 5 | Ocos -> 6
         | Oatan -> 7 | Oasin -> 8 | Oacos -> 9)
@@ -167,22 +168,26 @@ type mitl_formula =
   | Muntil of interval * mitl_formula * mitl_formula
 
 let rec mk_mitl_formula pm var aps = function
-  | Ptrue -> aps, Mtrue
+  | Ptrue -> aps, Mtrue, 0.
   | Pexpr e -> 
        let d = mk_dual_expr pm var e in
        (*APMap.add (Int32.of_int d.tag) d aps, Mexpr d*)
-       (d.tag, d)::aps, Mexpr d
+       (d.tag, d)::aps, Mexpr d, 0.
+  | Pnot (Pnot p) -> 
+       let aps,p,l = mk_mitl_formula pm var aps p in
+       aps, p, l
   | Pnot p -> 
-       let aps,p = mk_mitl_formula pm var aps p in
-       aps, Mnot p
+       let aps,p,l = mk_mitl_formula pm var aps p in
+       aps, Mnot p, l
   | Pand (p1,p2) -> 
-       let aps,p1 = mk_mitl_formula pm var aps p1 in
-       let aps,p2 = mk_mitl_formula pm var aps p2 in
-       aps, Mand (p1,p2)
-  | Puntil (i,p1,p2) -> 
-       let aps,p1 = mk_mitl_formula pm var aps p1 in
-       let aps,p2 = mk_mitl_formula pm var aps p2 in
-       aps, Muntil (i,p1,p2)
+       let aps,p1,l1 = mk_mitl_formula pm var aps p1 in
+       let aps,p2,l2 = mk_mitl_formula pm var aps p2 in
+       aps, Mand (p1,p2), max l1 l2
+  | Puntil (Interval (_,u) as i,p1,p2) -> 
+       let aps,p1,l1 = mk_mitl_formula pm var aps p1 in
+       let aps,p2,l2 = mk_mitl_formula pm var aps p2 in
+       aps, Muntil (i,p1,p2), (max l1 l2) +. u
+  | Puntil _ -> assert false
 
 
 let make (ps,var,iloc::ival,locs) prop = 
@@ -199,13 +204,13 @@ let make (ps,var,iloc::ival,locs) prop =
   let var = List.map snd var in
 
   (*let aps = APMap.empty in*)
-  let aps,prop = mk_mitl_formula pm var [] (snd prop) in
+  let aps,prop,len = mk_mitl_formula pm var [] (snd prop) in
 
   let iloc = get_lid iloc in
   let ival = List.map (mk_expr pm) ival in
   let locs = List.map (mk_loc pm var aps) locs in
 
-  (ps,var,(iloc,ival),locs), (aps,prop)
+  (ps,var,(iloc,ival),locs), (aps,prop,len)
 
 type param = string * float
 type id = ident
@@ -222,6 +227,7 @@ let rec print_expr fmt expr = match expr.node with
   | Var id -> fprintf fmt "%s" id
   | Val (Point v) -> fprintf fmt "%f" v
   | Val (Interval (l,u))  -> fprintf fmt "[%f;%f]" l u
+  | Val _ -> assert false
   | App (op,e) -> 
       fprintf fmt "%s %a" (sprint_un_op op) print_expr e
   | App2 (op,e1,e2) -> 

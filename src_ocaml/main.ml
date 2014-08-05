@@ -6,6 +6,8 @@ let usage = "usage: hss [options] input.txt"
 
 let debug = ref false
 
+let auto_length = ref false
+
 let prop_file = ref None
 
 let spec = [
@@ -13,6 +15,7 @@ let spec = [
                                 "sets the # steps to simulate";
   "-t",  Arg.Float (fun t -> Simulating.time_max := t), 
                                 "sets the max simulation time";
+  "-a",  Arg.Set auto_length,   "decide the simulation length automatically";
   "-g",  Arg.Set debug,         "sets the debug flag";
   
   "-p",  Arg.String (fun fn -> prop_file := Some fn),
@@ -47,7 +50,6 @@ module PPtree = Pretty.Make(Ptree)
 (*module PBa_ptree = Pretty.Make(Ba_ptree)*)
 module PModel = Pretty.Make(Model)
 
-
 let () =
   let lb = from_channel cin in 
   try 
@@ -58,24 +60,33 @@ let () =
       printf "@[%a@]@." PPtree.print_ha ha;
       printf "@[prop: %a@]\n@." Ptree.print_prop prop
     end *)
+    printf "@[prop: %a@]\n@." Ptree.print_prop prop;
 
-    let ha,prop = Model.make ha prop in
+    let ha,(aps,prop,len) = Model.make ha prop in
     if !debug then begin
       printf "@[%a@]@." PModel.print_ha ha;
 
-      let aps,_ = prop in
+      (*let aps,_,len = prop in*)
       let pp i (hash,ap) = 
-          printf "@[%d(%d): %a@]@." i hash Model.print_dual ap
+          printf "@[%d(%d): %a@." i hash Model.print_dual ap
       in
       (*Model.APMap.iter pp aps;*)
-      Util.mapi pp aps; ()
+      Util.mapi pp aps; 
+      printf "length: %f@]@." len;
+      ()
     end;
 
-    Capd_sending.send_model ha prop;
+    if !auto_length then Simulating.time_max := len;
+
+    Capd_sending.send_model ha aps;
     Capd_sending.send_solving_params params;
     Capd_sending_stubs.set_debug !debug;
-    let ap_fs = Simulating.simulate ha prop in
+
+    let ap_fs = Simulating.simulate ha aps in
     List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_fs;
+    let ap_fs = List.map (fun (id,fs) -> id, Some fs) ap_fs in
+    let ap_fs = Mitl_checking.check !Simulating.time_max ap_fs prop in
+    printf "%a" Mitl_checking.print_fs ap_fs;
     ()
   with
     | Lexer.Lexical_error s -> 

@@ -35,7 +35,7 @@ end
 
 (* MITL property to satisfy *)
 
-prop  F[0,300]G[0,300](75-x1 /\ 75-x2)
+prop  F[0,100]G[0,100](75-x1 /\ 75-x2)
 
 
 (* solving parameters *)

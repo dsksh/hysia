@@ -15,6 +15,8 @@
 type interval = 
   | Interval of float * float 
   | Point of float
+  | Universe
+  | Empty
 
 type rational = int * int
 
@@ -25,6 +27,12 @@ type un_op = Osqr | Osqrt | Oexp | Olog | Osin | Ocos | Oatan | Oasin | Oacos |
 
 type bin_op = Oadd | Osub | Omul | Odiv | Opow |
               Oand | Oor
+
+let print_interval fmt = function
+  | Interval (l,u) -> Format.fprintf fmt "[%f;%f]" l u
+  | Point v -> Format.fprintf fmt "[%f]" v
+  | Universe -> Format.fprintf fmt "(-oo,oo)"
+  | Empty -> Format.fprintf fmt "(empty)"
 
 let sprint_un_op = function
   | Osqr -> "sqr"
