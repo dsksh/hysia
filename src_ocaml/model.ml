@@ -36,7 +36,7 @@ module Expr_node = struct
         | Osqr -> 1 | Osqrt -> 2 | Oexp -> 3| Olog -> 4 | Osin -> 5 | Ocos -> 6
         | Oatan -> 7 | Oasin -> 8 | Oacos -> 9)
     | App2 (op,e1,e2) -> 19*(e1.tag + e2.tag) + (match op with
-        | Oadd -> 1 | Osub -> 2 | Omul -> 3 | Odiv -> 4 | Opow -> 5)
+        | Oadd -> 11 | Osub -> 12 | Omul -> 13 | Odiv -> 14 | Opow -> 15)
 end
 
 module Hexpr = Make_consed(Expr_node)

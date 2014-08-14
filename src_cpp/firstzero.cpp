@@ -44,14 +44,16 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 
 		time_old = time;
 
-		// current state
+		// states over the time interval.
 		const IVector dx( der(curve(time)) );
 		const interval dh( grd_h.der()(1)*dx );
-		//const interval dg( grd_g.der()(1)*dx );
+		interval dg[grd_g.size()];
+		for (int i(0); i < grd_g.size(); i++)
+			dg[i] = grd_g[i]->der()(1)*dx;
 
 g_context->cout << endl << "contracting lb:\t" << time+time_procd << endl;
 
-		// state at the left bound.
+		// evaluate the guard h at the left bound.
 		const interval offset(time.left());
 		//der(curve(offset));
 		const interval h( grd_h(curve(offset))(1) );
@@ -63,7 +65,7 @@ g_context->cout << "h:\t" << h << endl;
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
 		extDiv(-h, dh, gamma_l, gamma_u);
-g_context->cout << "gl:\t" << gamma_l << endl;
+g_context->cout << "gl:\t" << *gamma_l << endl;
 
 		if (gamma_l == NULL) {
 			return false;
@@ -77,13 +79,13 @@ g_context->cout << "gl:\t" << gamma_l << endl;
 		}
 
 		for (int i(0); i < grd_g.size(); i++) {
-			const interval dg( grd_g[i]->der()(1)*dx );
+			// evaluate the guard g at the left bound.
 			const interval g( polar ?
 					(*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) :
 					(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) );
-g_context->cout << "g[" << i << "]:\t" << g << endl;
+g_context->cout << polar << ", g[" << i << "]:\t" << g << endl;
 
-			extDiv(-g, dg, gamma_l, gamma_u);
+			extDiv(-g, dg[i], gamma_l, gamma_u);
 	
 			if (gamma_l == NULL) {
 				return false;
@@ -616,7 +618,7 @@ g_context->cout << endl;
 	Parallelepiped pped = g_context->pped;
 	interval time = g_context->time;
 g_context->cout << "TIME0: " << time << endl;
-	const double time_l(g_context->time.rightBound());
+	double time_l(g_context->time.rightBound());
 
 	//interval time;
 
@@ -634,16 +636,19 @@ g_context->cout << "TIME0: " << time << endl;
 	//IMatrix dx_prev(IMatrix::Identity(dim));
 	
 	while (true) {
- 		timeMap.moveSet(time_lower - time_l + 0.001, capdPped); // TODO
+ 		timeMap.moveSet(time_lower - time_l + 1e-8, capdPped); // TODO
 		time_procd = time_l + timeMap.getCurrentTime();
 		//dx_prev = IMatrix(capdPped);
 		if (timeMap.completed()) break;
 	}
-g_context->cout << "moved to time_l: " << time_lower << " - " << time_procd << endl;
+g_context->cout << "moved to time_l: " << time_lower << " - " << time_l << " " << time_procd << endl;
+
+	// TODO
+	time_l = time_procd.rightBound();
 
 	while (true) {
 
-g_context->cout << "integrate: " << time_max - time_l << endl;
+//g_context->cout << "integrate: " << time_max - time_l << endl;
 		// integrate 1 step.
  		timeMap.moveSet(time_max - time_l, capdPped);
 

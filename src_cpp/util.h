@@ -43,7 +43,7 @@ inline void extDiv(const capd::interval& numerator, const capd::interval& denomi
 //std::cout << "extDiv: " << numerator << " / " << denominator << " dom: " << *domain << std::endl;
 	containment = NULL;
 	if (!denominator.contains(capd::TypeTraits<capd::interval>::zero())) {
-//std::cout << numerator / denominator << " CUP " << *domain << std::endl;
+//std::cout << numerator / denominator << " CAP " << *domain << std::endl;
 		if (!intersection(numerator / denominator, *domain, *domain)) {
 			domain = NULL;
 		}
