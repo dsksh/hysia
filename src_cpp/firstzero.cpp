@@ -65,7 +65,6 @@ g_context->cout << "h:\t" << h << endl;
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
 		extDiv(-h, dh, gamma_l, gamma_u);
-g_context->cout << "gl:\t" << *gamma_l << endl;
 
 		if (gamma_l == NULL) {
 			return false;

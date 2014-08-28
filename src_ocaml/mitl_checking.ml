@@ -15,10 +15,10 @@ let cmp_fs f1 f2 = match f1,f2 with
     | _,_ -> assert false
 
 let intersect_fs fs1 fs2 = match fs1, fs2 with
-    | Some [], _ -> Some []
-    | _, Some [] -> Some []
-    | None, fs2 -> fs2
-    | fs1, None -> fs1
+    | None, _ -> None
+    | _, None -> None
+    | Some [], fs2 -> fs2
+    | fs1, Some [] -> fs1
     | Some fs1, Some fs2 ->
             let fs = List.merge cmp_fs fs1 fs2 in
             let sel (s,res) = function
@@ -35,20 +35,26 @@ let shift_fs tmax i fs =
     match i with
     | Interval (il,iu) -> begin
         match fs with
-        | None -> None
-        | Some [] -> (*Some [(Interval (tmax-.l,tmax-.l),false)]*)
-                     Some []
+        | None -> 
+                None
+        (*| Some [] -> 
+                Some [(Interval (tmax-.il,tmax-.il),false)]
+                (*Some []*)
+        *)
         | Some fs ->
-                let shift f fs = match f with
-                    | Interval (tl,tu) as t, true ->
-                        let tl,tu = tl-.iu, tu-.iu in
+                let shift fs f = match f with
+                    | Interval (tl,tu) as t, polar ->
+                        let o = if polar then iu else il in
+                        let tl,tu = tl-.o, tu-.o in
+(*Printf.printf "shifted: %f %f\n" tl tu;*)
                         if tl >= 0. then
-                            (Interval (tl,tu), true)::fs
+                            (Interval (tl,tu), polar)::fs
                         else if tu >= 0. then
-                            (Interval (0.,tu), true)::fs
-                        else 
-                            fs
-                    | Interval (tl,tu) as t, false ->
+                            (Interval (0.,tu), polar)::fs
+                        else
+                            (Interval (0.,0.), polar)::fs
+                            (*fs*)
+                    (*| Interval (tl,tu) as t, false ->
                         let tl,tu = tl-.il, tu-.il in
                         if tl >= 0. then
                             (Interval (tl,tu), false)::fs
@@ -56,31 +62,54 @@ let shift_fs tmax i fs =
                             (Interval (0.,tu), false)::fs
                         else
                             fs
+                    *)
                     | _,_ -> assert false
                 in
-                let res = List.fold_right shift fs [] in
-                if res = [] then
+                let _,p = List.hd fs in
+                (* status at time 0 should be expressed explicitly. *)
+                let fs = (Interval (0.,0.), not p)::fs in
+                let fs1 = List.fold_left shift [] fs in
+                if fs1 = [] then
                     (* result will be universe or empty *)
                     let _,p = List.nth fs (List.length fs -1) in
-                    if p then None else Some []
-                else Some fs
+                    if p then Some [] else None
+                else 
+                    (* sort fs *)
+                    let cmp (Interval (tl1,_),_) (Interval (tl2,_),_) =
+                        int_of_float (tl1 -. tl2)
+                    in
+                    let fs = List.sort cmp fs1 in
+
+                    let n_signals = ref 0 in
+                    let remove_overlaps fs (Interval (tl,tu),polar as f) =
+                        if polar then begin
+                            incr n_signals;
+                            if !n_signals = 1 && tu > 0. then List.append fs [f] else fs
+                        end else begin
+                            if !n_signals > 0 then decr n_signals;
+                            if !n_signals = 0 && tu > 0. then List.append fs [f] else fs
+                        end
+                    in
+                    let fs = List.fold_left remove_overlaps [] fs in
+                    Some fs 
     end
     | _ -> assert false
 
 
+
 let print_fs fmt = function
-    | Some [] -> Format.fprintf fmt "empty\n"
-    | None -> Format.fprintf fmt "universe\n"
+    | Some [] -> Format.fprintf fmt "universe\n"
+    | None -> Format.fprintf fmt "empty\n"
     | Some fs ->
         let pr = function
-        | Model_common.Interval (l,u),p -> Format.fprintf fmt "[%f;%f] %b\n" l u p;
+        | Model_common.Interval (l,u), p -> Format.fprintf fmt "[%f;%f] %b\n" l u p;
         | _ -> assert false
         in
         List.map pr fs; ()
     | _ -> ()
 
 let rec check tmax ap_fs = function
-    | Mtrue -> Printf.printf "true\n"; None
+    | Mtrue -> Printf.printf "true\n"; Some []
     | Mexpr d -> 
         let fs = snd (List.find (fun (apid,fs) -> apid = d.tag) ap_fs) in
         Format.printf "expr\n%a" print_fs fs;
@@ -98,9 +127,18 @@ let rec check tmax ap_fs = function
       let fs2 = check tmax ap_fs f2 in
       (*let fs = intersect_fs (shift_fs tmax i (intersect_fs fs1 fs2)) fs1 in*)
       let fs = intersect_fs fs1 fs2 in
-      Format.printf "until00 %a\n%a" Model_common.print_interval i print_fs fs;
+      (*Format.printf "until00 %a\n%a" Model_common.print_interval i print_fs fs;*)
       let fs = shift_fs tmax i fs in
-      Format.printf "until01 %a\n%a" Model_common.print_interval i print_fs fs;
+      (*Format.printf "until01 %a\n%a" Model_common.print_interval i print_fs fs;*)
       let fs = intersect_fs fs fs1 in
       Format.printf "until %a\n%a" Model_common.print_interval i print_fs fs;
       fs
+
+let eval_at_zero = function
+    | None -> Some false
+    | Some [] -> Some true 
+    | Some fs -> let Model_common.Interval (l,u), p = List.nth fs 0 in
+        if l > 0. then begin
+            if p then Some false else Some true
+        end else None
+

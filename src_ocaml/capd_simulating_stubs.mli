@@ -1,6 +1,7 @@
 external initialize: unit -> unit = "sim_initialize"
 external dispose: unit -> unit = "sim_dispose"
 external set_param: string -> string -> float -> unit = "sim_set_param"
+(*external check_prop: string -> int -> bool = "sim_check_prop"*)
 external find_inv_frontier: string -> int -> float*float = "sim_find_inv_frontier"
 external find_prop_frontier: string -> int -> bool -> float -> float -> float*float = "sim_find_prop_frontier"
 external find_first_zero: bool -> string -> int -> float*float = "sim_find_first_zero"

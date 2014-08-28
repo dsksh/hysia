@@ -99,6 +99,14 @@ let set_param_ lid (id,bnd) =
   set_param lid id (Random.float bnd)
 
 
+(*let init_prop_f lid polar apid =
+Printf.printf "ipf_ %d\n%!" apid;
+    if check_prop lid apid then begin
+        polar := false; 
+        [(Interval (0.,0.),true)]
+    end else []
+*)
+
 let find_prop_frontier_ lid t0 tmax polar (apid,tlist) =
 Printf.printf "fpf_ %d %f %f\n%!" apid t0 tmax;
   let tlist = ref tlist in
@@ -108,9 +116,9 @@ Printf.printf "fpf_ %d %f %f\n%!" apid t0 tmax;
     let (l,u) = find_prop_frontier lid apid !polar !time_l tmax in
 Printf.printf "fpf %f %f %f\n%!" l u !time_l;
     if l > !time_l && l <= u then begin
-      tlist := List.append !tlist [(Interval (l,u),!polar)];
       time_l := l;
-      polar := not !polar
+      polar := not !polar;
+      tlist := List.append !tlist [(Interval (l,u),!polar)]
     end else
       time_l := -1.;
   done;
@@ -124,8 +132,10 @@ let simulate (ps,_var,(iloc,_ival),locs) aps =
     print_pped true false;
 
     (* initialize ap frontiers list. *)
-    let ap_fs = ref (mapi (fun i _ -> i, []) aps) in
     let curr_polar = List.map (fun _ -> ref true) aps in
+    (*let ap_fs = ref (mapi (fun i _ -> i, init_prop_f !curr_loc (List.nth curr_polar i) i) 
+                          aps) in*)
+    let ap_fs = ref (mapi (fun i _ -> i, []) aps) in
 
     (*for i = 1 to (if !step_max >= 0 then !step_max else max_int) do*)
     while !curr_step < !step_max && !curr_time_l <= !time_max do

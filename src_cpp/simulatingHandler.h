@@ -16,6 +16,7 @@ extern const cInterval cError;
 void simInitialize();
 void simDispose();
 void setParam(const char *, const char *, const double);
+/*int checkProp(const char *, const int);*/
 cInterval findInvFrontier(const char *, const int);
 cInterval findPropFrontier(const char *, const int, const int, const double, const double);
 cInterval findFirstZero(const int, const char *, const int);

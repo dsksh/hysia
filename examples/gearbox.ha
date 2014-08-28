@@ -79,5 +79,5 @@ param order = 20
 param t_max = 1000
 param h_min   = 1e-14
 param epsilon = 1e-14
-param dump_interval = 0.5
+param dump_interval = 0.4
 param char_mtx = 3

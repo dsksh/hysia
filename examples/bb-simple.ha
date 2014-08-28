@@ -1,17 +1,18 @@
 let g = 1
 #let g = 10
-#let c = 1
-let c = 0.5
-let f = 0.001
+let c = 1
+#let c = 0.9
+#let f = 0
+let f = 0.9
 
 var   t, y, vy
 
 #init  L, 0, 10, -0
-init  L, 0, 10, -0.01
+init  L, 0, 7, -0.0001
 
-#at L wait 1, vy, -g
-at L wait 1, vy, -g - f*sqrt(vy^2)*vy
-  watch (y, vy) goto L then t, y, -c*vy
+#at L wait 1, vy, -g - f*vy
+at L wait 1, vy, -g - f*vy^2
+  watch F (y, vy) goto L then t, y, -c*vy
 end
 
 param order = 20

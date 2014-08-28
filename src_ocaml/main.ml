@@ -84,9 +84,15 @@ let () =
 
     let ap_fs = Simulating.simulate ha aps in
     List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_fs;
-    let ap_fs = List.map (fun (id,fs) -> id, Some fs) ap_fs in
+    let update_ap_fs (id,fs) =
+        (*let fs = (Model_common.Interval (0.,0.), true)::fs in*)
+        id, Some fs in
+    let ap_fs = List.map update_ap_fs ap_fs in
     let ap_fs = Mitl_checking.check !Simulating.time_max ap_fs prop in
-    printf "%a" Mitl_checking.print_fs ap_fs;
+    (*printf "%a" Mitl_checking.print_fs ap_fs;*)
+    match Mitl_checking.eval_at_zero ap_fs with
+    | Some res -> Printf.printf "%b\n%!" res
+    | None     -> Printf.printf "unknown\n%!";
     ()
   with
     | Lexer.Lexical_error s -> 

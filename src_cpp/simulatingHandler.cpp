@@ -68,6 +68,24 @@ void setParam(const char *lid, const char *id, const double v)
 	//g_context->cout << "setParam: " << id << " := " << v << endl;
 }
 
+/*int checkProp(const char *lid, const int apid)
+{
+	int dim(g_model->dim);
+	Location *loc = g_model->locs[lid].get();
+	//DerMap& der = loc->der;
+	AuxMap& ap = *g_model->locs[lid]->aps[apid];
+
+	IVector x0 = g_context->pped.hull();
+	//der.setValue(x0);
+
+	// TODO: ap is not evaluated properly...
+	printf("%f %f %f %f\n", x0[1].leftBound(), x0[1].rightBound(), ap(x0)(0).leftBound(), ap(x0)(0).rightBound());
+	
+	return (ap(x0)(1) - interval(0,INFINITY)).contains((capd::TypeTraits<interval>::zero()));
+	//return ap(x0)(1) < capd::TypeTraits<interval>::zero();
+}
+*/
+
 IVector simulate(IMap& der, const IVector& x, const interval& time)
 {
 	IVector result;

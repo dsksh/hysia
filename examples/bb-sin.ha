@@ -1,12 +1,12 @@
 let g = 1
 #let g = 10
-let c = 1
-#let c = 0.8
+#let c = 1
+let c = 0.8
 let f = 0.001
 
 var   x, y, vx, vy
 
-init  L, 1, 20, 0, 0
+init  L, 2, 3, 0, 0
 
 at L wait vx, vy, 0, -g
 #at L wait vx, vy, 0, -g - f*sqrt(vy^2)*vy
@@ -17,7 +17,7 @@ at L wait vx, vy, 0, -g
     (-c*vy + cos(x)*(vx + c*vx + vy*cos(x))) / (1 + cos(x)^2)
 end
 
-param order = 20
+param order = 100
 param t_max = 50
 #param h_min   = 0.1
 param h_min   = 1e-14
