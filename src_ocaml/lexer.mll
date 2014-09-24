@@ -34,6 +34,8 @@
       "F", CAP_F;
       "R", RANDOM;
 
+      "L", LOC;
+
       "param", PARAM;
 
       "G", GLOBAL;

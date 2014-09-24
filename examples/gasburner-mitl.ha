@@ -7,7 +7,7 @@ let B2 = 0.005
 
 var   x1, x2
 
-init  OnOff0, 0, 50
+init  OnOff0, 0, [50,50]
 
 at OnOff0 wait H1 - A1*x1 + B1*x2, -A2*x2 + B2*x1
   invariant x1, 100-x1, x2, 100-x2
@@ -35,7 +35,7 @@ end
 
 (* MITL property to satisfy *)
 
-prop  F[0,100]G[0,100](75-x1 /\ 75-x2)
+prop  F[0,200]G[0,100](!(75-x1) /\ !(75-x2))
 
 
 (* solving parameters *)

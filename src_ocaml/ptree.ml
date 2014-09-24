@@ -21,6 +21,7 @@ and  expr_node =
 type mitl_formula = loc * mitl_node
 and  mitl_node =
   | Ptrue
+  | Ploc of ident
   | Pexpr of expr
   | Pnot of mitl_node
   | Pand of mitl_node * mitl_node
@@ -66,6 +67,7 @@ let rec print_expr fmt = function
 let rec print_prop fmt (_,p) = print_prop_node fmt p
 and print_prop_node fmt = function
   | Ptrue -> fprintf fmt "true"
+  | Ploc id -> fprintf fmt "L[%s]" id
   | Pexpr e -> fprintf fmt "%a" print_expr e
   | Pnot p -> fprintf fmt "!%a" print_prop_node p
   | Pand (p1,p2) -> fprintf fmt "(%a & %a)" print_prop_node p1 print_prop_node p2

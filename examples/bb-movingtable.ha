@@ -7,7 +7,9 @@ let x0 = R 5
 
 var   t, x, vx
 
-init  Fall, 0, 5+x0, 0
+#init  Fall, 0, 5+x0, 0
+#init  Fall, 0, [6,6.00001], 0
+init  Fall, 0, x0, 0
 
 #at Fall wait 1, vx, -g
 at Fall wait 1, vx, -g + f*vx^2
@@ -23,7 +25,7 @@ prop  G[0,10](F[0,5](x-2))
 #prop  G[0,10](11-x)
 #prop  F[5,10](x-2)
 
-param order = 20
+param order = 30
 param t_max = 100
 #param h_min   = 0.1
 param h_min   = 1e-14

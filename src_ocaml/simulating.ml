@@ -124,7 +124,7 @@ Printf.printf "fpf %f %f %f\n%!" l u !time_l;
   done;
   apid, !tlist
 
-let simulate (ps,_var,(iloc,_ival),locs) aps =
+let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     let curr_step = ref 0 in
     let curr_loc = ref iloc in
     let curr_time_l = ref 0. in
@@ -135,7 +135,14 @@ let simulate (ps,_var,(iloc,_ival),locs) aps =
     let curr_polar = List.map (fun _ -> ref true) aps in
     (*let ap_fs = ref (mapi (fun i _ -> i, init_prop_f !curr_loc (List.nth curr_polar i) i) 
                           aps) in*)
-    let ap_fs = ref (mapi (fun i _ -> i, []) aps) in
+    let ap_fs = List.map (fun (apid,_) -> apid, []) aps in
+    let ap_fs = snd (List.fold_left 
+        (*(fun (i,ap_fs) lid -> i+1, List.append ap_fs [i,[]])
+        (List.length ap_fs, ap_fs) ap_locs in*)
+        (fun (i,ap_fs) lid -> 
+            let fs = (*if (lid <> !curr_loc) then [(Interval (0.,0.),false)] else*) [] in
+            (i+1, List.append ap_fs [(i,fs)])) (0,ap_fs) ap_locs ) in
+    let ap_fs = ref ap_fs in
 
     (*for i = 1 to (if !step_max >= 0 then !step_max else max_int) do*)
     while !curr_step < !step_max && !curr_time_l <= !time_max do
@@ -162,7 +169,21 @@ let simulate (ps,_var,(iloc,_ival),locs) aps =
         | Some (eid,(l0,u0)) ->
 
             (* update signal time intervals *)
-            let fpf i = find_prop_frontier_ !curr_loc !curr_time_l u0 (List.nth curr_polar i) 
+            let fpf i (apid,tlist) = 
+                let n_aps = List.length aps in
+                if i < n_aps then 
+                    find_prop_frontier_ !curr_loc !curr_time_l u0 
+                        (List.nth curr_polar i) (apid,tlist)
+                else begin
+                    let lid = List.nth ap_locs apid in
+                    let dst = dst_of_edge (List.nth es eid) in
+                    if !curr_loc = lid && dst <> lid then
+                        apid, List.append tlist [(Interval (l0,u0),false)]
+                    else begin if dst = lid then
+                        apid, List.append tlist [(Interval (l0,u0),true)]
+                    else 
+                        apid, tlist end
+                end
             in
             ap_fs := mapi fpf !ap_fs;
 

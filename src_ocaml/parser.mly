@@ -48,6 +48,8 @@
 %token THEN
 %token PROP
 
+%token LOC
+
 %token PARAM
 
 %token LB
@@ -243,6 +245,8 @@ factor :
 ;
 
 mitl_formula :
+  | LOC ID
+    { Ploc $2 }
   | expr
     { Pexpr $1 }
   | NOT mitl_formula

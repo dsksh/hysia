@@ -26,7 +26,8 @@ let d_ = 1.571
 #let v0 = 14
 let v0 = R 30
 
-var   v, ti
+var   v, (* velocity *)
+      ti (* torque integrater *)
 
 init  Q2pos, 14, 0, 0
 
@@ -79,5 +80,5 @@ param order = 20
 param t_max = 1000
 param h_min   = 1e-14
 param epsilon = 1e-14
-param dump_interval = 0.4
+param dump_interval = 0.1
 param char_mtx = 3

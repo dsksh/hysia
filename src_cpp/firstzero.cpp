@@ -150,6 +150,9 @@ g_context->cout << "proved" << endl;
 			time = contracted;
 			return true;
 		}
+		//else if (contracted.rightBound() > time_init.rightBound()) {
+		//	THROW("collision occurs over the multiple time steps");
+		//}
 
 		// inflation
 		d_old = d;

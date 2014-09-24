@@ -162,31 +162,35 @@ let get_lid (_,Pvar lid) = lid
 
 type mitl_formula =
   | Mtrue
+  | Mloc of int * ident
   | Mexpr of dual
   | Mnot of mitl_formula
   | Mand of mitl_formula * mitl_formula
   | Muntil of interval * mitl_formula * mitl_formula
 
-let rec mk_mitl_formula pm var aps = function
-  | Ptrue -> aps, Mtrue, 0.
+let rec mk_mitl_formula pm var aps ap_locs = function
+  | Ptrue -> aps, ap_locs, Mtrue, 0.
+  | Ploc lid ->
+       let id = List.length ap_locs in
+       aps, List.append ap_locs [lid], Mloc (id,lid), 0.
   | Pexpr e -> 
        let d = mk_dual_expr pm var e in
        (*APMap.add (Int32.of_int d.tag) d aps, Mexpr d*)
-       (d.tag, d)::aps, Mexpr d, 0.
+       (d.tag, d)::aps, ap_locs, Mexpr d, 0.
   | Pnot (Pnot p) -> 
-       let aps,p,l = mk_mitl_formula pm var aps p in
-       aps, p, l
+       let aps,ap_locs,p,l = mk_mitl_formula pm var aps ap_locs p in
+       aps, ap_locs, p, l
   | Pnot p -> 
-       let aps,p,l = mk_mitl_formula pm var aps p in
-       aps, Mnot p, l
+       let aps,ap_locs,p,l = mk_mitl_formula pm var aps ap_locs p in
+       aps, ap_locs, Mnot p, l
   | Pand (p1,p2) -> 
-       let aps,p1,l1 = mk_mitl_formula pm var aps p1 in
-       let aps,p2,l2 = mk_mitl_formula pm var aps p2 in
-       aps, Mand (p1,p2), max l1 l2
+       let aps,ap_locs,p1,l1 = mk_mitl_formula pm var aps ap_locs p1 in
+       let aps,ap_locs,p2,l2 = mk_mitl_formula pm var aps ap_locs p2 in
+       aps, ap_locs, Mand (p1,p2), max l1 l2
   | Puntil (Interval (_,u) as i,p1,p2) -> 
-       let aps,p1,l1 = mk_mitl_formula pm var aps p1 in
-       let aps,p2,l2 = mk_mitl_formula pm var aps p2 in
-       aps, Muntil (i,p1,p2), (max l1 l2) +. u
+       let aps,ap_locs,p1,l1 = mk_mitl_formula pm var aps ap_locs p1 in
+       let aps,ap_locs,p2,l2 = mk_mitl_formula pm var aps ap_locs p2 in
+       aps, ap_locs, Muntil (i,p1,p2), (max l1 l2) +. u
   | Puntil _ -> assert false
 
 
@@ -204,13 +208,13 @@ let make (ps,var,iloc::ival,locs) prop =
   let var = List.map snd var in
 
   (*let aps = APMap.empty in*)
-  let aps,prop,len = mk_mitl_formula pm var [] (snd prop) in
+  let aps,ap_locs,prop,len = mk_mitl_formula pm var [] [] (snd prop) in
 
   let iloc = get_lid iloc in
   let ival = List.map (mk_expr pm) ival in
   let locs = List.map (mk_loc pm var aps) locs in
 
-  (ps,var,(iloc,ival),locs), (aps,prop,len)
+  (ps,var,(iloc,ival),locs), (aps,ap_locs,prop,len)
 
 type param = string * float
 type id = ident
@@ -248,6 +252,7 @@ let print_rexpr fmt e = fprintf fmt "%a" print_dual e
 
 let rec print_prop fmt = function
   | Mtrue -> fprintf fmt "true"
+  | Mloc (id,lid) -> fprintf fmt "L[%s]" lid
   | Mexpr d -> fprintf fmt "%a" print_dual d
   | Mnot p -> fprintf fmt "!%a" print_prop p
   | Mand (p1,p2) -> fprintf fmt "(%a & %a)" print_prop p1 print_prop p2

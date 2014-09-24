@@ -62,7 +62,7 @@ let () =
     end *)
     printf "@[prop: %a@]\n@." Ptree.print_prop prop;
 
-    let ha,(aps,prop,len) = Model.make ha prop in
+    let ha,(aps,ap_locs,prop,len) = Model.make ha prop in
     if !debug then begin
       printf "@[%a@]@." PModel.print_ha ha;
 
@@ -82,13 +82,14 @@ let () =
     Capd_sending.send_solving_params params;
     Capd_sending_stubs.set_debug !debug;
 
-    let ap_fs = Simulating.simulate ha aps in
+    let ap_fs = Simulating.simulate ha (aps,ap_locs) in
     List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_fs;
     let update_ap_fs (id,fs) =
         (*let fs = (Model_common.Interval (0.,0.), true)::fs in*)
         id, Some fs in
     let ap_fs = List.map update_ap_fs ap_fs in
     let ap_fs = Mitl_checking.check !Simulating.time_max ap_fs prop in
+    print_endline "check done";
     (*printf "%a" Mitl_checking.print_fs ap_fs;*)
     match Mitl_checking.eval_at_zero ap_fs with
     | Some res -> Printf.printf "%b\n%!" res
