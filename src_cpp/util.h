@@ -37,6 +37,7 @@ extern std::ostream cnull;
 /// interval operators
 
 /// extended division on intervals
+/// Prop.4.3.1 of [Neumaier 1990]
 inline void extDiv(const capd::interval& numerator, const capd::interval& denominator, 
 			capd::interval *&domain, capd::interval *&containment) 
 {

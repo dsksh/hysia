@@ -52,6 +52,7 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 			dg[i] = grd_g[i]->der()(1)*dx;
 
 g_context->cout << endl << "contracting lb:\t" << time+time_procd << endl;
+if (time.left() < 0.) THROW("integration backward");
 
 		// evaluate the guard h at the left bound.
 		const interval offset(time.left());
@@ -399,8 +400,9 @@ time += time_procd;
 	//catch(exception& e)
 	CATCH
 	{
-		std::cerr << "exception caught! (1)\n" << eh_ex->what() << endl << endl;
-		return cEmpty;
+		std::cerr << "exception caught! (1): " << eh_ex->what() << endl << endl;
+		//return cEmpty;
+		return cError;
 	}
 
 	cInterval res = {time.leftBound(), time.rightBound()};
@@ -489,7 +491,7 @@ g_context->cout << endl << "mid:\t" << g_context->x_mid << " at " << time_mid <<
 	//catch (exception& e)
 	CATCH 
 	{
-		cerr << "exception caught! (2)\n" << eh_ex->what() << endl << endl;
+		std::cerr << "exception caught! (2): " << eh_ex->what() << endl << endl;
 		return false;
 	}
 
@@ -590,7 +592,7 @@ g_context->cout << "GTIME: " << g_context->time << endl;
 time += time_procd;
 	} 
 	CATCH {
-		std::cerr << "exception caught! (3)\n" << eh_ex->what() << endl << endl;
+		std::cerr << "exception caught! (3): " << eh_ex->what() << endl << endl;
 		//cInterval err= {-1., -1.};
 		//return err;
 		return cError;
@@ -621,20 +623,23 @@ g_context->cout << endl;
 	interval time = g_context->time;
 g_context->cout << "TIME0: " << time << endl;
 	double time_l(g_context->time.rightBound());
+    interval time_procd(time_l);
 
 	//interval time;
 
 	TRY {
 
-	// the solver:
-	ITaylor solver(der, g_params->order, g_params->h_min);
-	ITimeMap timeMap(solver);
-	timeMap.stopAfterStep(true);
-
 	// the initial value:
 	CapdPped capdPped(pped.toCapdPped());
 
-    interval time_procd(time_l);
+	{
+	// skip to the searched prefix time.
+
+	// the solver:
+	ITaylor solver(der, g_params->order, g_params->h_min);
+	ITimeMap timeMap(solver);
+	//timeMap.stopAfterStep(true);
+
 	//IMatrix dx_prev(IMatrix::Identity(dim));
 	
 	while (true) {
@@ -645,17 +650,24 @@ g_context->cout << "TIME0: " << time << endl;
 	}
 g_context->cout << "moved to time_l: " << time_lower << " - " << time_l << " " << time_procd << endl;
 
-	// TODO
+	if (time_procd.leftBound() >= time_max)
+		return cEmpty;
+
 	time_l = time_procd.rightBound();
+	}
+
+	ITaylor solver(der, g_params->order, g_params->h_min);
+	ITimeMap timeMap(solver);
+	timeMap.stopAfterStep(true);
 
 	while (true) {
 
-//g_context->cout << "integrate: " << time_max - time_l << endl;
+//cout << "integrate: " << time_max - time_l << endl;
 		// integrate 1 step.
  		timeMap.moveSet(time_max - time_l, capdPped);
 
 		time = interval(0,1)*solver.getStep();
-g_context->cout << endl << "step made (4): " << time+time_procd << endl;
+g_context->cout << endl << "step made (4): " << time/*+time_procd*/ << endl;
 		const interval time_init(time);
 		const ITaylor::CurveType& curve = solver.getCurve();
 
@@ -683,10 +695,11 @@ g_context->cout << "dx: " << dx << endl;
 		THROW("verification failed");
 	}
 
-	// reduce the upper bound
+/*	// reduce the upper bound
 	if ( !reduceUpper(der, ap, curve, time_init, time_procd, time) )
 		THROW("failed in reducing the upper bound");
 g_context->cout << "contracted ub:\t" << time + time_procd << endl;
+*/
 
 g_context->cout << "TIME: " << time << endl;
 g_context->cout << "GTIME: " << g_context->time << endl;
@@ -695,7 +708,7 @@ g_context->cout << "GTIME: " << g_context->time << endl;
 time += time_procd;
 	} 
 	CATCH {
-		std::cerr << "exception caught! (4)\n" << eh_ex->what() << endl << endl;
+		std::cerr << "exception caught! (4): " << eh_ex->what() << endl << endl;
 		return cError;
 	}
 

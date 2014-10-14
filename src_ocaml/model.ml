@@ -37,6 +37,9 @@ module Expr_node = struct
         | Oatan -> 7 | Oasin -> 8 | Oacos -> 9)
     | App2 (op,e1,e2) -> 19*(e1.tag + e2.tag) + (match op with
         | Oadd -> 11 | Osub -> 12 | Omul -> 13 | Odiv -> 14 | Opow -> 15)
+  (*let hash_max = ref 0
+  let hash _ = incr hash_max; !hash_max
+  *)
 end
 
 module Hexpr = Make_consed(Expr_node)
@@ -89,7 +92,8 @@ let rec diff_expr vid expr =
     | Val _ -> mk_val (Point 0.)
 
     | App (Osqr,e) -> 
-        (mk_app2 Omul (mk_val (Point 2.)) (mk_app2 Omul e (mk_app Osqr (diff e))))
+        (*(mk_app2 Omul (mk_val (Point 2.)) (mk_app2 Omul e (mk_app Osqr (diff e))))*)
+        (mk_app2 Omul (diff e) (mk_app2 Omul (mk_val (Point 2.)) e))
     | App (Osqrt,e) -> 
         (mk_app2 Odiv (diff e) (mk_app2 Omul (mk_val (Point 2.)) (mk_app Osqrt e)))
     | App (Oexp,e) -> 
@@ -136,6 +140,10 @@ let mk_normal var der dual =
   let e0 = mk_val (Point 0.) in
   let es = List.combine de der in
     mk_dual var (List.fold_left mk_term e0 es)
+
+(* dummy
+let mk_normal var der dual =
+  mk_dual var (mk_val (Point (-1.)))*)
 
 let mk_edge pm var der (_,(forced,grd_h,(_,grd_g),(_,dst),(_,jmp))) =
   let grd_h = mk_dual_expr pm var grd_h in

@@ -7,31 +7,30 @@ let pertb = [0,0]
 
 let g = 1
 #let f = 0
-let f = 0.01
+let f = 0.1
 
 var   x,y,vx,vy
 
-init  L, 1+pertb,2+pertb,-0.00001,-0.00001
+init  Loc, 1+pertb,2+pertb,-0.00001,-0.00001
 
-#init  L, 1,10,0,-0.1
-#init  L, -1+pertb,1+pertb, 2/sqrt(2),1/sqrt(2)
+#init  Loc, 1,10,0,-0.1
+#init  Loc, -1+pertb,1+pertb, 2/sqrt(2),1/sqrt(2)
 
-#init  L, -1/20,1/400, 1/(10*sqrt(2)), 1/sqrt(2)
-#init  L, -1/4+pertb,1/16+pertb, 1/(2*sqrt(2)), 1/sqrt(2)
-#init  L, -1/2+pertb,1/4+pertb, 1/sqrt(2), 1/sqrt(2)
-#init  L, -2+pertb,4+pertb, 4/sqrt(2), 1/sqrt(2)
-#init  L, -4+pertb,16+pertb, 8/sqrt(2), 1/sqrt(2)
-#init  L, -10+pertb+pertb,100, 20/sqrt(2), 1/sqrt(2)
+#init  Loc, -1/20,1/400, 1/(10*sqrt(2)), 1/sqrt(2)
+#init  Loc, -1/4+pertb,1/16+pertb, 1/(2*sqrt(2)), 1/sqrt(2)
+#init  Loc, -1/2+pertb,1/4+pertb, 1/sqrt(2), 1/sqrt(2)
+#init  Loc, -2+pertb,4+pertb, 4/sqrt(2), 1/sqrt(2)
+#init  Loc, -4+pertb,16+pertb, 8/sqrt(2), 1/sqrt(2)
+#init  Loc, -10+pertb+pertb,100, 20/sqrt(2), 1/sqrt(2)
 
-#init  L, -1+pertb,1/2+pertb, 2/sqrt(2),1/sqrt(2)
+#init  Loc, -1+pertb,1/2+pertb, 2/sqrt(2),1/sqrt(2)
 
-#init  L, -1+pertb,1+pertb, 1.4,0.7
+#init  Loc, -1+pertb,1+pertb, 1.4,0.7
 
-#at L wait vx,vy,0,-g+f*vy^2
-#at L wait vx,vy, -f*vx, -g-f*vy
-at L wait vx,vy, -f*sqrt(vx^2+vy^2)*vx, -g-f*sqrt(vx^2+vy^2)*vy
+#at L wait vx,vy,0,-g
+at Loc wait vx,vy, -f*sqrt(vx^2+vy^2)*vx, -g-f*sqrt(vx^2+vy^2)*vy
 
-  watch F (x^2-y, vy-2*x*vx) goto L then 
+  watch F (x^2-y, vy-2*x*vx) goto Loc then 
     x,y,
     vx + (4*x*(vy - 2*x*vx)) / (4*x^2 + 1),
     vy - (2*(vy - 2*x*vx)) / (4*x^2 + 1)

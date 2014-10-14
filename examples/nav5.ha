@@ -30,7 +30,8 @@ let I5_3 = 0
 let I5_4 = 0
 let I5_5 = 0
 
-let vx0 = R 1
+#let vx0 = R 1
+let vx0 = [0.999,1]
 let vy0 = R 1
 
 var   x1, x2, v1, v2

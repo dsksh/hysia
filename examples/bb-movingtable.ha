@@ -9,15 +9,23 @@ var   t, x, vx
 
 #init  Fall, 0, 5+x0, 0
 #init  Fall, 0, [6,6.00001], 0
-init  Fall, 0, x0, 0
+#init  Fall, 0, 2.000001+x0, 0
+init  Fall, 0, 2.000001+x0+[0,0.01], 0
+#init  Fall, 0, 6.47960222004910236, 0
 
 #at Fall wait 1, vx, -g
 at Fall wait 1, vx, -g + f*vx^2
-  watch F (sin(t)-x, vx) goto Rise then t, x, -c*vx + (c+1)*cos(t)
+  watch F (sin(t)-x, vx, -c*vx + (c+1)*cos(t)) goto Fall then t, x, -c*vx + (c+1)*cos(t)
+  watch F (sin(t)-x, vx,  c*vx - (c+1)*cos(t)) goto Rise then t, x, -c*vx + (c+1)*cos(t)
 end
 
 at Rise wait 1, vx, -g - f*vx^2
   watch F (vx, true) goto Fall then t, x, vx
+  watch F (sin(t)-x, -cos(t)+vx) goto Below then 0, 0, 0
+end
+
+at Below wait 1, 1, 1
+  watch F (t-1, -t) goto Below then 0, 0, 0
 end
 
 prop  G[0,10](F[0,5](x-2))
@@ -34,7 +42,7 @@ param epsilon = 1e-14
 param dump_interval = 0.1
 #param delta = 0.99
 #param tau = 1.01
-param char_mtx = -1
+#param char_mtx = -1
 #param char_mtx = 1
-#param char_mtx = 2
+param char_mtx = 3
 param qr_thres = 8000

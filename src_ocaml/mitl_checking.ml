@@ -50,7 +50,7 @@ let shift_fs tmax i fs =
                     | Interval (tl,tu) as t, polar ->
                         let o = if polar then iu else il in
                         let tl,tu = tl-.o, tu-.o in
-Printf.printf "shifted: %f %f\n" tl tu;
+(*Printf.printf "shifted: %f %f\n" tl tu;*)
                         if tl >= 0. then
                             (Interval (tl,tu), polar)::fs
                         else if tu >= 0. then
@@ -122,36 +122,36 @@ let print_fs fmt = function
         List.map pr fs; ()
     | _ -> ()
 
-let rec check tmax ap_fs (*ap_locs*) = function
-    | Mtrue -> Printf.printf "true\n"; Some []
+let rec check debug tmax ap_fs (*ap_locs*) = function
+    | Mtrue -> if debug then Printf.printf "true\n"; Some []
     | Mloc (id,lid) ->
         (*let i = ref (-1) in
         let _ = mapi (fun i_ lid_ -> if lid_ = lid then i := i_) ap_locs in*)
         let fs = snd (List.nth ap_fs id) in
-        Format.printf "loc\n%a" print_fs fs;
+        if debug then Format.printf "loc\n%a" print_fs fs;
         if fs = Some [] then None else fs
     | Mexpr d -> 
         let fs = snd (List.find (fun (apid,fs) -> apid = d.tag) ap_fs) in
-        Format.printf "expr\n%a" print_fs fs;
+        if debug then Format.printf "expr %d\n%a" d.tag print_fs fs;
         fs
     | Mnot f -> 
-        let fs = invert_fs (check tmax ap_fs f) in
-        Format.printf "not\n%a" print_fs fs;
+        let fs = invert_fs (check debug tmax ap_fs f) in
+        if debug then Format.printf "not\n%a" print_fs fs;
         fs
     | Mand (f1,f2) -> 
-        let fs = intersect_fs (check tmax ap_fs f1) (check tmax ap_fs f2) in
-        Format.printf "and\n%a" print_fs fs;
+        let fs = intersect_fs (check debug tmax ap_fs f1) (check debug tmax ap_fs f2) in
+        if debug then Format.printf "and\n%a" print_fs fs;
         fs
     | Muntil (i,f1,f2) -> 
-        let fs1 = check tmax ap_fs f1 in
-        let fs2 = check tmax ap_fs f2 in
+        let fs1 = check debug tmax ap_fs f1 in
+        let fs2 = check debug tmax ap_fs f2 in
         (*let fs = intersect_fs (shift_fs tmax i (intersect_fs fs1 fs2)) fs1 in*)
         let fs = intersect_fs fs1 fs2 in
-        Format.printf "until00 %a\n%a" Model_common.print_interval i print_fs fs;
+        if debug then Format.printf "until00 %a\n%a" Model_common.print_interval i print_fs fs;
         let fs = shift_fs tmax i fs in
-        Format.printf "until01 %a\n%a" Model_common.print_interval i print_fs fs;
+        if debug then Format.printf "until01 %a\n%a" Model_common.print_interval i print_fs fs;
         let fs = intersect_fs fs fs1 in
-        Format.printf "until %a\n%a" Model_common.print_interval i print_fs fs;
+        if debug then Format.printf "until %a\n%a" Model_common.print_interval i print_fs fs;
         fs
 
 let eval_at_zero = function

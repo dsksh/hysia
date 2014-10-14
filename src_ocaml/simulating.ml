@@ -15,7 +15,7 @@ let select_earliest earliest (id,(l,u)) = match earliest with
   | Some (id1,(l1,u1)) ->
 (*Printf.printf "1: %d,[%f,%f] vs. %d,[%f,%f]\n%!" id1 l1 u1 id l u;*)
 
-      if l<=u then begin
+      if l<=u && l>=0. then begin
         if u < l1 then Some (id,(l,u)) else begin
           if u1 < l then Some (id1,(l1,u1)) else 
             error (SelectEarliestError ((l,u), (l1,u1))) end 
@@ -24,7 +24,7 @@ let select_earliest earliest (id,(l,u)) = match earliest with
       else
         Some (id1,(l1,u1))
   | None -> 
-      if l<=u then Some (id,(l,u)) else None
+      if l<=u && l>=0. then Some (id,(l,u)) else None
 
 
 let find_first_zero_ lid (eid,zsf,zs) (forced,gh,_,_dst,_) = 
@@ -43,7 +43,7 @@ let select_earliest_grd lid invs es earliest (eid,(l,u)) = match earliest with
         None, Some (eid,(l,u))
 
       else begin
-        if l<=u then begin
+        if l<=u && l>=0. then begin
           if u < l1 then None, Some (eid,(l,u)) else begin
             if u1 < l then Some (iid,(l1,u1)), None else 
               error (SelectEarliestError ((l,u), (l1,u1))) end 
@@ -55,7 +55,7 @@ let select_earliest_grd lid invs es earliest (eid,(l,u)) = match earliest with
 
   | _None, Some (eid1,(l1,u1)) ->
 (*Printf.printf "3: %d,[%f,%f] vs. %d,[%f,%f]\n%!" eid1 l1 u1 eid l u;*)
-      if l<=u then begin
+      if l<=u && l>=0. then begin
         if u < l1 then None, Some (eid,(l,u)) else begin
           if u1 < l then None, Some (eid1,(l1,u1)) else 
             error (SelectEarliestError ((l,u), (l1,u1))) end 
@@ -65,7 +65,7 @@ let select_earliest_grd lid invs es earliest (eid,(l,u)) = match earliest with
         None, Some (eid1,(l1,u1))
 
   | None, None -> 
-      if l<=u then None, Some (eid,(l,u)) else None, None
+      if l<=u && l>=0. then None, Some (eid,(l,u)) else None, None
 
 let filter_invariant lid invs es tmax (eid,(l,u)) =
     match tmax with
@@ -107,19 +107,25 @@ Printf.printf "ipf_ %d\n%!" apid;
     end else []
 *)
 
-let find_prop_frontier_ lid t0 tmax polar (apid,tlist) =
-Printf.printf "fpf_ %d %f %f\n%!" apid t0 tmax;
+(* APs on the C/C++ side correspond to the indexes (id) of the AP list. 
+ * On the OCaml side, APs should be paired with apid. 
+ *)
+let find_prop_frontier_ lid t0 tmax polar id (apid,tlist) =
+(*Printf.printf "fpf_ %d %f %f\n%!" apid t0 tmax;*)
   let tlist = ref tlist in
   let time_l = ref t0 in
   (*let polar = ref polar in*)
   while !time_l >= 0. && !time_l < tmax do
-    let (l,u) = find_prop_frontier lid apid !polar !time_l tmax in
-Printf.printf "fpf %f %f %f\n%!" l u !time_l;
-    if l > !time_l && l <= u then begin
+    (*let (l,u) = find_prop_frontier lid apid !polar !time_l tmax in*)
+    let (l,u) = find_prop_frontier lid id !polar !time_l tmax in
+(*Printf.printf "fpf %f %f %f\n%!" l u !time_l;*)
+    if l<=u && l > !time_l then begin
       time_l := l;
       polar := not !polar;
       tlist := List.append !tlist [(Interval (l,u),!polar)]
-    end else
+    end else if l = -1. then
+      error FindZeroError
+    else
       time_l := -1.;
   done;
   apid, !tlist
@@ -146,7 +152,7 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
 
     (*for i = 1 to (if !step_max >= 0 then !step_max else max_int) do*)
     while !curr_step < !step_max && !curr_time_l <= !time_max do
-        (*Printf.printf "step %d at %s\n%!" !curr_step !curr_loc;*)
+(*Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !curr_loc;*)
         report_step !curr_step !curr_loc;
         incr curr_step;
 
@@ -173,8 +179,9 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
                 let n_aps = List.length aps in
                 if i < n_aps then 
                     find_prop_frontier_ !curr_loc !curr_time_l u0 
-                        (List.nth curr_polar i) (apid,tlist)
+                        (List.nth curr_polar i) i (apid,tlist)
                 else begin
+                    (* i > n_aps: indexes are used for location APs *)
                     let lid = List.nth ap_locs apid in
                     let dst = dst_of_edge (List.nth es eid) in
                     if !curr_loc = lid && dst <> lid then
@@ -205,7 +212,7 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
         | None ->
 
             (* update signal time intervals *)
-            let fpf i = find_prop_frontier_ !curr_loc !curr_time_l !time_max (List.nth curr_polar i) 
+            let fpf i = find_prop_frontier_ !curr_loc !curr_time_l !time_max (List.nth curr_polar i) i
             in
             ap_fs := mapi fpf !ap_fs;
 
