@@ -81,7 +81,7 @@ prop
 
 
 param order = 20
-param t_max = 20
+param t_max = 100
 #param h_min   = 0.1
 param h_min   = 1e-14
 param epsilon = 1e-14

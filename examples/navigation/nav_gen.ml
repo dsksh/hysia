@@ -11,11 +11,9 @@ let nv = ref 4
   
 let () =
   Arg.parse [
-    ("-n", Arg.Int (fun n -> nv := n), "# of vehicles");
-    ("-hytech", Arg.Unit (fun () -> file := "navigation_hytech.tmpl"), "generate a HyTech model");
-    ("-why", Arg.Unit (fun () -> file := "navigation_.tmpl"), "generate another HyTech model");
-    ("-math", Arg.Unit (fun () -> file := "navigation_math.tmpl"), "generate Mathematica model");
-    ("-rotated", Arg.Unit (fun () -> file := "nav_rotated.tmpl"), "generate pi/4 rotated model");
+    ("-n", Arg.Int (fun n -> nv := n), "set the value of n");
+    ("-rotated", Arg.Unit (fun () -> file := "nav_rotated.tmpl"), "generate a pi/4 rotated Navigation model");
+    ("-atm"), Arg.Unit (fun () -> file := "atm.tmpl"), "generate an ATM model"
   ] ignore "";
 
   let result_string = 
