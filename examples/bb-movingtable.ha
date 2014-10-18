@@ -9,26 +9,26 @@ var   t, x, vx
 
 #init  Fall, 0, 5+x0, 0
 #init  Fall, 0, [6,6.00001], 0
-#init  Fall, 0, 2.000001+x0, 0
-init  Fall, 0, 2.000001+x0+[0,0.01], 0
-#init  Fall, 0, 6.47960222004910236, 0
+init  Fall, 0, 2+x0, 0
+#init  Fall, 0, 2+[0,0.01]+x0, 0
+#init  Fall, 0, 2.48456863635738401, 0
 
 #at Fall wait 1, vx, -g
 at Fall wait 1, vx, -g + f*vx^2
-  watch F (sin(t)-x, vx, -c*vx + (c+1)*cos(t)) goto Fall then t, x, -c*vx + (c+1)*cos(t)
-  watch F (sin(t)-x, vx,  c*vx - (c+1)*cos(t)) goto Rise then t, x, -c*vx + (c+1)*cos(t)
+  watch F (sin(t)-x, vx-cos(t), -c*vx + (c+1)*cos(t)) goto Fall then t, x, -c*vx + (c+1)*cos(t)
+  watch F (sin(t)-x, vx-cos(t),  c*vx - (c+1)*cos(t)) goto Rise then t, x, -c*vx + (c+1)*cos(t)
 end
 
 at Rise wait 1, vx, -g - f*vx^2
   watch F (vx, true) goto Fall then t, x, vx
-  watch F (sin(t)-x, -cos(t)+vx) goto Below then 0, 0, 0
+  watch F (sin(t)-x, vx-cos(t)) goto Below then 0, 0, 0
 end
 
 at Below wait 1, 1, 1
   watch F (t-1, -t) goto Below then 0, 0, 0
 end
 
-prop  G[0,10](F[0,5](x-2))
+prop  G[0,100](F[0,5](x-2))
 #prop  G[2,10]!(x-5)
 #prop  G[0,10](11-x)
 #prop  F[5,10](x-2)

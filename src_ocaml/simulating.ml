@@ -116,11 +116,12 @@ let find_prop_frontier_ lid t0 tmax polar id (apid,tlist) =
   let time_l = ref t0 in
   (*let polar = ref polar in*)
   while !time_l >= 0. && !time_l < tmax do
-    (*let (l,u) = find_prop_frontier lid apid !polar !time_l tmax in*)
-    let (l,u) = find_prop_frontier lid id !polar !time_l tmax in
+    (*let (l,u) = find_prop_frontier lid id !polar !time_l tmax in*)
+    let (l,u) = find_prop_frontier lid id true !time_l tmax in
 (*Printf.printf "fpf %f %f %f\n%!" l u !time_l;*)
     if l<=u && l > !time_l then begin
-      time_l := l;
+      (*time_l := l;*)
+      time_l := u;
       polar := not !polar;
       tlist := List.append !tlist [(Interval (l,u),!polar)]
     end else if l = -1. then

@@ -73,8 +73,9 @@ inline void extDiv(const capd::interval& numerator, const capd::interval& denomi
 
 //std::cout << no_domain << std::endl;
 
-		if (domain->rightBound() <= no_domain.leftBound() ||
-			domain->leftBound()  >= no_domain.rightBound()) {
+		// no intersection
+		if (domain->rightBound() < no_domain.leftBound() ||
+			domain->leftBound()  > no_domain.rightBound()) {
 
 			return;
 		}

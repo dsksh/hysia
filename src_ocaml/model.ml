@@ -130,7 +130,7 @@ let mk_dual_expr pm var expr =
     mk_dual var (mk_expr pm expr)
 
 (* construct the normal vector i.e. Dx fun . der. *)
-let mk_normal var der dual =
+(*let mk_normal var der dual =
   let mk_term e0 (de,der) =
     let (der_e,_) = der.node in
     let e = mk_app2 Omul de der_e in
@@ -139,11 +139,11 @@ let mk_normal var der dual =
   let (_,de) = dual.node in
   let e0 = mk_val (Point 0.) in
   let es = List.combine de der in
-    mk_dual var (List.fold_left mk_term e0 es)
+    mk_dual var (List.fold_left mk_term e0 es)*)
 
-(* dummy
+(* dummy *)
 let mk_normal var der dual =
-  mk_dual var (mk_val (Point (-1.)))*)
+  mk_dual var (mk_val (Point (-1.)))
 
 let mk_edge pm var der (_,(forced,grd_h,(_,grd_g),(_,dst),(_,jmp))) =
   let grd_h = mk_dual_expr pm var grd_h in

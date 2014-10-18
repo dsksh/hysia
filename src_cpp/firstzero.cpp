@@ -41,9 +41,11 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 	//int i(0);
 	do {
 		//if (i++ > 5) break;
+g_context->cout << endl << "hoge: " << time << endl;
 
 		time_old = time;
 
+		// differentiation of h and g wrt time
 		// states over the time interval.
 		const IVector dx( der(curve(time)) );
 		const interval dh( grd_h.der()(1)*dx );
@@ -58,11 +60,13 @@ if (time.left() < 0.) THROW("integration backward");
 		const interval offset(time.left());
 		//der(curve(offset));
 		const interval h( grd_h(curve(offset))(1) );
-		time -= offset;
 g_context->cout << "offset:\t" << offset << endl;
 g_context->cout << "h:\t" << h << endl;
 //g_context->cout << "g:\t" << g << endl;
 
+		// enforce the Box consistency
+		time -= offset;
+g_context->cout << "contracted lb:\t" << time+offset+time_procd << endl;
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
 		extDiv(-h, dh, gamma_l, gamma_u);
@@ -74,10 +78,13 @@ g_context->cout << "h:\t" << h << endl;
 			//time = *gamma_l;
 		}
 		else {
-			//time = *gamma_u;
-			delete gamma_u;
+			// should not come here
+			THROW("extdiv resulted in two intervals");
+			//delete gamma_u;
 		}
+g_context->cout << "contracted lb:\t" << time+offset+time_procd << endl;
 
+		// evaluation of inequalities
 		for (int i(0); i < grd_g.size(); i++) {
 			// evaluate the guard g at the left bound.
 			const interval g( polar ?
@@ -85,21 +92,30 @@ g_context->cout << "h:\t" << h << endl;
 					(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) );
 g_context->cout << polar << ", g[" << i << "]:\t" << g << endl;
 
+			// enforce the Box consistency
 			extDiv(-g, dg[i], gamma_l, gamma_u);
 	
 			if (gamma_l == NULL) {
-				return false;
+				if (gamma_u == NULL)
+					return false;
+				else {
+					time = *gamma_u;
+					delete gamma_u;
+				}
 			}
 			else if (gamma_u == NULL) {
-				time = *gamma_l;
+				//time = *gamma_l;
 			}
 			else {
-				time = *gamma_u;
-				delete gamma_u;
+				// should not come here
+				THROW("extdiv resulted in two intervals");
+				//time = *gamma_u;
+				//delete gamma_u;
 			}
 		}
 
 		time += offset;
+		// TODO: this is needed to fix a small perturbation caused by time - lb + lb
 		intersection(time_init, time, time);
 g_context->cout << "contracted lb:\t" << time+time_procd << endl;
 
@@ -115,9 +131,11 @@ inline bool verify(DerMap& der, AuxMap& grd_h,
 				   interval& time)
 {
 	interval time_old(UNIVERSE);
-	time = time.left();
+	// TODO
+	//time = time.left();
 	double d(INFINITY), d_old(INFINITY);
 
+g_context->cout << endl << "time:\t" << time+time_procd << endl;
 g_context->cout << endl << "time_init:\t" << time_init+time_procd << endl;
 
 	do {
@@ -126,6 +144,8 @@ g_context->cout << endl << "verifying:\t" << time+time_procd << endl;
 		// current state
 		//interval time_tmp;
 		//intersection(time_init, time, time_tmp);
+		
+		// differentiate h
 		const IVector  dx( der(curve(time)) );
 g_context->cout << "dx: " << dx << endl;
 g_context->cout << "x: " << curve(time) << endl;
@@ -135,7 +155,7 @@ g_context->cout << "dh: " << dh << " at " << time+time_procd << endl;
 		if ( dh.contains((capd::TypeTraits<interval>::zero())) ) {
 			// TODO
 			THROW("zero in the derivative");
-			break;
+			//break;
 		}
 
 		// interval Newton
@@ -145,7 +165,10 @@ g_context->cout << "dh: " << dh << " at " << time+time_procd << endl;
 		//interval contracted(time_tmp.left() - grd_h(curve(time_tmp.left()))(1) / dh);
 		// TODO
 		//intersection(time_init, contracted, contracted);
+		intersection(time, contracted, contracted);
 g_context->cout << "contracted:\t" << contracted+time_procd << endl;
+
+		// inclusion test
 		if (time.containsInInterior(contracted)) {
 g_context->cout << "proved" << endl;
 			time = contracted;
@@ -166,10 +189,13 @@ g_context->cout << "proved" << endl;
 			 + interval(-g_params->abs_infl, g_params->abs_infl);
 g_context->cout << "inflated:\t" << time+time_procd << endl;
 
-		if ( time.contains((capd::TypeTraits<interval>::zero())) ) {
-			// TODO
-			THROW("zero in the time interval");
-		}
+		// TODO
+		intersection(time, time_init, time);
+
+		//if ( time.contains((capd::TypeTraits<interval>::zero())) ) {
+		//	// TODO
+		//	THROW("zero in the time interval");
+		//}
 
 	} while (hausdorff(time_old, time) <= g_params->delta*d_old);
 
@@ -214,8 +240,10 @@ g_context->cout << "dx: " << dx << endl;
 			time = *gamma_l;
 		}
 		else {
-			time = *gamma_u;
-			delete gamma_u;
+			// should not come here
+			THROW("extdiv resulted in two intervals");
+			//time = *gamma_u;
+			//delete gamma_u;
 		}
 		time += offset;
 		intersection(time_old, time, time);
@@ -247,10 +275,13 @@ g_context->cout << endl;
 	//Parallelepiped& pped = g_context->pped;
 	//interval& time = g_context->time;
 	Parallelepiped pped = g_context->pped;
+
 	interval time = g_context->time;
 g_context->cout << "TIME0: " << time << endl;
 	const double time_l(time.rightBound());
 	if (selected) g_context->time_l = time_l;
+
+	interval reduced;
 
 	TRY {
 
@@ -271,28 +302,33 @@ g_context->cout << "TIME0: " << time << endl;
  		timeMap.moveSet(g_params->t_max, capdPped);
 
 		time = interval(0,1)*solver.getStep();
+		reduced = time;
 g_context->cout << endl << "step made (1): " << time+time_procd << endl;
-		const interval time_init(time);
+		//const interval time_init(time);
+
 		const ITaylor::CurveType& curve = solver.getCurve();
 
-		IVector  dx( der(curve(time)) );
 g_context->cout << "x:  " << curve(time) << endl;
-g_context->cout << "dx: " << dx << endl; 
+		//IVector  dx( der(curve(time)) );
+//g_context->cout << "dx: " << dx << endl; 
 //g_context->cout << "h:  " << grd_h()(1) << endl;
 //g_context->cout << "dh: " << grd_h.der()(1)*dx << endl;
 //g_context->cout << "g:  " << grd_g()(1) << endl;
 //g_context->cout << "dg: " << grd_g.der()(1)*dx << endl;
 
 		// reduce the lower bound
-		bool res( reduceLower(der, grd_h, grd_g, curve, time_init, time_procd, time) );
+		//bool res( reduceLower(der, grd_h, grd_g, curve, time_init, time_procd, time) );
+		bool res( reduceLower(der, grd_h, grd_g, curve, time, time_procd, reduced) );
+g_context->cout << "TIME: " << time+time_procd << endl;
 
 		// dump the trajectory paving.
 		if (selected && g_params->dump_interval > 0) {
-		if (!res) time = time_init;
+		//if (!res) time = time_init;
+		if (!res) reduced = time;
 if (!res) {
-		int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
+		int grid(reduced.rightBound()/g_params->dump_interval + 0.9999999999);
  		if (grid==0) grid = 1;
-		const double stepW(time.rightBound()/grid - 0.0000001);
+		const double stepW(reduced.rightBound()/grid - 0.0000001);
  		for(int i(0); i<grid; ++i) {
  			const interval step( interval(i,i+1)*stepW );
  			IVector v = curve(step);
@@ -324,10 +360,11 @@ g_context->fout << ',' << endl;
 */
 
 	const ITaylor::CurveType& curve = solver.getCurve();
-	const interval time_init(time);
+	// TODO
+	//const interval time_init(time);
 
 	// verification of the result
-	if ( !verify(der, grd_h, curve, time_init, time_procd, time) ) {
+	if ( !verify(der, grd_h, curve, time, time_procd, reduced) ) {
 		THROW("verification failed");
 
 		// TODO
@@ -349,18 +386,18 @@ g_context->fout << ',' << endl;
 	//intersection(time_init, time, time);
 
 	// reduce the upper bound
-	if ( !reduceUpper(der, grd_h, curve, time_init, time_procd, time) )
+/*	if ( !reduceUpper(der, grd_h, curve, time, time_procd, reduced) )
 		THROW("failed in reducing the upper bound");
-g_context->cout << "contracted ub:\t" << time + time_procd << endl;
+g_context->cout << "contracted ub:\t" << reduced + time_procd << endl;
 
-g_context->cout << "TIME: " << time << endl;
+g_context->cout << "TIME: " << reduced << endl;
 g_context->cout << "GTIME: " << g_context->time << endl;
 
 		// TODO
 		if (selected && g_params->dump_interval > 0) {
-		int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
+		int grid(reduced.rightBound()/g_params->dump_interval + 0.9999999999);
  		if (grid==0) grid = 1;
-		const double stepW(time.rightBound()/grid - 0.0000001);
+		const double stepW(reduced.rightBound()/grid - 0.0000001);
  		for(int i(0); i<grid; ++i) {
  			const interval step( interval(i,i+1)*stepW );
  			IVector v = curve(step);
@@ -370,20 +407,26 @@ if (selected) {
 }
 		}
 		}
+*/
 
 if (selected) {
-	g_context->x = curve(time);
-	g_context->x_left = curve(time.left());
+	//g_context->x = curve(time);
+	g_context->x = curve(reduced);
+	g_context->x_left = curve(reduced.left());
 //#ifndef HSS_SKIP_PPED_T_INF
-	g_context->dx_phi = curve[time]*dx_prev;
+	//g_context->dx_phi = curve[time]*dx_prev;
+	g_context->dx_phi = curve[reduced]*dx_prev;
 //#else
 //	g_context->dx_phi = curve[time.left()]*dx_prev;
 //#endif
 	//g_context->Dt_phi = curve.derivative()(time);
 	g_context->dt_phi = der(g_context->x);
 	g_context->dh = grd_h.der()(1);
-g_context->time = time;
+
+	//g_context->time = time;
+	g_context->time = reduced;
 	g_context->time += time_procd;
+
 //g_context->pped = pped;
 
 printPipe(g_context->fout, g_context->time, g_context->x);
@@ -394,7 +437,8 @@ g_context->fout << ',' << std::endl;
 //	cout << "}" << endl;
 
 // TODO
-time += time_procd;
+//time += time_procd;
+reduced += time_procd;
 
 	} 
 	//catch(exception& e)
@@ -405,7 +449,8 @@ time += time_procd;
 		return cError;
 	}
 
-	cInterval res = {time.leftBound(), time.rightBound()};
+	//cInterval res = {time.leftBound(), time.rightBound()};
+	cInterval res = {reduced.leftBound(), reduced.rightBound()};
 	return res;
 }
 
@@ -532,6 +577,8 @@ g_context->cout << endl;
 g_context->cout << "TIME0: " << time << endl;
 	const double time_l(time.rightBound());
 
+	interval reduced;
+
 	TRY {
 
 	// the solver:
@@ -553,7 +600,8 @@ g_context->cout << "TIME0: " << time << endl;
 
 		time = interval(0,1)*solver.getStep();
 g_context->cout << endl << "step made (3): " << time+time_procd << endl;
-		const interval time_init(time);
+		//const interval time_init(time);
+		reduced = time;
 		const ITaylor::CurveType& curve = solver.getCurve();
 
 		IVector  dx( der(curve(time)) );
@@ -561,7 +609,7 @@ g_context->cout << "x:  " << curve(time) << endl;
 g_context->cout << "dx: " << dx << endl; 
 
 		// reduce the lower bound
-		bool res( reduceLower(der, invariant, inv_norm, curve, time_init, time_procd, time) );
+		bool res( reduceLower(der, invariant, inv_norm, curve, time, time_procd, reduced) );
 		if (res)
 			break;
 		else if (timeMap.completed())
@@ -573,23 +621,23 @@ g_context->cout << "dx: " << dx << endl;
 	}
 
 	const ITaylor::CurveType& curve = solver.getCurve();
-	const interval time_init(time);
+	//const interval time_init(time);
 
 	// verification of the result
-	if ( !verify(der, invariant, curve, time_init, time_procd, time) ) {
+	if ( !verify(der, invariant, curve, time, time_procd, reduced) ) {
 		THROW("verification failed");
 	}
 
 	// reduce the upper bound
-	if ( !reduceUpper(der, invariant, curve, time_init, time_procd, time) )
+	if ( !reduceUpper(der, invariant, curve, time, time_procd, reduced) )
 		THROW("failed in reducing the upper bound");
-g_context->cout << "contracted ub:\t" << time + time_procd << endl;
+g_context->cout << "contracted ub:\t" << reduced + time_procd << endl;
 
-g_context->cout << "TIME: " << time << endl;
+g_context->cout << "TIME: " << reduced << endl;
 g_context->cout << "GTIME: " << g_context->time << endl;
 
 // TODO
-time += time_procd;
+reduced += time_procd;
 	} 
 	CATCH {
 		std::cerr << "exception caught! (3): " << eh_ex->what() << endl << endl;
@@ -598,7 +646,7 @@ time += time_procd;
 		return cError;
 	}
 
-	cInterval res = {time.leftBound(), time.rightBound()};
+	cInterval res = {reduced.leftBound(), reduced.rightBound()};
 	return res;
 }
 
@@ -625,7 +673,7 @@ g_context->cout << "TIME0: " << time << endl;
 	double time_l(g_context->time.rightBound());
     interval time_procd(time_l);
 
-	//interval time;
+	interval reduced;
 
 	TRY {
 
@@ -668,7 +716,8 @@ g_context->cout << "moved to time_l: " << time_lower << " - " << time_l << " " <
 
 		time = interval(0,1)*solver.getStep();
 g_context->cout << endl << "step made (4): " << time/*+time_procd*/ << endl;
-		const interval time_init(time);
+		//const interval time_init(time);
+		reduced = time;
 		const ITaylor::CurveType& curve = solver.getCurve();
 
 		IVector  dx( der(curve(time)) );
@@ -676,7 +725,7 @@ g_context->cout << "x:  " << curve(time) << endl;
 g_context->cout << "dx: " << dx << endl; 
 
 		// reduce the lower bound
-		bool res( reduceLower(der, ap, ap_norm, curve, time_init, time_procd, time, polar) );
+		bool res( reduceLower(der, ap, ap_norm, curve, time, time_procd, reduced, polar) );
 		if (res)
 			break;
 		else if (timeMap.completed())
@@ -688,10 +737,10 @@ g_context->cout << "dx: " << dx << endl;
 	}
 
 	const ITaylor::CurveType& curve = solver.getCurve();
-	const interval time_init(time);
+	//const interval time_init(time);
 
 	// verification of the result
-	if ( !verify(der, ap, curve, time_init, time_procd, time) ) {
+	if ( !verify(der, ap, curve, time, time_procd, reduced) ) {
 		THROW("verification failed");
 	}
 
@@ -701,17 +750,17 @@ g_context->cout << "dx: " << dx << endl;
 g_context->cout << "contracted ub:\t" << time + time_procd << endl;
 */
 
-g_context->cout << "TIME: " << time << endl;
+g_context->cout << "TIME: " << reduced << endl;
 g_context->cout << "GTIME: " << g_context->time << endl;
 
 // TODO
-time += time_procd;
+reduced += time_procd;
 	} 
 	CATCH {
 		std::cerr << "exception caught! (4): " << eh_ex->what() << endl << endl;
 		return cError;
 	}
 
-	cInterval res = {time.leftBound(), time.rightBound()};
+	cInterval res = {reduced.leftBound(), reduced.rightBound()};
 	return res;
 }
