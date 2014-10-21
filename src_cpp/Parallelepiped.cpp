@@ -19,16 +19,17 @@ interval norm(const IMatrix& M) {
 DMatrix characteristic(const DMatrix& jA) {
 	DMatrix B(jA);
 
+	try {
+
 	// TODO
 	for (int i(0); i < B.numberOfColumns(); ++i) {
 		// should compute: Bcol(i) / norm(Bcol(i))
 		B.column(i).normalize();
 	}
 
-	try {
 		DMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(B) );
 		//DMatrix B_inv( capd::matrixAlgorithms::gaussInverseMatrix(B) );
-	
+
 		if (g_params->char_mtx == 1 ||
 			(g_params->char_mtx < 0 && norm(B)*norm(B_inv) > g_params->qr_thres) ) {
 
@@ -42,8 +43,9 @@ DMatrix characteristic(const DMatrix& jA) {
 		return B;
 	
 	} catch (std::runtime_error &e) {
-	    std::cout << "runtime_error from CAPD: " << e.what () << std::endl;
-	
+	    std::cout << "runtime_error from CAPD: " << e.what() << std::endl;
+
+		// TODO: it won't recover
 		return DMatrix::Identity(B.numberOfColumns());
 	}
 }
@@ -84,7 +86,15 @@ Parallelepiped map_parallelepiped(const Parallelepiped& piped,
 		for (int j(0); j < dim; ++j)
 			IB(i+1,j+1) = B(i+1,j+1);
 
-	IMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(IB) );
+	IMatrix B_inv;
+	try { 
+		B_inv = capd::matrixAlgorithms::inverseMatrix(IB);
+	} catch (std::runtime_error &e) {
+	    std::cout << "runtime_error from CAPD: " << e.what () << std::endl;
+	
+		// TODO: it won't recover
+		B_inv = IMatrix::Identity(B.numberOfColumns());
+	}
 
 //std::cout << "B_inv: " << B_inv << std::endl;
 

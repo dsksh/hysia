@@ -4,13 +4,13 @@ let   intv = [-1e-3,1e-3]
 
 var   x1, x2, c
 
-init  L, 1+intv, intv, 2
-#init  L, 1+intv, 1+intv, 2
+init  Loc, 1+intv, intv, 2
+#init  Loc, 1+intv, 1+intv, 2
 
-at L wait -c*x2, c*x1, 0
-  #watch (x1-x2, -c*x2) goto L then x1, x2, -c
-  #watch (x1-x2+1, -c*(x1+x2)) goto L then x1, x2, -c
-  watch (2*x1-x2, -c*x1) goto L then x1, x2, -c
+at Loc wait -c*x2, c*x1, 0
+  #watch (x1-x2, -c*x2) goto Loc then x1, x2, -c
+  #watch (x1-x2+1, -c*(x1+x2)) goto Loc then x1, x2, -c
+  watch (2*x1-x2, -c*x1) goto Loc then x1, x2, -c
 end
 
 param order = 10

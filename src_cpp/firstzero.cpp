@@ -41,7 +41,6 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 	//int i(0);
 	do {
 		//if (i++ > 5) break;
-g_context->cout << endl << "hoge: " << time << endl;
 
 		time_old = time;
 
@@ -62,16 +61,17 @@ if (time.left() < 0.) THROW("integration backward");
 		const interval h( grd_h(curve(offset))(1) );
 g_context->cout << "offset:\t" << offset << endl;
 g_context->cout << "h:\t" << h << endl;
+g_context->cout << "dh:\t" << dh << endl;
 //g_context->cout << "g:\t" << g << endl;
 
 		// enforce the Box consistency
 		time -= offset;
-g_context->cout << "contracted lb:\t" << time+offset+time_procd << endl;
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
 		extDiv(-h, dh, gamma_l, gamma_u);
 
 		if (gamma_l == NULL) {
+			// gamma_u is also NULL
 			return false;
 		}
 		else if (gamma_u == NULL) {
@@ -96,12 +96,7 @@ g_context->cout << polar << ", g[" << i << "]:\t" << g << endl;
 			extDiv(-g, dg[i], gamma_l, gamma_u);
 	
 			if (gamma_l == NULL) {
-				if (gamma_u == NULL)
-					return false;
-				else {
-					time = *gamma_u;
-					delete gamma_u;
-				}
+				return false;
 			}
 			else if (gamma_u == NULL) {
 				//time = *gamma_l;
@@ -131,8 +126,7 @@ inline bool verify(DerMap& der, AuxMap& grd_h,
 				   interval& time)
 {
 	interval time_old(UNIVERSE);
-	// TODO
-	//time = time.left();
+	time = time.left();
 	double d(INFINITY), d_old(INFINITY);
 
 g_context->cout << endl << "time:\t" << time+time_procd << endl;
@@ -141,9 +135,6 @@ g_context->cout << endl << "time_init:\t" << time_init+time_procd << endl;
 	do {
 
 g_context->cout << endl << "verifying:\t" << time+time_procd << endl;
-		// current state
-		//interval time_tmp;
-		//intersection(time_init, time, time_tmp);
 		
 		// differentiate h
 		const IVector  dx( der(curve(time)) );
@@ -153,19 +144,13 @@ g_context->cout << "x: " << curve(time) << endl;
 		const interval dh( grd_h.der()(1)*dx );
 g_context->cout << "dh: " << dh << " at " << time+time_procd << endl;
 		if ( dh.contains((capd::TypeTraits<interval>::zero())) ) {
-			// TODO
 			THROW("zero in the derivative");
 			//break;
 		}
 
 		// interval Newton
-		//der(curve(time.left()));
-		// TODO
 		interval contracted(time.left() - grd_h(curve(time.left()))(1) / dh);
-		//interval contracted(time_tmp.left() - grd_h(curve(time_tmp.left()))(1) / dh);
-		// TODO
-		//intersection(time_init, contracted, contracted);
-		intersection(time, contracted, contracted);
+		//intersection(time, contracted, contracted);
 g_context->cout << "contracted:\t" << contracted+time_procd << endl;
 
 		// inclusion test
@@ -174,9 +159,6 @@ g_context->cout << "proved" << endl;
 			time = contracted;
 			return true;
 		}
-		//else if (contracted.rightBound() > time_init.rightBound()) {
-		//	THROW("collision occurs over the multiple time steps");
-		//}
 
 		// inflation
 		d_old = d;
@@ -184,8 +166,8 @@ g_context->cout << "proved" << endl;
 		time_old = contracted;
 
 //g_context->cout << "mid:\t" << contracted.mid()+time_procd << endl;
-		time = time.mid() + g_params->tau*(contracted - time.mid())
-//		time = contracted.mid() + g_params->tau*(contracted - contracted.mid())
+		//time = time.mid() + g_params->tau*(contracted - time.mid())
+		time = contracted.mid() + g_params->tau*(contracted - contracted.mid())
 			 + interval(-g_params->abs_infl, g_params->abs_infl);
 g_context->cout << "inflated:\t" << time+time_procd << endl;
 
@@ -197,7 +179,8 @@ g_context->cout << "inflated:\t" << time+time_procd << endl;
 		//	THROW("zero in the time interval");
 		//}
 
-	} while (hausdorff(time_old, time) <= g_params->delta*d_old);
+	//} while (hausdorff(time_old, time) <= g_params->delta*d_old);
+	} while (hausdorff(time_old, time) <= g_params->delta*d);
 
 	return false;
 }
@@ -386,28 +369,32 @@ g_context->fout << ',' << endl;
 	//intersection(time_init, time, time);
 
 	// reduce the upper bound
-/*	if ( !reduceUpper(der, grd_h, curve, time, time_procd, reduced) )
+	if ( !reduceUpper(der, grd_h, curve, time, time_procd, reduced) )
 		THROW("failed in reducing the upper bound");
 g_context->cout << "contracted ub:\t" << reduced + time_procd << endl;
 
 g_context->cout << "TIME: " << reduced << endl;
 g_context->cout << "GTIME: " << g_context->time << endl;
 
-		// TODO
-		if (selected && g_params->dump_interval > 0) {
+	// TODO
+	if (selected && g_params->dump_interval > 0) {
 		int grid(reduced.rightBound()/g_params->dump_interval + 0.9999999999);
- 		if (grid==0) grid = 1;
+		if (grid==0) grid = 1;
 		const double stepW(reduced.rightBound()/grid - 0.0000001);
- 		for(int i(0); i<grid; ++i) {
- 			const interval step( interval(i,i+1)*stepW );
- 			IVector v = curve(step);
+		for(int i(0); i<grid; ++i) {
+			const interval step( interval(i,i+1)*stepW );
+			IVector v = curve(step);
 if (selected) {
- 			printPipe(g_context->fout, step+time_procd, v);
+			printPipe(g_context->fout, step+time_procd, v);
 			g_context->fout << ',' << endl;
 }
 		}
-		}
-*/
+	}
+
+	for (int i(0); i < grd_g.size(); i++) {
+		if ( (*grd_g[i])(curve(reduced))(1).rightBound() >= 0 )
+			THROW("inequality condition is not satisfied at last");
+	}
 
 if (selected) {
 	//g_context->x = curve(time);
@@ -504,6 +491,7 @@ g_context->cout << endl << "step made (2): " << time_procd + time_mid << endl;
 	// reduce with the interval Newton
     //interval contracted(time_mid);
 	const interval time_init(time_mid);
+g_context->cout << "time_init:\t" << time_init+time_procd << endl;
     interval time_old;
 	do {
     	time_old = time_mid;
@@ -526,7 +514,9 @@ g_context->cout << "time_mid:\t" << time_mid << endl;
 			//continue;
 			break;
 		}
-	} while (hausdorff(time_old, time_mid) > g_params->epsilon);
+	} while (hausdorff(time_old, time_mid) > g_params->epsilon &&
+			 // TODO
+			 time_mid.rightBound()-time_mid.leftBound() > g_params->epsilon );
 
 	g_context->x_mid = curve(time_mid);
 	time_mid += time_procd;

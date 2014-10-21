@@ -11,29 +11,50 @@ let find_inv_frontier_ lid iid _inv =
 (*Printf.printf "fif %s %d\n%!" lid iid;*)
     iid, (find_inv_frontier lid iid)
 
-let select_earliest earliest (id,(l,u)) = match earliest with
-  | Some (id1,(l1,u1)) ->
+let select_earliest earliest (id,(l,u)) = 
+    if l>u then 
+        earliest
+    else if l < 0. then
+        error FindZeroError
+    else
+    match earliest with
+    | Some (id1,(l1,u1)) ->
 (*Printf.printf "1: %d,[%f,%f] vs. %d,[%f,%f]\n%!" id1 l1 u1 id l u;*)
 
-      if l<=u && l>=0. then begin
+        (*if l<=u && l>=0. then begin*)
         if u < l1 then Some (id,(l,u)) else begin
-          if u1 < l then Some (id1,(l1,u1)) else 
-            error (SelectEarliestError ((l,u), (l1,u1))) end 
-      end else if l = -1. then
-        error (SelectEarliestError ((l,u), (l1,u1)))
-      else
-        Some (id1,(l1,u1))
-  | None -> 
-      if l<=u && l>=0. then Some (id,(l,u)) else None
+            if u1 < l then Some (id1,(l1,u1)) 
+            else error (SelectEarliestError ((l,u), (l1,u1)))
+        end 
+        (*end else if l = -1. then
+          error (SelectEarliestError ((l,u), (l1,u1)))
+        else
+            Some (id1,(l1,u1))*)
+    | None -> 
+        (*if l<=u && l>=0. then Some (id,(l,u)) else None*)
+        Some (id,(l,u))
 
 
 let find_first_zero_ lid (eid,zsf,zs) (forced,gh,_,_dst,_) = 
-    if forced then
+    (*if forced then
         eid+1, (eid,find_first_zero false lid eid)::zsf, zs
     else
-        eid+1, zsf, (eid,find_first_zero false lid eid)::zs
+        eid+1, zsf, (eid,find_first_zero false lid eid)::zs*)
 
-let select_earliest_grd lid invs es earliest (eid,(l,u)) = match earliest with
+    let (l,u) = find_first_zero false lid eid in
+(*Printf.printf "0: %d,[%f,%f]\n%!" eid l u;*)
+    if l<=u && l>=0. then begin
+        if forced then
+            eid+1, (eid,(l,u))::zsf, zs
+        else
+            eid+1, zsf, (eid,(l,u))::zs
+    end else if l>u then 
+        eid+1, zsf, zs
+    else (* if l = -1. then *)
+        error FindZeroError
+
+let select_earliest_grd lid invs es earliest (eid,(l,u)) =
+  match earliest with
   | Some (iid,(l1,u1)), _None ->
 (*Printf.printf "2: %d,[%f,%f] vs. %d,[%f,%f]\n%!" iid l1 u1 eid l u;*)
 
@@ -43,29 +64,35 @@ let select_earliest_grd lid invs es earliest (eid,(l,u)) = match earliest with
         None, Some (eid,(l,u))
 
       else begin
-        if l<=u && l>=0. then begin
+        (*if l<=u && l>=0. then begin*)
           if u < l1 then None, Some (eid,(l,u)) else begin
             if u1 < l then Some (iid,(l1,u1)), None else 
               error (SelectEarliestError ((l,u), (l1,u1))) end 
-        end else if l = -1. then
+        (*end 
+        else if l = -1. then
           error (SelectEarliestError ((l,u), (l1,u1)))
         else
           Some (iid,(l1,u1)), None
+        *)
       end
 
   | _None, Some (eid1,(l1,u1)) ->
 (*Printf.printf "3: %d,[%f,%f] vs. %d,[%f,%f]\n%!" eid1 l1 u1 eid l u;*)
-      if l<=u && l>=0. then begin
+      (*if l<=u && l>=0. then begin*)
         if u < l1 then None, Some (eid,(l,u)) else begin
           if u1 < l then None, Some (eid1,(l1,u1)) else 
             error (SelectEarliestError ((l,u), (l1,u1))) end 
-      end else if l = -1. then
+      (*end 
+      else if l = -1. then
         error (SelectEarliestError ((l,u), (l1,u1)))
       else
         None, Some (eid1,(l1,u1))
+      *)
 
   | None, None -> 
-      if l<=u && l>=0. then None, Some (eid,(l,u)) else None, None
+(*Printf.printf "4: %d,[%f,%f]\n%!" eid l u;*)
+      (*if l<=u && l>=0. then None, Some (eid,(l,u)) else None, None*)
+      None, Some (eid,(l,u))
 
 let filter_invariant lid invs es tmax (eid,(l,u)) =
     match tmax with
