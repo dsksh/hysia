@@ -10,8 +10,6 @@
 using namespace std;
 using namespace capd;
 
-//class Exception : public std::exception { };
-
 #define EXCEPTION_HACK 1
 
 #if EXCEPTION_HACK
@@ -38,9 +36,7 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 						const int polar = 1)
 {
 	interval time_old;
-	//int i(0);
 	do {
-		//if (i++ > 5) break;
 
 		time_old = time;
 
@@ -57,12 +53,10 @@ if (time.left() < 0.) THROW("integration backward");
 
 		// evaluate the guard h at the left bound.
 		const interval offset(time.left());
-		//der(curve(offset));
 		const interval h( grd_h(curve(offset))(1) );
 g_context->cout << "offset:\t" << offset << endl;
 g_context->cout << "h:\t" << h << endl;
 g_context->cout << "dh:\t" << dh << endl;
-//g_context->cout << "g:\t" << g << endl;
 
 		// enforce the Box consistency
 		time -= offset;
@@ -74,13 +68,9 @@ g_context->cout << "dh:\t" << dh << endl;
 			// gamma_u is also NULL
 			return false;
 		}
-		else if (gamma_u == NULL) {
-			//time = *gamma_l;
-		}
-		else {
+		else if (gamma_u != NULL) {
 			// should not come here
 			THROW("extdiv resulted in two intervals");
-			//delete gamma_u;
 		}
 g_context->cout << "contracted lb:\t" << time+offset+time_procd << endl;
 
@@ -98,14 +88,9 @@ g_context->cout << polar << ", g[" << i << "]:\t" << g << endl;
 			if (gamma_l == NULL) {
 				return false;
 			}
-			else if (gamma_u == NULL) {
-				//time = *gamma_l;
-			}
-			else {
+			else if (gamma_u != NULL) {
 				// should not come here
 				THROW("extdiv resulted in two intervals");
-				//time = *gamma_u;
-				//delete gamma_u;
 			}
 		}
 
@@ -140,7 +125,6 @@ g_context->cout << endl << "verifying:\t" << time+time_procd << endl;
 		const IVector  dx( der(curve(time)) );
 g_context->cout << "dx: " << dx << endl;
 g_context->cout << "x: " << curve(time) << endl;
-//g_context->cout << "time_tmp: " << time_tmp << endl;
 		const interval dh( grd_h.der()(1)*dx );
 g_context->cout << "dh: " << dh << " at " << time+time_procd << endl;
 		if ( dh.contains((capd::TypeTraits<interval>::zero())) ) {
@@ -174,11 +158,6 @@ g_context->cout << "inflated:\t" << time+time_procd << endl;
 		// TODO
 		intersection(time, time_init, time);
 
-		//if ( time.contains((capd::TypeTraits<interval>::zero())) ) {
-		//	// TODO
-		//	THROW("zero in the time interval");
-		//}
-
 	//} while (hausdorff(time_old, time) <= g_params->delta*d_old);
 	} while (hausdorff(time_old, time) <= g_params->delta*d);
 
@@ -194,8 +173,6 @@ inline bool reduceUpper(DerMap& der, AuxMap& grd_h,
 
 	do {
 g_context->cout << endl << "contracting rb: " << time+time_procd << endl;
-//		time += time_procd;
-//g_context->cout << endl << "contracting rb: " << time << endl;
 
 		time_old = time;
 
@@ -216,17 +193,11 @@ g_context->cout << "dx: " << dx << endl;
 		extDiv(-h, dh, gamma_l, gamma_u);
 
 		if (gamma_l == NULL) {
-			//THROW("gamma is empty");
 			return false;
 		}
-		else if (gamma_u == NULL) {
-			time = *gamma_l;
-		}
-		else {
+		else if (gamma_u != NULL) {
 			// should not come here
 			THROW("extdiv resulted in two intervals");
-			//time = *gamma_u;
-			//delete gamma_u;
 		}
 		time += offset;
 		intersection(time_old, time, time);
@@ -250,13 +221,7 @@ g_context->cout << endl;
 	EdgePtr edge = g_model->locs[lid]->edges[eid];
 	AuxMap& grd_h = edge->grd_h;
 	AuxMapVec& grd_g = edge->grd_g;
-//der.setParameter("hoge", interval(0.));
-//grd_h.setParameter("hoge", interval(0.));
-//for (int i(0); i < grd_g.size(); i++)
-//	grd_g[i]->setParameter("hoge", interval(0.));
 
-	//Parallelepiped& pped = g_context->pped;
-	//interval& time = g_context->time;
 	Parallelepiped pped = g_context->pped;
 
 	interval time = g_context->time;
@@ -343,30 +308,11 @@ g_context->fout << ',' << endl;
 */
 
 	const ITaylor::CurveType& curve = solver.getCurve();
-	// TODO
-	//const interval time_init(time);
 
 	// verification of the result
 	if ( !verify(der, grd_h, curve, time, time_procd, reduced) ) {
 		THROW("verification failed");
-
-		// TODO
-		//time_procd = time_l + timeMap.getCurrentTime();
-		//dx_prev = IMatrix(P);
-		//continue;
 	}
-
-	//if (time.right() == time_init.right()) {
-	//	X  = curve(time);
-	//	Dx_phi = curve[time]*dx_prev;
-	//	Dt_phi = curve.derivative()(time);
-	//	Dh = guard_h[X];
-	//	time += time_procd;
-	//	return true;
-	//}
-
-	// TODO
-	//intersection(time_init, time, time);
 
 	// reduce the upper bound
 	if ( !reduceUpper(der, grd_h, curve, time, time_procd, reduced) )
@@ -397,20 +343,16 @@ if (selected) {
 	}
 
 if (selected) {
-	//g_context->x = curve(time);
 	g_context->x = curve(reduced);
 	g_context->x_left = curve(reduced.left());
 //#ifndef HSS_SKIP_PPED_T_INF
-	//g_context->dx_phi = curve[time]*dx_prev;
 	g_context->dx_phi = curve[reduced]*dx_prev;
 //#else
-//	g_context->dx_phi = curve[time.left()]*dx_prev;
+//	g_context->dx_phi = curve[reduced.left()]*dx_prev;
 //#endif
-	//g_context->Dt_phi = curve.derivative()(time);
 	g_context->dt_phi = der(g_context->x);
 	g_context->dh = grd_h.der()(1);
 
-	//g_context->time = time;
 	g_context->time = reduced;
 	g_context->time += time_procd;
 
@@ -420,11 +362,7 @@ printPipe(g_context->fout, g_context->time, g_context->x);
 g_context->fout << ',' << std::endl;
 }
 
-//	dumpPipe1(cout, timeMap.getCurrentTime(), s, false);
-//	cout << "}" << endl;
-
 // TODO
-//time += time_procd;
 reduced += time_procd;
 
 	} 
@@ -432,11 +370,9 @@ reduced += time_procd;
 	CATCH
 	{
 		std::cerr << "exception caught! (1): " << eh_ex->what() << endl << endl;
-		//return cEmpty;
 		return cError;
 	}
 
-	//cInterval res = {time.leftBound(), time.rightBound()};
 	cInterval res = {reduced.leftBound(), reduced.rightBound()};
 	return res;
 }
