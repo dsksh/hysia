@@ -131,8 +131,8 @@ let rec check debug tmax ap_fs (*ap_locs*) = function
         if debug then Format.printf "loc\n%a" print_fs fs;
         if fs = Some [] then None else fs
     | Mexpr d -> 
-        let fs = snd (List.find (fun (apid,fs) -> apid = d.tag) ap_fs) in
-        if debug then Format.printf "expr %d\n%a" d.tag print_fs fs;
+        let fs = snd (List.find (fun (apid,fs) -> apid = d.Hashcons.tag) ap_fs) in
+        if debug then Format.printf "expr %d\n%a" d.Hashcons.tag print_fs fs;
         fs
     | Mnot f -> 
         let fs = invert_fs (check debug tmax ap_fs f) in
