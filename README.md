@@ -10,16 +10,18 @@
 
 ## Install
 
+`$(CAPD_DIR)` or `$(HSS_DIR)` represents the path to the unpacked directory of CAPD-DynSys or HSS, respectively.
+
 1. Apply patch to CAPD-DynSys.
 ```
 $ cd $(CAPD_DIR)
-$ patch -p1 
+$ patch -p1 < $(HSS_DIR)/tmp/capd_dynsys.20140612.diff
 ```
 2. Build and install CAPD-DynSys.
 ```
 $ cd $(CAPD_DIR)
 $ ./configure
-$ make install
+$ sudo make install
 ```
 3. Build HSS.
 ```
@@ -39,6 +41,8 @@ $ ./src_ocaml/hss.opt ./examples/bb-movingtable.ha -a
 ...
 true
 ```
+The option `-a` tells that the simulation length is automatically decided according to the BLTL property.
+You can also use the option `-n N` (`N` is a positive integer) to specify the number of steps to simulate.
 
 A file `pped.dat` will be generated in the current directory which contains a dumped data of the witness trajectory.
 If you have Mathematica, you can use a notebook file `plot.nb` to visualize a dump file.
