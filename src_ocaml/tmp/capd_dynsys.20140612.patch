@@ -1,0 +1,40 @@
+diff -Naru capd_dynsys.orig/capdDynSys/include/capd/map/CnContainer.h capd_dynsys/capdDynSys/include/capd/map/CnContainer.h
+--- capd_dynsys.orig/capdDynSys/include/capd/map/CnContainer.h	2011-03-18 21:50:25.000000000 +0900
++++ capd_dynsys/capdDynSys/include/capd/map/CnContainer.h	2014-06-12 12:41:01.000000000 +0900
+@@ -113,7 +113,9 @@
+   int index(const Multipointer&, const Multipointer&) const;
+   int index(const Multiindex&) const;
+   Object* m_data;
+-  int m_dim, m_rank, m_size;
++  int m_dim, m_rank; //, m_size;
++  // ishii
++  long long int m_size;
+ }; // the end of class CnContainer
+ 
+ // ------------------- member definitions -------------------
+diff -Naru capd_dynsys.orig/capdDynSys/include/capd/poincare/TimeMap.h capd_dynsys/capdDynSys/include/capd/poincare/TimeMap.h
+--- capd_dynsys.orig/capdDynSys/include/capd/poincare/TimeMap.h	2011-02-20 03:45:19.000000000 +0900
++++ capd_dynsys/capdDynSys/include/capd/poincare/TimeMap.h	2014-06-12 12:39:51.000000000 +0900
+@@ -108,6 +108,10 @@
+     return m_currentTime;
+   }
+   
++  // ishii
++  template<class SetType>
++  void moveSet(ScalarType time, SetType& s);
++
+ protected:
+ 
+   template<class SetType>
+@@ -119,8 +123,9 @@
+     x = m_dynamicalSystem(const_cast<const VectorType & >(x));
+   }
+ 
+-  template<class SetType>
+-  void moveSet(ScalarType time, SetType& s);
++  // ishii
++  //template<class SetType>
++  //void moveSet(ScalarType time, SetType& s);
+ 
+ // the fields of the class
+ 
