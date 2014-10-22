@@ -1,4 +1,4 @@
-# Hybrid Systems Simulator (HSS)
+# Hybrid System Simulator (HSS)
 
 > --- With A Monitor for Bounded LTL Properties ---
 
@@ -41,7 +41,7 @@ $ ./src_ocaml/hss.opt ./examples/bb-movingtable.ha -a
 ...
 true
 ```
-The option `-a` tells that the simulation length is automatically decided according to the BLTL property.
+The option `-a` tells to decide the simulation length automatically according to the BLTL property.
 You can also use the option `-n N` (`N` is a positive integer) to specify the number of steps to simulate.
 
 A file `pped.dat` will be generated in the current directory which contains a dumped data of the witness trajectory.
