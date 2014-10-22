@@ -2,36 +2,37 @@
 .SUFFIXES: .o .cpp .h .d .l .y
 .PHONY : doc clean
 
-#CMD		:= integrate
-LIB		:= libmycapd.a
+#CMD		= integrate
+LIB		= libmycapd.a
 
-TARGET	:= $(LIB)
+TARGET	= $(LIB)
 
-CAPD_DIR := /usr/local
+CAPD_DIR = /usr/local
 
-INCLUDES := -I$(CAPD_DIR)/include -I/opt/local/include
-#CFLAGS	:= -O3 -g -ansi -pedantic -Wall -frounding-math -fno-fast-math $(INCLUDES)
-CFLAGS	:= -O3 -g -frounding-math $(INCLUDES)
-LDFLAGS := -L$(CAPD_DIR)/lib
-LIBS	:= -lcapd
+INCLUDES = -I$(CAPD_DIR)/include -I/opt/local/include
+#CFLAGS	= -O3 -g -ansi -pedantic -Wall -frounding-math -fno-fast-math $(INCLUDES)
+CFLAGS	= -O3 -g -frounding-math $(INCLUDES)
+CFLAGS += -DEXCEPTION_HACK=1
+LDFLAGS = -L$(CAPD_DIR)/lib
+LIBS	= -lcapd
 
-CXX     := g++ #@CXX@
-SED     := sed #@SED@
-MV      := mv #@MV@
-AR      := ar #@AR@
-RANLIB  := ranlib #@RANLIB@
-RM      := rm #@RM@
-LN      := ln #@LN@
-LEX     := flex #@FLEX@
-YACC    := bison #@BISON@
-DOXYGEN := doxygen #@DOXYGEN@
+CXX     = g++ #@CXX@
+SED     = sed #@SED@
+MV      = mv #@MV@
+AR      = ar #@AR@
+RANLIB  = ranlib #@RANLIB@
+RM      = rm #@RM@
+LN      = ln #@LN@
+LEX     = flex #@FLEX@
+YACC    = bison #@BISON@
+DOXYGEN = doxygen #@DOXYGEN@
 
-SRC     := $(wildcard *.c) $(wildcard *.cc) $(wildcard *.cpp)
-SRC_EX  := $(SRC) $(wildcard *.h)
-OBJECT  := $(foreach file, $(SRC), $(basename $(file)).o)
-OBJ_COMMON := MapEx.o Parallelepiped.o util.o sendingHandler.o firstzero.o simulatingHandler.o
+SRC     = $(wildcard *.c) $(wildcard *.cc) $(wildcard *.cpp)
+SRC_EX  = $(SRC) $(wildcard *.h)
+OBJECT  = $(foreach file, $(SRC), $(basename $(file)).o)
+OBJ_COMMON = MapEx.o Parallelepiped.o util.o sendingHandler.o firstzero.o simulatingHandler.o
 
-DEP_FILE := $(OBJECT:.o=.d)
+DEP_FILE = $(OBJECT:.o=.d)
 
 all: 
 	@for t in $(TARGET); do \

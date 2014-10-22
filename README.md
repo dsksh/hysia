@@ -1,4 +1,6 @@
-# Hybrid Systems Simulator with Monitoring (HSS)
+# Hybrid Systems Simulator (HSS)
+
+> --- With A Monitor for Bounded LTL Properties ---
 
 ## Requirements
 
@@ -9,15 +11,21 @@
 ## Install
 
 1. Apply patch to CAPD-DynSys.
-    $ cd $(CAPD_DIR)
-    $ patch -p1 
+```
+$ cd $(CAPD_DIR)
+$ patch -p1 
+```
 2. Build and install CAPD-DynSys.
-    $ cd $(CAPD_DIR)
-    $ ./configure
-    $ make install
+```
+$ cd $(CAPD_DIR)
+$ ./configure
+$ make install
+```
 3. Build HSS.
-    $ cd $(HSS_DIR)
-    $ make
+```
+$ cd $(HSS_DIR)
+$ make
+```
 
 Binary file `$(HSS_DIR)/src_ocaml/hss.opt` will be generated.
 
@@ -25,13 +33,15 @@ Binary file `$(HSS_DIR)/src_ocaml/hss.opt` will be generated.
 
 Example HA models are in the `$(HSS_DIR)/examples` directory.
 
-   $ cd $(HSS_DIR)
-   $ ./src_ocaml/hss.opt ./examples/bb-movingtable.ha -a
-   ...
-   true
+```
+$ cd $(HSS_DIR)
+$ ./src_ocaml/hss.opt ./examples/bb-movingtable.ha -a
+...
+true
+```
 
-A file `pped.dat` will be generated in the current directory which contains a dump data of the witness trajectory.
-If you have Mathematica, a notebook for plotting is at `$(HSS_DIR)/plot.nb`.
+A file `pped.dat` will be generated in the current directory which contains a dumped data of the witness trajectory.
+If you have Mathematica, you can use a notebook file `plot.nb` to visualize a dump file.
 
 ## Reference
 

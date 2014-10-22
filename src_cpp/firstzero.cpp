@@ -10,7 +10,7 @@
 using namespace std;
 using namespace capd;
 
-#define EXCEPTION_HACK 1
+//#define EXCEPTION_HACK 1
 
 #if EXCEPTION_HACK
 jmp_buf eh_jb;

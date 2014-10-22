@@ -9,8 +9,8 @@ var   t, x, vx
 
 #init  Fall, 0, 5+x0, 0
 #init  Fall, 0, [6,6.00001], 0
-#init  Fall, 0, 2+x0, 0
-init  Fall, 0, 2+[0,0.001]+x0, 0
+init  Fall, 0, 2+x0, 0
+#init  Fall, 0, 2+[0,0.001]+x0, 0
 #init  Fall, 0, 4.17621061830895446, 0
 
 #at Fall wait 1, vx, -g
