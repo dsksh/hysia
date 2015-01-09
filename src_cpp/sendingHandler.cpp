@@ -264,13 +264,15 @@ void setInitParam(const char *id, const double v)
 
 void putInitValue()
 {
-	DerMap::NodeType *t = g_stack.front();
+	//DerMap::NodeType *t = g_stack.front();
+	Model::NodePtr t(g_stack.front());
 	g_stack.pop_front();
 	
-	g_model->x_init[ivec_pos] = (*t)(0);
+	//g_model->x_init[ivec_pos] = (*t)(0);
+	g_model->x_init[ivec_pos] = t;
 	++ivec_pos;
 
-	delete t;
+	//delete t;
 }
 
 void putEdge(const char *lid, const char *dst)

@@ -57,7 +57,6 @@ EXTOBJS =
 EXTLIBS = str unix nums dynlink
 
 EXTCMA	= $(addsuffix .cma,$(EXTLIBS)) $(addsuffix .cmo,$(EXTOBJS))
-# TODO
 EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(addsuffix .cmx,$(EXTOBJS)) \
 		  /usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 
@@ -94,32 +93,38 @@ LIBMODULES = hashcons model_common pretty ptree util model parser lexer capd_sen
 
 LIBML  = $(addsuffix .ml,  $(LIBMODULES))
 LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_sending_stubs.mli capd_simulating_stubs.mli
+LIBCMI = $(addsuffix .cmi, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating_stubs.cmi
 LIBCMO = $(addsuffix .cmo, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating_stubs.cmi
 LIBCMX = $(addsuffix .cmx, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating_stubs.cmi
 
 #$(LIBCMO) $(LIBCMX): OINCLUDES += $(LIBINCLUDES)
 $(LIBCMX): OFLAGS += -for-pack Hss
 
-COBJS = capd_sending_stubs.o capd_simulating_stubs.o capd_integrator.o
+COBJS = capd_sending_stubs.o capd_simulating_stubs.o capd_integrator.o \
+		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libgcc_eh.a \
+		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 
 # build targets
 
 byte: hss.cma
-opt:  hss.cmxa
+opt:  hss.cmxs
 
 CCLIBFLAGS := -cclib -lstdc++ -cclib -L$(CXXDIR) -cclib -l$(LIBNAME) -cclib -L$(CAPD_DIR)/lib -cclib -lcapd
 
 hss.cma: hss.cmo $(COBJS)
 	$(OCAMLC) -a $(BFLAGS) -o $@ $^ $(CCLIBFLAGS)
 
-hss.cmxa: hss.cmx $(COBJS)
+hss.cmxa: hss.cmx $(COBJS) 
 	$(OCAMLOPT) -a $(OFLAGS) -o $@ $^ $(CCLIBFLAGS)
 
-hss.cmo: $(LIBCMO)
-	$(OCAMLC) $(BFLAGS) -pack -o $@ $^
+hss.cmi hss.cmo: $(LIBCMI) $(LIBCMO)
+	$(OCAMLC) $(BFLAGS) -pack -o $@ $(LIBCMO)
 
-hss.cmx: $(LIBCMX)
-	$(OCAMLOPT) $(OFLAGS) -pack -o $@ $^
+hss.cmi hss.cmx: $(LIBCMI) $(LIBCMX)
+	$(OCAMLOPT) $(OFLAGS) -pack -o $@ $(LIBCMX)
+
+%.cmxs: %.cmxa
+	$(OCAMLOPT) -shared -linkall -o $@ $<
 
 # depend target
 
@@ -169,7 +174,7 @@ hss: hss.opt
 	ln -sf hss.opt $@
 
 main.cmo: hss.cma
-main.cmx: hss.cmxa
+main.cmx: hss.cmxs
 
 clean::
 	rm -f main.cm[iox] main.annot main.o

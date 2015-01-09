@@ -56,8 +56,10 @@ public:
 			
 			const std::string dumpFile = "pped.dat")
 	  : pped( capd::IMatrix::Identity(m.dim), 
-			  m.x_init - capd::vectalg::midVector(m.x_init), 
-			  capd::vectalg::midVector(m.x_init) ),
+			  //m.x_init - capd::vectalg::midVector(m.x_init), 
+			  //capd::vectalg::midVector(m.x_init) ),
+			  m.getXInit() - capd::vectalg::midVector(m.getXInit()), 
+			  capd::vectalg::midVector(m.getXInit()) ),
 
 		time(), time_mid(), time_l(0),
 		x(m.dim), x_mid(m.dim), x_left(m.dim),

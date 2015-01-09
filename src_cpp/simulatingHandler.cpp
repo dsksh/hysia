@@ -37,6 +37,9 @@ void simInitialize()
 	g_fstream->precision(17);
 	g_fstream->setf(ios::fixed,ios::floatfield);
 	//g_fstream = fstreamPtr(new ofstream(0));
+	
+	// reset evaluation caches
+	g_model->reset();
 
 	if (!g_params->debug)
 		g_context = CtxPtr(new Context(*g_model, cnull, *g_fstream));
@@ -47,16 +50,17 @@ void simInitialize()
 
 printPipe(cout, g_context->time, g_context->pped);
 
-	g_context->fout << '{' << endl;
+	//g_context->fout << '{' << endl;
+	printBegin(g_context->fout);
 
 	startTimer();
 }
 
 void simDispose()
 {
-	g_context->fout << '}' << endl;
-
-	g_context->fout << "(* time: (" << g_context->time.rightBound() << ", " << (getTime()/1000.) << ") *)" << std::endl;
+	//g_context->fout << '}' << endl;
+	//g_context->fout << "(* time: (" << g_context->time.rightBound() << ", " << (getTime()/1000.) << ") *)" << std::endl;
+	printEnd(g_context->fout);
 }
 
 void reportStep(const int stepId, const char *lid)
@@ -69,6 +73,7 @@ void setParam(const char *lid, const char *id, const double v)
 	g_model->der_proto.setParameter(id, v);
 	g_model->locs[lid]->der.setParameter(id, v);
 	//g_context->cout << "setParam: " << id << " := " << v << endl;
+	//std::cout << "setParam: " << id << " := " << v << endl;
 }
 
 /*int checkProp(const char *lid, const int apid)
@@ -289,7 +294,8 @@ void integrate(const char *lid,
  	ITimeMap timeMap(solver);
  
  	// The initial value:
- 	C0Rect2Set s(g_model->x_init);
+ 	//C0Rect2Set s(g_model->x_init);
+ 	C0Rect2Set s(g_model->getXInit());
  
  	cout << '{' << endl;
  	printPipe(cout, 0, s);

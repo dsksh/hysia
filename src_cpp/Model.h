@@ -12,6 +12,8 @@
 
 #include "capd/capdlib.h"
 
+#include "NodeEx.h"
+
 namespace capd{ 
 
 typedef boost::shared_ptr<AuxMap> AuxMapPtr;
@@ -34,6 +36,15 @@ public:
 	    grd_g(),
 		jump(der, der.dimension())
 	{}
+
+	void reset() {
+		grd_h.reset();
+		jump.reset();
+		int i;
+		for (i = 0; i < grd_g.size(); ++i) {
+			grd_g[i]->reset();
+		}
+	}
 };
 
 typedef boost::shared_ptr<Edge> EdgePtr;
@@ -63,6 +74,21 @@ public:
 		edges()
 	{ }
 
+	void reset() {
+		int i;
+		for (i = 0; i < invariant.size(); ++i) {
+			invariant[i]->reset();
+			invNormal[i]->reset();
+		}
+		for (i = 0; i < aps.size(); ++i) {
+			aps[i]->reset();
+			apNormals[i]->reset();
+		}
+		for (i = 0; i < edges.size(); ++i) {
+			edges[i]->reset();
+		}
+	}
+
 };
 
 typedef boost::shared_ptr<Location> LocPtr;
@@ -71,9 +97,14 @@ typedef std::map<std::string,LocPtr> LocSet;
 struct Model
 {
 public:
+	typedef capd::DerMap::ScalarType ScalarType;
+	typedef boost::shared_ptr<capd::DerMap::NodeType> NodePtr;
+	typedef std::vector<NodePtr> NodeSet;
+
 	const int dim;
 
-	capd::IVector x_init;
+	//capd::IVector x_init;
+	NodeSet x_init;
 	capd::DerMap der_proto;
 
 	LocSet locs;
@@ -96,6 +127,26 @@ public:
 						der_proto.getOrder(), 
 						DerMap::ScalarType(0.,0.) ));
 		}               								  
+	}
+
+	void reset() {
+		int i;
+		for (i = 0; i < x_init.size(); ++i)
+			x_init[i]->reset();
+
+		for (std::map<std::string,LocPtr>::iterator it = locs.begin(); it != locs.end(); ++it)
+ 		for (i = 0; i < locs.size(); ++i)
+			it->second->reset();
+	}
+
+	capd::IVector getXInit() const {
+		int s(x_init.size());
+		IVector x0(s);
+		for (int i(0); i < s; ++i) {
+			x0[i] = (*x_init[i])(0);
+//std::cout << "x0[" << i << "]: " << x0[i] << ", p: " << x_init[i] << std::endl;
+		}
+		return x0;
 	}
 };
 

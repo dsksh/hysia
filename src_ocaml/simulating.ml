@@ -162,6 +162,7 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     let curr_step = ref 0 in
     let curr_loc = ref iloc in
     let curr_time_l = ref 0. in
+    List.map (set_param_ !curr_loc) ps;
     initialize ();
     print_pped true false;
 

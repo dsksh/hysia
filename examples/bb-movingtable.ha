@@ -24,7 +24,7 @@ at Rise wait 1, vx, -g - f*vx^2
   watch F (sin(t)-x, vx-cos(t)) goto Rise then t, x, -c*vx + (c+1)*cos(t)
 end
 
-prop G[0,10](F[0,5](x-2))
+prop G[0,100](F[0,5](x-2))
 #prop  G[2,10]!(x-5)
 #prop  G[0,10](11-x)
 #prop  F[5,10](x-2)
@@ -33,7 +33,7 @@ param order = 30
 param t_max = 100
 #param h_min   = 0.1
 param h_min   = 1e-14
-param epsilon = 1e-14
+param epsilon = 1e-12
 #param epsilon = 0
 param dump_interval = 0.1
 #param delta = 0.99

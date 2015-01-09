@@ -11,14 +11,14 @@
 #include <caml/alloc.h>
 #include <caml/custom.h>
 
-#include "capd_integrator.h"
+/*#include "capd_integrator.h"*/
 #include "sendingHandler.h"
 
 #define LOG_DEBUG(msg, sig) 1
 /*#define LOG_DEBUG(msg, sig) fprintf(stderr, "[capd_stubs] %s: %d\n", msg, sig)*/
 
 
-value caml_test()
+/*value caml_test()
 {
 	CAMLparam0();
 	test("");
@@ -31,6 +31,7 @@ value caml_test1(value command)
 	test(String_val(command));
 	CAMLreturn(Val_unit);
 }
+*/
 
 
 value caml_init(value dim, value nparams)
