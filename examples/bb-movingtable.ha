@@ -31,7 +31,6 @@ prop G[0,100](F[0,5](x-2))
 
 param order = 30
 param t_max = 100
-#param h_min   = 0.1
 param h_min   = 1e-14
 param epsilon = 1e-12
 #param epsilon = 0

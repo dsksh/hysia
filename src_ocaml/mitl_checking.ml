@@ -48,6 +48,7 @@ let shift_fs tmax i fs =
         | Some fs ->
                 let shift fs f = match f with
                     | Interval (tl,tu) as t, polar ->
+                    if tl <= tmax then begin
                         let o = if polar then iu else il in
                         let tl,tu = tl-.o, tu-.o in
 (*Printf.printf "shifted: %f %f\n" tl tu;*)
@@ -58,6 +59,7 @@ let shift_fs tmax i fs =
                         else
                             (Interval (0.,0.), polar)::fs
                             (*fs*)
+                    end else fs
                     (*| Interval (tl,tu) as t, false ->
                         let tl,tu = tl-.il, tu-.il in
                         if tl >= 0. then

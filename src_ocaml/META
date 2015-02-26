@@ -1,0 +1,6 @@
+name="hss"
+description="interval-based hybrid systems simulator"
+version="0.1"
+depends=""
+archive(byte)="hss.cma"
+archive(native)="hss.cmxs"

@@ -48,7 +48,7 @@ void simInitialize()
 
 	//g_fstream->open(g_context->DumpFilename.c_str());
 
-printPipe(cout, g_context->time, g_context->pped);
+//printPipe(cout, g_context->time, g_context->pped);
 
 	//g_context->fout << '{' << endl;
 	printBegin(g_context->fout);
