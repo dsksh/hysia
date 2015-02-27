@@ -1,4 +1,3 @@
-type interval = Interval of Interval.t | Empty
 type rational = int * int
 type ident = string
 type un_op =
@@ -13,7 +12,6 @@ type un_op =
   | Oacos
   | Oneg
 type bin_op = Oadd | Osub | Omul | Odiv | Opow | Oand | Oor
-val print_interval : Format.formatter -> interval -> unit
 val sprint_un_op : un_op -> string
 val sprint_bin_op : bin_op -> string
 module MParam :

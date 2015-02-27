@@ -15,10 +15,11 @@ and print_list_ sp sp_ fmtr fmt = function
 let print_float fmt v =
   fprintf fmt "%f" v
 
-let print_interval fmt = function
+(*let print_interval fmt = function
   (*| Point v -> fprintf fmt "[%f]" v*)
   | Interval v -> fprintf fmt "[%f,%f]" v.inf v.sup 
   | Empty -> fprintf fmt "(empty)"
+*)
 
 let print_rational fmt = function
   | _,(n,1) ->

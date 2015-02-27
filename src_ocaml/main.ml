@@ -75,7 +75,7 @@ module PModel = Pretty.Make(Model)
 
 let process buff =
   try 
-    let (ha,prop),params = Parser.main Lexer.token buff in
+    let (ha,_prop),_params = Parser.main Lexer.token buff in
     let ha = Ptree.simplify ha in
       fprintf str_formatter "@[%a@]@." PPtree.print_ha ha;
       flush_str_formatter
@@ -176,9 +176,8 @@ let () =
       let pp i (hash,ap) = 
           printf "@[%d(%d): %a@." i hash Model.print_dual ap
       in
-      Util.mapi pp aps; 
-      printf "length: %f@]@." len;
-      ()
+      let _ = Util.mapi pp aps in
+      printf "length: %f@]@." len
     end;
 
     if !auto_length then Simulating.time_max := len;

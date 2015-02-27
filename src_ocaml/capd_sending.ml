@@ -45,9 +45,8 @@ let rec send_expr env e = match e.node with
       else error (UnknownId id)
   (*| Val (Point v) -> (*Printf.printf "send val: %f\n" v;*)
       put_scalar_node v v*)
-  | Val (Interval v) ->
+  | Val v ->
       put_scalar_node v.inf v.sup
-  | Val _ -> assert false
   | App (op,e) -> 
       (*fprintf fmt "%s %a" (sprint_un_op op) print_expr e*)
       send_expr env e;

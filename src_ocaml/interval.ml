@@ -1,15 +1,14 @@
 
 type t = { inf:float; sup:float }
 
-type rdir = Down | Up | Nearest
-
-external float_of_string: string -> rdir -> float = "caml_float_of_string_v"
+(* mode: -1, down; 0, nearest, 1, up *)
+external float_of_string: string -> int -> float = "caml_float_of_string_v"
 
 let interval_of_float v = {inf=v;sup=v}
 
-let interval_of_string v = {inf=float_of_string v Down; sup=float_of_string v Up}
+let interval_of_string v = {inf=float_of_string v (-1); sup=float_of_string v 1}
 
-let interval_of_string l u = {inf=float_of_string l Down; sup=float_of_string u Up}
+let interval_of_string l u = {inf=float_of_string l (-1); sup=float_of_string u 1}
 
 let zero = {inf=0.; sup=0.}
 let one  = {inf=1.; sup=1.}
@@ -17,8 +16,9 @@ let universe = {inf=neg_infinity; sup=infinity}
 let positive = {inf=0.; sup=infinity}
 let negative = {inf=neg_infinity; sup=0.}
 
-let pi = interval_of_string "3.1415926535897932384626433832795028841971693993751"
-                            "3.1415926535897932384626433832795028841971693993752"
+let pi = {inf=3.1415926535897; sup=3.1415926535898}
+(*interval_of_string "3.1415926535897932384626433832795028841971693993751"
+                            "3.1415926535897932384626433832795028841971693993752"*)
 
 external add_down: float -> float -> float = "caml_add_down"
 external add_up:   float -> float -> float = "caml_add_up"
@@ -34,6 +34,8 @@ external sqrt_up:   float -> float -> float = "caml_sqrt_up"
 let (+$) x y = { inf = add_down x.inf y.inf; sup = add_up x.sup y.sup }
 
 let (-$) x y = { inf = sub_down x.inf y.sup; sup = sub_up x.sup y.inf }
+
+let (-$) x = { inf = -. x.sup; sup = -. x.inf }
 
 let ( *$ ) x y = 
     if x.inf > 0. then begin
@@ -77,3 +79,5 @@ let (/$) x y =
     end else
         raise Division_by_zero
 
+
+let print_interval fmt x = Format.fprintf fmt "[%f;%f]" x.inf x.sup

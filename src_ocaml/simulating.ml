@@ -1,4 +1,4 @@
-open Model_common
+open Interval
 open Capd_simulating_stubs
 open Util
 
@@ -35,7 +35,7 @@ let select_earliest earliest (id,(l,u)) =
         Some (id,(l,u))
 
 
-let find_first_zero_ lid (eid,zsf,zs) (forced,gh,_,_dst,_) = 
+let find_first_zero_ lid (eid,zsf,zs) (forced,_gh,_,_dst,_) = 
     (*if forced then
         eid+1, (eid,find_first_zero false lid eid)::zsf, zs
     else
@@ -53,7 +53,7 @@ let find_first_zero_ lid (eid,zsf,zs) (forced,gh,_,_dst,_) =
     else (* if l = -1. then *)
         error FindZeroError
 
-let select_earliest_grd lid invs es earliest (eid,(l,u)) =
+let select_earliest_grd _lid invs es earliest (eid,(l,u)) =
   match earliest with
   | Some (iid,(l1,u1)), _None ->
 (*Printf.printf "2: %d,[%f,%f] vs. %d,[%f,%f]\n%!" iid l1 u1 eid l u;*)
@@ -94,9 +94,9 @@ let select_earliest_grd lid invs es earliest (eid,(l,u)) =
       (*if l<=u && l>=0. then None, Some (eid,(l,u)) else None, None*)
       None, Some (eid,(l,u))
 
-let filter_invariant lid invs es tmax (eid,(l,u)) =
+let filter_invariant _lid invs es tmax (eid,(l,u)) =
     match tmax with
-    | Some (iid,(lm,um)), _None -> 
+    | Some (iid,(lm,_um)), _None -> 
 (*Printf.printf "4: %d,[%f,%f] vs. %d,[%f,%f]\n%!" iid lm um eid l u;*)
         let (_,gh,_,_,_) = List.nth es eid in
 (*Printf.printf "%b\n%!" (fst (List.nth invs iid) = gh);*)
@@ -105,7 +105,7 @@ let filter_invariant lid invs es tmax (eid,(l,u)) =
           l<=u && u < lm
 
     | _None, Some t when t = (eid,(l,u)) -> true
-    | _None, Some (_,(lm,um)) -> l<=u && u < lm
+    | _None, Some (_,(lm,_um)) -> l<=u && u < lm
 
     | None, None -> l<=u
 
@@ -113,7 +113,7 @@ let filter_invariant lid invs es tmax (eid,(l,u)) =
 let select_random dst_list = 
     (*let filter dl (eid,(l,u)) = 
         if l<=u then (eid,(l,u))::dl else dl*)
-    let filter (eid,(l,u)) = l<=u
+    let filter (_eid,(l,u)) = l<=u
     in
     let dl = List.filter filter dst_list in
     match dl with
@@ -125,14 +125,6 @@ let dst_of_edge (_,_,_,dst,_) = dst
 let set_param_ lid (id,bnd) = 
   set_param lid id (Random.float bnd)
 
-
-(*let init_prop_f lid polar apid =
-Printf.printf "ipf_ %d\n%!" apid;
-    if check_prop lid apid then begin
-        polar := false; 
-        [(Interval (0.,0.),true)]
-    end else []
-*)
 
 (* APs on the C/C++ side correspond to the indexes (id) of the AP list. 
  * On the OCaml side, APs should be paired with apid. 
@@ -150,7 +142,7 @@ let find_prop_frontier_ lid t0 tmax polar id (apid,tlist) =
       (*time_l := l;*)
       time_l := u;
       polar := not !polar;
-      tlist := List.append !tlist [(Interval {inf=l;sup=u},!polar)]
+      tlist := List.append !tlist [({inf=l;sup=u},!polar)]
     end else if l = -1. then
       error FindZeroError
     else
@@ -162,7 +154,7 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     let curr_step = ref 0 in
     let curr_loc = ref iloc in
     let curr_time_l = ref 0. in
-    List.map (set_param_ !curr_loc) ps;
+    let _ = List.map (set_param_ !curr_loc) ps in
     initialize ();
     print_pped true false;
 
@@ -174,8 +166,8 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     let ap_fs = snd (List.fold_left 
         (*(fun (i,ap_fs) lid -> i+1, List.append ap_fs [i,[]])
         (List.length ap_fs, ap_fs) ap_locs in*)
-        (fun (i,ap_fs) lid -> 
-            let fs = (*if (lid <> !curr_loc) then [(Interval (0.,0.),false)] else*) [] in
+        (fun (i,ap_fs) _lid -> 
+            let fs = (*if (lid <> !curr_loc) then [(Interval.zero,false)] else*) [] in
             (i+1, List.append ap_fs [(i,fs)])) (0,ap_fs) ap_locs ) in
     let ap_fs = ref ap_fs in
 
@@ -185,7 +177,7 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
         report_step !curr_step !curr_loc;
         incr curr_step;
 
-        List.map (set_param_ !curr_loc) ps;
+        let _ = List.map (set_param_ !curr_loc) ps in
 
         (* compute the earliest time reaching the inv frontier. *)
         let invs = Model.iexprs_of_loc (List.find (loc_of_name !curr_loc) locs) in
@@ -214,9 +206,9 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
                     let lid = List.nth ap_locs apid in
                     let dst = dst_of_edge (List.nth es eid) in
                     if !curr_loc = lid && dst <> lid then
-                        apid, List.append tlist [(Interval {inf=l0;sup=u0},false)]
+                        apid, List.append tlist [({inf=l0;sup=u0},false)]
                     else begin if dst = lid then
-                        apid, List.append tlist [(Interval {inf=l0;sup=u0},true)]
+                        apid, List.append tlist [({inf=l0;sup=u0},true)]
                     else 
                         apid, tlist end
                 end
@@ -224,7 +216,7 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
             ap_fs := mapi fpf !ap_fs;
 
             (* FIXME *)
-            find_first_zero true !curr_loc eid;
+            let _ = find_first_zero true !curr_loc eid in
             if find_first_zero_mid !curr_loc eid then begin
                 simulate_jump !curr_loc eid l0 u0;
                 print_pped false false;

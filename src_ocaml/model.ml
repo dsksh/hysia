@@ -2,6 +2,7 @@
 open Format
 open Hashcons
 open Model_common
+open Interval
 open Ptree
 open Pretty
 
@@ -9,7 +10,7 @@ type expr = expr_node hash_consed
 and  expr_node =
   | Var of ident
   (*| Int of int*)
-  | Val of interval
+  | Val of Interval.t
   | App of un_op * expr
   | App2 of bin_op * expr * expr
 
@@ -30,13 +31,14 @@ module Expr_node = struct
   let hash = function
     | Var n -> Hashtbl.hash n
     (*| Val (Point v) -> int_of_float v*)
-    | Val (Interval v) -> int_of_float (v.inf+.v.sup) 
+    | Val v -> int_of_float (v.inf+.v.sup) 
     | Val _ -> assert false
     | App (op,e) -> 19*e.tag + (match op with
         | Osqr -> 1 | Osqrt -> 2 | Oexp -> 3| Olog -> 4 | Osin -> 5 | Ocos -> 6
-        | Oatan -> 7 | Oasin -> 8 | Oacos -> 9)
+        | Oatan -> 7 | Oasin -> 8 | Oacos -> 9 | Oneg -> 10)
     | App2 (op,e1,e2) -> 19*(e1.tag + e2.tag) + (match op with
-        | Oadd -> 11 | Osub -> 12 | Omul -> 13 | Odiv -> 14 | Opow -> 15)
+        | Oadd -> 11 | Osub -> 12 | Omul -> 13 | Odiv -> 14 | Opow -> 15 
+        | Oand -> 16 | Oor -> 17)
   (*let hash_max = ref 0
   let hash _ = incr hash_max; !hash_max
   *)
@@ -48,29 +50,29 @@ module PMap = Map.Make(String)
 let mk_var id        = Hexpr.hashcons (Var id)
 let mk_val v         = Hexpr.hashcons (Val v)
 let mk_app op e      = match op,e.node with
-  | (Osqr|Osqrt|Osin),Val (Interval z) when z = Interval.zero -> e
-  | (Oexp|Ocos),Val (Interval z) when z = Interval.zero -> 
-        Hexpr.hashcons (Val (Interval (Interval.interval_of_float 1.)))
-  | (Osqr|Osqrt),Val (Interval {inf=1.;sup=1.}) -> e
-  | Olog,Val (Interval {inf=1.;sup=1.}) -> 
-        Hexpr.hashcons (Val (Interval (Interval.zero)))
+  | (Osqr|Osqrt|Osin),Val z when z = Interval.zero -> e
+  | (Oexp|Ocos),Val z when z = Interval.zero -> 
+        Hexpr.hashcons (Val (Interval.interval_of_float 1.))
+  | (Osqr|Osqrt),Val {inf=1.;sup=1.} -> e
+  | Olog,Val {inf=1.;sup=1.} -> 
+        Hexpr.hashcons (Val Interval.zero)
   | _ -> Hexpr.hashcons (App (op,e))
 let mk_app2 op e1 e2 = match op,e1.node,e2.node with
-  | Oadd,Val (Interval z),_  when z = Interval.zero -> e2
-  | (Oadd|Osub),_,Val (Interval z) when z = Interval.zero -> e1
-  | Odiv,_,Val (Interval z) when z = Interval.zero -> assert false
-  | (Omul|Odiv),Val (Interval z),_ when z = Interval.zero -> 
-        Hexpr.hashcons (Val (Interval Interval.zero))
-  | Omul,_,Val (Interval z) when z = Interval.zero -> 
-        Hexpr.hashcons (Val (Interval Interval.zero))
-  | Omul,Val (Interval {inf=1.;sup=1.}),_ -> e2
-  | (Omul|Odiv),_,Val (Interval {inf=1.;sup=1.}) -> e1
+  | Oadd,Val z,_  when z = Interval.zero -> e2
+  | (Oadd|Osub),_,Val z when z = Interval.zero -> e1
+  | Odiv,_,Val z when z = Interval.zero -> assert false
+  | (Omul|Odiv),Val z,_ when z = Interval.zero -> 
+        Hexpr.hashcons (Val Interval.zero)
+  | Omul,_,Val z when z = Interval.zero -> 
+        Hexpr.hashcons (Val Interval.zero)
+  | Omul,Val z,_ when z = Interval.one -> e2
+  | (Omul|Odiv),_,Val z when z = Interval.one -> e1
   | _ -> Hexpr.hashcons (App2 (op,e1,e2))
 
 let rec mk_expr pm = function
   | _, Pvar id     -> 
           if PMap.mem id pm then mk_val (PMap.find id pm) else mk_var id
-  | _, Pint v      -> mk_val (Interval (Interval.interval_of_float (float_of_int v)))
+  | _, Pint v      -> mk_val (Interval.interval_of_float (float_of_int v))
   | _, Pval v      -> mk_val v
   | _, Papp (op,e) -> mk_app op (mk_expr pm e)
   | _, Papp2 (op,e1,e2) -> mk_app2 op (mk_expr pm e1) (mk_expr pm e2)
@@ -92,14 +94,14 @@ module Hdual = Make_consed(Dual_node)
 let rec diff_expr vid expr = 
   let diff = diff_expr vid in
   match expr.node with
-    | Var id -> if id = vid then mk_val (Interval Interval.one) else mk_val (Interval Interval.zero)
-    | Val _ -> mk_val (Interval Interval.zero)
+    | Var id -> if id = vid then mk_val Interval.one else mk_val Interval.zero
+    | Val _ -> mk_val Interval.zero
 
     | App (Osqr,e) -> 
         (*(mk_app2 Omul (mk_val (Point 2.)) (mk_app2 Omul e (mk_app Osqr (diff e))))*)
-        (mk_app2 Omul (diff e) (mk_app2 Omul (mk_val (Interval (Interval.interval_of_float 2.))) e))
+        (mk_app2 Omul (diff e) (mk_app2 Omul (mk_val (interval_of_float 2.)) e))
     | App (Osqrt,e) -> 
-        (mk_app2 Odiv (diff e) (mk_app2 Omul (mk_val (Interval (Interval.interval_of_float 2.))) (mk_app Osqrt e)))
+        (mk_app2 Odiv (diff e) (mk_app2 Omul (mk_val (interval_of_float 2.)) (mk_app Osqrt e)))
     | App (Oexp,e) -> 
         (mk_app2 Omul (mk_app Oexp e) (diff e))
     | App (Olog,e) -> 
@@ -107,9 +109,9 @@ let rec diff_expr vid expr =
     | App (Osin,e) -> 
         (mk_app2 Omul (mk_app Ocos e) (diff e))
     | App (Ocos,e) -> 
-        (mk_app2 Omul (mk_app2 Osub (mk_val (Interval Interval.zero)) (mk_app Osin e)) (diff e))
+        (mk_app2 Omul (mk_app2 Osub (mk_val Interval.zero) (mk_app Osin e)) (diff e))
     | App (Oatan,e) -> 
-        (mk_app2 Omul (mk_app2 Odiv (mk_val (Interval Interval.one)) (mk_app2 Oadd (mk_val (Interval Interval.one)) (mk_app Osqr e))) (diff e))
+        (mk_app2 Omul (mk_app2 Odiv (mk_val Interval.one) (mk_app2 Oadd (mk_val Interval.one) (mk_app Osqr e))) (diff e))
     | App _ -> assert false
 
     | App2 (Oadd,e1,e2) -> 
@@ -121,10 +123,11 @@ let rec diff_expr vid expr =
     | App2 (Odiv,e1,e2) -> 
         (mk_app2 Odiv (mk_app2 Osub (mk_app2 Omul (diff e1) e2) (mk_app2 Omul e1 (diff e2))) (mk_app Osqr e2))
     | App2 (Opow,e,n) -> 
-        if n = mk_val (Interval (Interval.interval_of_float 3.)) then
+        if n = mk_val (Interval.interval_of_float 3.) then
           (mk_app2 Omul (diff e) (mk_app2 Omul n (mk_app Osqr e)))
         else
-          (mk_app2 Omul (diff e) (mk_app2 Omul n (mk_app2 Opow e (mk_app2 Osub n (mk_val (Interval Interval.one))))))
+          (mk_app2 Omul (diff e) (mk_app2 Omul n (mk_app2 Opow e (mk_app2 Osub n (mk_val Interval.one)))))
+    | App2 _ -> assert false
 
 let mk_dual var e =
   let de = List.map (fun v -> diff_expr v e) var in
@@ -141,7 +144,7 @@ let mk_normal var der dual =
       mk_app2 Oadd e0 e
   in
   let (_,de) = dual.node in
-  let e0 = mk_val (Interval Interval.zero) in
+  let e0 = mk_val Interval.zero in
   let es = List.combine de der in
     mk_dual var (List.fold_left mk_term e0 es)
 
@@ -167,7 +170,9 @@ let mk_loc pm var aps (_,((_,id),(_,der),(_,inv),(_,edges))) =
   let ap_norms = List.map (fun ap -> mk_normal var der ap) aps in
   (id,der,inv,edges,aps,ap_norms)
 
-let get_lid (_,Pvar lid) = lid
+let get_lid = function 
+  | (_,Pvar lid) -> lid
+  | _ -> assert false
 
 
 (*module APMap = Map.Make(Int32)*)
@@ -178,7 +183,7 @@ type mitl_formula =
   | Mexpr of dual
   | Mnot of mitl_formula
   | Mand of mitl_formula * mitl_formula
-  | Muntil of interval * mitl_formula * mitl_formula
+  | Muntil of Interval.t * mitl_formula * mitl_formula
 
 let rec mk_mitl_formula pm var aps ap_locs = function
   | Ptrue -> aps, ap_locs, Mtrue, 0.
@@ -199,10 +204,10 @@ let rec mk_mitl_formula pm var aps ap_locs = function
        let aps,ap_locs,p1,l1 = mk_mitl_formula pm var aps ap_locs p1 in
        let aps,ap_locs,p2,l2 = mk_mitl_formula pm var aps ap_locs p2 in
        aps, ap_locs, Mand (p1,p2), max l1 l2
-  | Puntil (Interval v as i,p1,p2) -> 
+  | Puntil (t,p1,p2) -> 
        let aps,ap_locs,p1,l1 = mk_mitl_formula pm var aps ap_locs p1 in
        let aps,ap_locs,p2,l2 = mk_mitl_formula pm var aps ap_locs p2 in
-       aps, ap_locs, Muntil (i,p1,p2), (max l1 l2) +. v.sup
+       aps, ap_locs, Muntil (t,p1,p2), (max l1 l2) +. t.sup
   | Puntil _ -> assert false
 
 
@@ -242,7 +247,7 @@ type location = ident * dexpr list * iexpr list * edge list * dual list * dual l
 let rec print_expr fmt expr = match expr.node with
   | Var id -> fprintf fmt "%s" id
   (*| Val (Point v) -> fprintf fmt "%f" v*)
-  | Val (Interval v)  -> fprintf fmt "[%f;%f]" v.inf v.sup
+  | Val v  -> fprintf fmt "%a" print_interval v
   | Val _ -> assert false
   | App (op,e) -> 
       fprintf fmt "%s %a" (sprint_un_op op) print_expr e
@@ -268,8 +273,8 @@ let rec print_prop fmt = function
   | Mexpr d -> fprintf fmt "%a" print_dual d
   | Mnot p -> fprintf fmt "!%a" print_prop p
   | Mand (p1,p2) -> fprintf fmt "(%a & %a)" print_prop p1 print_prop p2
-  | Muntil (Interval v,p1,p2) -> fprintf fmt "%a U[%f;%f] %a"
-                                     print_prop p1 v.inf v.sup print_prop p2
+  | Muntil (v,p1,p2) -> fprintf fmt "%a U%a %a"
+                                     print_prop p1 print_interval v print_prop p2
   | Muntil (_,p1,p2) -> ()
 
 let id_of_loc      (e,_,_,_,_,_) = e

@@ -97,7 +97,8 @@ value sim_find_first_zero_mid(value lid, value eid)
 value sim_simulate_jump(value lid, value eid, value zero_l, value zero_u)
 {
 	CAMLparam4(lid, eid, zero_l, zero_u);
-	cInterval intv = { Double_val(zero_l), Double_val(zero_u) };
+	cInterval intv;
+	intv.l = Double_val(zero_l); intv.u = Double_val(zero_u);
 	simulateJump(String_val(lid), Int_val(eid), intv);
 	CAMLreturn(Val_unit);
 }

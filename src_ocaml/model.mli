@@ -1,7 +1,7 @@
 type expr = expr_node Hashcons.hash_consed
 and expr_node =
     Var of Model_common.ident
-  | Val of Model_common.interval
+  | Val of Interval.t
   | App of Model_common.un_op * expr
   | App2 of Model_common.bin_op * expr * expr
 module Expr_node :
@@ -48,10 +48,10 @@ module PMap :
     val mapi : (key -> 'a -> 'b) -> 'a t -> 'b t
   end
 val mk_var : Model_common.ident -> Hexpr.key Hashcons.hash_consed
-val mk_val : Model_common.interval -> Hexpr.key Hashcons.hash_consed
+val mk_val : Interval.t -> Hexpr.key Hashcons.hash_consed
 val mk_app : Model_common.un_op -> expr -> expr
 val mk_app2 : Model_common.bin_op -> expr -> expr -> expr
-val mk_expr : Model_common.interval PMap.t -> Ptree.expr -> expr
+val mk_expr : Interval.t PMap.t -> Ptree.expr -> expr
 type dual = dual_node Hashcons.hash_consed
 and dual_node = expr * expr list
 module Dual_node :
@@ -71,14 +71,14 @@ val diff_expr : Model_common.ident -> expr -> expr
 val mk_dual :
   Model_common.ident list -> expr -> Hdual.key Hashcons.hash_consed
 val mk_dual_expr :
-  Model_common.interval PMap.t ->
+  Interval.t PMap.t ->
   Model_common.ident list -> Ptree.expr -> Hdual.key Hashcons.hash_consed
 val mk_normal :
   Model_common.ident list ->
   (expr * 'a) Hashcons.hash_consed list ->
   ('b * expr list) Hashcons.hash_consed -> Hdual.key Hashcons.hash_consed
 val mk_edge :
-  Model_common.interval PMap.t ->
+  Interval.t PMap.t ->
   Model_common.ident list ->
   'a ->
   'b *
@@ -87,7 +87,7 @@ val mk_edge :
   'c * Hdual.key Hashcons.hash_consed * Hdual.key Hashcons.hash_consed list *
   'f * Hdual.key Hashcons.hash_consed list
 val mk_loc :
-  Model_common.interval PMap.t ->
+  Interval.t PMap.t ->
   Model_common.ident list ->
   ('a * ('b * expr list) Hashcons.hash_consed) list ->
   'c *
@@ -111,9 +111,9 @@ type mitl_formula =
   | Mexpr of dual
   | Mnot of mitl_formula
   | Mand of mitl_formula * mitl_formula
-  | Muntil of Model_common.interval * mitl_formula * mitl_formula
+  | Muntil of Interval.t * mitl_formula * mitl_formula
 val mk_mitl_formula :
-  Model_common.interval PMap.t ->
+  Interval.t PMap.t ->
   Model_common.ident list ->
   (int * Hdual.key Hashcons.hash_consed) list ->
   Model_common.ident list ->

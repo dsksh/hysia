@@ -31,13 +31,10 @@ val find_prop_frontier_ :
   float ->
   float ->
   bool ref ->
-  int ->
-  'a * (Model_common.interval * bool) list ->
-  'a * (Model_common.interval * bool) list
+  int -> 'a * (Interval.t * bool) list -> 'a * (Interval.t * bool) list
 val simulate :
   (string * float) list * 'a * (string * 'b) *
   (string * 'c * ('d * 'e) list * (bool * 'd * 'f * string * 'g) list * 'h *
    'i)
   list ->
-  (int * 'j) list * string list ->
-  (int * (Model_common.interval * bool) list) list
+  (int * 'j) list * string list -> (int * (Interval.t * bool) list) list

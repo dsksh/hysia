@@ -1,6 +1,5 @@
 type t = { inf : float; sup : float; }
-type rdir = Down | Up | Nearest
-external float_of_string : string -> rdir -> float = "caml_float_of_string_v"
+external float_of_string : string -> int -> float = "caml_float_of_string_v"
 val interval_of_float : float -> t
 val interval_of_string : string -> string -> t
 val zero : t
@@ -20,6 +19,7 @@ external div_up : float -> float -> float = "caml_div_up"
 external sqrt_down : float -> float -> float = "caml_sqrt_down"
 external sqrt_up : float -> float -> float = "caml_sqrt_up"
 val ( +$ ) : t -> t -> t
-val ( -$ ) : t -> t -> t
+val ( -$ ) : t -> t
 val ( *$ ) : t -> t -> t
 val ( /$ ) : t -> t -> t
+val print_interval : Format.formatter -> t -> unit

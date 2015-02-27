@@ -1,5 +1,5 @@
 type loc = Lexing.position * Lexing.position
-type pval = PVint of Model_common.interval | PVrandom of float
+type pval = PVint of Interval.t | PVrandom of float
 type param = loc * (string * pval)
 type id = loc * Model_common.ident
 type lid = loc * Model_common.ident
@@ -7,7 +7,7 @@ type expr = loc * expr_node
 and expr_node =
     Pvar of Model_common.ident
   | Pint of int
-  | Pval of Model_common.interval
+  | Pval of Interval.t
   | Papp of Model_common.un_op * expr
   | Papp2 of Model_common.bin_op * expr * expr
 type mitl_formula = loc * mitl_node
@@ -17,10 +17,10 @@ and mitl_node =
   | Pexpr of expr
   | Pnot of mitl_node
   | Pand of mitl_node * mitl_node
-  | Puntil of Model_common.interval * mitl_node * mitl_node
+  | Puntil of Interval.t * mitl_node * mitl_node
 type id_l = loc * id list
 type expr_l = loc * expr list
-type interval_l = loc * Model_common.interval list
+type interval_l = loc * Interval.t list
 type edge = loc * (bool * expr * expr_l * lid * expr_l)
 type edge_l = loc * edge list
 type location = loc * (lid * expr_l * expr_l * edge_l)

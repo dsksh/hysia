@@ -6,7 +6,6 @@ val print_list_ :
   string ->
   (Format.formatter -> 'a -> unit) -> Format.formatter -> 'a list -> unit
 val print_float : Format.formatter -> float -> unit
-val print_interval : Format.formatter -> Model_common.interval -> unit
 val print_rational : Format.formatter -> 'a * (int * int) -> unit
 module type Printer =
   sig
