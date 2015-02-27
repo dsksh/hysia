@@ -89,7 +89,7 @@ plugins: plugins.opt
 
 LIBGENERATED = lexer.ml parser.mli parser.ml
 
-LIBMODULES = hashcons model_common pretty ptree util model parser lexer capd_sending simulating mitl_checking
+LIBMODULES = hashcons interval model_common pretty ptree util model parser lexer capd_sending simulating mitl_checking
 
 LIBML  = $(addsuffix .ml,  $(LIBMODULES))
 LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_sending_stubs.mli capd_simulating_stubs.mli
@@ -100,7 +100,7 @@ LIBCMX = $(addsuffix .cmx, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating
 #$(LIBCMO) $(LIBCMX): OINCLUDES += $(LIBINCLUDES)
 $(LIBCMX): OFLAGS += -for-pack Hss
 
-COBJS = capd_sending_stubs.o capd_simulating_stubs.o capd_integrator.o \
+COBJS = capd_sending_stubs.o capd_simulating_stubs.o capd_integrator.o interval_stubs.o \
 		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libgcc_eh.a \
 		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 

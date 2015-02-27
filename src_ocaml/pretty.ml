@@ -16,8 +16,9 @@ let print_float fmt v =
   fprintf fmt "%f" v
 
 let print_interval fmt = function
-  | Point v -> fprintf fmt "[%f]" v
-  | Interval (l,u) -> fprintf fmt "[%f,%f]" l u
+  (*| Point v -> fprintf fmt "[%f]" v*)
+  | Interval v -> fprintf fmt "[%f,%f]" v.inf v.sup 
+  | Empty -> fprintf fmt "(empty)"
 
 let print_rational fmt = function
   | _,(n,1) ->

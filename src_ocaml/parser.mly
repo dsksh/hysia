@@ -241,7 +241,7 @@ factor :
   | ID { mk_expr (Pvar $1) }
   /*| float { mk_expr (Pval $1) }*/
   | interval { mk_expr (Pval $1) }
-  | MIN factor { mk_expr (Papp2 (Osub,(mk_expr (Pval (Point 0.))),$2)) }
+  | MIN factor { mk_expr (Papp2 (Osub,(mk_expr (Pval (Interval Interval.zero))),$2)) }
 ;
 
 mitl_formula :
@@ -287,8 +287,8 @@ float :
 ;
 interval :
   | noun_interval { $1 }
-  | float { Point $1 }
+  | float { Interval (Interval.interval_of_float $1) }
 ;
 noun_interval :
-  | LB float COM float RB { Interval ($2,$4) }
+  | LB float COM float RB { Interval {inf=$2;sup=$4} }
 ;

@@ -1,3 +1,4 @@
+open Interval
 
 (*module type S =
   sig
@@ -13,9 +14,7 @@
 *)
 
 type interval = 
-  | Interval of float * float 
-  | Point of float
-  | Universe
+  | Interval of Interval.t
   | Empty
 
 type rational = int * int
@@ -29,9 +28,9 @@ type bin_op = Oadd | Osub | Omul | Odiv | Opow |
               Oand | Oor
 
 let print_interval fmt = function
-  | Interval (l,u) -> Format.fprintf fmt "[%f;%f]" l u
-  | Point v -> Format.fprintf fmt "[%f]" v
-  | Universe -> Format.fprintf fmt "(-oo,oo)"
+  | Interval v -> Format.fprintf fmt "[%f;%f]" v.inf v.sup
+  (*| Point v -> Format.fprintf fmt "[%f]" v
+  | Universe -> Format.fprintf fmt "(-oo,oo)"*)
   | Empty -> Format.fprintf fmt "(empty)"
 
 let sprint_un_op = function
@@ -44,6 +43,7 @@ let sprint_un_op = function
   | Oatan -> "atan"
   | Oasin -> "asin"
   | Oacos -> "acos"
+  | Oneg -> "neg"
 
 let sprint_bin_op = function
   | Oadd -> "+"
@@ -51,6 +51,8 @@ let sprint_bin_op = function
   | Omul -> "*"
   | Odiv -> "/" 
   | Opow -> "^" 
+  | Oand -> "/\\" 
+  | Oor  -> "\\/" 
 
 
 module MParam = Map.Make(String)

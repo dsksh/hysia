@@ -43,10 +43,10 @@ let rec send_expr env e = match e.node with
   | Var id -> (*Printf.printf "send var: %s %d\n" id (SM.find id env); *)
       if SM.mem id env then put_var_node (SM.find id env)
       else error (UnknownId id)
-  | Val (Point v) -> (*Printf.printf "send val: %f\n" v;*)
-      put_scalar_node v v
-  | Val (Interval (l,u)) ->
-      put_scalar_node l u
+  (*| Val (Point v) -> (*Printf.printf "send val: %f\n" v;*)
+      put_scalar_node v v*)
+  | Val (Interval v) ->
+      put_scalar_node v.inf v.sup
   | Val _ -> assert false
   | App (op,e) -> 
       (*fprintf fmt "%s %a" (sprint_un_op op) print_expr e*)

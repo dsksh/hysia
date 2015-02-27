@@ -1,4 +1,4 @@
-type interval = Interval of float * float | Point of float | Universe | Empty
+type interval = Interval of Interval.t | Empty
 type rational = int * int
 type ident = string
 type un_op =

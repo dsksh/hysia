@@ -11,8 +11,8 @@ let invert_fs = function
             Some (List.map (fun (ap,p) -> ap, not p) fs)
 
 let cmp_fs f1 f2 = match f1,f2 with
-    | (Interval (l1,u1), _), (Interval (l2,u2), _) -> 
-            int_of_float (if l1 <> l2 then l1-.l2 else u2-.u1)
+    | (Interval v1, _), (Interval v2, _) -> 
+            int_of_float (if v1.inf <> v2.inf then v1.inf-.v2.inf else v2.sup-.v1.sup)
     | _,_ -> 
             print_endline "1";
             assert false
@@ -38,34 +38,34 @@ let intersect_fs fs1 fs2 = match fs1, fs2 with
 
 let shift_fs tmax i fs = 
     match i with
-    | Interval (il,iu) -> begin
+    | Interval v -> begin
         match fs with
         | None -> 
                 None
         | Some [] -> 
-                (*Some [(Interval (tmax-.il,tmax-.il),false)]*)
+                (*Some [(Interval {inf=tmax-.v.inf; sup=tmax-.v.inf},false)]*)
                 Some []
         | Some fs ->
                 let shift fs f = match f with
-                    | Interval (tl,tu) as t, polar ->
+                    | Interval {inf=tl;sup=tu} as t, polar ->
                     if tl <= tmax then begin
-                        let o = if polar then iu else il in
+                        let o = if polar then v.sup else v.inf in
                         let tl,tu = tl-.o, tu-.o in
 (*Printf.printf "shifted: %f %f\n" tl tu;*)
                         if tl >= 0. then
-                            (Interval (tl,tu), polar)::fs
+                            (Interval {inf=tl;sup=tu}, polar)::fs
                         else if tu >= 0. then
-                            (Interval (0.,tu), polar)::fs
+                            (Interval {inf=0.;sup=tu}, polar)::fs
                         else
-                            (Interval (0.,0.), polar)::fs
+                            (Interval {inf=0.;sup=0.}, polar)::fs
                             (*fs*)
                     end else fs
-                    (*| Interval (tl,tu) as t, false ->
-                        let tl,tu = tl-.il, tu-.il in
+                    (*| Interval {inf=tl;sup=tu} as t, false ->
+                        let tl,tu = tl-.v.inf, tu-.v.inf in
                         if tl >= 0. then
-                            (Interval (tl,tu), false)::fs
+                            (Interval {inf=tl;sup=tu}, false)::fs
                         else if tu >= 0. then
-                            (Interval (0.,tu), false)::fs
+                            (Interval {inf=0.;sup=tu}, false)::fs
                         else
                             fs
                     *)
@@ -75,10 +75,10 @@ let shift_fs tmax i fs =
                 in
                 let i,p = List.hd fs in
                 let fs = match i with
-                  | Interval (0.,_) -> fs;
+                  | Interval {inf=0.} -> fs;
                   | Interval _ ->
                     (* status at time 0 should be expressed explicitly. *)
-                    (Interval (0.,0.), not p)::fs
+                    (Interval {inf=0.;sup=0.}, not p)::fs
                 in
                 let fs1 = List.fold_left shift [] fs in
                 if fs1 = [] then
@@ -87,19 +87,19 @@ let shift_fs tmax i fs =
                     if p then Some [] else None
                 else 
                     (* sort fs *)
-                    let cmp (Interval (tl1,_),_) (Interval (tl2,_),_) =
-                        int_of_float (tl1 -. tl2)
+                    let cmp (Interval v1,_) (Interval v2,_) =
+                        int_of_float (v1.inf -. v2.inf)
                     in
                     let fs = List.sort cmp fs1 in
 
                     let n_signals = ref 0 in
-                    let remove_overlaps fs (Interval (tl,tu),polar as f) =
+                    let remove_overlaps fs (Interval v,polar as f) =
                         if polar then begin
                             incr n_signals;
-                            if !n_signals = 1 && tu > 0. then List.append fs [f] else fs
+                            if !n_signals = 1 && v.sup > 0. then List.append fs [f] else fs
                         end else begin
                             if !n_signals > 0 then decr n_signals;
-                            if !n_signals = 0 && tu > 0. then List.append fs [f] else fs
+                            if !n_signals = 0 && v.sup > 0. then List.append fs [f] else fs
                         end
                     in
                     let fs = List.fold_left remove_overlaps [] fs in
@@ -116,7 +116,7 @@ let print_fs fmt = function
     | None -> Format.fprintf fmt "empty\n"
     | Some fs ->
         let pr = function
-        | Model_common.Interval (l,u), p -> Format.fprintf fmt "[%f;%f] %b\n" l u p;
+        | Model_common.Interval v, p -> Format.fprintf fmt "[%f;%f] %b\n" v.inf v.sup p;
         | _ -> 
                print_endline "5";
                assert false
@@ -159,8 +159,8 @@ let rec check debug tmax ap_fs (*ap_locs*) = function
 let eval_at_zero = function
     | None -> Some false
     | Some [] -> Some true 
-    | Some fs -> let Model_common.Interval (l,u), p = List.nth fs 0 in
-        if l > 0. then begin
+    | Some fs -> let Model_common.Interval v, p = List.nth fs 0 in
+        if v.inf > 0. then begin
             if p then Some false else Some true
         end else None
 

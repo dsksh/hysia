@@ -173,11 +173,9 @@ let () =
     if !debug then begin
       printf "@[%a@]@." PModel.print_ha ha;
 
-      (*let aps,_,len = prop in*)
       let pp i (hash,ap) = 
           printf "@[%d(%d): %a@." i hash Model.print_dual ap
       in
-      (*Model.APMap.iter pp aps;*)
       Util.mapi pp aps; 
       printf "length: %f@]@." len;
       ()

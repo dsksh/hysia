@@ -150,7 +150,7 @@ let find_prop_frontier_ lid t0 tmax polar id (apid,tlist) =
       (*time_l := l;*)
       time_l := u;
       polar := not !polar;
-      tlist := List.append !tlist [(Interval (l,u),!polar)]
+      tlist := List.append !tlist [(Interval {inf=l;sup=u},!polar)]
     end else if l = -1. then
       error FindZeroError
     else
@@ -214,9 +214,9 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
                     let lid = List.nth ap_locs apid in
                     let dst = dst_of_edge (List.nth es eid) in
                     if !curr_loc = lid && dst <> lid then
-                        apid, List.append tlist [(Interval (l0,u0),false)]
+                        apid, List.append tlist [(Interval {inf=l0;sup=u0},false)]
                     else begin if dst = lid then
-                        apid, List.append tlist [(Interval (l0,u0),true)]
+                        apid, List.append tlist [(Interval {inf=l0;sup=u0},true)]
                     else 
                         apid, tlist end
                 end

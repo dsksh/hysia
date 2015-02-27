@@ -50,15 +50,16 @@ let simplify (params,(_,vars),(_,init),locs) =
 
 let dummy_loc = Lexing.dummy_pos, Lexing.dummy_pos
 let dummy_list = dummy_loc, []
-let dummy_grd  = dummy_loc, Pval (Point (-1.))
+let dummy_grd  = dummy_loc, Pval (Interval (Interval.interval_of_float (-1.)))
 let dummy_prop = dummy_loc, Ptrue
 
 
 let rec print_expr fmt = function
   | _, Pvar id -> fprintf fmt "%s" id
   | _, Pint v  -> fprintf fmt "%d" v
-  | _, Pval (Point v) -> fprintf fmt "%f" v
-  | _, Pval (Interval (l,u)) -> fprintf fmt "[%f;%f]" l u
+  (*| _, Pval (Point v) -> fprintf fmt "%f" v*)
+  | _, Pval (Interval v) -> fprintf fmt "[%f;%f]" v.inf v.sup
+  | _, Pval Empty -> fprintf fmt "(empty)"
   | _, Papp (op,e) -> 
       fprintf fmt "%s %a" (sprint_un_op op) print_expr e
   | _, Papp2 (op,e1,e2) -> 
@@ -71,8 +72,8 @@ and print_prop_node fmt = function
   | Pexpr e -> fprintf fmt "%a" print_expr e
   | Pnot p -> fprintf fmt "!%a" print_prop_node p
   | Pand (p1,p2) -> fprintf fmt "(%a & %a)" print_prop_node p1 print_prop_node p2
-  | Puntil (Interval (l,u),p1,p2) -> fprintf fmt "(%a U[%f;%f] %a)"
-     print_prop_node p1 l u print_prop_node p2
+  | Puntil (Interval v,p1,p2) -> fprintf fmt "(%a U[%f;%f] %a)"
+     print_prop_node p1 v.inf v.sup print_prop_node p2
   | Puntil (_,p1,p2) -> ()
 
 let print_param fmt (_,(id,v)) = match v with
