@@ -19,6 +19,10 @@ external div_up : float -> float -> float = "caml_div_up"
 external sqrt_down : float -> float -> float = "caml_sqrt_down"
 external sqrt_up : float -> float -> float = "caml_sqrt_up"
 val ( +$ ) : t -> t -> t
+val ( +$. ) : t -> float -> t
+val ( +.$ ) : float -> t -> t
+val ( -$. ) : t -> float -> t
+val ( -.$ ) : float -> t -> t
 val ( -$ ) : t -> t
 val ( *$ ) : t -> t -> t
 val ( /$ ) : t -> t -> t

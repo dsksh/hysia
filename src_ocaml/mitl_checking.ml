@@ -37,17 +37,18 @@ let shift_fs tmax t fs =
             Some []
     | Some fs ->
             let shift fs f = 
-                let t1, polar = f in
-                if t1.inf <= tmax then begin
+                let s, polar = f in
+                if s.inf <= tmax then begin
                     let o = if polar then t.sup else t.inf in
-                    let tl,tu = t1.inf-.o, t1.sup-.o in
+                    (*let tl,tu = s.inf -. o, s.sup -. o in*)
+                    let s = s -$. o in
 (*Printf.printf "shifted: %f %f\n" tl tu;*)
-                    if tl >= 0. then
-                        ({inf=tl;sup=tu}, polar)::fs
-                    else if tu >= 0. then
-                        ({inf=0.;sup=tu}, polar)::fs
+                    if s.inf >= 0. then
+                        (s, polar)::fs
+                    else if s.sup >= 0. then
+                        ({inf=0.;sup=s.sup}, polar)::fs
                     else
-                        ({inf=0.;sup=0.}, polar)::fs
+                        (Interval.zero, polar)::fs
                         (*fs*)
                 end else fs
             in
@@ -56,7 +57,7 @@ let shift_fs tmax t fs =
               | {inf=0.} -> fs;
               | _ ->
                 (* status at time 0 should be expressed explicitly. *)
-                ({inf=0.;sup=0.}, not p)::fs
+                (Interval.zero, not p)::fs
             in
             let fs1 = List.fold_left shift [] fs in
             if fs1 = [] then

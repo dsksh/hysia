@@ -1,6 +1,6 @@
-let   intv = [-1e-3,1e-3]
+#let   intv = [-1e-3,1e-3]
 #let   intv = [-2e-5,2e-5]
-#let   intv = [-1e-8,1e-8]
+let   intv = [-1e-6,1e-6]
 
 var   x1, x2, c
 
@@ -15,10 +15,13 @@ end
 
 param order = 10
 param t_max = 100
-param h_min   = 1e-0
+#param h_min   = 1e-0
+param h_min   = 1e-14
 param epsilon = 1e-14
-param dump_interval = 1
+param dump_interval = -1
 #param epsilon = 0
+
+# char_mtx 1: QR, 2: inverse, 3: ident, -1: hybrid
 param char_mtx = -1
 #param char_mtx = 3
-param dump_interval = 0.1
+#param dump_interval = 0.1

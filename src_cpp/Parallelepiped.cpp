@@ -43,7 +43,7 @@ DMatrix characteristic(const DMatrix& jA) {
 		return B;
 	
 	} catch (std::runtime_error &e) {
-	    std::cout << "runtime_error from CAPD: " << e.what() << std::endl;
+	    std::cerr << "runtime_error from CAPD: " << e.what() << std::endl;
 
 		// TODO: it won't recover
 		return DMatrix::Identity(B.numberOfColumns());

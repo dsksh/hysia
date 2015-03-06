@@ -3,15 +3,16 @@
 #let pertb = [-1e-6,1e-6]
 #let pertb = [-1e-8,1e-8]
 #let pertb = [-1e-10,1e-10]
-let pertb = [0,0]
+let pertb = 0
 
 let g = 1
-#let f = 0
-let f = 0.1
+let f = 0
+#let f = 0.1
 
 var   x,y,vx,vy
 
-init  Loc, 1+pertb,2+pertb,-0.00001,-0.00001
+init  Loc, 1+pertb,2+pertb,0,0
+#init  Loc, 1+pertb,2+pertb,-0.00001,-0.00001
 
 #init  Loc, 1,10,0,-0.1
 #init  Loc, -1+pertb,1+pertb, 2/sqrt(2),1/sqrt(2)
@@ -27,8 +28,8 @@ init  Loc, 1+pertb,2+pertb,-0.00001,-0.00001
 
 #init  Loc, -1+pertb,1+pertb, 1.4,0.7
 
-#at L wait vx,vy,0,-g
-at Loc wait vx,vy, -f*sqrt(vx^2+vy^2)*vx, -g-f*sqrt(vx^2+vy^2)*vy
+at Loc wait vx,vy,0,-g
+#at Loc wait vx,vy, -f*sqrt(vx^2+vy^2)*vx, -g-f*sqrt(vx^2+vy^2)*vy
 
   watch F (x^2-y, vy-2*x*vx) goto Loc then 
     x,y,
@@ -45,8 +46,7 @@ param dump_interval = 0.01
 #param dump_interval = -1
 #param delta = 0.99
 #param tau = 1.01
-#param char_mtx = -1
-param char_mtx = 0
-#param char_mtx = 1
+param char_mtx = -1
+#param char_mtx = 0
 #param char_mtx = 3
-param qr_thres = 100
+#param qr_thres = 1000

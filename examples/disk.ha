@@ -1,6 +1,6 @@
-let space = [-1e-4,1e-4]
+#let space = [-1e-4,1e-4]
 #let space = [-1e-5,1e-5]
-#let space = [-1e-6,1e-6]
+let space = [-1e-6,1e-6]
 
 var   x1, x2
 
@@ -16,5 +16,8 @@ param t_max = 10
 param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
-param char_mtx = 0
+param dump_interval = -1
+
+# char_mtx 1: QR, 2: inverse, 3: ident, -1: hybrid
+param char_mtx = -1
 #param char_mtx = 3

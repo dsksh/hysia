@@ -282,10 +282,10 @@ if (!res) {
  			IVector v = curve(step);
 
 // TODO
-if (selected) {
+//if (selected) {
  			printPipe(g_context->fout, step+time_procd, v);
 			g_context->fout << ',' << endl;
-}
+//}
  		}
 }
 		}
@@ -296,7 +296,9 @@ if (selected) {
 			return cEmpty;
 		else {
 			time_procd = time_l + timeMap.getCurrentTime();
-			dx_prev = IMatrix(capdPped);
+			//dx_prev = IMatrix(capdPped);
+			dx_prev = curve[solver.getStep()]*dx_prev;
+			//dx_prev = midMatrix(curve[solver.getStep()])*dx_prev;
 		}
 	}
 
@@ -330,10 +332,10 @@ g_context->cout << "GTIME: " << g_context->time << endl;
 		for(int i(0); i<grid; ++i) {
 			const interval step( interval(i,i+1)*stepW );
 			IVector v = curve(step);
-if (selected) {
+//if (selected) {
 			printPipe(g_context->fout, step+time_procd, v);
 			g_context->fout << ',' << endl;
-}
+//}
 		}
 	}
 
@@ -345,11 +347,10 @@ if (selected) {
 if (selected) {
 	g_context->x = curve(reduced);
 	g_context->x_left = curve(reduced.left());
-//#ifndef HSS_SKIP_PPED_T_INF
+
 	g_context->dx_phi = curve[reduced]*dx_prev;
-//#else
-//	g_context->dx_phi = curve[reduced.left()]*dx_prev;
-//#endif
+	//g_context->dx_phi = curve[reduced];
+
 	g_context->dt_phi = der(g_context->x);
 	g_context->dh = grd_h.der()(1);
 

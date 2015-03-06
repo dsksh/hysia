@@ -33,10 +33,12 @@ void simInitialize()
 	std::cout.precision(17);
 	std::cout.setf(ios::fixed,ios::floatfield);
 	
+if (g_params->dump_interval > 0) {
 	g_fstream = fstreamPtr(new ofstream("pped.dat"));
 	g_fstream->precision(17);
 	g_fstream->setf(ios::fixed,ios::floatfield);
-	//g_fstream = fstreamPtr(new ofstream(0));
+} else
+	g_fstream = fstreamPtr(new ofstream(0));
 	
 	// reset evaluation caches
 	g_model->reset();
@@ -168,12 +170,12 @@ const double tc_r(g_context->time.rightBound());
 g_context->cout << "omega_mid: " << omega_mid << endl;
 
 	// D_omega
-	IVector dt_num(dim);
+	IVector dh_dx_phi(dim);
 	const_MatrixIterator<capd::IMatrix> it(dx_phi);
 	for (int i(0); i < dim; ++i) {
 		it = dx_phi.beginOfColumn(i+1);
 		for (int j(0); j < dim; ++j) {
-			dt_num[i] += dh[j]*(*it);
+			dh_dx_phi[i] += dh[j]*(*it);
 			it.moveToNextRow();
 		}
 	}
@@ -183,7 +185,7 @@ g_context->cout << "omega_mid: " << omega_mid << endl;
 		dh_dt_phi += dh[i]*dt_phi[i];
 	}
 
-	const IVector dt( -dt_num / dh_dt_phi );
+	const IVector dt( -dh_dx_phi / dh_dt_phi );
 
 g_context->cout << "Dt: " << dt_phi << endl;
 

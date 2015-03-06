@@ -32,8 +32,12 @@ external sqrt_down: float -> float -> float = "caml_sqrt_down"
 external sqrt_up:   float -> float -> float = "caml_sqrt_up"
 
 let (+$) x y = { inf = add_down x.inf y.inf; sup = add_up x.sup y.sup }
+let (+$.) x y = { inf = add_down x.inf y; sup = add_up x.sup y }
+let (+.$) x y = { inf = add_down x y.inf; sup = add_up x y.sup }
 
 let (-$) x y = { inf = sub_down x.inf y.sup; sup = sub_up x.sup y.inf }
+let (-$.) x y = { inf = sub_down x.inf y; sup = sub_up x.sup y }
+let (-.$) x y = { inf = sub_down x y.sup; sup = sub_up x y.inf }
 
 let (-$) x = { inf = -. x.sup; sup = -. x.inf }
 
