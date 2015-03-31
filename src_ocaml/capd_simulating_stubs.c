@@ -123,3 +123,11 @@ value sim_report_step(value step_id, value lid)
 	reportStep(Int_val(step_id), String_val(lid));
 	CAMLreturn(Val_unit);
 }
+
+value sim_get_dump_data()
+{
+	CAMLparam0();
+	const char *s;
+	s = getDumpData();
+	CAMLreturn(caml_copy_string(s));
+}

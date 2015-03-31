@@ -344,18 +344,22 @@ g_context->cout << "GTIME: " << g_context->time << endl;
 			THROW("inequality condition is not satisfied at last");
 	}
 
+//std::cout << curve[reduced.left()]*dx_prev << std::endl;
+
 if (selected) {
 	g_context->x = curve(reduced);
 	g_context->x_left = curve(reduced.left());
 
 	g_context->dx_phi = curve[reduced]*dx_prev;
 	//g_context->dx_phi = curve[reduced];
+//std::cout << "dx_phi" << g_context->dx_phi << std::endl;
 
 	g_context->dt_phi = der(g_context->x);
 	g_context->dh = grd_h.der()(1);
 
 	g_context->time = reduced;
 	g_context->time += time_procd;
+//std::cout << g_context->time << std::endl;
 
 //g_context->pped = pped;
 

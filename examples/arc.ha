@@ -1,16 +1,21 @@
 #let   intv = [-1e-3,1e-3]
-#let   intv = [-2e-5,2e-5]
-let   intv = [-1e-6,1e-6]
+#let   intv = [-1e-4,1e-4]
+let   intv = [-1e-5,1e-5]
+#let   intv = [-1e-6,1e-6]
+#let   intv = [-1e-12,1e-12]
 
-var   x1, x2, c
+let   c = 1
+#let   c = 2
+let   o = 0
+#let   o = 0.01
 
-init  Loc, 1+intv, intv, 2
-#init  Loc, 1+intv, 1+intv, 2
+var   x1, x2, v
 
-at Loc wait -c*x2, c*x1, 0
-  #watch (x1-x2, -c*x2) goto Loc then x1, x2, -c
-  #watch (x1-x2+1, -c*(x1+x2)) goto Loc then x1, x2, -c
-  watch (2*x1-x2, -c*x1) goto Loc then x1, x2, -c
+init  Loc, 1+intv, intv, 1
+
+at Loc wait -v*x2, v*x1, 0
+  watch (c*x1-x2+o, -v*x1) goto Loc then x1, x2, -v
+  #watch (x1, -v*x2) goto Loc then x1, x2, -v
 end
 
 param order = 10
@@ -18,10 +23,13 @@ param t_max = 100
 #param h_min   = 1e-0
 param h_min   = 1e-14
 param epsilon = 1e-14
-param dump_interval = -1
+#param dump_interval = 0.1
+param dump_interval = 10000
+#param dump_interval = -1
 #param epsilon = 0
 
-# char_mtx 1: QR, 2: inverse, 3: ident, -1: hybrid
+# char_mtx 0: inverse, 1: QR, 3: ident, -1: hybrid
 param char_mtx = -1
+#param char_mtx = 0
 #param char_mtx = 3
 #param dump_interval = 0.1

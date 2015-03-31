@@ -8,15 +8,18 @@ let models = [
 ]
 
 let nv = ref 4
+
+let name = ref ""
   
 let () =
   Arg.parse [
     ("-n", Arg.Int (fun n -> nv := n), "value of n.");
+    ("-name", Arg.String (fun n -> name := n), "name.");
     (*("-", Arg.String (fun fn -> file := fn), "specify the template filename.");*)
   ] (fun fn -> file := fn) "";
 
   let result_string = 
-    Jg_template.from_file !file ~use_compiled:false ~models:(("n",Tint !nv)::models) in
+    Jg_template.from_file !file ~use_compiled:false ~models:(("name",Tstr !name)::("n",Tint !nv)::models) in
 
   print_endline result_string
 ;;

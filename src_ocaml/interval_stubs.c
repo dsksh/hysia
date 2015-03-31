@@ -287,7 +287,7 @@ value caml_float_of_string_v(value val, value dir)
 value caml_add_up(value x, value y)
 {
 	CAMLparam2(x, y);
-	volatile double r, x1 = x, y1 = y;
+	volatile double r, x1 = Double_val(x), y1 = Double_val(y);
     fesetround(FE_UPWARD);
 	r = x1 + y1;
 	fesetround(FE_TONEAREST);
@@ -297,7 +297,7 @@ value caml_add_up(value x, value y)
 value caml_add_down(value x, value y)
 {
 	CAMLparam2(x, y);
-	volatile double r, x1 = x, y1 = y;
+	volatile double r, x1 = Double_val(x), y1 = Double_val(y);
     fesetround(FE_DOWNWARD);
 	r = x1 + y1;
 	fesetround(FE_TONEAREST);
@@ -307,7 +307,7 @@ value caml_add_down(value x, value y)
 value caml_sub_up(value x, value y)
 {
 	CAMLparam2(x, y);
-	volatile double r, x1 = x, y1 = y;
+	volatile double r, x1 = Double_val(x), y1 = Double_val(y);
     fesetround(FE_UPWARD);
 	r = x1 - y1;
 	fesetround(FE_TONEAREST);
@@ -317,7 +317,7 @@ value caml_sub_up(value x, value y)
 value caml_sub_down(value x, value y)
 {
 	CAMLparam2(x, y);
-	volatile double r, x1 = x, y1 = y;
+	volatile double r, x1 = Double_val(x), y1 = Double_val(y);
     fesetround(FE_DOWNWARD);
 	r = x1 - y1;
 	fesetround(FE_TONEAREST);
@@ -327,7 +327,7 @@ value caml_sub_down(value x, value y)
 value caml_mul_up(value x, value y)
 {
 	CAMLparam2(x, y);
-	volatile double r, x1 = x, y1 = y;
+	volatile double r, x1 = Double_val(x), y1 = Double_val(y);
     fesetround(FE_UPWARD);
 	r = x1 * y1;
 	fesetround(FE_TONEAREST);
@@ -337,7 +337,7 @@ value caml_mul_up(value x, value y)
 value caml_mul_down(value x, value y)
 {
 	CAMLparam2(x, y);
-	volatile double r, x1 = x, y1 = y;
+	volatile double r, x1 = Double_val(x), y1 = Double_val(y);
     fesetround(FE_DOWNWARD);
 	r = x1 * y1;
 	fesetround(FE_TONEAREST);
@@ -347,7 +347,7 @@ value caml_mul_down(value x, value y)
 value caml_div_up(value x, value y)
 {
 	CAMLparam2(x, y);
-	volatile double r, x1 = x, y1 = y;
+	volatile double r, x1 = Double_val(x), y1 = Double_val(y);
     fesetround(FE_UPWARD);
 	r = x1 / y1;
 	fesetround(FE_TONEAREST);
@@ -357,7 +357,7 @@ value caml_div_up(value x, value y)
 value caml_div_down(value x, value y)
 {
 	CAMLparam2(x, y);
-	volatile double r, x1 = x, y1 = y;
+	volatile double r, x1 = Double_val(x), y1 = Double_val(y);
     fesetround(FE_DOWNWARD);
 	r = x1 / y1;
 	fesetround(FE_TONEAREST);
@@ -367,7 +367,7 @@ value caml_div_down(value x, value y)
 value caml_sqrt_up(value x)
 {
 	CAMLparam1(x);
-	volatile double r, x1 = x;
+	volatile double r, x1 = Double_val(x);
     fesetround(FE_UPWARD);
 	r = sqrt(x1);
 	fesetround(FE_TONEAREST);
@@ -377,7 +377,7 @@ value caml_sqrt_up(value x)
 value caml_sqrt_down(value x)
 {
 	CAMLparam1(x);
-	volatile double r, x1 = x;
+	volatile double r, x1 = Double_val(x);
     fesetround(FE_DOWNWARD);
 	r = sqrt(x1);
 	fesetround(FE_TONEAREST);

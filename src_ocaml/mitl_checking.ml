@@ -42,7 +42,7 @@ let shift_fs tmax t fs =
                     let o = if polar then t.sup else t.inf in
                     (*let tl,tu = s.inf -. o, s.sup -. o in*)
                     let s = s -$. o in
-(*Printf.printf "shifted: %f %f\n" tl tu;*)
+(*Printf.printf "shifted: %f %f %b\n" s.inf s.sup polar;*)
                     if s.inf >= 0. then
                         (s, polar)::fs
                     else if s.sup >= 0. then
@@ -56,8 +56,10 @@ let shift_fs tmax t fs =
             let fs = match t0 with
               | {inf=0.} -> fs;
               | _ ->
-                (* status at time 0 should be expressed explicitly. *)
-                (Interval.zero, not p)::fs
+                if not p then
+                  (* status at time 0 should be expressed explicitly. *)
+                  (Interval.zero, not p)::fs
+                else fs
             in
             let fs1 = List.fold_left shift [] fs in
             if fs1 = [] then
@@ -66,11 +68,12 @@ let shift_fs tmax t fs =
                 if p then Some [] else None
             else 
                 (* sort fs *)
-                let cmp (t1,_) (t2,_) = int_of_float (t1.inf -. t2.inf) in
+                let cmp (t1,_) (t2,_) = int_of_float (100000000.*.(t1.inf -. t2.inf)) (*TODO*) in
                 let fs = List.sort cmp fs1 in
 
                 let n_signals = ref 0 in
                 let remove_overlaps fs (t,polar as f) =
+(*Format.printf "ro: %a %d %b\n" print_interval t !n_signals polar;*)
                     if polar then begin
                         incr n_signals;
                         if !n_signals = 1 && t.sup > 0. then List.append fs [f] else fs

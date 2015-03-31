@@ -10,6 +10,7 @@ external simulate_jump: string -> int -> float -> float -> unit = "sim_simulate_
 external simulate_cont: string -> unit = "sim_simulate_cont"
 external print_pped: bool -> bool -> unit = "sim_print_pped"
 external report_step: int -> string -> unit = "sim_report_step"
+external get_dump_data: unit -> string = "sim_get_dump_data"
 
 (*external integrate: float -> float -> float -> float -> unit = "sim_integrate"*)
 

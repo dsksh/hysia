@@ -54,6 +54,8 @@ Parallelepiped map_parallelepiped(const Parallelepiped& piped,
 								  const IMatrix& J, const IVector& y) {
 	int dim(y.size());
 
+//std::cout << "J: " << J << std::endl;
+
 	// compute B and JA
 	DMatrix B(dim,dim);
 	IMatrix JA(dim,dim);
@@ -99,7 +101,6 @@ Parallelepiped map_parallelepiped(const Parallelepiped& piped,
 //std::cout << "B_inv: " << B_inv << std::endl;
 
 	IVector v( B_inv*JA * piped.u() + B_inv*(y - capd::vectalg::midVector(y)) );
-//std::cout << "v: " << v << std::endl;
 
 	return Parallelepiped(IB, v, capd::vectalg::midVector(y));
 }

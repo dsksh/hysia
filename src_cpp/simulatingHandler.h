@@ -26,6 +26,7 @@ void simulateCont(const char *);
 void reportStep(int, const char *);
 void printPped(int, int);
 /*capd::interval getCurrentTime();*/
+const char *getDumpData();
 
 #ifdef __cplusplus
 }

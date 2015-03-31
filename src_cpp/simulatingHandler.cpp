@@ -1,6 +1,7 @@
 #include <memory>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "Context.h"
 #include "Parallelepiped.h"
@@ -13,7 +14,7 @@ using namespace capd;
 
 CtxPtr g_context;
 
-typedef auto_ptr<ofstream> fstreamPtr;
+typedef auto_ptr<ostream> fstreamPtr;
 fstreamPtr g_fstream;
 
 const cInterval cEmpty = { 1., -1. };
@@ -34,7 +35,8 @@ void simInitialize()
 	std::cout.setf(ios::fixed,ios::floatfield);
 	
 if (g_params->dump_interval > 0) {
-	g_fstream = fstreamPtr(new ofstream("pped.dat"));
+	//g_fstream = fstreamPtr(new ofstream("pped.dat"));
+	g_fstream = fstreamPtr(new ostringstream());
 	g_fstream->precision(17);
 	g_fstream->setf(ios::fixed,ios::floatfield);
 } else
@@ -338,4 +340,14 @@ void integrate(const char *lid,
  	{
  		cout << "\n\nException caught! (7)\n" << e.what() << endl << endl;
  	}
+}
+
+
+const char *getDumpData()
+{
+	ostringstream *oss = dynamic_cast<ostringstream *>(g_fstream.get());
+	if (oss != NULL)
+		return oss->str().c_str();
+	else 
+		return "";
 }
