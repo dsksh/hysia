@@ -1,3 +1,89 @@
 * {
-    font-family: sans-serif;
+  margin: 0; padding: 0;
+  line-height: 1.5em;
+  font-family: sans-serif;
+}
+
+body {
+  background-color: #999999;
+}
+
+div#pagebody {
+  width: 1024px; height: 820px; margin: 0 auto;
+  text-align: left;
+  background-color: #ffffff;
+}
+
+div#top {
+  width: 1024px; height: 400px; margin: 0 auto;
+}
+div#submenu {
+  width: 180px; height: 400px;
+  /*margin: 10px 20px 10px 0px;*/
+  margin: 10px 10px 10px 20px;
+  float: left;
+}
+div#input {
+  width: 800px; margin: 0 auto;
+  float: right;
+}
+div#left {
+  width: 400px; margin: 0 auto;
+  float: left;
+}
+div#right {
+  width: 400px; margin: 0 auto;
+  float: right;
+}
+
+h1 {
+  padding: 5px;
+  background-color: #eeeeee;
+  font-size: 75%; font-weight: bold; text-align: center;
+}
+
+div#plot {
+  width: 1000px;
+  height: 400px;
+  padding: 10px 0px 0px 0px;
+}
+
+div#submenu_header {
+  background-color: #cccccc;
+  /*padding: 4px 0px 0px 0px;*/
+  padding: 10px 0px 0px 0px;
+  font-size: 90%; font-weight: bold; text-align: center;
+}
+ul#submenu_body {
+  padding-bottom: 6px;
+  background-color: #cccccc;
+}
+ul#submenu_body li {
+  font-size: 90%;
+  list-style-type: none;
+  display: inline;
+}
+ul#submenu_body li a {
+  display: block;
+  margin: 0px 4px 0px 4px;
+  padding: 2px 0px 2px 20px;
+  background-color: #eeeeee;
+  text-decoration: none;
+}
+ul#submenu_body li a:hover {
+  background-color: #ffffff;
+}
+
+div#ctrl {
+  width: 400px;
+  height: 200px;
+}
+textarea#data {
+  width: 380px;
+  height: 200px;
+}
+
+textarea#spec {
+  width: 380px;
+  height: 400px;
 }
