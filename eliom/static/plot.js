@@ -1,4 +1,4 @@
-function plot(holderId, data) {
+function plot(holderId, yvar, data) {
 //alert(data.length);
 
 	var arr = [];
@@ -6,16 +6,26 @@ function plot(holderId, data) {
 		var d = data[i];
 		if (d["state"]["kind"] == 'pped') continue;
 
-		arr[j] = [[],[]];
+		arr[j] = [];
 
 		var ti = d["time"];
-		arr[j][0] = (ti[0]+ti[1])/2;
-		var y1i = d["state"]["value"][1];
-		arr[j][1] = (y1i[0]+y1i[1])/2;
+		var y1i = d["state"]["value"][yvar];
+		//arr[j][0] = (ti[0]+ti[1])/2;
+		//arr[j][1] = (y1i[0]+y1i[1])/2;
+		arr[j][0] = ti[0];
+		arr[j][1] = y1i[0];
+		arr[j][2] = y1i[1];
+		j++;
+
+		arr[j] = [];
+		arr[j][0] = ti[1];
+		arr[j][1] = y1i[0];
+		arr[j][2] = y1i[1];
 		j++;
 	}
 
-	g = new Dygraph(document.getElementById(holderId), arr, {width:1000, height:350});
+	g = new Dygraph(document.getElementById(holderId), arr, 
+	  {width:1000, height:350, colors:['#0b615e','#088a85']});
 }
 
 function readData(holderId, filename) {
