@@ -10,11 +10,15 @@
 type t_param = { order:int; tmax:float; hmin:float; eps:float; hdump:float;
 				 k:int; tsim:float; }
 
-type t = { spec:string; param:t_param; yvar:int; }
+type t = { spec:string; param:t_param; yvar:int; fontsize:float; }
 
-let record_of_pdata (_data,(spec,(order,(tmax,(hmin,(eps,(hdump,(k,(tsim,yvar))))))))) = 
+let record_of_pdata (_data,(spec,(order,(tmax,(hmin,(eps,(hdump,(k,(tsim,(yvar,fontsize)))))))))) = 
   let pvalue = {order=order;tmax=tmax;hmin=hmin;eps=eps;hdump=hdump;k=k;tsim=tsim;} in
-  {spec=spec;param=pvalue;yvar=yvar;}
+  {spec=spec;param=pvalue;yvar=yvar;fontsize=fontsize;}
+
+let default_pvalue spec = 
+  let pvalue = {order=20; tmax=100.; hmin=1e-14; eps=1e-14; hdump=0.1; k=10000; tsim=10.;} in
+  {spec=spec;param=pvalue;yvar=0;fontsize=1.;}
 
 
 {server{
@@ -84,31 +88,31 @@ module Hssweb_app =
 let main_service =
   Eliom_service.service ~path:[] ~get_params:Eliom_parameter.unit ()
 
-let load_example_service =
-  Eliom_service.service
-    ~path:["loadexample"]
-    ~get_params:Eliom_parameter.(string "filename")
-	()
 
+let examples = [
+  ("Arc", "arc.ha");
+  ("Disk", "disk.ha");
+  ("Rotate", "rotate.ha");
+  ("BB (simple)", "bb-simple.ha");
+  ("BB (parabola)", "bb-parabola.ha")
+]
 
-let get_file =
-  Eliom_registration.File.register_service
-    ~path:["getfile"]
-    ~get_params:unit
-    (fun () () -> Lwt.return "../examples/arc.ha")
-
+let example_services =
+  List.map
+	(fun (nm,_fn) ->
+	  Eliom_service.service
+	    ~path:["loadexample";nm]
+	    ~get_params:unit
+		() )
+	examples
 
 let example_list () =
-  let elink name fn = Html5.D.a load_example_service [pcdata name] (fn) in
+  let elink ind (nm,_fn) = Html5.D.(li [a (List.nth example_services ind) [pcdata nm] ()]) in
   div ~a:[ a_id "example_list" ]
     [ div ~a:[ a_id "submenu_header" ] [pcdata "Examples:"];
-	  ul ~a:[ a_id "submenu_body" ]
-	  [ li [elink "Arc" "arc.ha"];
-	  	li [elink "Disk" "disk.ha"];
-	  	li [elink "Rotate" "rotate.ha"];
-	  	li [elink "BB (simple)" "bb-simple.ha"];
-	  	li [elink "BB (parabola)" "bb-parabola.ha"];
-	  ]]
+	  ul ~a:[ a_id "submenu_body" ] (List.mapi elink examples);
+	]
+
 
 let submission_service = 
   Eliom_service.post_service
@@ -122,16 +126,20 @@ let submission_service =
 				  float "hdump" **
 				  int "k" **
 				  float "tsim" **
-				  int "yvar" )
+				  int "yvar" **
+				  float "fontsize" )
 	()
 
-let create_input_form vars v_data v_spec pvalue v_yvar =
-  fun (data, (spec, (order, (tmax, (hmin, (eps, (hdump, (k, (tsim, yvar))))))))) ->
+let create_input_form vars v_data v_spec pvalue v_yvar v_fontsize =
+  fun (data, (spec, (order, (tmax, (hmin, (eps, (hdump, (k, (tsim, (yvar, fontsize)))))))))) ->
     let submenu = div ~a:[ a_id "submenu" ] 
 	  [ example_list () ] in
 
-    let left = div ~a:[ a_id "left" ] 
-	  [ Html5.D.textarea ~a:[ a_id "spec"; a_style "font-size:1em;" ] ~name:spec ~value:v_spec () ] in
+	let spec_ta =
+	  Html5.D.textarea ~a:[ a_id "spec"; 
+							a_style ("font-size:"^(string_of_float v_fontsize)^"em;"); ] 
+					   ~name:spec ~value:v_spec () in
+    let left = div ~a:[ a_id "left" ] [ spec_ta ] in 
 
 	let create_input l input =
       div ~a:[ a_class ["param_input"] ] 
@@ -140,6 +148,39 @@ let create_input_form vars v_data v_spec pvalue v_yvar =
 	  create_input l (Html5.D.int_input ~input_type:`Text ~name:n ~value:v ()) in
     let flt_input l n v =
 	  create_input l (Html5.D.float_input ~input_type:`Text ~name:n ~value:v ()) in
+	let yv_input =
+	  match vars with
+	  | [] ->
+	    Html5.D.(int_select ~name:yvar (Option ([], 0, Some (pcdata ""), true)) [])
+	  | v0::vs ->
+	    Html5.D.(int_select ~name:yvar
+	      (Option ([], 0, Some (pcdata v0), v_yvar=0))
+	      (List.mapi (fun i l -> Option ([], (i+1), Some (pcdata l), v_yvar=(i+1))) vs) ) in
+	let _ = {unit{
+	  let open Lwt_js_events in
+	  let inp = Html5.To_dom.of_select %yv_input in
+	  async (fun () -> changes inp (fun _ _ ->
+	    Js.Unsafe.fun_call (Js.Unsafe.variable "plot") 
+		  [|Js.Unsafe.inject "plot"; Js.Unsafe.inject inp##value; Js.Unsafe.eval_string %v_data|];
+		Lwt.return ()
+	  ))
+	}} in
+	let fs_input = 
+	  let eq f1 f2 = abs_float (f1-.f2) < 1e-12 in
+	  Html5.D.(float_select ~name:fontsize
+		(Option ([], 0.6, Some (pcdata "0.6"), (eq v_fontsize 0.6)))
+		(List.map (fun s -> Option ([], s, Some (pcdata (string_of_float s)), (eq v_fontsize s)))
+		[1.;1.1;1.2;1.3;1.4] )) in
+	let _ = {unit{
+	  let open Lwt_js_events in
+	  let inp = Html5.To_dom.of_select %fs_input in
+	  let ta  = Html5.To_dom.of_textarea %spec_ta in
+	  async (fun () -> changes inp (fun _ _ ->
+	    let s = Js.to_string (inp##value) in
+	    ta##style##fontSize <- Js.string (s^"em");
+		Lwt.return ()
+	  ))
+	}} in
     let right = div ~a:[ a_id "right" ]
 	  [ div ~a:[ a_id "ctrl" ] [
 		  int_input "Order: " order pvalue.order;
@@ -149,17 +190,11 @@ let create_input_form vars v_data v_spec pvalue v_yvar =
 		  flt_input "Hdump: " hdump pvalue.hdump;
 		  int_input "K: "     k     pvalue.k;
 		  flt_input "Tsim: "  tsim  pvalue.tsim;
-      	  div ~a:[ a_class ["param_input"] ] 
-  	        [pcdata "Yvar: "; 
-			 match vars with
-			 | [] ->
-			   Html5.D.(int_select ~name:yvar (Option ([], 0, Some (pcdata ""), true)) [])
-			 | v0::vs ->
-			   Html5.D.(int_select ~name:yvar
-			     (Option ([], 0, Some (pcdata v0), v_yvar=0))
-			     (List.mapi (fun i l -> Option ([], (i+1), Some (pcdata l), v_yvar=(i+1))) vs) );
-			];
-		  Html5.D.input ~input_type:`Submit ~value:"Run" () 
+		  br ();
+		  Html5.D.input ~input_type:`Submit ~value:"Run" ();
+		  br ();
+      	  div ~a:[ a_class ["param_input"] ] [ pcdata "Yvar: "; yv_input ];
+      	  div ~a:[ a_class ["param_input"] ] [ pcdata "Fontsize: "; fs_input ];
 		];
 	    Html5.D.textarea ~a:[ a_id "data" ] ~name:data ~value:v_data ()
 	  ] in
@@ -170,21 +205,20 @@ let create_input_form vars v_data v_spec pvalue v_yvar =
     Html5.D.([ submenu; input_pane ])
 
 
-let gen_frontend phandler {spec=spec; param=pvalue; yvar=v_yvar;} =
+let gen_frontend phandler {spec=spec; param=pvalue; yvar=yvar; fontsize=fontsize;} =
   let vars, res = if spec <> "" then 
 	hss_process pvalue spec
   else [], "[]" in
 
   let _ = {unit{
-	(*Eliom_lib.alert "%d\n" (List.length %vars);*)
     Js.Unsafe.fun_call (Js.Unsafe.variable "plot") 
-	  [|Js.Unsafe.inject "plot"; Js.Unsafe.inject %v_yvar; Js.Unsafe.eval_string %res|]
+	  [|Js.Unsafe.inject "plot"; Js.Unsafe.inject %yvar; Js.Unsafe.eval_string %res|];
   }} in
 
-  let title_text = "Validated simulator for hybrid automata" in
+  let title_text = "Validated simulator for hybrid automata (beta)" in
   let p_holder = div ~a:[ a_id "plot" ] [] in
   let iform = (Html5.D.post_form phandler 
-	(create_input_form vars res spec pvalue v_yvar) ()) in
+	(create_input_form vars res spec pvalue yvar fontsize) ()) in
 
   Lwt.return
 	Html5.F.(html
@@ -203,45 +237,30 @@ let gen_frontend phandler {spec=spec; param=pvalue; yvar=v_yvar;} =
 			  ]]))
 
 
-(*let process_service = 
-  Eliom_service.post_service
-	~fallback:main_service
-    ~post_params:(string "ha")
-	()
-let process =
-  Eliom_registration.String.register
-	~service:process_service
-    (fun () (ha) -> 
-	  let r = hss_process false true ha in
-	  Lwt.return (r, "application/json"))
-*)
-
-(*let default_option = (20, (100., (1e-14, (1e-14, (0.1, (10000, (10., 0)))))))*)
-let default_pvalue = {order=20; tmax=100.; hmin=1e-14; eps=1e-14; hdump=0.1; k=10000; tsim=10.;}
-
 let () =
   Hssweb_app.register
     ~service:submission_service
-	(*(fun () (data,(spec,(order,(tmax,(hmin,(eps,(hdump,(k,(tsim,yvar)))))))) -> 
-	  gen_frontend submission_service (spec,(order,(tmax,(hmin,(eps,(hdump,(k,(tsim,yvar))))))));*)
 	(fun () pdata -> gen_frontend submission_service (record_of_pdata pdata));
 
-  Hssweb_app.register
-	~service:load_example_service
+  let register i (_,fn) =
+	Hssweb_app.register
+	  ~service:(List.nth example_services i)
 
-    (fun (fn) () -> 
-      let ic = open_in ("../examples/"^fn) in
-      try
-        let n = in_channel_length ic in
-        let s = String.create n in
-        really_input ic s 0 n;
-        close_in ic;
-
-	    gen_frontend submission_service {spec=s; param=default_pvalue; yvar=0;};
-      with e ->
-        close_in_noerr ic;
-        raise e);
+	  (fun () () -> 
+	    let ic = open_in ("../examples/"^fn) in
+	    try
+	      let n = in_channel_length ic in
+	      let s = String.create n in
+	      really_input ic s 0 n;
+	      close_in ic;
+	
+	      gen_frontend submission_service (default_pvalue s);
+	    with e ->
+	      close_in_noerr ic;
+	      raise e )
+  in
+  let _ = List.mapi register examples in
 
   Hssweb_app.register
     ~service:main_service
-	(fun () () -> gen_frontend submission_service {spec=""; param=default_pvalue; yvar=0;})
+	(fun () () -> gen_frontend submission_service (default_pvalue ""))
