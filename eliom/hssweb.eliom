@@ -31,7 +31,6 @@ let default_pvalue spec =
 
   (*let hss_process_body debug auto_length lb =*)
   let hss_process_body pvalue lb =
-print_endline "hoge";
     (begin try 
       let (ha,prop),params = Parser.main Lexer.token lb in
       let ha = Ptree.simplify ha in
@@ -39,14 +38,17 @@ print_endline "hoge";
 
       Simulating.step_max := pvalue.k;
       (*Simulating.time_max := if auto_length then 10. else 10.;*)
-      Simulating.time_max := pvalue.tsim;
+      Simulating.time_max := max pvalue.tsim len;
 
       Capd_sending.send_model ha aps;
-	  let params = Model_common.MParam.add "order" (float_of_int pvalue.order) params in
-	  let params = Model_common.MParam.add "t_max" pvalue.tmax params in
-	  let params = Model_common.MParam.add "h_min" pvalue.hmin params in
-	  let params = Model_common.MParam.add "epsilon" pvalue.eps params in
-	  let params = Model_common.MParam.add "dump_interval" pvalue.hdump params in
+	  let add_param k v params = 
+		if Model_common.MParam.mem k params then params 
+		else Model_common.MParam.add k v params in
+	  let params = add_param "order" (float_of_int pvalue.order) params in
+	  let params = add_param "t_max" pvalue.tmax params in
+	  let params = add_param "h_min" pvalue.hmin params in
+	  let params = add_param "epsilon" pvalue.eps params in
+	  let params = add_param "dump_interval" pvalue.hdump params in
       Capd_sending.send_solving_params params;
       Capd_sending_stubs.set_debug (*debug*) false;
 
@@ -66,7 +68,8 @@ print_endline "hoge";
 		[]
     end,
 
-	Capd_simulating_stubs.get_dump_data () )
+	Capd_simulating_stubs.get_dump_data (),
+	flush_str_formatter () )
 
 
   (*let hss_process debug auto_length ha =*)
@@ -95,7 +98,9 @@ let examples = [
   ("Disk", "disk.ha");
   ("Rotate", "rotate.ha");
   ("BB (simple)", "bb-simple.ha");
-  ("BB (parabola)", "bb-parabola.ha")
+  ("BB (parabola)", "bb-parabola.ha");
+  ("BB (movingtable)", "bb-movingtable.ha");
+  ("ATM 4", "atm4.ha");
 ]
 
 let example_services =
@@ -131,8 +136,8 @@ let submission_service =
 				  float "fontsize" )
 	()
 
-let create_input_form vars v_data v_spec pvalue v_yvar v_fontsize =
-  fun (data, (spec, (order, (tmax, (hmin, (eps, (hdump, (k, (tsim, (yvar, fontsize)))))))))) ->
+let create_input_form vars v_dump v_res v_spec pvalue v_yvar v_fontsize =
+  fun (res, (spec, (order, (tmax, (hmin, (eps, (hdump, (k, (tsim, (yvar, fontsize)))))))))) ->
     let submenu = div ~a:[ a_id "submenu" ] 
 	  [ example_list () ] in
 
@@ -141,6 +146,11 @@ let create_input_form vars v_data v_spec pvalue v_yvar v_fontsize =
 							a_style ("font-size:"^(string_of_float v_fontsize)^"em;"); ] 
 					   ~name:spec ~value:v_spec () in
     let left = div ~a:[ a_id "left" ] [ spec_ta ] in 
+
+	let res_ta =
+	  Html5.D.textarea ~a:[ a_id "data"; 
+							a_style ("font-size:"^(string_of_float v_fontsize)^"em;"); ] 
+					   ~name:res ~value:v_res () in
 
 	let create_input l input =
       div ~a:[ a_class ["param_input"] ] 
@@ -162,7 +172,7 @@ let create_input_form vars v_data v_spec pvalue v_yvar v_fontsize =
 	  let inp = Html5.To_dom.of_select %yv_input in
 	  async (fun () -> changes inp (fun _ _ ->
 	    Js.Unsafe.fun_call (Js.Unsafe.variable "plot") 
-		  [|Js.Unsafe.inject "plot"; Js.Unsafe.inject inp##value; Js.Unsafe.eval_string %v_data|];
+		  [|Js.Unsafe.inject "plot"; Js.Unsafe.inject inp##value; Js.Unsafe.eval_string %v_dump|];
 		Lwt.return ()
 	  ))
 	}} in
@@ -175,10 +185,12 @@ let create_input_form vars v_data v_spec pvalue v_yvar v_fontsize =
 	let _ = {unit{
 	  let open Lwt_js_events in
 	  let inp = Html5.To_dom.of_select %fs_input in
-	  let ta  = Html5.To_dom.of_textarea %spec_ta in
+	  let sta  = Html5.To_dom.of_textarea %spec_ta in
+	  let rta  = Html5.To_dom.of_textarea %res_ta in
 	  async (fun () -> changes inp (fun _ _ ->
 	    let s = Js.to_string (inp##value) in
-	    ta##style##fontSize <- Js.string (s^"em");
+	    sta##style##fontSize <- Js.string (s^"em");
+	    rta##style##fontSize <- Js.string (s^"em");
 		Lwt.return ()
 	  ))
 	}} in
@@ -197,7 +209,8 @@ let create_input_form vars v_data v_spec pvalue v_yvar v_fontsize =
       	  div ~a:[ a_class ["param_input"] ] [ pcdata "Yvar: "; yv_input ];
       	  div ~a:[ a_class ["param_input"] ] [ pcdata "Fontsize: "; fs_input ];
 		];
-	    Html5.D.textarea ~a:[ a_id "data" ] ~name:data ~value:v_data ()
+	    (*Html5.D.textarea ~a:[ a_id "data" ] ~name:data ~value:v_data ()*)
+		res_ta;
 	  ] in
 
     let input_pane = div ~a:[ a_id "input" ] 
@@ -207,21 +220,20 @@ let create_input_form vars v_data v_spec pvalue v_yvar v_fontsize =
 
 
 let gen_frontend phandler {spec=spec; param=pvalue; yvar=yvar; fontsize=fontsize;} =
-  let vars, res = if spec <> "" then 
+  let vars, dump, res = if spec <> "" then 
 	hss_process pvalue spec
-  else [], "[]" in
+  else [], "[]", "" in
 
   let _ = {unit{
-alert "%s" %spec;
-alert "%s" %res;
+(*alert "%s" %spec;*)
     Js.Unsafe.fun_call (Js.Unsafe.variable "plot") 
-	  [|Js.Unsafe.inject "plot"; Js.Unsafe.inject %yvar; Js.Unsafe.eval_string %res|];
+	  [|Js.Unsafe.inject "plot"; Js.Unsafe.inject %yvar; Js.Unsafe.eval_string %dump|];
   }} in
 
   let title_text = "Validated simulator for hybrid automata (beta)" in
   let p_holder = div ~a:[ a_id "plot" ] [] in
   let iform = (Html5.D.post_form phandler 
-	(create_input_form vars res spec pvalue yvar fontsize) ()) in
+	(create_input_form vars dump res spec pvalue yvar fontsize) ()) in
 
   Lwt.return
 	Html5.F.(html
@@ -250,7 +262,7 @@ let () =
 	  ~service:(List.nth example_services i)
 
 	  (fun () () -> 
-	    let ic = open_in ("../examples/"^fn) in
+	    let ic = open_in ("static/ha/"^fn) in
 	    try
 	      let n = in_channel_length ic in
 	      let s = String.create n in

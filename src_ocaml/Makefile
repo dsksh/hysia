@@ -57,8 +57,8 @@ EXTOBJS =
 EXTLIBS = str unix nums dynlink
 
 EXTCMA	= $(addsuffix .cma,$(EXTLIBS)) $(addsuffix .cmo,$(EXTOBJS))
-EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(addsuffix .cmx,$(EXTOBJS)) 
-#		  /usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
+EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(addsuffix .cmx,$(EXTOBJS)) \
+		  /usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 
 # C/C++
 CC  = gcc
@@ -100,9 +100,9 @@ LIBCMX = $(addsuffix .cmx, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating
 #$(LIBCMO) $(LIBCMX): OINCLUDES += $(LIBINCLUDES)
 $(LIBCMX): OFLAGS += -for-pack Hss
 
-COBJS = capd_sending_stubs.o capd_simulating_stubs.o capd_integrator.o interval_stubs.o 
-#		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libgcc_eh.a \
-#		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
+COBJS = capd_sending_stubs.o capd_simulating_stubs.o capd_integrator.o interval_stubs.o \
+		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libgcc_eh.a \
+		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 
 # build targets
 

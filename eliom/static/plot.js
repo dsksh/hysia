@@ -1,5 +1,5 @@
 function plot(holderId, yvar, data) {
-alert(data.length);
+//alert(data.length);
 
 	var arr = [];
 	for (var i = 0, j = 0; i < data.length; i++) {
