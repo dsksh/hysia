@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstring>
 
 #include "Context.h"
 #include "Parallelepiped.h"
@@ -343,11 +344,14 @@ void integrate(const char *lid,
 }
 
 
-const char *getDumpData()
+char *getDumpData()
 {
 	ostringstream *oss = dynamic_cast<ostringstream *>(g_fstream.get());
-	if (oss != NULL)
-		return oss->str().c_str();
-	else 
-		return "";
+	if (oss != NULL) {
+		char *s = new char[oss->str().length()];
+		strcpy(s, oss->str().c_str());
+		return s;
+	} else {
+		return NULL;
+	}
 }

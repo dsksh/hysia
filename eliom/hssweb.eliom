@@ -31,6 +31,7 @@ let default_pvalue spec =
 
   (*let hss_process_body debug auto_length lb =*)
   let hss_process_body pvalue lb =
+print_endline "hoge";
     (begin try 
       let (ha,prop),params = Parser.main Lexer.token lb in
       let ha = Ptree.simplify ha in
@@ -86,7 +87,7 @@ module Hssweb_app =
     end)
 
 let main_service =
-  Eliom_service.service ~path:[] ~get_params:Eliom_parameter.unit ()
+  Eliom_service.Http.service ~path:[] ~get_params:Eliom_parameter.unit ()
 
 
 let examples = [
@@ -100,7 +101,7 @@ let examples = [
 let example_services =
   List.map
 	(fun (nm,_fn) ->
-	  Eliom_service.service
+	  Eliom_service.Http.service
 	    ~path:["loadexample";nm]
 	    ~get_params:unit
 		() )
@@ -115,7 +116,7 @@ let example_list () =
 
 
 let submission_service = 
-  Eliom_service.post_service
+  Eliom_service.Http.post_service
 	~fallback:main_service
     ~post_params:(string "data" ** 
 				  string "spec" ** 
@@ -211,6 +212,8 @@ let gen_frontend phandler {spec=spec; param=pvalue; yvar=yvar; fontsize=fontsize
   else [], "[]" in
 
   let _ = {unit{
+alert "%s" %spec;
+alert "%s" %res;
     Js.Unsafe.fun_call (Js.Unsafe.variable "plot") 
 	  [|Js.Unsafe.inject "plot"; Js.Unsafe.inject %yvar; Js.Unsafe.eval_string %res|];
   }} in

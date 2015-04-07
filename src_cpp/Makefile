@@ -11,9 +11,9 @@ CAPD_DIR = /usr/local
 
 INCLUDES = -I$(CAPD_DIR)/include -I/opt/local/include
 #CFLAGS	= -O3 -g -ansi -pedantic -Wall -frounding-math -fno-fast-math $(INCLUDES)
-CFLAGS	= -O3 -g -frounding-math $(INCLUDES)
-CFLAGS += -DEXCEPTION_HACK=1
-LDFLAGS = -L$(CAPD_DIR)/lib
+CFLAGS	= -O3 -g -frounding-math -fPIC $(INCLUDES)
+#CFLAGS += -DEXCEPTION_HACK=1
+LDFLAGS = -L$(CAPD_DIR)/lib -fPIC
 LIBS	= -lcapd
 
 CXX     = g++ #@CXX@

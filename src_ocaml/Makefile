@@ -57,8 +57,8 @@ EXTOBJS =
 EXTLIBS = str unix nums dynlink
 
 EXTCMA	= $(addsuffix .cma,$(EXTLIBS)) $(addsuffix .cmo,$(EXTOBJS))
-EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(addsuffix .cmx,$(EXTOBJS)) \
-		  /usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
+EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(addsuffix .cmx,$(EXTOBJS)) 
+#		  /usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 
 # C/C++
 CC  = gcc
@@ -67,9 +67,9 @@ CXX = g++
 CAPD_DIR := /usr/local
 
 INCLUDES := -I$(OCAMLLIB) -I$(CAPD_DIR)/include -I../src_cpp
-LDFLAGS := -L$(CAPD_DIR)/lib -lcapd
+LDFLAGS := -L$(CAPD_DIR)/lib -lcapd -fPIC
 
-CFLAGS   = -O3 -g -ansi -pedantic -Wall -frounding-math
+CFLAGS   = -O3 -g -ansi -pedantic -Wall -frounding-math -fPIC
 CXXFLAGS = $(CFLAGS)
 
 ###############
@@ -100,9 +100,9 @@ LIBCMX = $(addsuffix .cmx, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating
 #$(LIBCMO) $(LIBCMX): OINCLUDES += $(LIBINCLUDES)
 $(LIBCMX): OFLAGS += -for-pack Hss
 
-COBJS = capd_sending_stubs.o capd_simulating_stubs.o capd_integrator.o interval_stubs.o \
-		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libgcc_eh.a \
-		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
+COBJS = capd_sending_stubs.o capd_simulating_stubs.o capd_integrator.o interval_stubs.o 
+#		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libgcc_eh.a \
+#		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 
 # build targets
 

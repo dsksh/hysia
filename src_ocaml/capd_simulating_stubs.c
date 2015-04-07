@@ -127,7 +127,13 @@ value sim_report_step(value step_id, value lid)
 value sim_get_dump_data()
 {
 	CAMLparam0();
-	const char *s;
+	CAMLlocal1(os);
+	char *s;
 	s = getDumpData();
-	CAMLreturn(caml_copy_string(s));
+	if (s != NULL) {
+		os = caml_copy_string(s);
+		free(s);
+	} else
+		os = caml_copy_string("");
+	CAMLreturn(os);
 }
