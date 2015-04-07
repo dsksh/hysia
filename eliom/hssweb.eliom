@@ -31,6 +31,10 @@ let default_pvalue spec =
 
   (*let hss_process_body debug auto_length lb =*)
   let hss_process_body pvalue lb =
+	(* kludge for the lazy evaluation *)
+	let dump = ref "" in
+	let res = ref "" in
+
     (begin try 
       let (ha,prop),params = Parser.main Lexer.token lb in
       let ha = Ptree.simplify ha in
@@ -52,24 +56,29 @@ let default_pvalue spec =
       Capd_sending.send_solving_params params;
       Capd_sending_stubs.set_debug (*debug*) false;
 
+	  (*flush_str_formatter ();*)
+
       let ap_fs = Simulating.simulate ha (aps,ap_locs) in
       let update_ap_fs (id,fs) =
           id, Some fs in
       let ap_fs = List.map update_ap_fs ap_fs in
       let ap_fs = Mitl_checking.check false !Simulating.time_max ap_fs prop in
       begin match Mitl_checking.eval_at_zero ap_fs with
-      | Some res -> fprintf str_formatter "%b\n%!" res
-      | None     -> fprintf str_formatter "unknown\n%!" end;
+      | Some r -> Format.fprintf str_formatter "%b\n%!" r;
+      | None   -> Format.fprintf str_formatter "unknown\n%!" end;
+
+	  dump := Capd_simulating_stubs.get_dump_data ();
+	  res := flush_str_formatter ();
 
 	  vars (* return var list. *)
     with
       | _ ->
-        fprintf str_formatter "unexpected error\n@.";
+        fprintf str_formatter "unexpected error\n@.%!";
 		[]
     end,
 
-	Capd_simulating_stubs.get_dump_data (),
-	flush_str_formatter () )
+	(*Capd_simulating_stubs.get_dump_data ()*) !dump,
+	(*flush_str_formatter ()*) !res )
 
 
   (*let hss_process debug auto_length ha =*)
@@ -82,6 +91,7 @@ let default_pvalue spec =
     let lb = from_channel cin in
 	hss_process_body param lb
 }}
+
 
 module Hssweb_app =
   Eliom_registration.App (
@@ -225,9 +235,17 @@ let gen_frontend phandler {spec=spec; param=pvalue; yvar=yvar; fontsize=fontsize
   else [], "[]", "" in
 
   let _ = {unit{
+(*let _ =
+  lwt _ = Lwt_js_events.onload () in
+*)
 (*alert "%s" %spec;*)
     Js.Unsafe.fun_call (Js.Unsafe.variable "plot") 
 	  [|Js.Unsafe.inject "plot"; Js.Unsafe.inject %yvar; Js.Unsafe.eval_string %dump|];
+
+(*Lwt.return ()
+ in
+()
+*)
   }} in
 
   let title_text = "Validated simulator for hybrid automata (beta)" in
