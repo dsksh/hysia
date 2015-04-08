@@ -102,7 +102,7 @@ input[type=submit] {
   float: left;
 }
 
-textarea#data {
+textarea#result {
   width: 380px;
   height: 180px;
 }

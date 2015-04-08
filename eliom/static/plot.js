@@ -1,4 +1,4 @@
-function plot(holderId, yvar, data) {
+function plot(holderId, yvar, data, tsim) {
 //alert(data.length);
 
 	var arr = [];
@@ -6,9 +6,11 @@ function plot(holderId, yvar, data) {
 		var d = data[i];
 		if (d["state"]["kind"] == 'pped') continue;
 
+		var ti = d["time"];
+		if (ti[0] > tsim) break;
+
 		arr[j] = [];
 
-		var ti = d["time"];
 		var y1i = d["state"]["value"][yvar];
 		//arr[j][0] = (ti[0]+ti[1])/2;
 		//arr[j][1] = (y1i[0]+y1i[1])/2;
