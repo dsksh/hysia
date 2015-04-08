@@ -4,13 +4,14 @@ let g = 1
 let c = 1
 let f = 0
 
-var   t, y, vy
+var   y, vy
 
-init  Loc, 0, 1+pertb, -0+pertb
+init  Loc, 1+pertb, -0+pertb
 
-at Loc wait 1, vy, -g
-  watch F (y, vy) goto Loc then t, y, -c*vy
+at Loc wait vy, -g
+  watch F (y, vy) goto Loc then y, -c*vy
 end
 
 
-param qr_thres = 10000
+param order = 20
+param qr_thres = 15000

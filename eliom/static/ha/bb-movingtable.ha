@@ -3,18 +3,18 @@ let c = 0.9
 let f = 0.04
 let x0 = R 5
 
-var   t, x, vx
+var   x, vx, t
 
-init  Fall, 0, 2+x0, 0
+init  Fall, 2+x0, 0, 0
 
-at Fall wait 1, vx, -g + f*vx^2
-  watch F (sin(t)-x, vx-cos(t), -c*vx + (c+1)*cos(t)) goto Fall then t, x, -c*vx + (c+1)*cos(t)
-  watch F (sin(t)-x, vx-cos(t),  c*vx - (c+1)*cos(t)) goto Rise then t, x, -c*vx + (c+1)*cos(t)
+at Fall wait vx, -g + f*vx^2, 1
+  watch F (sin(t)-x, vx-cos(t), -c*vx + (c+1)*cos(t)) goto Fall then x, -c*vx + (c+1)*cos(t), t
+  watch F (sin(t)-x, vx-cos(t),  c*vx - (c+1)*cos(t)) goto Rise then x, -c*vx + (c+1)*cos(t), t
 end
 
-at Rise wait 1, vx, -g - f*vx^2
-  watch F (vx, true) goto Fall then t, x, vx
-  watch F (sin(t)-x, vx-cos(t)) goto Rise then t, x, -c*vx + (c+1)*cos(t)
+at Rise wait vx, -g - f*vx^2, 1
+  watch F (vx, true) goto Fall then x, vx, t
+  watch F (sin(t)-x, vx-cos(t)) goto Rise then x, -c*vx + (c+1)*cos(t), t
 end
 
 

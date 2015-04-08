@@ -91,7 +91,7 @@ input[type=text] {
 input[type=submit] {
   border: solid 1px #000000;
   padding: 5px 10px;
-  margin: 2px 300px 5px 10px;
+  margin: 5px 300px 5px 10px;
   /*font-family:Arial, sans-serif;
   font-size:1.2em;
   text-transform:uppercase;
