@@ -108,9 +108,11 @@ let examples = [
   ("Arc", "arc.ha");
   ("Disk", "disk.ha");
   ("Rotate", "rotate.ha");
+  ("Water tank", "watertank.ha");
   ("BB (simple)", "bb-simple.ha");
   ("BB (parabola)", "bb-parabola.ha");
   ("BB (movingtable)", "bb-movingtable.ha");
+  ("Gas burner", "gasburner.ha");
   ("ATM 4", "atm4.ha");
 ]
 
@@ -262,6 +264,11 @@ let gen_frontend phandler {spec=spec; param=pvalue; yvar=yvar; fontsize=fontsize
 				  p_holder
 				];
 				iform;
+				div ~a:[ a_id "bottom" ] 
+				  [ pcdata "Copyright(C) 2015 "; 
+					Html5.F.Raw.a
+					  ~a:[a_href (Xml.uri_of_string "http://www.dsksh.com/")]
+					  [pcdata "Daisuke Ishii"]; pcdata ". All rights reserved." ];
 			  ]]))
 
 

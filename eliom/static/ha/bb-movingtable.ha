@@ -18,8 +18,12 @@ at Rise wait vx, -g - f*vx^2, 1
 end
 
 
+(* MITL property to satisfy *)
+
 prop G[0,10](F[0,5](x-2))
 
+
+(* solving parameters *)
 
 param order = 30
 param qr_thres = 8000

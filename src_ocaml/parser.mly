@@ -141,10 +141,15 @@ property :
   | { dummy_prop }
 ;
 
+/*solver_params_init :
+  | solver_params PARAM ID EQ float
+    { env := MParam.empty; set_param $2 $4 }
+  | { env := MParam.empty; }
+;*/
 solver_params :
-  | PARAM ID EQ float solver_params
-    { set_param $2 $4 }
-  | { }
+  | solver_params PARAM ID EQ float
+    { set_param $3 $5 }
+  | { env := MParam.empty }
 ;
 
 /**/
