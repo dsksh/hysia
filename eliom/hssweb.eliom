@@ -29,11 +29,19 @@ let default_pvalue spec =
   module PPtree = Pretty.Make(Ptree)
   module PModel = Pretty.Make(Model)
 
+  let report (b,e) =
+    let l = b.pos_lnum in
+    let fc = b.pos_cnum - b.pos_bol + 1 in
+    let lc = e.pos_cnum - b.pos_bol + 1 in
+      Format.fprintf str_formatter "line %d, characters %d-%d: " l fc lc
+
   (*let hss_process_body debug auto_length lb =*)
   let hss_process_body pvalue lb =
 	(* kludge for the lazy evaluation *)
 	let dump = ref "" in
 	let res = ref "" in
+
+	(*flush_str_formatter ();*)
 
     (begin try 
       let (ha,prop),params = Parser.main Lexer.token lb in
@@ -56,9 +64,9 @@ let default_pvalue spec =
       Capd_sending.send_solving_params params;
       Capd_sending_stubs.set_debug (*debug*) false;
 
-	  (*flush_str_formatter ();*)
-
       let ap_fs = Simulating.simulate ha (aps,ap_locs) in
+	  dump := Capd_simulating_stubs.get_dump_data ();
+
       let update_ap_fs (id,fs) =
           id, Some fs in
       let ap_fs = List.map update_ap_fs ap_fs in
@@ -67,14 +75,34 @@ let default_pvalue spec =
       | Some r -> Format.fprintf str_formatter "%b\n%!" r;
       | None   -> Format.fprintf str_formatter "unknown\n%!" end;
 
-	  dump := Capd_simulating_stubs.get_dump_data ();
 	  res := flush_str_formatter ();
 
 	  vars (* return var list. *)
     with
-      | _ ->
-        fprintf str_formatter "unexpected error\n@.%!";
-		[]
+    | Lexer.Lexical_error s -> 
+	  report (lexeme_start_p lb, lexeme_end_p lb);
+	  Format.fprintf str_formatter "lexical error: %s\n@." s;
+	  res := flush_str_formatter ();
+	  []
+    | Parsing.Parse_error ->
+	  let  loc = (lexeme_start_p lb, lexeme_end_p lb) in
+	  report loc;
+      Format.fprintf str_formatter "syntax error\n@.";
+	  res := flush_str_formatter ();
+	  []
+    | Util.LError (e,l) -> 
+	  report l; 
+	  Format.fprintf str_formatter "lint error: %a\n@." Util.report e;
+	  res := flush_str_formatter ();
+	  []
+    | Util.Error e -> 
+	  Format.fprintf str_formatter "error: %a\n@." Util.report e;
+	  res := flush_str_formatter ();
+	  []
+	| _ ->
+	  fprintf str_formatter "unexpected error\n@.%!";
+	  res := flush_str_formatter ();
+	  []
     end,
 
 	(*Capd_simulating_stubs.get_dump_data ()*) !dump,

@@ -19,7 +19,8 @@ exception *eh_ex;
 
 #if !EXCEPTION_HACK
 #	define TRY try
-#	define CATCH catch (const exception& eh_ex)
+//#	define CATCH catch (const exception& eh_ex)
+#	define CATCH catch (exception *const eh_ex)
 #	define THROW(msg) throw runtime_error(msg)
 #else
 	// emulation of exception handling to deal with a bug in Mac OS.
@@ -374,7 +375,7 @@ reduced += time_procd;
 	//catch(exception& e)
 	CATCH
 	{
-		std::cerr << "exception caught! (1): " << eh_ex.what() << endl << endl;
+		std::cerr << "exception caught! (1): " << eh_ex->what() << endl << endl;
 		return cError;
 	}
 
@@ -467,7 +468,7 @@ g_context->cout << endl << "mid:\t" << g_context->x_mid << " at " << time_mid <<
 	//catch (exception& e)
 	CATCH 
 	{
-		std::cerr << "exception caught! (2): " << eh_ex.what() << endl << endl;
+		std::cerr << "exception caught! (2): " << eh_ex->what() << endl << endl;
 		return false;
 	}
 
@@ -571,7 +572,7 @@ g_context->cout << "GTIME: " << g_context->time << endl;
 reduced += time_procd;
 	} 
 	CATCH {
-		std::cerr << "exception caught! (3): " << eh_ex.what() << endl << endl;
+		std::cerr << "exception caught! (3): " << eh_ex->what() << endl << endl;
 		//cInterval err= {-1., -1.};
 		//return err;
 		return cError;
@@ -688,7 +689,7 @@ g_context->cout << "GTIME: " << g_context->time << endl;
 reduced += time_procd;
 	} 
 	CATCH {
-		std::cerr << "exception caught! (4): " << eh_ex.what() << endl << endl;
+		std::cerr << "exception caught! (4): " << eh_ex->what() << endl << endl;
 		return cError;
 	}
 

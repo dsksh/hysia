@@ -9,8 +9,8 @@ var   t, x, vx
 
 #init  Fall, 0, 5+x0, 0
 #init  Fall, 0, [6,6.00001], 0
-#init  Fall, 0, 2+x0, 0
-init  Fall, 0, 2+[0,0.01]+x0, 0
+init  Fall, 0, 2+x0, 0
+#init  Fall, 0, 2+[0,0.01]+x0, 0
 #init  Fall, 0, 3.86578580569671715+[0,0.01], 0
 #init  Fall, 0, 2+[0,0.01]+1.65, 0
 #init  Fall, 0, 4.17621061830895446, 0
@@ -26,7 +26,7 @@ at Rise wait 1, vx, -g - f*vx^2
   watch F (sin(t)-x, vx-cos(t)) goto Rise then t, x, -c*vx + (c+1)*cos(t)
 end
 
-prop G[0,10](F[0,5](x-2))
+prop G[0,100](F[0,5](x-2))
 #prop  G[2,10]!(x-5)
 #prop  G[0,10](11-x)
 #prop  F[5,10](x-2)
