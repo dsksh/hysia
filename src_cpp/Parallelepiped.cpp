@@ -1,7 +1,7 @@
-#include "util.h"
-
 #include "Context.h"
 #include "Parallelepiped.h"
+
+#include "util.h"
 
 namespace capd{ 
 
@@ -19,13 +19,16 @@ interval norm(const IMatrix& M) {
 DMatrix characteristic(const DMatrix& jA) {
 	DMatrix B(jA);
 
-	try {
+	TRY {
 
-	// TODO
-	for (int i(0); i < B.numberOfColumns(); ++i) {
-		// should compute: Bcol(i) / norm(Bcol(i))
-		B.column(i).normalize();
-	}
+		// TODO
+		for (int i(0); i < B.numberOfColumns(); ++i) {
+    		if(!isSingular(B.column(i).euclNorm()))
+      			THROW("Failed to decompose B");
+
+			// should compute: Bcol(i) / norm(Bcol(i))
+			B.column(i).normalize();
+		}
 
 		DMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(B) );
 		//DMatrix B_inv( capd::matrixAlgorithms::gaussInverseMatrix(B) );
@@ -42,8 +45,10 @@ DMatrix characteristic(const DMatrix& jA) {
 	
 		return B;
 	
-	} catch (std::runtime_error &e) {
-	    std::cerr << "runtime_error from CAPD: " << e.what() << std::endl;
+	}
+	//catch (std::runtime_error &e) {
+	CATCH {
+	    std::cerr << "runtime_error from CAPD: " << eh_ex.what() << std::endl;
 
 		// TODO: it won't recover
 		return DMatrix::Identity(B.numberOfColumns());

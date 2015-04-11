@@ -31,5 +31,5 @@ param t_max = 100
 param h_min   = 1e-14
 param epsilon = 1e-14
 param dump_interval = 10
-#param char_mtx = -1
-param char_mtx = 3
+param char_mtx = -1
+#param char_mtx = 3

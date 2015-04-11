@@ -1,5 +1,5 @@
-#ifndef _CAPD_UTIL_H_
-#define _CAPD_UTIL_H_ 
+#ifndef _CAPD_UTIL_JSON_H_
+#define _CAPD_UTIL_JSON_H_ 
 
 #include <iostream>
 
@@ -386,4 +386,4 @@ inline void printPipe(std::ostream& out, const capd::interval& time, const Piped
 
 } // the end of the namespace capd
 
-#endif // _CAPD_UTIL_H_
+#endif // _CAPD_UTIL_JSON_H_

@@ -135,7 +135,7 @@ let main_service =
 let examples = [
   ("Arc", "arc.ha");
   ("Disk", "disk.ha");
-  ("Rotate", "rotate.ha");
+  ("Rotation", "rotate.ha");
   ("Water tank", "watertank.ha");
   ("BB (simple)", "bb-simple.ha");
   ("BB (parabola)", "bb-parabola.ha");

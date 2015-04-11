@@ -18,7 +18,7 @@ at Rise wait vx, -g - f*vx^2, 1
 end
 
 
-(* MITL property to satisfy *)
+(* BLTL property *)
 
 prop G[0,10](F[0,5](x-2))
 

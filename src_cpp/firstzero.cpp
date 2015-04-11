@@ -3,32 +3,32 @@
 #include "MapEx.h"
 #include "util.h"
 
-#include <setjmp.h>
+//#include <setjmp.h>
 
 #include "simulatingHandler.h"
 
 using namespace std;
 using namespace capd;
 
-//#define EXCEPTION_HACK 1
-
-#if EXCEPTION_HACK
-jmp_buf eh_jb;
-exception eh_ex;
-#endif
-
-#if !EXCEPTION_HACK
-#	define TRY try
-#	define CATCH catch (const exception& eh_ex)
-//#	define CATCH catch (exception *const eh_ex)
-#	define THROW(msg) throw runtime_error(msg)
-#else
-	// emulation of exception handling to deal with a bug in Mac OS.
-	// try ... catch() is also needed for the exceptions of CAPD etc.
-#	define TRY if (setjmp(eh_jb) == 0) try
-#	define CATCH catch (exception& e) { eh_ex = e; goto EH_HANDLER; } else EH_HANDLER:
-#	define THROW(msg) do { eh_ex = runtime_error(msg); longjmp(eh_jb, 1); } while (0);
-#endif
+////#define EXCEPTION_HACK 1
+//
+//#if EXCEPTION_HACK
+//jmp_buf eh_jb;
+//exception eh_ex;
+//#endif
+//
+//#if !EXCEPTION_HACK
+//#	define TRY try
+//#	define CATCH catch (const exception& eh_ex)
+////#	define CATCH catch (exception *const eh_ex)
+//#	define THROW(msg) throw runtime_error(msg)
+//#else
+//	// emulation of exception handling to deal with a bug in Mac OS.
+//	// try ... catch() is also needed for the exceptions of CAPD etc.
+//#	define TRY if (setjmp(eh_jb) == 0) try
+//#	define CATCH catch (exception& e) { eh_ex = e; goto EH_HANDLER; } else EH_HANDLER:
+//#	define THROW(msg) do { eh_ex = runtime_error(msg); longjmp(eh_jb, 1); } while (0);
+//#endif
 
 inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 						const ITaylor::CurveType& curve,

@@ -8,6 +8,11 @@ namespace capd{
 
 std::ostream cnull(0);
 
+#if EXCEPTION_HACK
+jmp_buf eh_jb;
+std::exception eh_ex;
+#endif
+
 } // the end of the namespace capd
 
 void printPped(int is_lb, int is_last)

@@ -34,6 +34,9 @@ at Leave wait 1, 0, vx1,vy1,-vy1/r,vx1/r, vx2,vy2,-vy2/r,vx2/r, vx3,vy3,-vy3/r,v
   goto Start then 0,r, x1,y1,vx1,vy1, x2,y2,vx2,vy2, x3,y3,vx3,vy3, x4,y4,vx4,vy4
 end
 
+
+(* BLTL property *)
+
 prop 
 G[0,30]( ((x1-x2)^2+(y1-y2)^2) - 4 ) &
 G[0,30]( ((x1-x3)^2+(y1-y3)^2) - 4 ) &
@@ -49,4 +52,8 @@ F[0,10]( G[0,10]( !((x3-cx)^2+(y3-cy)^2 -  25) ) & F[10,20](  (x3-cx)^2+(y3-cy)^
 F[0,10]( G[0,10]( !((x4-cx)^2+(y4-cy)^2 -  25) ) & F[10,20](  (x4-cx)^2+(y4-cy)^2 - 100) )
 
 
+(* solving parameters *)
+
 param t_max = 20
+param dump_interval = 0.6
+param char_mtx = 3
