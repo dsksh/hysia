@@ -33,9 +33,6 @@ LDFLAGS := -L$(CAPD_DIR)/lib -lcapd
 CFLAGS   = -O3 -g -ansi -pedantic -Wall -frounding-math
 
 CCLIBFLAGS := -cclib -L$(MYCAPD_DIR) -cclib -lmycapd -cclib -L$(CAPD_DIR)/lib -cclib -lcapd
-#COBJS = capd_sending_stubs.o capd_simulating_stubs.o \
-#		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libgcc_eh.a \
-#		/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 COBJS =
 
 ## Where to put intermediate object files.
@@ -71,7 +68,6 @@ DIST_DIRS = $(ETCDIR) $(DATADIR) $(LIBDIR) $(LOGDIR) $(STATICDIR) $(ELIOMSTATICD
 ## Testing
 
 DIST_FILES = $(ELIOMSTATICDIR)/$(PROJECT_NAME).js $(LIBDIR)/$(PROJECT_NAME).cma
-#	/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 
 .PHONY: test.byte test.opt
 test.byte: $(addprefix $(TEST_PREFIX),$(ETCDIR)/$(PROJECT_NAME)-test.conf $(DIST_DIRS) $(DIST_FILES))

@@ -36,8 +36,8 @@ void simInitialize()
 	std::cout.setf(ios::fixed,ios::floatfield);
 	
 if (g_params->dump_interval > 0) {
-	//g_fstream = fstreamPtr(new ofstream("pped.dat"));
-	g_fstream = fstreamPtr(new ostringstream());
+	g_fstream = fstreamPtr(new ofstream("pped.dat"));
+	//g_fstream = fstreamPtr(new ostringstream());
 	g_fstream->precision(17);
 	g_fstream->setf(ios::fixed,ios::floatfield);
 } else
@@ -348,7 +348,7 @@ char *getDumpData()
 {
 	ostringstream *oss = dynamic_cast<ostringstream *>(g_fstream.get());
 	if (oss != NULL) {
-		char *s = new char[oss->str().length()];
+		char *s = new char[oss->str().length()+1];
 		strcpy(s, oss->str().c_str());
 		return s;
 	} else {

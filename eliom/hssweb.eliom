@@ -38,15 +38,17 @@ let default_pvalue spec =
   (*let hss_process_body debug auto_length lb =*)
   let hss_process_body pvalue lb =
 	(* kludge for the lazy evaluation *)
+	let vars = ref [] in
 	let dump = ref "" in
 	let res = ref "" in
 
 	(*flush_str_formatter ();*)
 
-    (begin try 
+    begin try 
       let (ha,prop),params = Parser.main Lexer.token lb in
       let ha = Ptree.simplify ha in
-      let ((_,vars,_,_) as ha),(aps,ap_locs,prop,len) = Model.make ha prop in
+      let ((_,vs,_,_) as ha),(aps,ap_locs,prop,len) = Model.make ha prop in
+	  vars := vs;
 
       Simulating.step_max := pvalue.k;
       (*Simulating.time_max := if auto_length then 10. else 10.;*)
@@ -77,34 +79,31 @@ let default_pvalue spec =
 
 	  res := flush_str_formatter ();
 
-	  vars (* return var list. *)
+	  (*vars (* return var list. *)*)
     with
     | Lexer.Lexical_error s -> 
 	  report (lexeme_start_p lb, lexeme_end_p lb);
 	  Format.fprintf str_formatter "lexical error: %s\n@." s;
 	  res := flush_str_formatter ();
-	  []
     | Parsing.Parse_error ->
 	  let  loc = (lexeme_start_p lb, lexeme_end_p lb) in
 	  report loc;
       Format.fprintf str_formatter "syntax error\n@.";
 	  res := flush_str_formatter ();
-	  []
     | Util.LError (e,l) -> 
 	  report l; 
 	  Format.fprintf str_formatter "lint error: %a\n@." Util.report e;
 	  res := flush_str_formatter ();
-	  []
     | Util.Error e -> 
 	  Format.fprintf str_formatter "error: %a\n@." Util.report e;
+	  dump := (Capd_simulating_stubs.get_dump_data ())^"{}]";
 	  res := flush_str_formatter ();
-	  []
 	| _ ->
 	  fprintf str_formatter "unexpected error\n@.%!";
 	  res := flush_str_formatter ();
-	  []
-    end,
+    end;
 
+	(!vars,
 	(*Capd_simulating_stubs.get_dump_data ()*) !dump,
 	(*flush_str_formatter ()*) !res,
 	!Simulating.time_max )

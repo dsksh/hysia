@@ -3,7 +3,9 @@ function plot(holderId, yvar, data, tsim) {
 
 	var arr = [];
 	for (var i = 0, j = 0; i < data.length; i++) {
+
 		var d = data[i];
+		if (d.state === undefined) continue;
 		if (d["state"]["kind"] == 'pped') continue;
 
 		var ti = d["time"];
