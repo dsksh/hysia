@@ -144,6 +144,11 @@ val make :
    list) *
   ((int * Hdual.key Hashcons.hash_consed) list * Model_common.ident list *
    mitl_formula * float)
+val make_prop :
+  Model_common.ident list ->
+  'a * Ptree.mitl_node ->
+  (int * Hdual.key Hashcons.hash_consed) list * Model_common.ident list *
+  mitl_formula * float
 type param = string * float
 type id = Model_common.ident
 type init = Model_common.ident * expr list

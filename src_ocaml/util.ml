@@ -9,6 +9,7 @@ type error =
   | FindZeroError
   | FindZeroMidError
   | SelectEarliestError of (float*float) * (float*float)
+  | UnknownOverlap
 
 exception LError of error * loc
 exception LWarning of error * loc
@@ -30,6 +31,8 @@ let report fmt = function
       fprintf fmt "failed to find the midpoint of the zero crossing"
   | SelectEarliestError _ -> 
       fprintf fmt "failed to find the earliest discrete change"
+  | UnknownOverlap -> 
+      fprintf fmt "undecidable overlap of frontiers occurred"
 
 let error e l = raise (LError (e,l))
 let warning e l = raise (LWarning (e,l))

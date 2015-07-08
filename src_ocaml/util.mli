@@ -5,6 +5,7 @@ type error =
   | FindZeroError
   | FindZeroMidError
   | SelectEarliestError of (float * float) * (float * float)
+  | UnknownOverlap
 
 exception LError of error * Ptree.loc
 exception LWarning of error * Ptree.loc

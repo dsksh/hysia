@@ -36,7 +36,8 @@ let (+$.) x y = { inf = add_down x.inf y; sup = add_up x.sup y }
 let (+.$) x y = { inf = add_down x y.inf; sup = add_up x y.sup }
 
 let (-$) x y = { inf = sub_down x.inf y.sup; sup = sub_up x.sup y.inf }
-let (-$.) x y = { inf = sub_down x.inf y; sup = sub_up x.sup y }
+(*let (-$.) x y = { inf = sub_down x.inf y; sup = sub_up x.sup y }*)
+let (-$.) x y = { inf = x.inf -. y; sup = x.sup -. y }
 let (-.$) x y = { inf = sub_down x y.sup; sup = sub_up x y.inf }
 
 let (-$) x = { inf = -. x.sup; sup = -. x.inf }
@@ -82,6 +83,16 @@ let (/$) x y =
             { inf = div_down x.sup y.sup; sup = div_up x.inf y.sup }
     end else
         raise Division_by_zero
+
+let intersect x y =
+    let l = max x.inf y.inf in
+    let u = min x.sup y.sup in
+    if l <= u then Some { inf=l; sup=u } else None
+
+let union x y =
+    let l = min x.inf y.inf in
+    let u = max x.sup y.sup in
+    { inf=l; sup=u }
 
 
 let print_interval fmt x = Format.fprintf fmt "[%f;%f]" x.inf x.sup

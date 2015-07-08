@@ -1,4 +1,4 @@
-# Hybrid System Simulator (HSS)
+# HySIA: Hybrid systems/automata Simulation using Interval Analysis
 
 > --- With A Monitor for Bounded LTL Properties ---
 
@@ -51,4 +51,4 @@ If you have Mathematica, you can use a notebook file `plot.nb` to visualize a du
 
 ## Reference
 
-D. Ishii, N. Yonezaki, A. Goldsztejn: Monitoring Bounded LTL Properties Using Interval Analysis (submitted to HSCC'15).
+D. Ishii, N. Yonezaki, A. Goldsztejn: Monitoring Bounded LTL Properties Using Interval Analysis, NSV'15.

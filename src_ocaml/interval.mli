@@ -26,4 +26,6 @@ val ( -.$ ) : float -> t -> t
 val ( -$ ) : t -> t
 val ( *$ ) : t -> t -> t
 val ( /$ ) : t -> t -> t
+val intersect : t -> t -> t option
+val union : t -> t -> t
 val print_interval : Format.formatter -> t -> unit

@@ -1,16 +1,18 @@
-val invert_fs : ('a * bool) list option -> ('a * bool) list option
+val invert_fs :
+  (Interval.t * bool) list option -> (Interval.t * bool) list option
 val cmp_fs : Interval.t * 'a -> Interval.t * 'b -> int
+val merge_fs : (Interval.t * bool) list -> (Interval.t * bool) list option
 val intersect_fs :
   (Interval.t * bool) list option ->
   (Interval.t * bool) list option -> (Interval.t * bool) list option
 val shift_fs :
-  float ->
+  'a ->
   Interval.t ->
   (Interval.t * bool) list option -> (Interval.t * bool) list option
 val print_fs : Format.formatter -> (Interval.t * bool) list option -> unit
-val check :
+val mod_intervals :
   bool ->
-  float ->
+  'a ->
   (int * (Interval.t * bool) list option) list ->
   Model.mitl_formula -> (Interval.t * bool) list option
 val eval_at_zero : (Interval.t * bool) list option -> bool option

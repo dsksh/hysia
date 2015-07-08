@@ -60,6 +60,7 @@
 /* formula expression keywords */
 
 %token TRUE
+%token FALSE
 %token EQ
 %token LP
 /*%token LP_STAR_RP*/
@@ -104,8 +105,9 @@
 
 /**/
 
-%start main
+%start main property
 %type <Ptree.t * float Model_common.MParam.t> main
+%type <Ptree.mitl_formula> property
 
 %%
 
@@ -250,6 +252,10 @@ factor :
 ;
 
 mitl_formula :
+  | TRUE
+    { Ptrue }
+  | FALSE
+    { Pnot Ptrue }
   | LOC ID
     { Ploc $2 }
   | expr

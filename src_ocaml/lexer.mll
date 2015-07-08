@@ -42,6 +42,9 @@
       "U", UNTIL;
 
       "true", TRUE;
+      "false", FALSE;
+
+      (*"/\\", AND;*)
 	];
       fun s -> 
 	try Hashtbl.find h s with Not_found -> ID s

@@ -193,7 +193,7 @@ let rec mk_mitl_formula pm var aps ap_locs = function
   | Pexpr e -> 
        let d = mk_dual_expr pm var e in
        (*APMap.add (Int32.of_int d.tag) d aps, Mexpr d*)
-       (d.tag, d)::aps, ap_locs, Mexpr d, 0.
+       List.append aps [(d.tag, d)], ap_locs, Mexpr d, 0.
   | Pnot (Pnot p) -> 
        let aps,ap_locs,p,l = mk_mitl_formula pm var aps ap_locs p in
        aps, ap_locs, p, l
@@ -233,6 +233,17 @@ let make (ps,var,iloc::ival,locs) prop =
 
   (ps,var,(iloc,ival),locs), (aps,ap_locs,prop,len)
 
+(* for testing *)
+let make_prop var prop = 
+  (*let ps  = List.map snd ps in*)
+  (*let add_param (ps,pm) (id,v) = match v with
+    | PVint v -> (ps, PMap.add id v pm)
+    | PVrandom bnd -> ((id,bnd)::ps, pm)
+  in
+  let ps,pm = List.fold_left add_param ([],PMap.empty) ps in*)
+
+  mk_mitl_formula PMap.empty var [] [] (snd prop)
+
 type param = string * float
 type id = ident
 type init = ident * expr list
@@ -257,7 +268,7 @@ let rec print_expr fmt expr = match expr.node with
 
 let print_dual fmt dual = 
   let (e,d) = dual.node in
-  fprintf fmt "@[(%a,@ [%a])@]" print_expr e (print_list "," print_expr) d
+  fprintf fmt "@[(%a(%d)@ [%a])@]" print_expr e dual.tag (print_list "," print_expr) d
 
 let print_param fmt (id,bnd) = fprintf fmt "%s:=R(%f)" id bnd
 let print_id fmt id = fprintf fmt "%s" id

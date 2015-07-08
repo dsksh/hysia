@@ -24,6 +24,7 @@ endif
 
 #OINCLUDES = -I /usr/lib/ocaml/oUnit
 #OINCLUDES = -I /opt/local/lib/ocaml/site-lib/oUnit
+OINCLUDES = -I ~/.opam/system/lib/oUnit
 
 CXXDIR  = ../src_cpp
 LIBNAME = mycapd
@@ -56,7 +57,7 @@ endif
 # external libraries common to all binaries
 
 #EXTOBJS =
-EXTLIBS = str unix nums dynlink
+EXTLIBS = str unix nums dynlink oUnitAdvanced oUnit
 
 EXTCMA	= $(addsuffix .cma,$(EXTLIBS)) #$(addsuffix .cmo,$(EXTOBJS))
 EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(EXTOBJS)
@@ -121,10 +122,12 @@ hss.cma: hss.cmo $(COBJS)
 hss.cmxa: hss.cmx $(COBJS) 
 	$(OCAMLOPT) -a $(OFLAGS) -o $@ $^ $(CCLIBFLAGS)
 
-hss.cmi hss.cmo: $(LIBCMI) $(LIBCMO)
+#hss.cmi hss.cmo: $(LIBCMI) $(LIBCMO)
+hss.cmo: $(LIBCMI) $(LIBCMO)
 	$(OCAMLC) $(BFLAGS) -pack -o $@ $(LIBCMO)
 
-hss.cmi hss.cmx: $(LIBCMI) $(LIBCMX)
+#hss.cmi hss.cmx: $(LIBCMI) $(LIBCMX)
+hss.cmx: $(LIBCMI) $(LIBCMX)
 	$(OCAMLOPT) $(OFLAGS) -pack -o $@ $(LIBCMX)
 
 %.cmxs: %.cmxa
@@ -165,14 +168,14 @@ clean::
 byte: hss.byte
 opt:  hss.opt
 
+hss.byte: hss.cma main.cmo
+	$(if $(QUIET),@echo 'Linking  $@' &&) \
+	    $(OCAMLC) $(BFLAGS) -o $@ $(EXTCMA) $^
+
 hss.opt: hss.cmxa main.cmx 
 	$(if $(QUIET),@echo 'Linking  $@' &&) \
 	    $(OCAMLOPT) $(OFLAGS) -o $@ $(EXTCMXA) $^
 	$(STRIP) $@
-
-hss.byte: hss.cma main.cmo
-	$(if $(QUIET),@echo 'Linking  $@' &&) \
-	    $(OCAMLC) $(BFLAGS) -o $@ $(EXTCMA) $^
 
 hss: hss.opt
 	ln -sf hss.opt $@
@@ -183,6 +186,29 @@ main.cmx: hss.cmxs
 clean::
 	rm -f main.cm[iox] main.annot main.o
 	rm -f hss.byte hss.opt hss
+
+#############
+# test
+#############
+
+byte: test_mitl_checking.byte
+opt:  test_mitl_checking.opt
+
+test_mitl_checking.byte: hss.cma test_mitl_checking.cmo
+	$(if $(QUIET),@echo 'Linking  $@' &&) \
+	    $(OCAMLC) $(BFLAGS) -o $@ $(EXTCMA) $^
+
+test_mitl_checking.opt: hss.cmxa test_mitl_checking.cmx
+	$(if $(QUIET),@echo 'Linking  $@' &&) \
+	    $(OCAMLOPT) $(OFLAGS) -o $@ $(EXTCMXA) $^
+	$(STRIP) $@
+
+test_mitl_checking.cmo: hss.cma
+test_mitl_checking.cmx: hss.cmxs
+
+clean::
+	rm -f test_mitl_checking.cm[iox] test_mitl_checking.annot test_mitl_checking.o
+	rm -f test_mitl_checking.byte test_mitl_checking.opt
 
 ################
 # generic rules

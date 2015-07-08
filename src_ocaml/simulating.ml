@@ -168,7 +168,8 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
         (List.length ap_fs, ap_fs) ap_locs in*)
         (fun (i,ap_fs) _lid -> 
             let fs = (*if (lid <> !curr_loc) then [(Interval.zero,false)] else*) [] in
-            (i+1, List.append ap_fs [(i,fs)])) (0,ap_fs) ap_locs ) in
+            (i+1, List.append ap_fs [(i,fs)]) ) 
+        (0,ap_fs) ap_locs ) in
     let ap_fs = ref ap_fs in
 
     (*for i = 1 to (if !step_max >= 0 then !step_max else max_int) do*)

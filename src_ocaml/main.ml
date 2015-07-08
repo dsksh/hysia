@@ -73,7 +73,7 @@ module PPtree = Pretty.Make(Ptree)
 module PModel = Pretty.Make(Model)
 
 
-let process buff =
+(*let process buff =
   try 
     let (ha,_prop),_params = Parser.main Lexer.token buff in
     let ha = Ptree.simplify ha in
@@ -99,7 +99,7 @@ let process buff =
     | _ ->
       printf "unexpected error\n@.";
       exit 1
-
+*)
 
 let proc_sprt ha (aps,ap_locs) prop =
 
@@ -133,10 +133,10 @@ let proc_sprt ha (aps,ap_locs) prop =
         | Some ap_fs -> begin
             (*List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_fs;*)
             let update_ap_fs (id,fs) =
-                (*let fs = (Model_common.Interval (0.,0.), true)::fs in*)
+                let fs = (Model_common.Interval (0.,0.), true)::fs in
                 id, Some fs in
             let ap_fs = List.map update_ap_fs ap_fs in
-            let ap_fs = Mitl_checking.check !debug !Simulating.time_max ap_fs prop in
+            let ap_fs = Mitl_checking.mod_intervals !debug !Simulating.time_max ap_fs prop in
             (*print_endline "check done";*)
             (*printf "%a" Mitl_checking.print_fs ap_fs;*)
             match Mitl_checking.eval_at_zero ap_fs with
@@ -191,10 +191,10 @@ let () =
         let ap_fs = Simulating.simulate ha (aps,ap_locs) in
             (*List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_fs;*)
         let update_ap_fs (id,fs) =
-            (*let fs = (Model_common.Interval (0.,0.), true)::fs in*)
+            let fs = (Interval.zero, true)::fs in
             id, Some fs in
         let ap_fs = List.map update_ap_fs ap_fs in
-        let ap_fs = Mitl_checking.check !debug !Simulating.time_max ap_fs prop in
+        let ap_fs = Mitl_checking.mod_intervals !debug !Simulating.time_max ap_fs prop in
         (*print_endline "check done";*)
         (*printf "%a" Mitl_checking.print_fs ap_fs;*)
         match Mitl_checking.eval_at_zero ap_fs with
