@@ -44,8 +44,8 @@ end;*)
     res
   with
   | Util.Error _e -> 
-        printf "@[  result: unknown@]\n@.";
-        None
+          if debug then printf "@[  result: unknown@]\n@.";
+          None
 
 (*let () =
   try 
@@ -138,29 +138,29 @@ let test3 _ =
             "prop (x & y)");
     assert_equal (Some true) (verify false
             [("x", Some [({inf=0.;sup=0.},true)]);
-             ("y", Some [({inf=(-1.);sup=(-1.)},true); ({inf=1.;sup=1.},false)])  ]
+             ("y", Some [({inf=(-1.);sup=0.},true); ({inf=1.;sup=1.},false)])  ]
             "prop (x & y)");
     assert_equal (Some true) (verify false
             [("x", Some [({inf=0.;sup=0.},true); ({inf=2.;sup=2.},false)]);
-             ("y", Some [({inf=(-1.);sup=(-1.)},true); ({inf=1.;sup=1.},false)])  ]
+             ("y", Some [({inf=0.;sup=0.},true); ({inf=1.;sup=1.},false)])  ]
             "prop (x & y)");
     assert_equal (Some true) (verify false
-            [("x", Some [({inf=0.;sup=0.},true); ({inf=2.;sup=2.},false)]);
-             ("y", Some [({inf=(-1.);sup=(-1.)},true); ({inf=1.;sup=1.},false)])  ]
-            "prop (x & y)");
+            [("x", Some [({inf=1.;sup=1.},true); ({inf=3.;sup=3.},false)]);
+             ("y", Some [({inf=1.;sup=1.},true); ({inf=2.;sup=2.},false)])  ]
+            "prop F[1,1] (x & y)");
     assert_equal (Some true) (verify false
-            [("x", Some [({inf=(-3.);sup=(-3.)},true); ({inf=1.;sup=1.},false)]);
-             ("y", Some [({inf=(-2.);sup=(-2.)},true); ({inf=2.;sup=2.},false)]);
-             ("z", Some [({inf=(-1.);sup=(-1.)},true); ({inf=3.;sup=3.},false)])  ]
+            [("x", Some [({inf=0.;sup=0.},true); ({inf=1.;sup=1.},false)]);
+             ("y", Some [({inf=0.;sup=0.},true); ({inf=2.;sup=2.},false)]);
+             ("z", Some [({inf=0.;sup=0.},true); ({inf=3.;sup=3.},false)])  ]
             "prop (x & y & z)");
     ()
 
 let test4 _ =
-    assert_equal (Some true)  (verify true
+    assert_equal (Some true)  (verify false
             [("x", Some [({inf=0.5;sup=0.5},true); ({inf=1.;sup=1.},false); 
                          ({inf=1.5;sup=1.5},true); ({inf=2.;sup=2.},false) ])]
             "prop (true U[0,3.5] x)");
-    assert_equal (Some true)  (verify true
+    assert_equal (Some true)  (verify false
             [("x", Some [({inf=0.5;sup=0.5},true); ({inf=1.;sup=1.},false); 
                          ({inf=1.5;sup=1.5},true); ({inf=2.;sup=2.},false); 
                          ({inf=2.5;sup=2.5},true); ({inf=3.;sup=3.},false) ])]

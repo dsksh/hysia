@@ -267,13 +267,16 @@ mitl_formula :
   | GLOBAL noun_interval mitl_formula
     { Pnot (Puntil ($2,Ptrue,Pnot $3)) }
   | mitl_formula OR mitl_formula
-    { Pnot (Pand ((Pnot $1), (Pnot $3))) }
+    /*{ Pnot (Pand ((Pnot $1), (Pnot $3))) }*/
+    { Por ($1,$3) }
   | mitl_formula AND mitl_formula
-    { Pand ($1,$3) }
+    /*{ Pand ($1,$3) }*/
+    { Pnot (Por ((Pnot $1), (Pnot $3))) }
   | mitl_formula UNTIL noun_interval mitl_formula
     { Puntil ($3,$1,$4) }
   | mitl_formula IMP mitl_formula
-    { Pnot (Pand ($1, Pnot $3)) }
+    /*{ Pnot (Pand ($1, Pnot $3)) }*/
+    { Por (Pnot $1, $3) }
   | LP mitl_formula RP
     { $2 }
 ;

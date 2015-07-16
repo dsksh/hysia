@@ -89,7 +89,7 @@ let intersect x y =
     let u = min x.sup y.sup in
     if l <= u then Some { inf=l; sup=u } else None
 
-let union x y =
+let join x y =
     let l = min x.inf y.inf in
     let u = max x.sup y.sup in
     { inf=l; sup=u }

@@ -24,7 +24,8 @@ and  mitl_node =
   | Ploc of ident
   | Pexpr of expr
   | Pnot of mitl_node
-  | Pand of mitl_node * mitl_node
+  (*| Pand of mitl_node * mitl_node*)
+  | Por of mitl_node * mitl_node
   | Puntil of Interval.t * mitl_node * mitl_node
 
 type id_l = loc * (id list)
@@ -71,7 +72,8 @@ and print_prop_node fmt = function
   | Ploc id -> fprintf fmt "L[%s]" id
   | Pexpr e -> fprintf fmt "%a" print_expr e
   | Pnot p -> fprintf fmt "!%a" print_prop_node p
-  | Pand (p1,p2) -> fprintf fmt "(%a & %a)" print_prop_node p1 print_prop_node p2
+  (*| Pand (p1,p2) -> fprintf fmt "(%a /\\ %a)" print_prop_node p1 print_prop_node p2*)
+  | Por (p1,p2) -> fprintf fmt "(%a \\/ %a)" print_prop_node p1 print_prop_node p2
   | Puntil (v,p1,p2) -> fprintf fmt "(%a U%a %a)"
      print_prop_node p1 Interval.print_interval v print_prop_node p2
   | Puntil (_,p1,p2) -> ()

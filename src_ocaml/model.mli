@@ -110,7 +110,7 @@ type mitl_formula =
   | Mloc of int * Model_common.ident
   | Mexpr of dual
   | Mnot of mitl_formula
-  | Mand of mitl_formula * mitl_formula
+  | Mor of mitl_formula * mitl_formula
   | Muntil of Interval.t * mitl_formula * mitl_formula
 val mk_mitl_formula :
   Interval.t PMap.t ->

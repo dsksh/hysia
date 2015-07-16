@@ -70,9 +70,10 @@ let default_pvalue spec =
 	  dump := Capd_simulating_stubs.get_dump_data ();
 
       let update_ap_fs (id,fs) =
+          let fs = (Interval.zero, true)::fs in
           id, Some fs in
       let ap_fs = List.map update_ap_fs ap_fs in
-      let ap_fs = Mitl_checking.check false !Simulating.time_max ap_fs prop in
+      let ap_fs = Mitl_checking.mod_intervals false !Simulating.time_max ap_fs prop in
       begin match Mitl_checking.eval_at_zero ap_fs with
       | Some r -> Format.fprintf str_formatter "%b\n%!" r;
       | None   -> Format.fprintf str_formatter "unknown\n%!" end;
@@ -272,7 +273,7 @@ let gen_frontend phandler {spec=spec; param=pvalue; yvar=yvar; fontsize=fontsize
 		Js.Unsafe.inject %tsim; |];
   }} in
 
-  let title_text = "Validated simulator for hybrid automata (beta)" in
+  let title_text = "HySIA (beta)" in
   let p_holder = div ~a:[ a_id "plot" ] [] in
   let iform = (Html5.D.post_form phandler 
 	(create_input_form vars dump res tsim spec pvalue yvar fontsize) ()) in

@@ -1,7 +1,12 @@
+val print_fs : Format.formatter -> (Interval.t * bool) list option -> unit
+val cmp_fs : Interval.t * 'a -> Interval.t * 'b -> int
+val normalize_fs :
+  (Interval.t * bool) list -> (Interval.t * bool) list option
 val invert_fs :
   (Interval.t * bool) list option -> (Interval.t * bool) list option
-val cmp_fs : Interval.t * 'a -> Interval.t * 'b -> int
-val merge_fs : (Interval.t * bool) list -> (Interval.t * bool) list option
+val join_fs :
+  (Interval.t * bool) list option ->
+  (Interval.t * bool) list option -> (Interval.t * bool) list option
 val intersect_fs :
   (Interval.t * bool) list option ->
   (Interval.t * bool) list option -> (Interval.t * bool) list option
@@ -9,7 +14,6 @@ val shift_fs :
   'a ->
   Interval.t ->
   (Interval.t * bool) list option -> (Interval.t * bool) list option
-val print_fs : Format.formatter -> (Interval.t * bool) list option -> unit
 val mod_intervals :
   bool ->
   'a ->

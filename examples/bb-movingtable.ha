@@ -3,18 +3,12 @@ let g = 1
 #let c = 1
 let c = 0.9
 let f = 0.04
-#let x0 = R 5
-let x0 = 1.4
+let x0 = R 5
+#let x0 = 1.4
 
 var   t, x, vx
 
-#init  Fall, 0, 5+x0, 0
-#init  Fall, 0, [6,6.00001], 0
-#init  Fall, 0, 2+x0, 0
-init  Fall, 0, 2+[0,0.002]+x0, 0
-#init  Fall, 0, 3.86578580569671715+[0,0.01], 0
-#init  Fall, 0, 2+[0,0.01]+1.65, 0
-#init  Fall, 0, 4.17621061830895446, 0
+init  Fall, 0, 2+x0, 0
 
 #at Fall wait 1, vx, -g
 at Fall wait 1, vx, -g + f*vx^2

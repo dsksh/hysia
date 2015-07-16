@@ -16,7 +16,7 @@ and mitl_node =
   | Ploc of Model_common.ident
   | Pexpr of expr
   | Pnot of mitl_node
-  | Pand of mitl_node * mitl_node
+  | Por of mitl_node * mitl_node
   | Puntil of Interval.t * mitl_node * mitl_node
 type id_l = loc * id list
 type expr_l = loc * expr list

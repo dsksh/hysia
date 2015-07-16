@@ -182,7 +182,8 @@ type mitl_formula =
   | Mloc of int * ident
   | Mexpr of dual
   | Mnot of mitl_formula
-  | Mand of mitl_formula * mitl_formula
+  (*| Mand of mitl_formula * mitl_formula*)
+  | Mor of mitl_formula * mitl_formula
   | Muntil of Interval.t * mitl_formula * mitl_formula
 
 let rec mk_mitl_formula pm var aps ap_locs = function
@@ -200,10 +201,14 @@ let rec mk_mitl_formula pm var aps ap_locs = function
   | Pnot p -> 
        let aps,ap_locs,p,l = mk_mitl_formula pm var aps ap_locs p in
        aps, ap_locs, Mnot p, l
-  | Pand (p1,p2) -> 
+  (*| Pand (p1,p2) -> 
        let aps,ap_locs,p1,l1 = mk_mitl_formula pm var aps ap_locs p1 in
        let aps,ap_locs,p2,l2 = mk_mitl_formula pm var aps ap_locs p2 in
-       aps, ap_locs, Mand (p1,p2), max l1 l2
+       aps, ap_locs, Mand (p1,p2), max l1 l2*)
+  | Por (p1,p2) -> 
+       let aps,ap_locs,p1,l1 = mk_mitl_formula pm var aps ap_locs p1 in
+       let aps,ap_locs,p2,l2 = mk_mitl_formula pm var aps ap_locs p2 in
+       aps, ap_locs, Mor (p1,p2), max l1 l2
   | Puntil (t,p1,p2) -> 
        let aps,ap_locs,p1,l1 = mk_mitl_formula pm var aps ap_locs p1 in
        let aps,ap_locs,p2,l2 = mk_mitl_formula pm var aps ap_locs p2 in
@@ -283,7 +288,8 @@ let rec print_prop fmt = function
   | Mloc (id,lid) -> fprintf fmt "L[%s]" lid
   | Mexpr d -> fprintf fmt "%a" print_dual d
   | Mnot p -> fprintf fmt "!%a" print_prop p
-  | Mand (p1,p2) -> fprintf fmt "(%a & %a)" print_prop p1 print_prop p2
+  (*| Mand (p1,p2) -> fprintf fmt "(%a /\\ %a)" print_prop p1 print_prop p2*)
+  | Mor (p1,p2) ->  fprintf fmt "(%a \\/ %a)" print_prop p1 print_prop p2
   | Muntil (v,p1,p2) -> fprintf fmt "%a U%a %a"
                                      print_prop p1 print_interval v print_prop p2
   | Muntil (_,p1,p2) -> ()

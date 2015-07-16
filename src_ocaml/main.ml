@@ -133,7 +133,7 @@ let proc_sprt ha (aps,ap_locs) prop =
         | Some ap_fs -> begin
             (*List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_fs;*)
             let update_ap_fs (id,fs) =
-                let fs = (Model_common.Interval (0.,0.), true)::fs in
+                let fs = (Interval.zero, true)::fs in
                 id, Some fs in
             let ap_fs = List.map update_ap_fs ap_fs in
             let ap_fs = Mitl_checking.mod_intervals !debug !Simulating.time_max ap_fs prop in
