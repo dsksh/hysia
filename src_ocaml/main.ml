@@ -136,7 +136,7 @@ let proc_sprt ha (aps,ap_locs) prop =
                 let fs = (Interval.zero, true)::fs in
                 id, Some fs in
             let ap_fs = List.map update_ap_fs ap_fs in
-            let ap_fs = Mitl_checking.mod_intervals !debug !Simulating.time_max ap_fs prop in
+            let ap_fs = Mitl_checking.propagate !debug ap_fs prop in
             (*print_endline "check done";*)
             (*printf "%a" Mitl_checking.print_fs ap_fs;*)
             match Mitl_checking.eval_at_zero ap_fs with
@@ -194,7 +194,7 @@ let () =
             let fs = (Interval.zero, true)::fs in
             id, Some fs in
         let ap_fs = List.map update_ap_fs ap_fs in
-        let ap_fs = Mitl_checking.mod_intervals !debug !Simulating.time_max ap_fs prop in
+        let ap_fs = Mitl_checking.propagate !debug ap_fs prop in
         (*print_endline "check done";*)
         (*printf "%a" Mitl_checking.print_fs ap_fs;*)
         match Mitl_checking.eval_at_zero ap_fs with

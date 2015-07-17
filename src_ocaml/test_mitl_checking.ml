@@ -2,7 +2,6 @@ open Format
 open Lexing
 open OUnit2
 open Hss.Interval
-open Hss.Util
 open Hss
 
 let verify debug env str =
@@ -13,7 +12,7 @@ let verify debug env str =
   let vs,fs = List.split env in
 (*List.map (fun v -> Printf.printf " %s" v) vs;
 print_endline "";*)
-  let aps,_,prop,len = Model.make_prop vs prop in
+  let aps,_,prop,_ = Model.make_prop vs prop in
   if debug then
     printf "@[prop(Model): %a@]\n@." Model.print_prop prop;
 (*List.map (fun (i,d) -> Printf.printf " %d %d" i d.Hashcons.tag) aps;
@@ -34,7 +33,7 @@ end;*)
   let ap_fs = List.map (fun ((apid,_),fs) -> apid, fs) ap_fs in
 
   try
-    let ap_fs = Mitl_checking.mod_intervals debug len ap_fs prop in
+    let ap_fs = Mitl_checking.propagate debug ap_fs prop in
     let res = Mitl_checking.eval_at_zero ap_fs in
     if debug then begin
         match res with
