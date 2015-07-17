@@ -10,9 +10,13 @@ val join_fs :
 val intersect_fs :
   (Interval.t * bool) list option ->
   (Interval.t * bool) list option -> (Interval.t * bool) list option
+val shift_elem :
+  Interval.t -> (Interval.t * bool) list -> (Interval.t * bool) list option
+val map_pairs :
+  (('a * bool) list -> 'b list option) -> ('a * bool) list -> 'b list option
 val shift_fs :
-  'a ->
   Interval.t ->
+  (Interval.t * bool) list option ->
   (Interval.t * bool) list option -> (Interval.t * bool) list option
 val mod_intervals :
   bool ->

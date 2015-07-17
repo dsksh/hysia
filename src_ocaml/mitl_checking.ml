@@ -42,29 +42,29 @@ let normalize_fs fs =
 
     let n_overlaps = ref 0 in
     let rec filter_embedded = function
-        | (t,true as f)::fs -> 
-                if !n_overlaps >= 1 then
-                    (* f is included in another interval in fs *)
-                    filter_embedded fs
-                else begin
-                    incr n_overlaps;
-                    f::(filter_embedded fs)
-                end
-        | (t,false as f)::fs -> 
+        | (_,true as f)::fs -> 
+                incr n_overlaps;
                 if !n_overlaps >= 2 then
                     (* f is included in another interval in fs *)
                     filter_embedded fs
                 else begin
-                    decr n_overlaps;
+                    f::(filter_embedded fs)
+                end
+        | (_,false as f)::fs -> 
+                decr n_overlaps;
+                if !n_overlaps >= 1 then
+                    (* f is included in another interval in fs *)
+                    filter_embedded fs
+                else begin
                     f::(filter_embedded fs)
                 end
         | [] -> []
     in
     let fs = filter_embedded fs in
 
-    let rec filter_negative = function
+    let filter_negative = function
         | (t,true as f)::[] -> if t.sup > 0. then f::fs else [(Interval.zero,true)]
-        | (t,b as f)::fs    -> if t.sup > 0. then f::fs else fs
+        | (t,_ as f)::fs    -> if t.sup > 0. then f::fs else fs
         | [] -> []
     in
     let fs = filter_negative fs in
@@ -200,48 +200,23 @@ let intersect_fs fs1 fs2 = match fs1, fs2 with
     | None, fs2 -> fs2
     | fs1, None -> fs1
     | Some fs1, Some fs2 ->
-            (*let fs = List.merge cmp_fs fs1 fs2 in
-            let sel (s,res) = function
-                | t, true -> 
-                        if s = 1 then (2, List.append res [(t,true)]) else (1,res)
-                | t, false -> 
-                        if s = 2 then (1, List.append res [(t,false)]) else (0,res)
-            in
-            let _,fs = List.fold_left sel (0,[]) fs in
-            Some fs*)
-
-            let Some fs1 = invert_fs (Some fs1) in
+            let fs1 = invert_fs (Some fs1) in
 (*Format.printf "\n%a" print_fs (Some fs1);*)
-            let Some fs2 = invert_fs (Some fs2) in
+            let fs2 = invert_fs (Some fs2) in
+            let fs1,fs2 = match fs1,fs2 with
+            | Some fs1, Some fs2 -> fs1,fs2
+            | _,_ -> assert false
+            in
 (*Format.printf "\n%a" print_fs (Some fs2);*)
             let fs = List.merge cmp_fs fs1 fs2 in
             let fs = normalize_fs fs in
             invert_fs fs
 
-let shift_fs tmax t fs = 
+(*let shift_fs tmax t fs = 
     match fs with
     | None -> 
             None
-    (*| Some [] -> 
-            (*Some [({inf=tmax-.v.inf; sup=tmax-.v.inf},false)]*)
-            Some []*)
     | Some fs ->
-            (*let shift fs f = 
-                let s, polar = f in
-                if s.inf <= tmax then begin
-                    let o = if polar then t.sup else t.inf in
-                    (*let tl,tu = s.inf -. o, s.sup -. o in*)
-                    let s = s -$. o in
-(*Printf.printf "shifted: %f %f %b\n" s.inf s.sup polar;*)
-                    if s.inf >= 0. then
-                        (s, polar)::fs
-                    else if s.sup >= 0. then
-                        ({inf=0.;sup=s.sup}, polar)::fs
-                    else
-                        (Interval.zero, polar)::fs
-                        (*fs*)
-                end else fs
-            in*)
             let shift f fs = 
                 let s, polar = f in
                 let o = if polar then t.sup else t.inf in
@@ -249,18 +224,60 @@ let shift_fs tmax t fs =
 (*Printf.printf "shifted: [%f, %f] - %f = [%f, %f] %b\n" s.inf s.sup o s1.inf s1.sup polar;*)
                 (s1, polar)::fs
             in
-            (*let t0,p = List.hd fs in
-            let fs = match t0 with
-              | {inf=0.} -> fs;
-              | _ ->
-                if not p then
-                  (* status at time 0 should be expressed explicitly. *)
-                  (Interval.zero, not p (* correct? *))::fs
-                else fs
-            in*)
             let fs = List.fold_right shift fs [] in
 
             normalize_fs fs
+*)
+
+let shift_elem t bs = 
+    let shift (u,polar) = 
+        let o = if polar then t.sup else t.inf in
+        let u1 = u -$. o in
+(*Printf.printf "shifted: [%f, %f] - %f = [%f, %f] %b\n" u.inf u.sup o u1.inf u1.sup polar;*)
+        u1,polar
+    in
+    let bs = List.map shift bs in
+    normalize_fs bs
+
+let rec map_pairs proc = function
+    | (_,true as b1)::(_,false as b2)::bs ->
+            let bs1 = proc [b1;b2] in
+            let bs2 = map_pairs proc bs in
+            let bs1,bs2 = match bs1,bs2 with
+            | Some bs1, Some bs2 -> bs1,bs2
+            | _ -> assert false
+            in
+            Some (List.append bs1 bs2)
+    | (_,true as b1)::[] ->
+            proc [b1]
+    | [] -> Some []
+    | _  -> assert false
+
+let shift_fs t fs1 fs2 = match fs1, fs2 with
+    | Some [], _ -> Some []
+    | _, Some [] -> Some []
+    | None, None -> None
+    | None, Some fs2 ->
+            map_pairs (shift_elem t) fs2
+    | Some fs1, None ->
+            let proc bs = 
+                let bs1 = shift_elem t bs in
+                intersect_fs (Some bs) bs1
+            in
+            map_pairs proc fs1
+    | Some fs1, Some fs2 ->
+            let proc1 bs1 bs2 =
+                let bs = match intersect_fs (Some bs1) (Some bs2) with
+                | Some bs -> bs
+                | _None -> assert false
+                in
+                let bs = shift_elem t bs in
+                intersect_fs bs (Some bs1)
+            in
+            let proc2 bs1 = 
+                map_pairs (proc1 bs1) fs2
+            in
+            map_pairs proc2 fs1
 
 
 let rec mod_intervals debug tmax ap_fs (*ap_locs*) = function
@@ -281,11 +298,6 @@ let rec mod_intervals debug tmax ap_fs (*ap_locs*) = function
         let fs = invert_fs (mod_intervals debug tmax ap_fs f) in
         if debug then Format.printf "  not\n%a" print_fs fs;
         fs
-    (*| Mand (f1,f2) -> 
-        let fs = intersect_fs (mod_intervals debug tmax ap_fs f1) 
-                              (mod_intervals debug tmax ap_fs f2) in
-        if debug then Format.printf "  and\n%a" print_fs fs;
-        fs*)
     | Mor (f1,f2) -> 
         let fs = join_fs (mod_intervals debug tmax ap_fs f1) 
                          (mod_intervals debug tmax ap_fs f2) in
@@ -294,12 +306,14 @@ let rec mod_intervals debug tmax ap_fs (*ap_locs*) = function
     | Muntil (i,f1,f2) -> 
         let fs1 = mod_intervals debug tmax ap_fs f1 in
         let fs2 = mod_intervals debug tmax ap_fs f2 in
-        (*let fs = intersect_fs (shift_fs tmax i (intersect_fs fs1 fs2)) fs1 in*)
-        let fs = intersect_fs fs1 fs2 in
-        if debug then Format.printf "  until00 %a\n%a" print_interval i print_fs fs;
+        (*let fs = intersect_fs fs1 fs2 in
+        if debug then Format.printf "  until(1) %a\n%a" print_interval i print_fs fs;
         let fs = shift_fs tmax i fs in
-        if debug then Format.printf "  until01 %a\n%a" print_interval i print_fs fs;
+        if debug then Format.printf "  until(2) %a\n%a" print_interval i print_fs fs;
         let fs = intersect_fs fs fs1 in
+        if debug then Format.printf "  until(3) %a\n%a" print_interval i print_fs fs;
+        *)
+        let fs = shift_fs i fs1 fs2 in
         if debug then Format.printf "  until %a\n%a" print_interval i print_fs fs;
         fs
 
@@ -310,7 +324,7 @@ let eval_at_zero = function
         (*let t, p = List.nth fs 0 in 
         if t.inf > 0. then begin if p then Some false else Some true end else None*)
 
-        let count_before_zero c (t,polar as f) =
+        let count_before_zero c (t,_) =
             if t.sup < 0. then begin
                 (*if polar then incr n_overlaps
                 else decr_pos n_overlaps;*)
