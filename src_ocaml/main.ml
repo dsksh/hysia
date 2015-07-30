@@ -10,6 +10,8 @@ let auto_length = ref false
 
 let prop_file = ref None
 
+let dump_to_file = ref false
+
 let sprt = ref false
 let bht  = ref false
 
@@ -29,6 +31,7 @@ let spec = [
   
   "-p",  Arg.String (fun fn -> prop_file := Some fn),
                                 "sets the property filename";
+  "-dump", Arg.Set dump_to_file, "sets to dump plot data to the file (\"pped.dat\")";
 
   "-sprt",      Arg.Set sprt,   "use SPRT";
   "-bht",       Arg.Set bht,    "use BHT";
@@ -72,34 +75,6 @@ module PPtree = Pretty.Make(Ptree)
 (*module PBa_ptree = Pretty.Make(Ba_ptree)*)
 module PModel = Pretty.Make(Model)
 
-
-(*let process buff =
-  try 
-    let (ha,_prop),_params = Parser.main Lexer.token buff in
-    let ha = Ptree.simplify ha in
-      fprintf str_formatter "@[%a@]@." PPtree.print_ha ha;
-      flush_str_formatter
-  with
-    | Lexer.Lexical_error s -> 
-	  report (lexeme_start_p buff, lexeme_end_p buff);
-	  printf "lexical error: %s\n@." s;
- 	  exit 1
-    | Parsing.Parse_error ->
-	  let  loc = (lexeme_start_p buff, lexeme_end_p buff) in
-	  report loc;
-      printf "syntax error\n@.";
-	  exit 1
-    | Util.LError (e,l) -> 
-	  report l; 
-	  printf "lint error: %a\n@." Util.report e;
-	  exit 1
-    | Util.Error e -> 
-	  printf "error: %a\n@." Util.report e;
-	  exit 1
-    | _ ->
-      printf "unexpected error\n@.";
-      exit 1
-*)
 
 let proc_sprt ha (aps,ap_locs) prop =
 
@@ -167,7 +142,6 @@ let () =
       printf "@[%a@]@." PPtree.print_ha ha;
       printf "@[prop: %a@]\n@." Ptree.print_prop prop
     end *)
-    printf "@[prop: %a@]\n@." Ptree.print_prop prop;
 
     let ha,(aps,ap_locs,prop,len) = Model.make ha prop in
     if !debug then begin
@@ -183,23 +157,28 @@ let () =
     if !auto_length then Simulating.time_max := len;
 
     Capd_sending.send_model ha aps;
+    let params = Model_common.MParam.add "dump_to_file" 
+        (if !dump_to_file then 1. else 0.) params in
     Capd_sending.send_solving_params params;
     Capd_sending_stubs.set_debug !debug;
 
+    let start = Sys.time () in
+
     if !sprt then proc_sprt ha (aps,ap_locs) prop
     else
-        let ap_fs = Simulating.simulate ha (aps,ap_locs) in
-            (*List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_fs;*)
-        let update_ap_fs (id,fs) =
+        let ap_bs = Simulating.simulate ha (aps,ap_locs) in
+        (*List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_bs;*)
+        let update_ap_bs (id,fs) =
             let fs = (Interval.zero, true)::fs in
             id, Some fs in
-        let ap_fs = List.map update_ap_fs ap_fs in
-        let ap_fs = Mitl_checking.propagate !debug ap_fs prop in
+        let ap_bs = List.map update_ap_bs ap_bs in
+        let ap_bs = Mitl_checking.propagate !debug ap_bs prop in
         (*print_endline "check done";*)
-        (*printf "%a" Mitl_checking.print_fs ap_fs;*)
-        match Mitl_checking.eval_at_zero ap_fs with
+        (*printf "%a" Mitl_checking.print_fs ap_bs;*)
+        (match Mitl_checking.eval_at_zero ap_bs with
         | Some res -> Printf.printf "%b\n%!" res
-        | None     -> Printf.printf "unknown\n%!";
+        | None     -> Printf.printf "unknown\n%!");
+    Printf.printf "time: %fs\n%!" (Sys.time () -. start);
     ()
   with
     | Lexer.Lexical_error s -> 

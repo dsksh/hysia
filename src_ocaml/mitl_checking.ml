@@ -34,6 +34,39 @@ let normalize_bs bs =
     in
     let _ = check_if_contains_zero bs in
 
+    let normalize_overlap_opp (u,polar) b (res,bs) = 
+        match b with
+        | (u1,polar1 as b) when polar <> polar1 -> 
+            begin match intersect u u1 with
+            | Some _u -> 
+                    error UnknownOverlap
+            | None   -> res, b::bs
+            end
+        | _ -> res, b::bs
+    in
+    let normalize_overlap_homo (u,polar) b (res,bs) = 
+        match b with
+        | (u1,polar1 as b) when polar = polar1 -> 
+            begin match intersect u u1 with
+            | Some _ -> true, (join u u1, polar)::bs
+            | None   -> res,  b::bs
+            end
+        | b -> res, b::bs
+    in
+    let rec normalize_overlaps = function
+        | b::bs -> 
+            let _,bs = List.fold_right (normalize_overlap_opp  b) bs (false,[]) in
+            let r,bs = List.fold_right (normalize_overlap_homo b) bs (false,[]) in
+            if r then 
+                (* b is merged with another frontier in bs *)
+                normalize_overlaps bs
+            else 
+                b::(normalize_overlaps bs)
+        | [] -> [] 
+    in
+    (* apply for detecting the undecidable overlaps *)
+    let _ = normalize_overlaps bs in
+
     let n_overlaps = ref 0 in
     let rec filter_embedded = function
         | (_,true as f)::bs -> 
@@ -55,6 +88,7 @@ let normalize_bs bs =
         | [] -> []
     in
     let bs = filter_embedded bs in
+(*let _ = Format.printf "  fe %a\n" print_bs (Some bs) in*)
 
     let filter_negative = function
         | (u,true as b)::[] -> if u.sup > 0. then b::bs else [(Interval.zero,true)]
@@ -63,7 +97,7 @@ let normalize_bs bs =
     in
     let bs = filter_negative bs in
 
-    let normalize_overlap_opp (u,polar) b (res,bs) = 
+    (*let normalize_overlap_opp (u,polar) b (res,bs) = 
         match b with
         | (u1,polar1 as b) when polar <> polar1 -> 
             begin match intersect u u1 with
@@ -96,7 +130,8 @@ let normalize_bs bs =
             else 
                 b::(normalize_overlaps bs)
         | [] -> [] 
-    in
+    in*)
+    (* apply again for removing the overlappings *)
     let bs = normalize_overlaps bs in
 
     let bs = match bs with
@@ -199,14 +234,18 @@ let shift_bs t bs1 bs2 = match bs1, bs2 with
             in
             normalize_bs (map_pairs proc bs1)
     | Some bs1, Some bs2 ->
+(*let _ = Format.printf "  shift_bs %a\n%a" print_bs (Some bs1) print_bs (Some bs2) in*)
             let proc1 bs1 bs2 =
+(*let _ = Format.printf "  proc %a\n%a\n" print_bs (Some bs1) print_bs (Some bs2) in*)
                 let bs = match intersect_bs (Some bs1) (Some bs2) with
                 | Some bs -> bs
                 | _None -> assert false
                 in
                 let bs = shift_elem t bs in
                 match intersect_bs (Some bs) (Some bs1) with
-                | Some bs -> bs
+                | Some bs -> 
+(*let _ = Format.printf "  res: %a" print_bs (Some bs) in*)
+                    bs
                 | _ -> assert false
             in
             let proc2 bs1 = 

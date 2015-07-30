@@ -103,10 +103,10 @@ value sim_simulate_jump(value lid, value eid, value zero_l, value zero_u)
 	CAMLreturn(Val_unit);
 }
 
-value sim_simulate_cont(value lid)
+value sim_simulate_cont(value lid, value time_max)
 {
-	CAMLparam1(lid);
-	simulateCont(String_val(lid));
+	CAMLparam2(lid, time_max);
+	simulateCont(String_val(lid), Double_val(time_max));
 	CAMLreturn(Val_unit);
 }
 

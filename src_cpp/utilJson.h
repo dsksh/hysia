@@ -158,6 +158,7 @@ inline void printBegin(std::ostream& out)
 inline void printEnd(std::ostream& out)
 {
 	out << ']' << std::endl;
+	out.flush();
 }
 
 inline void printStep(std::ostream& out, const int stepId, const char *lid, const double sim_time)

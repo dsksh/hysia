@@ -165,6 +165,7 @@ public:
 	double h_min;
 	//double h_max;
 	double dump_interval;
+	bool dump_to_file;
 
 	//std::string DumpFilename;
 
@@ -185,6 +186,7 @@ public:
 	    h_min(0.01),
 		//h_max(0.1)
 		dump_interval(0.1),
+		dump_to_file(0),
 		epsilon(1e-12),
 		abs_infl(1e-12),
 		delta(0.99),

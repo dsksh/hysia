@@ -36,8 +36,10 @@ void simInitialize()
 	std::cout.setf(ios::fixed,ios::floatfield);
 	
 if (g_params->dump_interval > 0) {
-	//g_fstream = fstreamPtr(new ofstream("pped.dat"));
-	g_fstream = fstreamPtr(new ostringstream());
+	if (g_params->dump_to_file)
+		g_fstream = fstreamPtr(new ofstream("pped.dat"));
+	else
+		g_fstream = fstreamPtr(new ostringstream());
 	g_fstream->precision(17);
 	g_fstream->setf(ios::fixed,ios::floatfield);
 } else
@@ -226,7 +228,7 @@ g_context->cout << "D_omega: " << d_omega << endl;
 }
 
 /// simulate and dump a continuous evolution in a location.
-void simulateCont(const char *lid)
+void simulateCont(const char *lid, const double time_max)
 {
 g_context->cout << endl;
 g_context->cout << "*** simulateCont: " << lid << endl;
@@ -251,26 +253,26 @@ g_context->cout << endl;
 
 	const double time_l(time.rightBound());
     interval time_procd(time_l);
-	IMatrix dx_prev(IMatrix::Identity(dim));
+	//IMatrix dx_prev(IMatrix::Identity(dim));
 
 	do {
 		// integrate 1 step.
-		//timeMap(g_params->t_max, p);
- 		timeMap.moveSet(g_params->t_max, capdPped);
+ 		//timeMap.moveSet(g_params->t_max, capdPped);
+ 		timeMap.moveSet(time_max - time_l, capdPped);
 
 		time = interval(0,1)*solver.getStep();
-g_context->cout << endl << "step made (4): " << time+time_procd << endl;
+g_context->cout << endl << "step made (5): " << time+time_procd << endl;
 		const interval time_init(time);
 		const ITaylor::CurveType& curve = solver.getCurve();
 
-		IVector  dx( der(curve(time)) );
+		//IVector  dx( der(curve(time)) );
 
 		// dump the trajectory paving.
 		if (g_params->dump_interval > 0) {
 			int grid(time.rightBound()/g_params->dump_interval + 0.9999999999);
 	 		if (grid==0) grid = 1;
 			const double stepW(time.rightBound()/grid - 0.0000001);
-	 		for(int i(0); i<grid; ++i) {
+	 		for(int i(0); i < grid; ++i) {
 	 			const interval step( interval(i,i+1)*stepW );
 	 			IVector v = curve(step);
 	
@@ -280,11 +282,10 @@ g_context->cout << endl << "step made (4): " << time+time_procd << endl;
 
 			time_procd = time_l + timeMap.getCurrentTime();
 		}
-
  	} while(!timeMap.completed());
- 
-	} catch(exception& e)
-	{
+
+	} 
+	catch(exception& e) {
 		std::cerr << "exception caught! (6)\n" << e.what() << endl << endl;
 	}
 }
@@ -337,8 +338,8 @@ void integrate(const char *lid,
  	printPipe(cout, timeMap.getCurrentTime(), s);
  	cout << "}" << endl;
  
- 	} catch(exception& e)
- 	{
+ 	} 
+	catch(exception& e) {
  		cout << "\n\nException caught! (7)\n" << e.what() << endl << endl;
  	}
 }

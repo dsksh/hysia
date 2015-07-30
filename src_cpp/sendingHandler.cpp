@@ -350,6 +350,9 @@ void setSolvingParam(const char *id, const double value)
 	else if (strcmp(id, "dump_interval") == 0) {
 		g_params->dump_interval = value;
 	}
+	else if (strcmp(id, "dump_to_file") == 0) {
+		g_params->dump_to_file = value;
+	}
 	else if (strcmp(id, "char_mtx") == 0) {
 		g_params->char_mtx = value;
 	}

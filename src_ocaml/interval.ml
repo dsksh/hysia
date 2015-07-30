@@ -95,4 +95,4 @@ let join x y =
     { inf=l; sup=u }
 
 
-let print_interval fmt x = Format.fprintf fmt "[%f;%f]" x.inf x.sup
+let print_interval fmt x = Format.fprintf fmt "[%.16f;%.16f]" x.inf x.sup

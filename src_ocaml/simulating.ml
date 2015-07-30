@@ -20,27 +20,15 @@ let select_earliest earliest (id,(l,u)) =
     match earliest with
     | Some (id1,(l1,u1)) ->
 (*Printf.printf "1: %d,[%f,%f] vs. %d,[%f,%f]\n%!" id1 l1 u1 id l u;*)
-
-        (*if l<=u && l>=0. then begin*)
         if u < l1 then Some (id,(l,u)) else begin
             if u1 < l then Some (id1,(l1,u1)) 
             else error (SelectEarliestError ((l,u), (l1,u1)))
         end 
-        (*end else if l = -1. then
-          error (SelectEarliestError ((l,u), (l1,u1)))
-        else
-            Some (id1,(l1,u1))*)
     | None -> 
-        (*if l<=u && l>=0. then Some (id,(l,u)) else None*)
         Some (id,(l,u))
 
 
-let find_first_zero_ lid (eid,zsf,zs) (forced,_gh,_,_dst,_) = 
-    (*if forced then
-        eid+1, (eid,find_first_zero false lid eid)::zsf, zs
-    else
-        eid+1, zsf, (eid,find_first_zero false lid eid)::zs*)
-
+let find_first_zero_ lid (forced,_,_,_,_) (eid,zsf,zs) = 
     let (l,u) = find_first_zero false lid eid in
 (*Printf.printf "0: %d,[%f,%f]\n%!" eid l u;*)
     if l<=u && l>=0. then begin
@@ -111,11 +99,7 @@ let filter_invariant _lid invs es tmax (eid,(l,u)) =
 
 
 let select_random dst_list = 
-    (*let filter dl (eid,(l,u)) = 
-        if l<=u then (eid,(l,u))::dl else dl*)
-    let filter (_eid,(l,u)) = l<=u
-    in
-    let dl = List.filter filter dst_list in
+    let dl = List.filter (fun (_eid,(l,u)) -> l<=u) dst_list in
     match dl with
     | [] -> None
     | dl -> Some (List.nth dl (Random.int (List.length dl)))
@@ -158,21 +142,17 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     initialize ();
     print_pped true false;
 
-    (* initialize ap frontiers list. *)
+    (* initialize ap boundaries list. *)
     let curr_polar = List.map (fun _ -> ref true) aps in
-    (*let ap_fs = ref (mapi (fun i _ -> i, init_prop_f !curr_loc (List.nth curr_polar i) i) 
-                          aps) in*)
     let ap_fs = List.map (fun (apid,_) -> apid, []) aps in
-    let ap_fs = snd (List.fold_left 
-        (*(fun (i,ap_fs) lid -> i+1, List.append ap_fs [i,[]])
-        (List.length ap_fs, ap_fs) ap_locs in*)
+    (*let ap_fs = snd (List.fold_left 
         (fun (i,ap_fs) _lid -> 
-            let fs = (*if (lid <> !curr_loc) then [(Interval.zero,false)] else*) [] in
+            let fs = [] in
             (i+1, List.append ap_fs [(i,fs)]) ) 
-        (0,ap_fs) ap_locs ) in
+        (0,ap_fs) ap_locs ) in*)
+    let ap_fs = List.append ap_fs (mapi (fun i _lid -> i,[]) ap_locs) in
     let ap_fs = ref ap_fs in
 
-    (*for i = 1 to (if !step_max >= 0 then !step_max else max_int) do*)
     while !curr_step < !step_max && !curr_time_l <= !time_max do
 (*Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !curr_loc;*)
         report_step !curr_step !curr_loc;
@@ -187,7 +167,7 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     
         (* find zero for each edge *)
         let es = Model.edges_of_loc (List.find (loc_of_name !curr_loc) locs) in
-        let _,zsf,zs = List.fold_left (find_first_zero_ !curr_loc) (0,[],[]) es in
+        let _,zsf,zs = List.fold_right (find_first_zero_ !curr_loc) es (0,[],[]) in
         let tmax = List.fold_left (select_earliest_grd !curr_loc invs es) (tmax,None) zsf in
         let zs = List.filter (filter_invariant !curr_loc invs es tmax) (List.append zsf zs) in
         (*let dst = List.fold_left select_earliest None zs in*)
@@ -225,12 +205,6 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
                 curr_time_l := l0
             end else error FindZeroMidError;
 
-            (*begin try 
-                List.find (fun lid -> lid = !curr_loc) flocs;
-                print_endline "reached final loc!"
-            with Not_found -> ()
-            end*)
-
         | None ->
 
             (* update signal time intervals *)
@@ -238,7 +212,7 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
             in
             ap_fs := mapi fpf !ap_fs;
 
-            simulate_cont !curr_loc;
+            simulate_cont !curr_loc !time_max;
             (*print_pped true true;
             dispose ();
             error FindZeroError*)

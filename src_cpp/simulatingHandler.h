@@ -22,7 +22,7 @@ cInterval findPropFrontier(const char *, const int, const int, const double, con
 cInterval findFirstZero(const int, const char *, const int);
 int findFirstZeroMid(const char *, const int);
 void simulateJump(const char *, const int, const cInterval);
-void simulateCont(const char *);
+void simulateCont(const char *, const double time_max);
 void reportStep(int, const char *);
 void printPped(int, int);
 /*capd::interval getCurrentTime();*/
