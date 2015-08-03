@@ -175,10 +175,16 @@ let () =
         let ap_bs = Mitl_checking.propagate !debug ap_bs prop in
         (*print_endline "check done";*)
         (*printf "%a" Mitl_checking.print_fs ap_bs;*)
-        (match Mitl_checking.eval_at_zero ap_bs with
-        | Some res -> Printf.printf "%b\n%!" res
-        | None     -> Printf.printf "unknown\n%!");
-    Printf.printf "time: %fs\n%!" (Sys.time () -. start);
+        begin match Mitl_checking.eval_at_zero ap_bs with
+        | Some res -> 
+                (*Printf.printf "%b\n%!" res*)
+                Printf.printf "%b, " res
+        | None     -> 
+                (*Printf.printf "unknown\n%!"*)
+                Printf.printf "unknown, " 
+        end;
+    (*Printf.printf "time: %fs\n%!" (Sys.time () -. start);*)
+    Printf.printf "%f\n%!" (Sys.time () -. start);
     ()
   with
     | Lexer.Lexical_error s -> 

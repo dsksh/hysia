@@ -57,8 +57,8 @@ g_context->cout << "contracted lb:\t" << time+offset+time_procd << endl;
 		for (int i(0); i < grd_g.size(); i++) {
 			// evaluate the guard g at the left bound.
 			const interval g( polar ?
-					(*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) :
-					(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) );
+					(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) :
+					(*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) );
 g_context->cout << polar << ", g[" << i << "]:\t" << g << endl;
 
 			// enforce the Box consistency
