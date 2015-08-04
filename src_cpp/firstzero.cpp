@@ -138,7 +138,8 @@ g_context->cout << "inflated:\t" << time+time_procd << endl;
 		intersection(time, time_init, time);
 
 	//} while (hausdorff(time_old, time) <= g_params->delta*d_old);
-	} while (hausdorff(time_old, time) <= g_params->delta*d);
+	//} while (hausdorff(time_old, time) <= g_params->delta*d);
+	} while (d <= g_params->delta*d_old);
 
 	return false;
 }
