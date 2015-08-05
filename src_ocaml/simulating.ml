@@ -109,6 +109,8 @@ let dst_of_edge (_,_,_,dst,_) = dst
 let set_param_ lid (id,bnd) = 
   set_param lid id (Random.float bnd)
 
+(*let c_fpf = ref 0*)
+
 
 (* APs on the C/C++ side correspond to the indexes (id) of the AP list. 
  * On the OCaml side, APs should be paired with apid. 
@@ -119,6 +121,7 @@ let find_prop_frontier_ lid t0 tmax polar id (apid,tlist) =
   let time_l = ref t0 in
   (*let polar = ref polar in*)
   while !time_l >= 0. && !time_l < tmax do
+(*let _ = incr c_fpf in*)
     let (l,u) = find_prop_frontier lid id !polar !time_l tmax in
     (*let (l,u) = find_prop_frontier lid id true !time_l tmax in*)
 (*Printf.printf "fpf %f %f %f\n%!" l u !time_l;*)
@@ -220,4 +223,5 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     done;
     print_pped true true;
     dispose ();
+(*Printf.printf "fpf: %d\n" !c_fpf;*)
     !ap_fs

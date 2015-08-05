@@ -193,8 +193,10 @@ let rec mk_mitl_formula pm var aps ap_locs = function
        aps, List.append ap_locs [lid], Mloc (id,lid), 0.
   | Pexpr e -> 
        let d = mk_dual_expr pm var e in
-       (*APMap.add (Int32.of_int d.tag) d aps, Mexpr d*)
-       List.append aps [(d.tag, d)], ap_locs, Mexpr d, 0.
+       if not (List.mem (d.tag, d) aps) then
+           List.append aps [(d.tag, d)], ap_locs, Mexpr d, 0.
+       else
+           aps, ap_locs, Mexpr d, 0.
   | Pnot (Pnot p) -> 
        let aps,ap_locs,p,l = mk_mitl_formula pm var aps ap_locs p in
        aps, ap_locs, p, l
