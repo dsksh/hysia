@@ -89,7 +89,7 @@ inline bool verify(DerMap& der, AuxMap& grd_h,
 				   const interval& time_init, const interval& time_procd,
 				   interval& time)
 {
-	interval time_old(UNIVERSE);
+	//interval time_old(UNIVERSE);
 	time = time.left();
 	double d(INFINITY), d_old(INFINITY);
 
@@ -125,8 +125,9 @@ g_context->cout << "proved" << endl;
 
 		// inflation
 		d_old = d;
-		d = hausdorff(time_old, contracted);
-		time_old = contracted;
+		//d = hausdorff(time_old, contracted);
+		//time_old = contracted;
+		d = hausdorff(time, contracted);
 
 //g_context->cout << "mid:\t" << contracted.mid()+time_procd << endl;
 		//time = time.mid() + g_params->tau*(contracted - time.mid())
@@ -139,7 +140,7 @@ g_context->cout << "inflated:\t" << time+time_procd << endl;
 
 	//} while (hausdorff(time_old, time) <= g_params->delta*d_old);
 	//} while (hausdorff(time_old, time) <= g_params->delta*d);
-	} while (d <= g_params->delta*d_old);
+	} while (d < g_params->delta*d_old);
 
 	return false;
 }
