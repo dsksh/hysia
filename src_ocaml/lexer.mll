@@ -34,7 +34,7 @@
       "F", CAP_F;
       "R", RANDOM;
 
-      "L", LOC;
+      (*"L", LOC;*)
 
       "param", PARAM;
 

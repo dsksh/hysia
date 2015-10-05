@@ -20,18 +20,26 @@ DMatrix characteristic(const DMatrix& jA) {
 	DMatrix B(jA);
 
 	TRY {
-
 		// TODO
 		for (int i(0); i < B.numberOfColumns(); ++i) {
-    		if(!isSingular(B.column(i).euclNorm()))
-      			THROW("Failed to decompose B");
+    		//if (!isSingular(B.column(i).euclNorm()))
+      		//	THROW("Failed to decompose B");
 
 			// should compute: Bcol(i) / norm(Bcol(i))
 			B.column(i).normalize();
 		}
 
-		DMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(B) );
+		//DMatrix B_inv( capd::matrixAlgorithms::inverseMatrix(B) );
 		//DMatrix B_inv( capd::matrixAlgorithms::gaussInverseMatrix(B) );
+		DMatrix B_inv;
+		try { 
+			B_inv = capd::matrixAlgorithms::inverseMatrix(B);
+		} catch (std::runtime_error &e) {
+		    std::cout << "runtime_error from CAPD: " << e.what () << std::endl;
+		
+			// TODO: it won't recover
+			B_inv = DMatrix::Identity(B.numberOfColumns());
+		}
 
 		if (g_params->char_mtx == 1 ||
 			(g_params->char_mtx < 0 && norm(B)*norm(B_inv) > g_params->qr_thres) ) {
@@ -48,7 +56,7 @@ DMatrix characteristic(const DMatrix& jA) {
 	}
 	//catch (std::runtime_error &e) {
 	CATCH {
-	    std::cerr << "runtime_error from CAPD: " << eh_ex.what() << std::endl;
+	    //std::cerr << "runtime_error from CAPD: " << eh_ex.what() << std::endl;
 
 		// TODO: it won't recover
 		return DMatrix::Identity(B.numberOfColumns());

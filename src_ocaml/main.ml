@@ -167,7 +167,7 @@ let () =
     if !sprt then proc_sprt ha (aps,ap_locs) prop
     else
         let ap_bs = Simulating.simulate ha (aps,ap_locs) in
-        (*List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_bs;*)
+        List.map (fun (apid,fs) -> Printf.printf "AP%d: %d\n%!" apid (List.length fs)) ap_bs;
         let update_ap_bs (id,fs) =
             let fs = (Interval.zero, true)::fs in
             id, Some fs in

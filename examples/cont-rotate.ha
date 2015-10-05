@@ -7,7 +7,8 @@ let   intv = 0
 
 let   c0 = 0.1
 #let   c1 = 0.1
-let   c1 = R 0.2
+#let   c1 = R 0.2
+let   c1 = 0.14
 let   c2 = -1
 let   c3 = 1
 #let   c4 = R 0.1
@@ -24,7 +25,7 @@ end
 
 #prop G[0,100] F[0,6.284]!(x2-1) (* 1<x2 *)
 #prop G[0,100] F[0,6.284](!(x2-1) & F[0,3.142]!(-x2-1))
-prop G[0,100] F[0,6.284](!(x2-1) & F[0,1.571](!(-x2) & F[0,1.571](!(-x2-1) & F[0,1.571](-x2) )))
+#prop G[0,100] F[0,6.284](!(x2-1) & F[0,1.571](!(-x2) & F[0,1.571](!(-x2-1) & F[0,1.571](-x2) )))
 #prop G[0,100]
 #  F[0,6.284](! (x2-1) & F[0,0.786]( (x2-0.707) & F[0,0.786](!(-x2) & F[0,0.786](!(-x2-0.707) & 
 #  F[0,0.786](!(-x2-1) & F[0,0.786]((-x2-0.707) & F[0,0.786]( (-x2) & F[0,0.786] !(x2-0.707) )))))))
@@ -46,7 +47,7 @@ param t_max = 100
 param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
-#param dump_interval = 0.1
-param dump_interval = 0.2
+param dump_interval = 0.01
+#param dump_interval = 0.2
 param char_mtx = -1
 #param char_mtx = 3

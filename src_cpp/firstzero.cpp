@@ -12,7 +12,8 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 						const ITaylor::CurveType& curve,
 						const interval& time_init, const interval& time_procd,
 						interval& time,
-						const int polar = 1)
+						//const int polar = 1)
+						const int polar = 0)
 {
 	interval time_old;
 	do {
@@ -238,12 +239,6 @@ g_context->cout << endl << "step made (1): " << time+time_procd << endl;
 		const ITaylor::CurveType& curve = solver.getCurve();
 
 g_context->cout << "x:  " << curve(time) << endl;
-		//IVector  dx( der(curve(time)) );
-//g_context->cout << "dx: " << dx << endl; 
-//g_context->cout << "h:  " << grd_h()(1) << endl;
-//g_context->cout << "dh: " << grd_h.der()(1)*dx << endl;
-//g_context->cout << "g:  " << grd_g()(1) << endl;
-//g_context->cout << "dg: " << grd_g.der()(1)*dx << endl;
 
 		// reduce the lower bound
 		//bool res( reduceLower(der, grd_h, grd_g, curve, time_init, time_procd, time) );
