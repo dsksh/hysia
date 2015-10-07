@@ -16,7 +16,7 @@ var   x,y,vx,vy
 #init  Loc, 1+pertb,2+pertb,-0.00001,-0.00001
 
 #init  Loc, 0+pertb,1+pertb,0,0
-init  Loc, 0,1+pertb,0,0
+init  Loc, 1,2+pertb,0,0
 
 #init  Loc, 1,10,0,-0.1
 #init  Loc, -1+pertb,1+pertb, 2/sqrt(2),1/sqrt(2)
@@ -46,7 +46,7 @@ param t_max = 100
 param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
-param dump_interval = 0.1
+param dump_interval = 0.01
 #param dump_interval = -1
 #param delta = 0.99
 #param tau = 1.01

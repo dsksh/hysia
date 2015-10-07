@@ -13,7 +13,9 @@ std::ostream& operator<<(std::ostream& os, const Parallelepiped& piped) {
 }
 
 interval norm(const IMatrix& M) {
-	return capd::matrixAlgorithms::maxEigenValueOfSymMatrix(M);
+	//return capd::matrixAlgorithms::maxEigenValueOfSymMatrix(M);
+	static IEuclNorm norm;
+	return norm(M);
 }
 
 DMatrix characteristic(const DMatrix& jA) {
@@ -41,8 +43,8 @@ DMatrix characteristic(const DMatrix& jA) {
 			B_inv = DMatrix::Identity(B.numberOfColumns());
 		}
 
-		if (g_params->char_mtx == 1 ||
-			(g_params->char_mtx < 0 && norm(B)*norm(B_inv) > g_params->qr_thres) ) {
+		if ( g_params->char_mtx == 1 ||
+			(g_params->char_mtx <  0 && norm(B)*norm(B_inv) > g_params->qr_thres) ) {
 
 			capd::matrixAlgorithms::QR_decompose(B, B, B_inv);
 //std::cout << "Q: " << B << std::endl;
