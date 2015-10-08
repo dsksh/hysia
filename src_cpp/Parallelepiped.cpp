@@ -43,8 +43,8 @@ DMatrix characteristic(const DMatrix& jA) {
 			B_inv = DMatrix::Identity(B.numberOfColumns());
 		}
 
-		if ( g_params->char_mtx == 1 ||
-			(g_params->char_mtx <  0 && norm(B)*norm(B_inv) > g_params->qr_thres) ) {
+		if ( g_params->cm_thres == 1 ||
+			(g_params->cm_thres >  1 && norm(B)*norm(B_inv) > g_params->cm_thres) ) {
 
 			capd::matrixAlgorithms::QR_decompose(B, B, B_inv);
 //std::cout << "Q: " << B << std::endl;
@@ -93,7 +93,7 @@ Parallelepiped map_parallelepiped(const Parallelepiped& piped,
 
 //std::cout << "jA: " << B << std::endl;
 
-	if (g_params->char_mtx < 3)
+	if (g_params->cm_thres != 0)
 		B = characteristic(B);
 	else
 		B = DMatrix::Identity(dim);

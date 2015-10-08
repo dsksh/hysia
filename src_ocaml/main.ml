@@ -12,6 +12,8 @@ let prop_file = ref None
 
 let dump_to_file = ref false
 
+let cm_thres = ref None
+
 let sprt = ref false
 let bht  = ref false
 
@@ -32,6 +34,9 @@ let spec = [
   "-p",  Arg.String (fun fn -> prop_file := Some fn),
                                 "sets the property filename";
   "-dump", Arg.Set dump_to_file, "sets to dump plot data to the file (\"pped.dat\")";
+
+  "-cm_thres",  Arg.Int (fun v -> cm_thres := Some v),   
+                                "sets the threshold for character matrix selection";
 
   "-sprt",      Arg.Set sprt,   "use SPRT";
   "-bht",       Arg.Set bht,    "use BHT";
@@ -159,6 +164,9 @@ let () =
     Capd_sending.send_model ha aps;
     let params = Model_common.MParam.add "dump_to_file" 
         (if !dump_to_file then 1. else 0.) params in
+    let params = match !cm_thres with
+        | Some v -> Model_common.MParam.add "cm_thres" (float_of_int v) params
+        | None   -> params in
     Capd_sending.send_solving_params params;
     Capd_sending_stubs.set_debug !debug;
 

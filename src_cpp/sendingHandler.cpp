@@ -326,9 +326,15 @@ void setSolvingParam(const char *id, const double value)
 	if (strcmp(id, "order") == 0) {
 		g_params->order = value;
 	}
-	else if (strcmp(id, "qr_thres") == 0) {
-		g_params->qr_thres = value;
+	else if (strcmp(id, "cm_thres") == 0) {
+		g_params->cm_thres = value;
 	}
+	//else if (strcmp(id, "qr_thres") == 0) {
+	//	g_params->qr_thres = value;
+	//}
+	//else if (strcmp(id, "char_mtx") == 0) {
+	//	g_params->char_mtx = value;
+	//}
 	else if (strcmp(id, "t_max") == 0) {
 		g_params->t_max = value;
 	}
@@ -352,9 +358,6 @@ void setSolvingParam(const char *id, const double value)
 	}
 	else if (strcmp(id, "dump_to_file") == 0) {
 		g_params->dump_to_file = value;
-	}
-	else if (strcmp(id, "char_mtx") == 0) {
-		g_params->char_mtx = value;
 	}
 	else {
 		std::cerr << "unknown param: " << id << std::endl;

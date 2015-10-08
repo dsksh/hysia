@@ -174,8 +174,10 @@ public:
 	double delta;
 	double tau;
 
-	int char_mtx;
-	int qr_thres;
+	int cm_thres;
+
+	//int char_mtx;
+	//int qr_thres;
 
 	/// constractor
 	SolvingParams()
@@ -191,8 +193,9 @@ public:
 		abs_infl(1e-12),
 		delta(0.99),
 		tau(1.1),
-		char_mtx(-1),
-	    qr_thres(100)
+		cm_thres(100)
+		//char_mtx(-1),
+	    //qr_thres(100)
 	{}
 };
 
