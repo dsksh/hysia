@@ -33,10 +33,3 @@ param dump_interval = 0.1
 #param dump_interval = -1
 #param delta = 0.99
 #param tau = 1.01
-
-# char_mtx 1: QR, 2: inverse, 3: ident, -1: hybrid
-param char_mtx = -1
-#param char_mtx = 1
-#param char_mtx = 3
-#param qr_thres = 100
-

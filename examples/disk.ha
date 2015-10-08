@@ -17,7 +17,3 @@ param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
 param dump_interval = -1
-
-# char_mtx 1: QR, 2: inverse, 3: ident, -1: hybrid
-param char_mtx = -1
-#param char_mtx = 3

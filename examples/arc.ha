@@ -26,9 +26,3 @@ param epsilon = 1e-14
 param dump_interval = 0.1
 #param dump_interval = -1
 #param epsilon = 0
-
-# char_mtx 0: inverse, 1: QR, 3: ident, -1: hybrid
-param char_mtx = -1
-#param char_mtx = 0
-#param char_mtx = 3
-#param dump_interval = 0.1
