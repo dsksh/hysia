@@ -1,7 +1,7 @@
-let   intv = [-1e-5,1e-5]
+let   intv = [-1e-6,1e-6]
 
 let   c = 1
-let   o = 0
+let   o = 0.1
 
 var   x1, x2, v
 

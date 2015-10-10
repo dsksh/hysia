@@ -56,4 +56,3 @@ F[0,10]( G[0,10]( !((x4-cx)^2+(y4-cy)^2 -  25) ) & F[10,20](  (x4-cx)^2+(y4-cy)^
 
 param t_max = 20
 param dump_interval = 0.6
-param char_mtx = 3

@@ -28,4 +28,4 @@ end
 
 (* solving parameters *)
 
-param char_mtx = 3
+param cm_thres = 0

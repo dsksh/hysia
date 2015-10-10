@@ -27,4 +27,3 @@ prop G[0,10](F[0,5](x-2))
 
 param order = 30
 param epsilon = 1e-12
-param qr_thres = 8000

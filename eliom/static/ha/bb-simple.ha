@@ -16,4 +16,3 @@ end
 (* solving parameters *)
 
 param order = 20
-param qr_thres = 15000

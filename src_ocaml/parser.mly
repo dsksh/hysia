@@ -66,8 +66,8 @@
 /*%token LP_STAR_RP*/
 %token RP
 
-%token FINAL
-%token GLOBAL
+%token EVENTLY
+%token ALWAYS
 %token UNTIL
 %token NOT
 %token AND
@@ -94,14 +94,13 @@
 /**/
 
 %left IMP
-%left AND OR
-%left UNTIL
+%left AND
+%left OR
 %nonassoc NOT
-%nonassoc FINAL GLOBAL
-%nonassoc CAP_F RANDOM
-
-%left MIN PLUS MUL DIV POW
+%left PLUS MIN
+%left MUL DIV
 %nonassoc SQRT EXP LOG SIN COS ATAN ASIN ACOS
+%nonassoc POW UMIN
 
 /**/
 
@@ -118,10 +117,10 @@ main :
 /**/
 
 statements :
-  | VAR var_vec statements
+  | VAR var_list statements
     { let ps,_,init,locs = $3 in 
 	    ps,(mk_id_l $2),init,locs }
-  | INIT expr_vec statements
+  | INIT expr_list statements
     { let ps,vs,_,locs = $3 in 
 	    ps,vs,(mk_init $2),locs }
   | AT ID flow invariant edges END statements
@@ -143,13 +142,8 @@ property :
   | { dummy_prop }
 ;
 
-/*solver_params_init :
-  | solver_params PARAM ID EQ float
-    { env := MParam.empty; set_param $2 $4 }
-  | { env := MParam.empty; }
-;*/
 solver_params :
-  | solver_params PARAM ID EQ float
+  | solver_params PARAM ID EQ float_pn
     { set_param $3 $5 }
   | { env := MParam.empty }
 ;
@@ -157,25 +151,25 @@ solver_params :
 /**/
 
 flow :
-  | WAIT expr_vec
+  | WAIT expr_list
     { mk_expr_l $2 }
-  | FLOW expr_vec
+  | FLOW expr_list
     { mk_expr_l $2 }
 ;
 
 invariant :
   | { mk_expr_l [] }
-  | INV expr_vec
+  | INV expr_list
     { mk_expr_l $2 }
 ;
 
 edges :
-  /*| WATCH LP expr COM expr_vec RP GOTO ID edges
+  /*| WATCH LP expr COM expr_list RP GOTO ID edges
     { (mk_edge $3 $5 (mk_id $8) (mk_expr_l []))::$9 }
   */
-  | WATCH LP expr COM expr_vec RP GOTO ID THEN expr_vec edges
+  | WATCH LP expr COM expr_list RP GOTO ID THEN expr_list edges
     { (mk_edge false $3 (mk_expr_l $5) (mk_id $8) (mk_expr_l $10))::$11 }
-  | WATCH CAP_F LP expr COM expr_vec RP GOTO ID THEN expr_vec edges
+  | WATCH CAP_F LP expr COM expr_list RP GOTO ID THEN expr_list edges
     { (mk_edge true $4 (mk_expr_l $6) (mk_id $9) (mk_expr_l $11))::$12 }
 
   | { [] }
@@ -183,38 +177,38 @@ edges :
 
 /**/
 
-expr_vec :
+expr_list :
   | TRUE { [] } /* TODO */
   | expr { [$1] }
-  | TRUE expr_vec_rest{ $2 }
-  | expr expr_vec_rest { $1::$2 }
-  | LP expr expr_vec_rest RP { $2::$3 }
+  | TRUE expr_list_rest{ $2 }
+  | expr expr_list_rest { $1::$2 }
+  | LP expr expr_list_rest RP { $2::$3 }
 ;
-expr_vec_rest :
-  | COM expr expr_vec_rest
+expr_list_rest :
+  | COM expr expr_list_rest
     { $2::$3 }
   | { [] }
 ;
 
-var_vec :
-  | ID var_vec_rest { (mk_id $1)::$2 }
+var_list :
+  | ID var_list_rest { (mk_id $1)::$2 }
   | { [] }
 ;
-var_vec_rest :
-  | COM ID var_vec_rest { (mk_id $2)::$3 }
+var_list_rest :
+  | COM ID var_list_rest { (mk_id $2)::$3 }
   | { [] }
 ;
-var_vec_old :
-  | ID var_vec { (mk_id $1)::$2 }
+var_list_old :
+  | ID var_list { (mk_id $1)::$2 }
   | { [] }
 ;
 
-interval_vec :
-  | interval interval_vec_rest { $1::$2 }
-  | LP interval interval_vec_rest RP { $2::$3 }
+interval_list :
+  | interval interval_list_rest { $1::$2 }
+  | LP interval interval_list_rest RP { $2::$3 }
 ;
-interval_vec_rest :
-  | COM interval interval_vec_rest
+interval_list_rest :
+  | COM interval interval_list_rest
     { $2::$3 }
   | { [] }
 ;
@@ -222,36 +216,47 @@ interval_vec_rest :
 /**/
 
 expr :
-  | expr PLUS term  { mk_expr (Papp2 (Oadd,$1,$3)) }
-  | expr MIN term { mk_expr (Papp2 (Osub,$1,$3)) }
-  | term { $1 }
-;
-
-term :
-  | term MUL factor { mk_expr (Papp2 (Omul,$1,$3)) }
-  | term DIV factor { mk_expr (Papp2 (Odiv,$1,$3)) }
-  | factor { $1 }
-;
-
-factor :
-  | LP expr RP { $2 }
-  | factor POW integer
-    { match $3 with 2 -> mk_expr (Papp (Osqr,$1)) | _ -> mk_expr (Papp2 (Opow,$1,(mk_expr (Pint $3)))) }
-  | SQRT factor { mk_expr (Papp (Osqrt,$2)) }
-  | EXP factor { mk_expr (Papp (Oexp,$2)) }
-  | LOG factor { mk_expr (Papp (Olog,$2)) }
-  | SIN factor { mk_expr (Papp (Osin,$2)) }
-  | COS factor { mk_expr (Papp (Ocos,$2)) }
-  | ATAN factor { mk_expr (Papp (Oatan,$2)) }
-  | ASIN factor { mk_expr (Papp (Oasin,$2)) }
-  | ACOS factor { mk_expr (Papp (Oacos,$2)) }
+  | expr PLUS expr { mk_expr (Papp2 (Oadd,$1,$3)) }
+  | expr MIN  expr { mk_expr (Papp2 (Osub,$1,$3)) }
+  | expr MUL  expr { mk_expr (Papp2 (Omul,$1,$3)) }
+  | expr DIV  expr { mk_expr (Papp2 (Odiv,$1,$3)) }
+  | expr POW integer
+    { match $3 with 
+      | 2 -> mk_expr (Papp (Osqr,$1)) 
+      | _ -> mk_expr (Papp2 (Opow,$1,(mk_expr (Pint $3)))) }
+  | SQRT expr { mk_expr (Papp (Osqrt,$2)) }
+  | EXP  expr { mk_expr (Papp (Oexp,$2)) }
+  | LOG  expr { mk_expr (Papp (Olog,$2)) }
+  | SIN  expr { mk_expr (Papp (Osin,$2)) }
+  | COS  expr { mk_expr (Papp (Ocos,$2)) }
+  | ATAN expr { mk_expr (Papp (Oatan,$2)) }
+  | ASIN expr { mk_expr (Papp (Oasin,$2)) }
+  | ACOS expr { mk_expr (Papp (Oacos,$2)) }
   | ID { mk_expr (Pvar $1) }
-  /*| float { mk_expr (Pval $1) }*/
   | interval { mk_expr (Pval $1) }
-  | MIN factor { mk_expr (Papp2 (Osub,(mk_expr (Pval Interval.zero)),$2)) }
+  | MIN expr %prec UMIN { mk_expr (Papp2 (Osub,(mk_expr (Pval Interval.zero)),$2)) }
+  | LP expr RP { $2 }
 ;
+
+/**/
 
 mitl_formula :
+  | mitl_formula_term
+    { $1 }
+  | mitl_formula AND mitl_formula
+    /*{ Pand ($1,$3) }*/
+    { Pnot (Por ((Pnot $1), (Pnot $3))) }
+  | mitl_formula OR mitl_formula
+    /*{ Pnot (Pand ((Pnot $1), (Pnot $3))) }*/
+    { Por ($1,$3) }
+  | mitl_formula IMP mitl_formula
+    /*{ Pnot (Pand ($1, Pnot $3)) }*/
+    { Por (Pnot $1, $3) }
+  | LP mitl_formula RP
+    { $2 }
+;
+
+mitl_formula_term :
   | TRUE
     { Ptrue }
   | FALSE
@@ -263,47 +268,47 @@ mitl_formula :
     { Pexpr $1 }
   | NOT mitl_formula
     { Pnot $2 }
-  | final noun_interval mitl_formula
-    { Puntil ($2,Ptrue,$3) }
-  | GLOBAL noun_interval mitl_formula
-    { Pnot (Puntil ($2,Ptrue,Pnot $3)) }
-  | mitl_formula OR mitl_formula
-    /*{ Pnot (Pand ((Pnot $1), (Pnot $3))) }*/
-    { Por ($1,$3) }
-  | mitl_formula AND mitl_formula
-    /*{ Pand ($1,$3) }*/
-    { Pnot (Por ((Pnot $1), (Pnot $3))) }
-  | mitl_formula UNTIL noun_interval mitl_formula
-    { Puntil ($3,$1,$4) }
-  | mitl_formula IMP mitl_formula
-    /*{ Pnot (Pand ($1, Pnot $3)) }*/
-    { Por (Pnot $1, $3) }
-  | LP mitl_formula RP
-    { $2 }
+  | evently mitl_formula
+    { Puntil ($1,Ptrue,$2) }
+  | always mitl_formula
+    { Pnot (Puntil ($1,Ptrue,Pnot $2)) }
+  | mitl_formula until mitl_formula
+    { Puntil ($2,$1,$3) }
 ;
 
-final :
-  | FINAL { }
-  | CAP_F { }
+always :
+  | ALWAYS noun_interval { $2 }
+;
+evently :
+  | EVENTLY noun_interval { $2 }
+  | CAP_F noun_interval { $2 }
+;
+until :
+  | UNTIL noun_interval { $2 }
 ;
 
-rational :
+/**/
+
+/*rational :
   | integer { mk_ratio $1 1 }
   | integer DIV integer { mk_ratio $1 $3 }
-;
+;*/
 integer :
   | INT { $1 }
   | MIN INT { -$2 }
 ;
 float :
   | FLOAT { $1 }
-  | MIN FLOAT { -.$2 }
   | integer { float_of_int $1 }
 ;
+float_pn :
+  | float { $1 }
+  | MIN float { -.$2 }
+; 
 interval :
   | noun_interval { $1 }
-  | float { Interval.interval_of_float $1 }
+  | float_pn { Interval.interval_of_float $1 }
 ;
 noun_interval :
-  | LB float COM float RB { {inf=$2; sup=$4} }
+  | LB float_pn COM float_pn RB { {inf=$2; sup=$4} }
 ;

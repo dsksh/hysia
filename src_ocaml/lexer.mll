@@ -38,7 +38,7 @@
 
       "param", PARAM;
 
-      "G", GLOBAL;
+      "G", ALWAYS;
       "U", UNTIL;
 
       "true", TRUE;
@@ -105,8 +105,8 @@ rule token = parse
 
   | "="  { EQ }
 
-  | "<>" { FINAL }
-  | "[]" { GLOBAL }
+  | "<>" { EVENTLY }
+  | "[]" { ALWAYS }
   | "!"  { NOT }
   | "&"  { AND }
   | "/\\" { AND }

@@ -25,4 +25,3 @@ param h_min   = 1e-14
 param epsilon = 1e-14
 param dump_interval = 0.1
 #param dump_interval = -1
-#param epsilon = 0

@@ -42,4 +42,3 @@ prop  F[0,100]G[0,200](!(75-x1) /\ !(75-x2))
 
 param epsilon = 1e-8
 param dump_interval = 1
-param char_mtx = 3

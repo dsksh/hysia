@@ -8,16 +8,16 @@
 
 
 type t_param = { order:int; tmax:float; hmin:float; eps:float; hdump:float;
-				 k:int; tsim:float; }
+				 k:int; tsim:float; cm:int; }
 
 type t = { spec:string; param:t_param; yvar:int; fontsize:float; }
 
-let record_of_pdata ((*_data,*)(spec,(order,(tmax,(hmin,(eps,(hdump,(k,(tsim,(yvar,fontsize)))))))))) = 
-  let pvalue = {order=order;tmax=tmax;hmin=hmin;eps=eps;hdump=hdump;k=k;tsim=tsim;} in
+let record_of_pdata ((*_data,*)(spec,(order,(tmax,(hmin,(eps,(hdump,(k,(tsim,(cm,(yvar,fontsize))))))))))) = 
+  let pvalue = {order=order;tmax=tmax;hmin=hmin;eps=eps;hdump=hdump;k=k;tsim=tsim;cm=cm;} in
   {spec=spec;param=pvalue;yvar=yvar;fontsize=fontsize;}
 
 let default_pvalue spec = 
-  let pvalue = {order=20; tmax=100.; hmin=1e-14; eps=1e-14; hdump=0.1; k=10000; tsim=10.;} in
+  let pvalue = {order=20; tmax=100.; hmin=1e-14; eps=1e-14; hdump=0.1; k=10000; tsim=10.;cm=100;} in
   {spec=spec;param=pvalue;yvar=0;fontsize=1.;}
 
 
@@ -63,6 +63,7 @@ let default_pvalue spec =
 	  let params = add_param "h_min" pvalue.hmin params in
 	  let params = add_param "epsilon" pvalue.eps params in
 	  let params = add_param "dump_interval" pvalue.hdump params in
+	  let params = add_param "cm_thres" (float_of_int pvalue.cm) params in
       Capd_sending.send_solving_params params;
       Capd_sending_stubs.set_debug (*debug*) false;
 
@@ -176,12 +177,13 @@ let submission_service =
 				  float "hdump" **
 				  int "k" **
 				  float "tsim" **
+				  int "cm" **
 				  int "yvar" **
 				  float "fontsize" )
 	()
 
 let create_input_form vars v_dump v_res v_tsim v_spec pvalue v_yvar v_fontsize =
-  fun ((*res,*) (spec, (order, (tmax, (hmin, (eps, (hdump, (k, (tsim, (yvar, fontsize)))))))))) ->
+  fun ((*res,*) (spec, (order, (tmax, (hmin, (eps, (hdump, (k, (tsim, (cm, (yvar, fontsize))))))))))) ->
     let submenu = div ~a:[ a_id "submenu" ] 
 	  [ example_list () ] in
 
@@ -241,13 +243,14 @@ let create_input_form vars v_dump v_res v_tsim v_spec pvalue v_yvar v_fontsize =
 	}} in
     let right = div ~a:[ a_id "right" ]
 	  [ div ~a:[ a_id "ctrl" ] [
-		  int_input "Order: " order pvalue.order;
-		  flt_input "Tmax: "  tmax  pvalue.tmax;
-		  flt_input "Hmin: "  hmin  pvalue.hmin;
-		  flt_input "Eps: "   eps   pvalue.eps;
-		  flt_input "Hdump: " hdump pvalue.hdump;
-		  int_input "K: "     k     pvalue.k;
-		  flt_input "Tsim: "  tsim  pvalue.tsim;
+		  int_input "Order: "  order pvalue.order;
+		  flt_input "Tmax: "   tmax  pvalue.tmax;
+		  flt_input "Hmin: "   hmin  pvalue.hmin;
+		  flt_input "Eps: "    eps   pvalue.eps;
+		  int_input "Kmax: "   cm    pvalue.cm;
+		  flt_input "Hdump: "  hdump pvalue.hdump;
+		  int_input "#steps: " k     pvalue.k;
+		  flt_input "Tsim: "   tsim  pvalue.tsim;
 		  br ();
 		  Html5.D.input ~input_type:`Submit ~value:"Run" ();
 		  br ();
