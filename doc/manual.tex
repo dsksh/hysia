@@ -1,0 +1,263 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+%\usepackage[english]{isodate}
+\usepackage[parfill]{parskip}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{url}
+\usepackage{intmacros}
+\usepackage{syntax}
+\usepackage{manual}
+
+\lstset{%
+%    backgroundcolor=\color{yellow!20},%
+    basicstyle=\ttfamily,%
+    %numbers=left, numberstyle=\tiny, stepnumber=2, numbersep=5pt,%
+    numbers=left, numberstyle=\tiny, numbersep=5pt,%
+	frame=single,%
+    }%
+
+\lstset{emph={%  
+    let, var, init, at, wait, watch, goto, then, end, param%
+    },emphstyle={\color{blue}\bfseries}%
+}
+
+\begin{document}
+
+\title{HySIA Manual (beta version)}
+\author{Daisuke Ishii}
+
+\maketitle
+
+\setlength{\grammarparsep}{8pt plus 1pt minus 1pt} % increase separation between rules
+\setlength{\grammarindent}{8em} % increase separation between LHS/RHS 
+
+\section{Short Tutorial}
+
+Specification of a simple bouncing ball model:
+\begin{lstlisting}
+let g = 1
+let c = 1
+
+let pertb = 0.001
+
+var   y, vy
+
+init  Loc, 1+pertb, -0+pertb
+
+at Loc wait vy, -g
+  watch F (y, vy) goto Loc then y, -c*vy
+end
+
+param order = 20
+param t_max = 100
+param dump_interval = 0.1
+\end{lstlisting}
+
+\begin{lstlisting}
+at Raise wait vy, -g
+  watch F (vy, -y) goto Fall then y, vy
+end
+
+at Fall wait vy, -g
+  watch F (y, vy) goto Raise then y, -c*vy
+end
+\end{lstlisting}
+
+Command-line execution for simulating for 10 steps:
+\begin{verbatim}
+$ hysia bb.ha -n 10 -dump
+\end{verbatim}
+
+
+\section{Command-Line Tool}
+
+The basic syntax for the command-line execution is of the form below:
+\begin{grammar}
+<command> ::= `hysia' <options> <filename>
+\end{grammar}
+
+The \texttt{hysia} command accepts the following options:
+\begin{description}
+\item[\texttt{-h}, \texttt{-help}, or \texttt{--help}] Displays a summary of the options accepted by the command.
+\item[\texttt{-n}] Specify the number steps to simulate (default is $\infty$).
+\item[\texttt{-t}] Specify the max simulation time (default is $\infty$).
+\item[\texttt{-a}] Decide the simulation length automatically from the STL property.
+\item[\texttt{-g}] Sets the debug flag.
+\item[\texttt{-dump}] Sets to dump plot to the file ``pped.dat.''
+\item[\texttt{-cm_thres}] Sets the threshold for character matrix selection.
+\end{description}
+
+The option \texttt{-cm_thres} specifies the character matrix $B$ to be used in the parallelotope method (see the corresponding publication for the detail). It is selected as follows:
+\begin{itemize}
+	\item $-1$: $B := (\mathrm{mid}\J) A$.
+	\item $0$: $B := I$ (i.e., identity matrix).
+	\item $1$: $B := \mathrm{orthogonalize}((\mathrm{mid}\J) A)$.
+	\item $n > 1$ (default): 
+		\[
+			B := \begin{cases}
+				(\mathrm{mid}\J) A & \text{if $\kappa((\mathrm{mid}\J) A) < n$} \\
+				\mathrm{orthogonalize}((\mathrm{mid}\J) A) & \text{otherwise.}
+			\end{cases}
+		\]
+\end{itemize}
+
+
+\section{Solving Parameters}
+
+\begin{description}
+\item[\texttt{order}] Order of Taylor expansion.
+\item[\texttt{t_max}] Max time horizon assumed in the simulation of each step.
+\item[\texttt{h_min}] Min time CAPD integration can take.
+\item[\texttt{epsilon}] Specifies the precision of the event detection.
+\item[\texttt{dump_interval}] Set the precision of the dumped flowpipe data.
+\item[\texttt{delta}] Parameter for the box inflation process.
+\item[\texttt{tau}] Parameter for the box inflation process.
+\item[\texttt{cm_thres}] Parameter for the character matrix selection.
+\end{description}
+
+
+\section{Specification Language}
+
+This section describes the grammar of the specification language of HySIA.
+A specification consists of the definition of a hybrid automaton, an STL formula, and solving parameter configurations.
+
+\subsection{Lexical conventions}
+
+The lexical class of digits, letters, and identifiers is the following:
+\begin{grammar}
+<digit> ::= [`0'--`9']
+
+<letter> ::= [`a'--`z' `A'--`Z']
+
+<id> ::= <letter> (<digit> | <letter> | `_')*
+\end{grammar}
+
+The syntax of various numeral expressions is as follows:
+\begin{grammar}
+<integer> ::= <digit>+
+
+<float> ::= 
+%<digit>+ ~~|~~ <digit>+ `.' <digit>*
+<digit>+ ~ (`.' <digit>*)? ~ ( (`e'|`E') (`+'|`-')? <digit>+ )?
+%\alt <digit>+ `.' <digit>* (`e'|`E')  <digit>+
+%\alt <digit>+ (`e'|`E') <digit>+
+%\alt <digit>+ (`e'|`E') (`+'|`-') <digit>+
+
+<float-pn> ::= <float> ~~|~~ `-' <float>
+
+<interval> ::= <interval-noun> ~|~ <float-pn>
+
+<interval-noun> ::= `(' <float-pn> `,' <float-pn> `)'
+
+<interval-list> ::= <interval> <interval-list-rest>
+\alt `(' <interval> <interval-list-rest> `)'
+
+<interval-list-rest> ::= `,' <interval> <interval-list-rest> ~~|~~ <empty>
+\end{grammar}
+
+
+\noindent
+\textbf{Comments.}
+Comments are either enclosed between \texttt{(*} and \texttt{*)} (can be nested) or prefixed with \texttt{\#}.
+
+
+\subsection{Toplevel syntax}
+
+The syntax for the toplevel of specifications is the following:
+\begin{grammar}
+<specification> ::= <statement>+ <property> <solver-param>*
+
+<statement> ::= 
+`let' <id> `=' <interval>
+\alt `let' <id> `=' `R' <float>
+\alt `var' <var-list>
+\alt `init' <expr-list>
+\alt `at' <id> <flow> <invariant>? <edge>* `end'
+
+<property> ::= `prop' <mitl-formula>
+
+<solver-param> ::= `param' <id> `=' <float-pn>
+
+
+<flow> ::= `wait' <expr-list>
+
+<invariant> ::= `inv' <expr-list>
+
+<edge> ::= `watch' `F'? `(' <expr> `,' <expr-list> `)' `goto' <id> `then' <expr-list>
+\end{grammar}
+
+
+\subsection{Expressions}
+
+The operators and function application in expressions have the priorities and associativities as shown in the table below (from lowest to greatest priority):
+\begin{table}[ht]
+	\centering
+	%\caption{\label{t:operators} Terms} 
+	%\small
+    \begin{tabular}{|l|l|} \hline
+		construct & associativity \\
+		\hline
+		`\texttt{+}', `\texttt{-}' & left \\
+		`\texttt{*}', `\texttt{/}' & left \\
+		function application & left \\
+		`\texttt{\^}', `\texttt{-}' (unary) & --- \\
+		\hline
+	\end{tabular}
+\end{table}
+
+The syntax for expressions is the following:
+\begin{grammar}
+<expr> ::= <expr> `+' <expr> ~~|~~ <expr> `-' <expr>
+\alt <expr> `*' <expr> ~~|~~ <expr> `/' <expr>
+\alt `-' <expr> ~~|~~ <expr> `^' <integer>
+\alt <function> <expr>
+\alt <id> ~~|~~ <interval>
+\alt `(' <expr> `)' 
+
+<function> ::= `sqrt' | `exp' | `log' | `sin' | `cos' | `atan' | `asin' | `acos'
+
+<expr-list> ::= <expr> <expr-list-rest> ~~|~~ `(' <expr> <expr-list-rest> `)'
+
+<expr-list-rest> ::= `,' <expr> <expr-list-rest> ~|~ <empty>
+\end{grammar}
+
+
+\subsection{STL formulae}
+
+The operators in formulae have the following priorities and associativities:
+\begin{table}[ht]
+	\centering
+	%\caption{\label{t:operators} Terms} 
+	%\small
+    \begin{tabular}{|l|l|} \hline
+		construct & associativity \\
+		\hline
+		`\texttt{->}' & right \\
+		`\texttt{||}' & right \\
+		`\texttt{\&\&}' & right \\
+		`\texttt{U} [$\cdot$,$\cdot$]' & right \\
+		`\texttt{G} [$\cdot$,$\cdot$]', `\texttt{F} [$\cdot$,$\cdot$]' & --- \\
+		`\texttt{!}' & --- \\
+		\hline
+	\end{tabular}
+\end{table}
+
+The syntax for formulae is the following:
+\begin{grammar}
+<mitl-formula> ::= `true' ~~|~~ `false'
+\alt <id> ~~|~~ <expr>
+\alt `!' <mitl-formula>
+\alt <mitl-formula> (`&'|`|'|`->') <mitl-formula>
+\alt (`F'|`G') <noun-interval> <mitl-formula>
+\alt <mitl-formula> `U' <noun-interval> <mitl-formula>
+\alt `(' <mitl-formula> `)'
+\end{grammar}
+
+\end{document}

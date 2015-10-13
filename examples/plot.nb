@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       145,          7]
-NotebookDataLength[    672104,      15144]
-NotebookOptionsPosition[    671115,      15108]
-NotebookOutlinePosition[    671616,      15127]
-CellTagsIndexPosition[    671573,      15124]
+NotebookDataLength[    759681,      16940]
+NotebookOptionsPosition[    758687,      16904]
+NotebookOutlinePosition[    759189,      16923]
+CellTagsIndexPosition[    759146,      16920]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1041,7 +1041,7 @@ Cell[BoxData[{
      RowBox[{"1", ";;", 
       RowBox[{"-", "2"}]}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"bThickness", "=", "0.002"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"bThickness", "=", "0.001"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"bPointSize", "=", "0.001"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -1056,7 +1056,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{
       RowBox[{"pipe2g", "[", 
-       RowBox[{"length", ",", "0", ",", "2", ",", "#"}], "]"}], "&"}], " ", "/@",
+       RowBox[{"length", ",", "1", ",", "2", ",", "#"}], "]"}], "&"}], " ", "/@",
       " ", "list"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1443,305 +1443,2095 @@ Cell[BoxData[{
    3.652916770872314*^9}, {3.65291721826814*^9, 3.652917218703507*^9}, {
    3.652992197240398*^9, 3.652992197407839*^9}, {3.6529922356982107`*^9, 
    3.652992235870674*^9}, {3.6530194107787933`*^9, 3.6530194123042183`*^9}, {
-   3.653019562377203*^9, 3.653019571572548*^9}, 3.653019643203271*^9}],
+   3.653019562377203*^9, 3.653019571572548*^9}, 3.653019643203271*^9, {
+   3.6530199094124107`*^9, 3.653019909641382*^9}, {3.653173677842607*^9, 
+   3.653173678063026*^9}, {3.653173956902843*^9, 3.65317395714928*^9}, {
+   3.6531743882533293`*^9, 3.653174388465584*^9}, {3.6531750688654413`*^9, 
+   3.653175100640765*^9}, {3.653281706957355*^9, 3.653281708154873*^9}}],
 
 Cell[BoxData[
  GraphicsBox[{
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0., 0.9999999999999999}, {0., 1.0000000000000002`}], 
-    {RGBColor[1, 0, 0], PointSize[0.001], PointBox[{0., 1.}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0., 0.995555564983641}, {0.09428080415820636, 1.}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.04714040207910318, 0.9977777824918205}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0.09428080415820636, 0.9822222599345638}, \
-{0.18856160831641272`, 0.9955555649836411}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.14142120623730953`, 0.9888889124591025}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0.18856160831641272`, 0.9600000848527687}, \
-{0.2828424124746191, 0.9822222599345639}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.23570201039551592`, 0.9711111723936663}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0.28284241247461905`, 0.9288890397382554}, \
-{0.37712321663282544`, 0.9600000848527688}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.32998281455372225`, 0.9444445622955121}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0.37712321663282544`, 0.8888891245910242}, \
-{0.47140402079103183`, 0.9288890397382555}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.42426361871192864`, 0.9088890821646398}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0.4714040207910318, 0.8400003394110748}, \
-{0.5656848249492382, 0.8888891245910243}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.518544422870135, 0.8644447320010495}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0.5656848249492381, 0.7822226841984073}, \
-{0.6599656291074446, 0.840000339411075}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.6128252270283414, 0.8111115118047412}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0.6599656291074445, 0.7155561589530219}, \
-{0.7542464332656509, 0.7822226841984076}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.7071060311865477, 0.7488894215757147}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0.7542464332656509, 0.6400007636749184}, \
-{0.8485272374238573, 0.715556158953022}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.8013868353447541, 0.6777784613139702}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0.8485272374238572, 0.5555564983640968}, \
-{0.9428080415820637, 0.6400007636749186}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.8956676395029604, 0.5977786310195077}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{0.9428080415820635, 0.4622233630205571}, \
-{1.03708884574027, 0.555556498364097}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{0.9899484436611667, 0.5088899306923271}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.0370888457402698`, 0.3600013576442994}, \
-{1.1313696498984764`, 0.46222336302055744`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{1.0842292478193731`, 0.41111236033242843`}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.1313696498984762`, 0.2488904822353235}, \
-{1.2256504540566828`, 0.36000135764429975`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{1.1785100519775795`, 0.3044459199398116}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.2256504540566826`, 0.12889073679362972`}, \
-{1.3199312582148892`, 0.24889048223532395`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{1.272790856135786, 0.18889060951447684`}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.319931258214889, 2.12131921773*^-6}, \
-{1.4142120623730956`, 0.12889073679363006`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{1.3670716602939923`, 0.06444642905642389}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.414213562373095, -2.2*^-16}, \
-{1.4142135623730951`, 2.2*^-16}], 
-    {GrayLevel[0.85], PointSize[0.001], PointBox[{1.4142135623730951`, 0.}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.4142135623730951`, -2.2000000000000002`*^-16}, \
-{1.4142135623730951`, 5.400000000000001*^-16}], 
+   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.001]}], FaceForm[{GrayLevel[
+    0.85], Opacity[0.]}], 
+    GeometricTransformationBox[
+     RectangleBox[{-1.00000000025*^-6, -1.*^-6}, {9.9999999992*^-7, 1.*^-6}], \
+{{{1., 0.}, {0., 1.}}, {1.0000000000000002`, 0.}}], 
     {RGBColor[1, 0, 0], PointSize[0.001], 
-     PointBox[{1.4142135623730951`, 1.6000000000000004`*^-16}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.4142135623730951`, -2.4*^-16}, \
-{1.5117454321919295`, 0.13793089306140302`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{1.4629794972825123`, 0.06896544653070139}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.5117454321919293`, 0.12841842743104406`}, 
-     {1.6092773020107636`, 0.26634932049244747`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{1.5605113671013464`, 0.19738387396174578`}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.6092773020107634`, 0.24732438923173047`}, \
-{1.7068091718295977`, 0.3852552822931339}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{1.6580432369201805`, 0.3162898357624322}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.7068091718295975`, 0.3567178854020587}, \
-{1.804341041648432, 0.49464877846346234`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{1.7555751067390148`, 0.42568333193276053`}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.8043410416484318`, 0.456598915942029}, \
-{1.9018729114672661`, 0.5945298090034329}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{1.853106976557849, 0.525564362472731}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.901872911467266, 0.5469674808516414}, \
-{1.9994047812861002`, 0.6848983739130452}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{1.950638846376683, 0.6159329273823433}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{1.9994047812861, 0.6278235801308956}, \
-{2.0969366511049348`, 0.7657544731922996}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{2.0481707161955174`, 0.6967890266615976}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{2.0969366511049343`, 0.6991672137797919}, \
-{2.1944685209237687`, 0.8370981068411958}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{2.1457025860143513`, 0.7681326603104939}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{2.194468520923768, 0.7609983817983301}, \
-{2.292000390742603, 0.8989292748597342}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{2.2432344558331856`, 0.8299638283290321}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{2.2920003907426025`, 0.8133170841865103}, \
-{2.3895322605614373`, 0.9512479772479145}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{2.34076632565202, 0.8822825307172124}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{2.389532260561437, 0.8561233209443325}, \
-{2.487064130380271, 0.9940542140057368}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{2.4382981954708542`, 0.9250887674750347}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{2.4870641303802707`, 0.8894170920717968}, \
-{2.5845960001991055`, 1.027347985133201}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{2.535830065289688, 0.9583825386024989}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{2.584596000199105, 0.9131983975689029}, \
-{2.68212787001794, 1.0511292906303074`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{2.6333619351085225`, 0.9821638440996051}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{2.6821278700179394`, 0.9274672374356511}, \
-{2.7796597398367737`, 1.0653981304970557`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{2.7308938049273563`, 0.9964326839663533}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{2.7796597398367733`, 0.9322236116720413}, 
-     {2.877191609655608, 1.070154504733446}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{2.8284256747461907`, 1.0011890582027436`}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{2.8771916096556076`, 0.9274675202780734}, \
-{2.974723479474442, 1.065398413339478}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{2.9259575445650245`, 0.9964329668087757}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{2.974723479474442, 0.9131989632537476}, \
-{3.0722553492932763`, 1.051129856315152}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.023489414383859, 0.9821644097844499}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{3.072255349293276, 0.8894179405990638}, \
-{3.1697872191121106`, 1.0273488336604684`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.121021284202693, 0.958383387129766}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{3.16978721911211, 0.8561244523140218}, \
-{3.2673190889309445`, 0.9940553453754264}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.218553154021527, 0.925089898844724}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{3.267319088930944, 0.8133184983986217}, \
-{3.364850958749779, 0.9512493914600266}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.3160850238403614`, 0.8822839449293242}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{3.3648509587497784`, 0.7610000788528639}, \
-{3.462382828568613, 0.8989309719142685}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.4136168936591957`, 0.8299655253835663}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{3.4623828285686122`, 0.6991691936767478}, \
-{3.5599146983874475`, 0.8371000867381531}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.51114876347803, 0.7681346402074505}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{3.5599146983874466`, 0.6278258428702737}, \
-{3.657446568206282, 0.7657567359316789}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.608680633296864, 0.6967912894009762}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{3.657446568206281, 0.546970026433442}, \
-{3.7549784380251157`, 0.6849009194948469}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.7062125031156983`, 0.6159354729641444}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{3.7549784380251148`, 0.45660174436625184`}, \
-{3.85251030784395, 0.5945326374276573}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.803744372934532, 0.5255671908969546}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{3.852510307843949, 0.35672099666870366`}, \
-{3.9500421776627843`, 0.49465188973010893`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.901276242753367, 0.4256864431994063}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{3.9500421776627834`, 0.24732778334079805`}, \
-{4.047574047481619, 0.38525867640220274`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{3.9988081125722013`, 0.3162932298715004}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{4.047574047481617, 0.1284221043825338}, 
-     {4.1451059173004525`, 0.2663529974439391}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{4.096339982391035, 0.19738755091323645`}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{4.145105917300452, 3.95979391156*^-6}, \
-{4.242637787119287, 0.13793485285531687`}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{4.1938718522098695`, 0.06896940632461422}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{4.242640687119284, -2.11*^-15}, \
-{4.2426406871192865`, 2.42*^-15}], 
-    {GrayLevel[0.85], PointSize[0.001], 
-     PointBox[{4.242640687119286, 1.5499999999999995`*^-16}]}}, 
-   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.002]}], FaceForm[{GrayLevel[
-    0.85], Opacity[0.1]}], 
-    RectangleBox[{4.2426406871192865`, -2.2000000000000025`*^-16}, \
-{4.2426406871192865`, 3.680000000000001*^-15}], 
+     PointBox[{1.0000000000000002`, 0.}]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9997127569626801, -1.02392568126*^-6}, \
+{1.0000010239256818`, 0.02392670517568126}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9978267125137394, 0.0239224320023442}, \
+{0.9997148587712775, 0.06590463428115026}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9941813070640454, 0.0658691331970743}, \
+{0.9978293056400721, 0.10777223889771513`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9887830757517568, 0.10769970153012805`}, \
+{0.9941844949157567, 0.1494498319275932}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9816415361159678, 0.14934038616601866`}, \
+{0.9887868527083942, 0.190863932243716}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9727692792960244, 0.190717771050303}, \
+{0.9816458955184367, 0.23194152327899023`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.962181947832279, 0.23175890434830415`}, \
+{0.9727742134583288, 0.27261018176069074`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9498982080869672, 0.2723914270653761}, \
+{0.962187448055073, 0.3127982053988256}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9359397173338299, 0.31254370062194126`}, \
+{0.949904264672892, 0.352434739303347}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9203310855745043, 0.352144933158374}, \
+{0.9359463196046114, 0.391449900907325}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9030998321490076, 0.39112530434704673`}, \
+{0.9203382218897801, 0.4297749031758327}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8842763372168079, 0.4294160884914818}, \
+{0.9031074899268492, 0.4673421758833157}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8638937881940307, 0.4669497756955763}, \
+{0.8842845029559043, 0.504085484745624}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8419881212412325, 0.5036601908892675}, \
+{0.8639024474974923, 0.5399400481966653}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8185979579049049, 0.5394826105007876}, 
+     {0.8419972588419736, 0.5748426516037941}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7937645370244176, 0.5743538765698032}, \
+{0.8186075576925617, 0.6087317587205643}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7675316420244508, 0.6082125081002496}, \
+{0.7937745820737512, 0.6415476201803435}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7399455237211078, 0.6409988094565352}, \
+{0.7675421146251881, 0.673232378839509}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7110548187778093, 0.6726549756120035}, \
+{0.7399564054091665, 0.7037301717844923}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6809104639547349, 0.7031251940640921}, \
+{0.7110660903678515, 0.7329872288228284}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6495656063030008, 0.732355743236503}, \
+{0.6809221055739928, 0.7609519672845597}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6170755094619059, 0.7602950871948917}, \
+{0.6495775974263134, 0.7875750829668531}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5834974562244546, 0.7868939665090855}, \
+{0.617087828947907, 0.8128096370614861}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5488906475429397, 0.8121054851016322}, \
+{0.5835100823528466, 0.8366111389119415}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5133160981526493, 0.835885192929556}, \
+{0.548903558052789, 0.8589376244542049}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4768365289977196, 0.8581911643535503}, \
+{0.5133292702816332, 0.8797497302029624}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4395162566487969, 0.87898407205643}, \
+{0.47684993952225874`, 0.899010762652762}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4114301439765316, 0.8982272710255831}, \
+{0.4395298672799413, 0.9118750224483334}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4114345488105456, 0.9114355328782006}, \
+{0.41144110671117307`, 0.911440122661911}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.001]}], FaceForm[{GrayLevel[
+    0.85], Opacity[0.]}], 
+    GeometricTransformationBox[
+     RectangleBox[{-1.25361002557*^-6, -1.00004523501*^-6}, \
+{1.25361002503*^-6, 1.00004523475*^-6}], {{{0.8778305358067203, 
+      0.9114386853128403}, {0.4789713461213375, -0.41143592808018264`}}, {
+      0.411439727477661, 0.9114369702031566}}], 
     {RGBColor[1, 0, 0], PointSize[0.001], 
-     PointBox[{4.2426406871192865`, 1.7300000000000001`*^-15}]}}},
-  AspectRatio->NCache[
-    Rational[3, 10], 0.3],
+     PointBox[{0.411439727477661, 0.9114369702031566}]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4114376913302409, 0.901331063715227}, \
+{0.43324851405362724`, 0.9114380302379428}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4331246499404244, 0.8823488162750066}, \
+{0.47097766820806397`, 0.9013346759638496}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4705806517823906, 0.8618155898383509}, \
+{0.5076367832177844, 0.8823574634393909}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5072069800718367, 0.8397629095114219}, \
+{0.5434008915761969, 0.8618245799613745}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5429390594893303, 0.8162296560377434}, \
+{0.5782069381306467, 0.839772226742736}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5777138913519531, 0.7912573205367186}, \
+{0.6119935568725985, 0.81623928395028}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6114701646853149, 0.7648899313512711}, \
+{0.6447011791311065, 0.7912672421556524}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6441483643199964, 0.7371739764221467}, \
+{0.676272138597429, 0.7649001291839473}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6756908758218342, 0.708158321325736}, \
+{0.7066507729956146, 0.7371844324889225}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7060420870710478, 0.6778941231199229}, \
+{0.7357835222198101, 0.7081690171916797}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7351484863111188, 0.6464347401498597}, \
+{0.7636190227652648, 0.677905039927317}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7629587564945508, 0.6138356379726829}, \
+{0.7901081982865399, 0.6464458586514478}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7894238657591702, 0.5801542915670383}, \
+{0.8152043461232628, 0.6138469385656048}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8144971042293506, 0.5454499768439908}, \
+{0.8388632692869769, 0.5801658614832255}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8381342914140549, 0.5097839360339883}, \
+{0.8610432293396015, 0.5454619544126192}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8602937768436777, 0.4732191029603752}, \
+{0.8817050972389393, 0.509796351709675}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.880936491468251, 0.4358199445213092}, \
+{0.9008124443615934, 0.4732319348532318}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9000260404332237, 0.39765239860124396`}, \
+{0.918331582835981, 0.43583317000762173`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9175287672466729, 0.3587837578168533}, \
+{0.9342316249369056, 0.39766599436335986`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9334138131185505, 0.31928255087444724`}, \
+{0.9484845375432324, 0.35879769988429216`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9476531713673437, 0.2792184217480579}, \
+{0.9610651915626558, 0.3192968146661632}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9602217367982278, 0.23866200689121356`}, \
+{0.9719514062364181, 0.2792329821157779}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9710973499656501, 0.1976848106988872}, \
+{0.9811239882458654, 0.23867683816377575`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9802608362423111, 0.15635907943919133`}, \
+{0.9885667655518953, 0.1976998867275018}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9876960396256554, 0.11475767387708692`}, \
+{0.9942666159076309, 0.15637437364354276`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9933898512222737, 0.07295394081468286}, \
+{0.9982134899940542, 0.11477315929219734`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9973322323599918, 0.03102158377461037}, \
+{1.000400429137807, 0.07296959013845364}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9995162322869003, -0.01096546694553075}, \
+{1.0008235775799204`, 0.03103736941595802}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9985965125284951, -0.05294284013351486}, \
+{0.9999420623375588, -0.01094957281802906}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9954941774679712, -0.09485423366253629}, \
+{0.9986008125814674, -0.0529172100275871}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9906367018431158, -0.1365983911423996}, \
+{0.9954989450001731, -0.09479154971318884}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.984032649794938, -0.1781017140872722}, \
+{0.9906419284489842, -0.13649876386674514`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9756936648266359, -0.2192910286230082}, \
+{0.9840383262595241, -0.17796531913663735`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9656344492751131, -0.26009371449888696`}, \
+{0.9756997811418517, -0.21911810647324506`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9538727383895151, -0.30043783312326683`}, \
+{0.965640994657377, -0.25988457002639387`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9404292690624808, -0.3402522543974164}, \
+{0.9538797012987634, -0.3001928350674657}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.925327743269246, -0.3794667821239041}, \
+{0.940436637222515, -0.3399718347106338}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9085947862790514, -0.41801227776844035`}, \
+{0.9253355036893754, -0.3791514352098024}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8902598997125387, -0.4558207823569706}, \
+{0.9086029252769982, -0.41766255961034254`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8703554095278943, -0.4928256362931035}, \
+{0.8902684029385601, -0.4554373095376144}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8489164090274456, -0.528961596884626}, \
+{0.8703642619900823, -0.4924090849075539}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8259806969851975, -0.5641649533718962}, \
+{0.8489255951181597, -0.528512701348262}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8015887110043909, -0.5983736392553106}, \
+{0.8259902005085813, -0.5636845051255752}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.775783456222583, -0.6315273417237997}, \
+{0.8015985152049278, -0.5978624853699901}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.748610429489947, -0.663567607991423}, \
+{0.7757935438146368, -0.6309863834070799}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7201175391544711, -0.6944379483545832}, \
+{0.7486207826882387, -0.6629977989986418}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6903550205954818, -0.7240839357881581}, \
+{0.7201281397054347, -0.6938402933072638}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.659375347654416, -0.7524533019049563}, \
+{0.690365849809448, -0.7234594884027771}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6272331401189922, -0.7794960291093128}, \
+{0.6593863864385632, -0.7518031631351519}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5939850674238991, -0.8051644387823454}, \
+{0.627244369011009, -0.7788213452048101}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5596897061567173, -0.829413295071527}, \
+{0.5939965092073602, -0.8044663795398946}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5244074483819924, -0.8521998792711616}, \
+{0.5597014993834833, -0.8286930176903622}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4882006158526128, -0.8734839628928106}, \
+{0.5244196884032364, -0.8514585998511044}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4511330442814501, -0.8932280202940498}, \
+{0.48821328108814016`, -0.8727229883722729}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4132700869372208, -0.9113972410291389}, \
+{0.4511461124013778, -0.8924486923355744}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.3746784994211374, -0.9279595912227865}, \
+{0.4132835349013465, -0.9106009336539344}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.33542632197112837`, -0.9428858700485855}, \
+{0.3746923035195612, -0.9271477083882115}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.2955827595011352, -0.9561497612125437}, \
+{0.3354404578660556, -0.9420598431728526}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.25521805958698646`, -0.9677278793509398}, \
+{0.29559720226978553`, -0.9553110466510087}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.21440338861397099`, -0.9775998112606997}, \
+{0.2552327837655353, -0.9668779558284228}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.17321070630447163`, -0.9857481518896043}, \
+{0.21441836824244412`, -0.9767401772643695}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.13171263884687967`, -0.9921585350228691}, \
+{0.1732259149725153, -0.9848803230270166}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.08998235084947172, -0.9968196586119995}, \
+{0.13172804974032368`, -0.9912840413498235}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.04809341634500785, -0.9997233047012586}, \
+{0.08999793679760544, -0.995940041934921}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.00611968907347918, -1.00086435391662}, \
+{0.04810914986848443, -0.9988401158588623}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.03586482772829193, -1.0002407944916574`}, \
+{0.00613554243276395, -0.9993549905190567}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.07781772025339798, -0.9993591738477636}, \
+{-0.03584888248401425, -0.9969685873175379}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.11963882143977037`, -0.9969731656140934}, \
+{-0.07777010278417316, -0.9928243683459701}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.16124898924920245`, -0.9928294092347035}, \
+{-0.11955420780512885`, -0.9869297159097156}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.2025748614310011, -0.9869352105031132}, \
+{-0.16112752863014976`, -0.9792950227803624}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.24354357697174775`, -0.9793009613909905}, \
+{-0.20241676797289773`, -0.9699337495686412}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.28408290455543705`, -0.9699401217262263}, \
+{-0.24334912940675252`, -0.9588624009922283}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.32412136991340595`, -0.9588691954621169}, \
+{-0.2838524457110789, -0.9461004967765309}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.3635883818395239, -0.9461077015794969}, \
+{-0.32385530610815, -0.9316705372397567}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.4024143566484694, -0.9316781396731221}, \
+{-0.3632871821663973, -0.9155979636229473}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.4405308408576612, -0.9156059502829781}, \
+{-0.40207855214801097`, -0.8979111132349153}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.47787063187654744`, -0.8979194700404535}, \
+{-0.4401610235816516, -0.8786411694911687}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5143678964904651, -0.8786498817084578}, \
+{-0.477467453844172, -0.8578221069349062}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5499582869301749, -0.8578311592035694}, \
+{-0.5139320685387484, -0.8354906313370216}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5845790543224285, -0.8355000076971425}, \
+{-0.5494905774607153, -0.8116861149807187}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6181691593215486, -0.8116957989009799}, \
+{-0.5840802879466409, -0.7864505272448417}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.650669379726965, -0.7864605016516714}, \
+{-0.6176402154068046, -0.7598283606083044}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6820224148969724, -0.7598386079159786}, \
+{-0.650111190846194, -0.7318665522060814}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.712172986774614, -0.7318770543477287}, \
+{-0.6814359651844558, -0.7026144010750631}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7410679373475805, -0.7026251395345177}, \
+{-0.7115593101908742, -0.6721234812356763}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7686563223702868, -0.6721344370801247}, \
+{-0.7404281158564193, -0.640447550762519}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7948895011828943, -0.6404587046758792}, \
+{-0.7679914840311937, -0.6076424570043197}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8197212224689137, -0.6076537893212975}, \
+{-0.7942008181621801, -0.5737660381203312}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8431077691379445, -0.5737776655688893}, \
+{-0.819009845635333, -0.5388778843989591}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8650078555849667, -0.5388899451928562}, \
+{-0.8423748791757565, -0.503039621312289}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8853828599067837, -0.5030521161934617}, \
+{-0.8642547344456496, -0.46631445676018124`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.9041968592447858, -0.4663273636990955}, \
+{-0.8846108354067038, -0.42876714031877194`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.9116062752276416, -0.42878039126120904`}, \
+{-0.9034073190138742, -0.4114334674083482}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.9114408655974328, -0.41144122577599657`}, \
+{-0.9114347899455062, -0.4114344297419058}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.001]}], FaceForm[{GrayLevel[
+    0.85], Opacity[0.]}], 
+    GeometricTransformationBox[
+     RectangleBox[{-1.81283307105*^-6, -1.00014345143*^-6}, \
+{1.81283307026*^-6, 1.00014345172*^-6}], {{{-0.15966102898988038`, 
+      0.4114318258489042}, {-0.9871718978080222, -0.9114405371052116}}, \
+{-0.9114368334993465, -0.41144003030901716`}}], 
+    {RGBColor[1, 0, 0], PointSize[0.001], 
+     PointBox[{-0.9114368334993465, -0.41144003030901716`}]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.9114375990558248, -0.4332494953862096}, \
+{-0.9013312142834049, -0.4114373123896399}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.9013339080134105, -0.47097861580627054`}, \
+{-0.8823492839578366, -0.4331242952476598}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8823566300390869, -0.5076377074408924}, \
+{-0.8618160983567488, -0.4705803073315383}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8618236825805609, -0.5434017907947228}, \
+{-0.8397634579688263, -0.5072066464701928}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.839771266963571, -0.5782078107591921}, \
+{-0.8162302434671777, -0.5429387373250629}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8162384319107951, -0.6119944431915849}, \
+{-0.791257777456636, -0.5777135393741252}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7912665551367233, -0.644702091425677}, \
+{-0.7648902011774247, -0.6114697696666948}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7648996083968467, -0.6762730752591312}, \
+{-0.7371740586788103, -0.6441479269570354}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.737184078851842, -0.7066517323730346}, \
+{-0.7081582158678836, -0.67569039688564}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7081688313281116, -0.7357845026214842}, \
+{-0.6778938301334861, -0.7060415674060256}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6779050221649545, -0.7636200224626619}, \
+{-0.6464342601513983, -0.7351479268334821}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6464460090216074, -0.7901092155171087}, \
+{-0.6138349718084746, -0.7629581581907059}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6138472568031715, -0.8152053790935396}, \
+{-0.5801534404115872, -0.7894232296839775}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5801662398712852, -0.8388642665296446}, \
+{-0.5454490493537897, -0.8144964811503677}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5454623407119573, -0.8610441652027022}, \
+{-0.509782985416366, -0.8381337063235572}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5097967452392128, -0.8817059700724672}, \
+{-0.47321813089135106`, -0.8602932307732294}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.47323233491914357`, -0.9008132526266689}, \
+{-0.43581895271472315`, -0.8809359853806206}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.43583357590455735`, -0.9183323251075645}, \
+{-0.39765138880573514`, -0.9000255752206865}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.39766640537568854`, -0.9342322999063094}, \
+{-0.3587827318127767, -0.9175283437294381}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.35879811528736444`, -0.9484851440204282}, \
+{-0.319281510470735, -0.9334134320433148}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.3192972337275882, -0.9610657284783729}, \
+{-0.27921736877902975`, -0.9476528334059752}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.2792334040967148, -0.9719518726440284}, \
+{-0.23866094321334325`, -0.9602214425465806}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.2386772623202365, -0.9811243833230529}, \
+{-0.19768373818752888`, -0.9710970999425151}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.19770031231166257`, -0.9885670886021052}, \
+{-0.15635799998527342`, -0.9802606308885002}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.15637479990506264`, -0.9942668663612987}, \
+{-0.11475658938377813`, -0.9876958793032249}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.11477358547954115`, -0.9982136674096088}, \
+{-0.07295285319403673, -0.9933897362138856}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.07297001550021698, -1.0004005332024497`}, \
+{-0.03102049494419426, -0.9973321628684156}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.03103779320219205, -1.0008236081101762`}, \
+{0.01096655506601657, -0.9995162084346555}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.0109491513544954, -0.9999420332309321}, \
+{0.05294392591854455, -0.9985965204095122}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.05291679162982971, -0.9986007099438283}, \
+{0.09485531490497964, -0.9954942310228936}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.09479113511887839, -0.9954987690124802}, \
+{0.1365994659359346, -0.9906368009775218}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.13649835380684655`, -0.9906416794215193}, \
+{0.17810278053694684`, -0.9840327943340456}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.177964914334121, -0.9840380046313434}, \
+{0.21929208484858126`, -0.9756938545156099}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.21911770764181207`, -0.9756993874800126}, \
+{0.26009475863814324`, -0.9656346837795162}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.25988417786921786`, -0.9656405296559388}, \
+{0.3004388633353004, -0.9538730172958959}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.300192450275953, -0.9538791657775632}, \
+{0.3402532688658762, -0.9404295918791039}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.3399714579632044, -0.9404360321257219}, \
+{0.3794677790601963, -0.9253281094269581}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.379151067170694, -0.9253348300838264}, \
+{0.4180132554148817, -0.9085951951322856}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.41766220092843925`, -0.9086021843503167}, \
+{0.45582173898988765`, -0.8902603505404523}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.45543696084530283`, -0.8902675959970628}, \
+{0.49282657022587134`, -0.8703559015356391}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4924087468196081, -0.8703633904564755}, \
+{0.528962506470642, -0.8489169413475708}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5285123744607597, -0.8489246605290307}, \
+{0.5641658370074835, -0.8259812686791774}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.563684170841726, -0.8259892817406402}, \
+{0.5983745145556654, -0.8015892438353304}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5978621077836364, -0.8015977608813027}, \
+{0.6315282436412216, -0.7757838022477936}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6309859631839384, -0.7757929552652644}, \
+{0.6635685349357552, -0.7486105880993571}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6629973368796014, -0.7486203609507809}, \
+{0.6944388986915444, -0.7201175100684384}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6938397901070796, -0.7201278855234506}, \
+{0.7240849078422236, -0.6903548038652877}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7234589450086334, -0.6903657636310823}, \
+{0.7524542939623128, -0.6593749436621741}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7518025805050988, -0.6593864684157554}, \
+{0.7794970394208788, -0.6272325495769752}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7788207243660736, -0.6272446189992266}, \
+{0.8051654655668563, -0.5939842913732822}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8044657413151928, -0.5939968841847899}, \
+{0.8294143167905481, -0.5596887885468066}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8286924170151563, -0.5597018825453771}, \
+{0.8522008403130986, -0.5244065069742427}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8514580377844355, -0.5244200790740474}, \
+{0.873484861563265, -0.48819965230680584`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8727224659051123, -0.48821367857908265`}, \
+{0.8932288550085895, -0.4511320602963987}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.892448210389076, -0.4511465160116417}, \
+{0.9113980103160915, -0.4132690842477739}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9106004930778107, -0.4132839439193326}, \
+{0.9279602937258338, -0.37467747979512145`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9271473099592354, -0.3746927172241361}, \
+{0.9428865045291551, -0.33542528720623055`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9420594875934885, -0.3354408755278231}, \
+{0.9561503265519928, -0.2955817114217336}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.955310734548173, -0.2955976231523726}, \
+{0.9677283745525268, -0.2552170000409339}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9668776877523794, -0.2552332071268903}, \
+{0.9776002354513426, -0.21440231946933686`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9767399536877588, -0.214418793336145}, \
+{0.9857485043214186, -0.1732096294462486}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9848801443440232, -0.17322634104908588`}, \
+{0.9921588150744879, -0.1317115561736599}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9912839078754809, -0.13172847604855492`}, \
+{0.9968198657896681, -0.08998126427009988}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9959399539045556, -0.0899983625858798}, \
+{0.9997234386397053, -0.04809232777521538}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9988400734276791, -0.04810957438610109}, \
+{1.0008644143796999`, -0.00611860043250687}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9993549798122634, -0.00613596493126243}, \
+{1.0002407813727687`, 0.03586591452107787}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9969686222959248, 0.03584846274953465}, \
+{0.9993591011132353, 0.07781880357464176}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9928244489519672, 0.0777696865537399}, \
+{0.9969730194402568, 0.11963989908655003`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.986929842001208, 0.11955379581259144`}, \
+{0.9928291898792755, 0.16125005932153544`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9792951941350403, 0.161127121601886}, \
+{0.986934918352836, 0.20257592204225922`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9699339658843915, 0.20241636662653292`}, \
+{0.9793005969609498, 0.24354462625198345`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9588626618876683, 0.24334873444989433`}, \
+{0.9699396856589431, 0.2840839406546804}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9461008017916797, 0.2838520578400697}, \
+{0.9588686885264146, 0.32412239100492624`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9316708858368467, 0.32385492600683924`}, \
+{0.9461071246691463, 0.36358938612305036`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9155983551873723, 0.36328681050493594`}, \
+{0.9316774938052648, 0.4024153423533649}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8979115470763143, 0.40207818958166947`}, \
+{0.915605236596334, 0.4405318062460446}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8786416448446422, 0.4401606707496652}, \
+{0.8979186897933125, 0.4778715752463572}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8578226229623661, 0.47746711136861336`}, \
+{0.8786490362764617, 0.5143688161784604}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8354911871286675, 0.513931737023431}, \
+{0.8578302500772865, 0.5499591813148679}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8116867095566429, 0.5494902574901288}, \
+{0.8354990364794391, 0.5845799218269431}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7864509493681038, 0.5840799279027727}, \
+{0.8116949774928481, 0.6181700505985486}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7598285955241628, 0.6176398124461476}, \
+{0.786459845511826, 0.6506702966833485}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7318665995003593, 0.6501107456792019}, \
+{0.7598381182012498, 0.6820233559160677}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7026142606643764, 0.6814354785959957}, \
+{0.7318767319215249, 0.7121739501973248}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6721231533675812, 0.7115587830388428}, \
+{0.702624984965304, 0.7410689214753108}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6404470360150748, 0.7404275490702305}, \
+{0.6721344506404195, 0.7686573254679362}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6076417562850696, 0.767990878610139}, \
+{0.6404588863417748, 0.7948905214819169}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5737651526647024, 0.7942001751736685}, \
+{0.6076541387725015, 0.8197222581704356}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5388769524758824, 0.8190092295507576}, \
+{0.5737780454814922, 0.8431087550781858}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.503038666570962, 0.8423743012769361}, \
+{0.5388903328909018, 0.8650087798300221}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4663134808838934, 0.864254195751469}, \
+{0.5030525109934058, 0.885383720827131}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4287661450280759, 0.8846103368669261}, \
+{0.46632776490487216`, 0.9041976553225495}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4114318927054063, 0.9034068771350068}, \
+{0.4287807850961362, 0.9116072681049844}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4114328551624712, 0.9114337914196308}, \
+{0.4114428003416208, 0.9114418641335192}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.001]}], FaceForm[{GrayLevel[
+    0.85], Opacity[0.]}], 
+    GeometricTransformationBox[
+     RectangleBox[{-2.47900535685*^-6, -1.00034391578*^-6}, \
+{2.47900535547*^-6, 1.0003439134*^-6}], {{{0.9999620303939684, 
+      0.911442923052318}, {-0.00871422804223091, -0.41142654024484876`}}, {
+      0.4114409109055312, 0.9114364359807147}}], 
+    {RGBColor[1, 0, 0], PointSize[0.001], 
+     PointBox[{0.4114409109055312, 0.9114364359807147}]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.41143750987398536`, 0.9013310470714558}, 
+     {0.4332510495839886, 0.9114369502754159}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4331244743411271, 0.8823491920022996}, \
+{0.47098016080918675`, 0.9013331268261275}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.47058043813278005`, 0.8618157210472787}, \
+{0.5076392625462793, 0.8823560626303779}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5072067287485953, 0.8397627959706515}, \
+{0.5434033532607978, 0.8618233299508153}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5429387709355622, 0.8162292979474571}, \
+{0.5782093778311952, 0.8397711297345052}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5777135660764028, 0.7912567185282601}, \
+{0.6119959702876957, 0.8162383418784963}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6114698032614709, 0.764889086486032}, \
+{0.6447035620056975, 0.791266456681268}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6441479673850796, 0.737172890189696}, \
+{0.6762744867303037, 0.7648995016918202}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6756904440756741, 0.7081569956411932}, \
+{0.7066530822468161, 0.7371839640853743}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7060416212748498, 0.6778925603205824}, \
+{0.7357857885179331, 0.7081687087025458}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.735147987286121, 0.646432942991069}, \
+{0.7636212421146336, 0.6779048918964898}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7629582251205763, 0.6138336096229852}, \
+{0.7901103667742534, 0.6464458713399183}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7894233029730765, 0.580152035602586}, \
+{0.8152064599260935, 0.6138471119510022}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8144965606694803, 0.5454476043980738}, \
+{0.8388652750320084, 0.5801660881040225}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8381337919324847, 0.509781502861515}, \
+{0.8610450995968006, 0.5454621822971797}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8602933223210357, 0.47321661335123466`}, \
+{0.8817068287108845, 0.5097965804562189}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8809360827058993, 0.4358174028648931}, \
+{0.9008140339955526, 0.47323216405845986`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9000256781518451, 0.3976498093787081}, \
+{0.9183330278292952, 0.43583339926742565`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.917528452085, 0.3587811255932161}, \
+{0.934232922741929, 0.39766622327353507`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9334135456322401, 0.3192798802905421}, \
+{0.9484856858718249, 0.3587979280412507}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9476529520279968, 0.27921571751235047`}, \
+{0.9610661883902167, 0.31929704166764505`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9602215659925583, 0.2386592737715004}, \
+{0.9719522498054559, 0.27923320756156017`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9710972279948028, 0.19768205351388998`}, \
+{0.9811246770690962, 0.2386770616563784}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.980260763321331, 0.15635630305006074`}, \
+{0.9885672984148657, 0.19770010787288844`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9876960158831085, 0.11475488317883223`}, \
+{0.9942669918708583, 0.15637459205181534`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.99338987670002, 0.07295114072754148}, \
+{0.9982137083946835, 0.11477337457828353`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9973323070131118, 0.03101877923537316}, \
+{1.0004004895907794`, 0.07296980192278583}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9995163559837744, -0.01096827099222352}, \
+{1.000823479978652, 0.03103757732514249}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9985966305434664, -0.05294563988859786}, \
+{0.9999418613742359, -0.01094936915055385}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9954943441256098, -0.09485702304558036}, \
+{0.9986004541132922, -0.05291701096090417}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9906369168495903, -0.13660116523548613`}, \
+{0.9954984296591555, -0.09479135559826962}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9840329127711741, -0.1781044679994401}, \
+{0.9906412571437141, -0.1364985750458307}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9756939753089838, -0.219293757498877}, \
+{0.9840375001735695, -0.17796513594263494`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9656348067161665, -0.26009641352721724`}, \
+{0.9756988017316719, -0.21911792922914128`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9538731421590749, -0.30044049754544305`}, \
+{0.9656398636497553, -0.259884399044685}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9404297184486673, -0.34025487951583666`}, \
+{0.953878420687762, -0.30019267064960714`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.925328237479753, -0.3794693633102621}, \
+{0.9404352092659594, -0.33997167714650806`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9085953244425442, -0.41801481047188593`}, \
+{0.9253339309048743, -0.37915128477720844`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8902603747619492, -0.4558232791016151}, \
+{0.9086013165557438, -0.41766239958502366`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.870355640276496, -0.49282812155079553`}, \
+{0.8902669414660385, -0.45543711132788783`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8489163950684092, -0.5289640662736457}, \
+{0.8703629503429932, -0.49240884886288017`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.825980438343134, -0.564167402538502}, \
+{0.8489244356090481, -0.5285124278848078}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.801588208135308, -0.5983760638814141}, \
+{0.8259891951817601, -0.5636841947254798}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7757827100130816, -0.6315297375345795}, \
+{0.8015976658328733, -0.5978621385805151}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7486094412556576, -0.663569970762862}, \
+{0.775792851894864, -0.6309860008396444}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7201163106377343, -0.6944402739209151}, \
+{0.7486202494406606, -0.6629973813277444}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6903535539622768, -0.7240862200492124}, \
+{0.7201277660702121, -0.6938398412692941}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6593736454905411, -0.7524555408333876}, \
+{0.6903656364453316, -0.7234590027947159}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6272312054255067, -0.7794982187577003}, \
+{0.6593863337217318, -0.7518026448131677}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5939829036118315, -0.8051665752901539}, \
+{0.6272444770344071, -0.7788207950827482}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5596873596221142, -0.8294153549437856}, \
+{0.5939967351994705, -0.8044658183157934}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5244050394056243, -0.8522018050659236}, \
+{0.5597017268022316, -0.8286925001639247}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4881981486817089, -0.8734857512147369}, \
+{0.5244199168476641, -0.8514581269347733}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4511305232658418, -0.8932296679901772}, \
+{0.4882135101554806, -0.87272256089984}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.41326751652167204`, -0.9113987451944395}, \
+{0.45114634168776574`, -0.8924483110607095}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.3746758841375086, -0.9279609492052896}, \
+{0.4132837640025306, -0.9106005992488576}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.3354236664303862, -0.9428870794540527}, \
+{0.37469253203161657`, -0.9271474214425073}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.295580068385223, -0.9561508199086907}, \
+{0.33544068538609606`, -0.9420596041924307}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.25521533764056953`, -0.9677287854711957}, \
+{0.29559742839667413`, -0.9553108560572117}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.21440064063607134`, -0.9776005632074977}, \
+{0.2552330081005912, -0.9668778139572839}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.17320793714000718`, -0.9857487483371984}, \
+{0.2144185903901455, -0.9767400843660193}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.1317098533781219, -0.9921589749196718}, \
+{0.17322613454119695`, -0.9848802792652429}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.08997955398743801, -0.9968199411824352}, \
+{0.1317282663428674, -0.9912840468017821}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.04809061302080293, -0.9997234294471319}, \
+{0.0899981500521226, -0.9959400965909996}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.00611688422960107, -1.0008643206179935`}, \
+{0.04810935939898928, -0.9988402196226975}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.03586762914666582, -1.0002406032072393`}, \
+{0.0061357478698364, -0.9993550886943555}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.07782051445116897, -0.9993588794031296}, \
+{-0.0358486815025772, -0.9969687342145112}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.11964160234577743`, -0.9969727140060232}, \
+{-0.07776990661271878, -0.9928245637216494}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.16125175196047273`, -0.9928288012594204}, \
+{-0.11955401678952407`, -0.9869299594196371}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.20257760107664058`, -0.9869344472325291}, \
+{-0.1611273431071713, -0.9792953139951976}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.24354628872152898`, -0.9793000441708163}, \
+{-0.20241658826963832`, -0.9699340879749537}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.2840855836283155, -0.9699390521735985}, \
+{-0.24334895584004426`, -0.9588627859933792}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.32412401158594917`, -0.9588679754627476}, \
+{-0.28385227858693457`, -0.9461009276937304}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.36359098145423946`, -0.9461063332843481}, \
+{-0.3238551457212237, -0.9316710133132612}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.4024169096220162, -0.931676625494614}, \
+{-0.36328702879946484`, -0.9155984840133992}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.44053334268893074`, -0.9156042928907359}, \
+{-0.4020784060714711, -0.8979116770248221}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.47787312233798096`, -0.8979179483310317}, \
+{-0.4401608408696679, -0.8786414997120892}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5143703728630804, -0.8786485088077126}, \
+{-0.4774672331469688, -0.8578221925616795}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5499607448479173, -0.8578299375320412}, \
+{-0.5139318102454338, -0.8354904722186802}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5845814894517808, -0.8354989394087415}, \
+{-0.549490282026682, -0.8116857113978017}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6181715673691712, -0.8116948858791894}, \
+{-0.5840799558927644, -0.7864498799088999}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6506717564472666, -0.786459745506226}, \
+{-0.6176398473185237, -0.7598274706606463}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6820247560995935, -0.7598380099800269}, \
+{-0.6501107873724797, -0.7318654212157598}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7121752883318162, -0.7318766156754825}, \
+{-0.6814355270366663, -0.7026130310361095}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7410701952015232, -0.7026248608993934}, \
+{-0.711558838141501, -0.6721218745635855}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7686585325401827, -0.6721343189733796}, \
+{-0.7404276107377257, -0.6404457102899901}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7948916597720264, -0.6404587473057456}, \
+{-0.7679909467337465, -0.6076403859762616}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8197233256715064, -0.6076539926126153}, \
+{-0.7942002496332804, -0.5737637401881417}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8431097499081234, -0.5737778924554414}, \
+{-0.8190093102150954, -0.5388755003218847}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8650097002348568, -0.5388901732684842}, \
+{-0.8423743880037817, -0.5030371772997976}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8853845651841108, -0.5030523450560491}, \
+{-0.8642542883879154, -0.4663119571212738}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.9041984221430017, -0.46632759294513804`}, \
+{-0.8846104352496478, -0.42876458946052376`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.9116078647901542, -0.42878060097334975`}, \
+{-0.9034069967252751, -0.41143052659969975`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.9114424774676331, -0.41144416642720005`}, \
+{-0.9114331780956884, -0.41143148906313703`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.001]}], FaceForm[{GrayLevel[
+    0.85], Opacity[0.]}], 
+    GeometricTransformationBox[
+     RectangleBox[{-3.18599985953*^-6, -1.00076883274*^-6}, \
+{3.18599985807*^-6, 1.00076883425*^-6}], {{{0.10443409806629667`, 
+      0.4114196967430724}, {-0.9945318090242657, -0.9114460121871387}}, \
+{-0.9114361301786, -0.41144158832701677`}}], 
+    {RGBColor[1, 0, 0], PointSize[0.001], 
+     PointBox[{-0.9114361301786, -0.41144158832701677`}]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.9114369722757859, -0.4332524171942195}, \
+{-0.9013303973466117, -0.41143748979020317`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.9013331635499786, -0.470981567599324}, \
+{-0.8823484835895151, -0.4331243938563529}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8823560989454335, -0.5076406331427167}, \
+{-0.8618149579821097, -0.47058036446319745`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8618233657930492, -0.5434046852470577}, \
+{-0.8397619795984469, -0.50720666202409}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8397711650407245, -0.5782106688588728}, \
+{-0.8162284297075499, -0.5429387112737752}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.8162383765864529, -0.6119972180805998}, \
+{-0.7912557999514307, -0.5777135135825229}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7912664907297691, -0.6447047643638637}, \
+{-0.7648881191918094, -0.6114697580280493}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7648995350208354, -0.6762756415338728}, \
+{-0.737171875883502, -0.6441479294918666}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7371839966361416, -0.7066541874597713}, \
+{-0.7081559361113352, -0.6756904135894787}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.7081687404176754, -0.7357868421916902}, \
+{-0.6778914574351015, -0.7060415982494216}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6779049227200654, -0.7636222423914768}, \
+{-0.6464317986944457, -0.7351479717620558}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6464459012175953, -0.7901113118906099}, \
+{-0.6138324259327114, -0.7629582171252445}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.6138471408301037, -0.8152073482156431}, \
+{-0.5801508146056078, -0.7894233025205744}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5801661159336321, -0.8388661049286211}, \
+{-0.5454463482471126, -0.8144965677606059}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.5454622090282316, -0.8610458696372988}, \
+{-0.509780213771271, -0.8381338065547355}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.509796606041584, -0.8817075375376211}, \
+{-0.4732152935944833, -0.8602933444486317}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.47323218845302895`, -0.9008146803588064}, \
+{-0.43581605476847735`, -0.8809361122998275}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.43583342242818907`, -0.9183336105894727}, \
+{-0.39764843531943583`, -0.9000257151599288}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.3976662451596583, -0.934233440871575}, \
+{-0.35877972799367064`, -0.9175284964419911}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.35879794861414677`, -0.9484861384574326}, \
+{-0.3192784616148096, -0.9334135972599333}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.31929706089104215`, -0.9610665746338394}, \
+{-0.2792142802616765, -0.9476530108353681}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.2792332254015658, -0.9719525690261134}, \
+{-0.23865782047987968`, -0.9602216318759252}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.23867707808153912`, -0.9811249287039758}, \
+{-0.19768058674359873`, -0.9710973008380078}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.19770012285424532`, -0.9885674820203133}, \
+{-0.1563548253871392, -0.9802608429959451}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.15637460556295496`, -0.994267107123162}, \
+{-0.11475339722852539`, -0.9876961022486586}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.11477338659538461`, -0.998213755090644}, \
+{-0.07294964910970554, -0.9933899696042364}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.07296981242466122, -1.0004004676480673`}, \
+{-0.03101728457985673, -0.9973324062921967}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{-0.03103758629327646, -1.0008233894359548`}, \
+{0.01096976605021617, -0.9995164614626899}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.01094936173197288, -0.9999417335997716}, \
+{0.05294713336840959, -0.9985967108348378}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.05291700510495576, -0.9986002581369151}, \
+{0.09485851165909932, -0.9954944303036364}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.09479135131527835, -0.9954981658263883}, \
+{0.13660264635816055`, -0.9906370087623331}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.13649857234334783`, -0.9906409259197163}, \
+{0.17810593901992525`, -0.9840330102565829}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.17796513482542514`, -0.9840371021423171}, \
+{0.21929521582363912`, -0.9756940781951836}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.21911792969917432`, -0.9756983375949277}, \
+{0.26009785658510637`, -0.9656349148217601}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.2598844011011322, -0.9656393342258316}, \
+{0.30044192279222576`, -0.9538732552934631}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.3001926742888428, -0.9538778269100782}, \
+{0.34025628443868206`, -0.9404298364123848}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.339971655549021, -0.9404347802085078}, \
+{0.3794707722452672, -0.9253281320377077}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.37915122382112, -0.9253337877449095}, \
+{0.4180162350949358, -0.908594875359849}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4176623163672866, -0.9086013534274291}, \
+{0.4558246999114966, -0.8902596889486153}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.4554370348690431, -0.8902669779551917}, \
+{0.49282950716867957`, -0.8703548992908442}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.49240877929773114`, -0.870362986385281}, \
+{0.5289654142565705, -0.8489156002168602}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5285123653360037, -0.8489244711409248}, \
+{0.5641687105098595, -0.8259795910270782}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5636841393032994, -0.8259892301405802}, \
+{0.5983773295351399, -0.8015873098486355}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5978620903826727, -0.8015977001570013}, \
+{0.6315309586392192, -0.7757817623395479}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6309859599511166, -0.7757928855237837}, \
+{0.6635711451655044, -0.7486084458660914}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6629973478206214, -0.748620282315081}, \
+{0.6944413995509889, -0.7201152692870916}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6938398152026515, -0.7201277981321731}, \
+{0.7240872949221364, -0.6903524684865471}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7234589842145117, -0.6903656676383053}, \
+{0.7524565630540698, -0.6593725178035101}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7518026337521599, -0.6593863639907224}, \
+{0.7794991865238791, -0.6272300375153822}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7788207915604387, -0.6272445063260476}, \
+{0.8051674868955753, -0.5939816975377378}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8044658223383925, -0.5939967634621172}, \
+{0.829416208781212, -0.5596861175104623}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8286925117243399, -0.559701753986055}, \
+{0.8522025996299676, -0.524403763446362}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8514581460126225, -0.524419942904737}, \
+{0.8734864851045144, -0.48819684112446066`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8727225874614875, -0.4882135350398621}, \
+{0.8932303399117786, -0.4511291864159417}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.892448345059325, -0.45114636535558267`}, \
+{0.9113993539632101, -0.4132661527360998}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9106006406244985, -0.41328378641205443`}, \
+{0.9279614937479183, -0.37467449582073364`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9271474701222249, -0.3746925531433376}, \
+{0.9428875588104649, -0.3354222560301286}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9420596600903987, -0.33544070516279245`}, \
+{0.9561512332337404, -0.29557863838813797`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9553109190748771, -0.2955974468034779}, \
+{0.9677291320361556, -0.255213890567863}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9668778839835411, -0.2552330251050495}, \
+{0.9776008424013447, -0.21439917903905506`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9767401612774061, -0.21441860596227816`}, \
+{0.9857489596676899, -0.1732064635956006}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9848803629261581, -0.17322614865354893`}, \
+{0.9921591180142143, -0.1317083704843086}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9912841370647245, -0.13172827897055747`}, \
+{0.9968200157887411, -0.08997806435868543}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9959401932968279, -0.08999816117288702}, \
+{0.9997234354336638, -0.04808911928345273}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9988403226009114, -0.04810936899322117}, \
+{1.0008642579741964`, -0.00611538901723876}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9993551665586797, -0.00613575592062036}, \
+{1.0002404720435598`, 0.03586912319785421}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9969688180151821, 0.03584867500943539}, \
+{0.9993587111412113, 0.07782200536191947}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9928246533200915, 0.0777699016886671}, \
+{0.9969724777326565, 0.11964308683220426`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9869300546578811, 0.11955401344324401`}, \
+{0.9928284973911754, 0.16125322740530057`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.97929541470533, 0.16112734134456264`}, \
+{0.9869340763051511, 0.20257906487853522`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9699341939794142, 0.20241658809380872`}, \
+{0.9792996068382817, 0.2435477382996837}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9588628971052728, 0.24334895725130376`}, \
+{0.9699385492069617, 0.2840870164270012}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9461010437171576, 0.28385228158279496`}, \
+{0.9588674077487812, 0.32412542507902037`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9316710477760293, 0.3238551401524238}, \
+{0.9461057880916138, 0.36359238329356736`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.9155981746867291, 0.3632869838481903}, \
+{0.9316763659523506, 0.4024183281636719}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8979110244540831, 0.4020783218169748}, \
+{0.9156043194565384, 0.44053477543190517`}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8786407810222503, 0.44016076164387946`}, \
+{0.8979179849836308, 0.4778745225728451}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8578214194628054, 0.47746716076148227`}, \
+{0.878648545039533, 0.5143717364491895}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8354896460738099, 0.5139317448278706}, \
+{0.8578299732792033, 0.5499620693811533}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.8116848336634985, 0.5494902236923792}, \
+{0.8354989746082199, 0.5845827725968796}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7864489521326837, 0.5840799047445702}, \
+{0.8116949204689243, 0.6181728068638396}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7598264944782649, 0.6176398034466166}, \
+{0.7864597794252332, 0.65067295010617}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7318643983483056, 0.6501107508542096}, \
+{0.759838043168504, 0.6820259018182102}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.7026119632869847, 0.681435497936418}, \
+{0.7318766480749154, 0.7121763840901474}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6721207638153222, 0.711558816510581}, \
+{0.7026248924526589, 0.7410712390676539}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6404445585009313, 0.7404275966142708}, \
+{0.672134349624847, 0.7686595226736885}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.6076391951771091, 0.7679909401426577}, \
+{0.6404587770013737, 0.7948925944272183}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5737625124783754, 0.7942002505861784}, \
+{0.6076540213000481, 0.8197242032005081}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5388742378660608, 0.8190093187103}, \
+{0.5737779200841007, 0.8431105687637765}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.5030358823237326, 0.8423744040263154}, \
+{0.5388901997896582, 0.8650104589734499}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.46631063190812055`, 0.8642543119095288}, \
+{0.5030523704229788, 0.8853852624679233}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.428763236346745, 0.8846104662288704}, \
+{0.4663276171130993, 0.9041990567426631}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.41142918129597933`, 0.9034070507528881}, \
+{0.4287806181434325, 0.9116084255456068}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{GrayLevel[0], Opacity[0.9], Thickness[0.001]}], FaceForm[{
+    GrayLevel[0.85], Opacity[0.1]}], 
+    RectangleBox[{0.41143014380134035`, 0.9114326045466564}, \
+{0.41144551167306365`, 0.9114430510284466}], 
+    {PointSize[0.001]}}, 
+   {EdgeForm[{RGBColor[0, 0, 1], Thickness[0.001]}], FaceForm[{GrayLevel[
+    0.85], Opacity[0.]}], 
+    GeometricTransformationBox[
+     RectangleBox[{-3.9121449264*^-6, -1.00156719409*^-6}, \
+{3.91214492462*^-6, 1.00156719007*^-6}], {{{0.9863578711648252, 
+      0.9114497033472596}, {-0.16461515723405906`, -0.4114115193673997}}, {
+      0.4114422450054149, 0.9114358337397674}}], 
+    {RGBColor[1, 0, 0], PointSize[0.001], 
+     PointBox[{0.4114422450054149, 0.9114358337397674}]}}},
+  AspectRatio->Full,
   Axes->Automatic,
   AxesStyle->Directive[12],
-  ImageSize->{Automatic, 204.4551732556128}]], "Output",
+  ImageSize->{207.37860144036426`, 205.28787729127538`}]], "Output",
  CellChangeTimes->{{3.647517464145258*^9, 3.647517571138625*^9}, 
    3.647517606766445*^9, {3.647517672754374*^9, 3.647517694032167*^9}, {
    3.647517778211606*^9, 3.6475178912824373`*^9}, 3.647517949034234*^9, {
@@ -1757,7 +3547,13 @@ Cell[BoxData[
    3.6529165906826563`*^9}, {3.652916745421822*^9, 3.6529167728184147`*^9}, 
    3.652917220617346*^9, {3.652992189243791*^9, 3.652992197977624*^9}, {
    3.652992229508766*^9, 3.652992237505302*^9}, 3.65301941732292*^9, 
-   3.653019548904685*^9, {3.653019588128932*^9, 3.653019625780867*^9}}]
+   3.653019548904685*^9, {3.653019588128932*^9, 3.653019625780867*^9}, {
+   3.6530199000009327`*^9, 3.653019910198114*^9}, 3.653020054142129*^9, 
+   3.653173587882593*^9, 3.6531736791386843`*^9, {3.6531739528368187`*^9, 
+   3.653173958266753*^9}, {3.653174385553174*^9, 3.653174412217614*^9}, 
+   3.653175038311385*^9, {3.65317506990688*^9, 3.65317510314991*^9}, 
+   3.653175462247642*^9, 3.653281709013832*^9, 3.6532817454975443`*^9, 
+   3.653281822319721*^9, 3.653281864241234*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -15108,7 +16904,7 @@ Cell[BoxData[
 },
 AutoGeneratedPackage->None,
 WindowSize->{973, 903},
-WindowMargins->{{38, Automatic}, {Automatic, 0}},
+WindowMargins->{{36, Automatic}, {44, Automatic}},
 PrivateNotebookOptions->{"VersionedStylesheet"->{"Default.nb"[8.] -> False}},
 Magnification:>1.25 Inherited,
 FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (2013\:5e741\
@@ -15139,12 +16935,12 @@ Cell[41427, 1005, 584, 9, 36, "Input"],
 Cell[42014, 1016, 421, 6, 36, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[42472, 1027, 27824, 418, 309, "Input"],
-Cell[70299, 1447, 16390, 312, 274, "Output"]
+Cell[42472, 1027, 28121, 422, 309, "Input"],
+Cell[70596, 1451, 103665, 2104, 309, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[86726, 1764, 1518, 44, 225, "Input"],
-Cell[88247, 1810, 582852, 13295, 563, "Output"]
+Cell[174298, 3560, 1518, 44, 225, "Input"],
+Cell[175819, 3606, 582852, 13295, 563, "Output"]
 }, Open  ]]
 }
 ]

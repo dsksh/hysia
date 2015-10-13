@@ -8,7 +8,7 @@ let debug = ref false
 
 let auto_length = ref false
 
-let prop_file = ref None
+(*let prop_file = ref None*)
 
 let dump_to_file = ref false
 
@@ -31,8 +31,8 @@ let spec = [
   "-a",  Arg.Set auto_length,   "decide the simulation length automatically";
   "-g",  Arg.Set debug,         "sets the debug flag";
   
-  "-p",  Arg.String (fun fn -> prop_file := Some fn),
-                                "sets the property filename";
+  (*"-p",  Arg.String (fun fn -> prop_file := Some fn),
+                                "sets the property filename";*)
   "-dump", Arg.Set dump_to_file, "sets to dump plot data to the file (\"pped.dat\")";
 
   "-cm_thres",  Arg.Int (fun v -> cm_thres := Some v),   

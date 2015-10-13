@@ -93,9 +93,9 @@
 
 /**/
 
-%left IMP
-%left AND
-%left OR
+%right IMP
+%right AND
+%right OR
 %nonassoc NOT
 %left PLUS MIN
 %left MUL DIV
@@ -257,6 +257,12 @@ mitl_formula :
 ;
 
 mitl_formula_term :
+  | mitl_formula_term_sub until mitl_formula
+    { Puntil ($2,$1,$3) }
+  | mitl_formula_term_sub
+    { $1 }
+;
+mitl_formula_term_sub :
   | TRUE
     { Ptrue }
   | FALSE
@@ -272,8 +278,6 @@ mitl_formula_term :
     { Puntil ($1,Ptrue,$2) }
   | always mitl_formula
     { Pnot (Puntil ($1,Ptrue,Pnot $2)) }
-  | mitl_formula until mitl_formula
-    { Puntil ($2,$1,$3) }
 ;
 
 always :
