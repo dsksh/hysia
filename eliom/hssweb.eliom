@@ -71,7 +71,7 @@ let default_pvalue spec =
 	  dump := Capd_simulating_stubs.get_dump_data ();
 
       let update_ap_fs (id,fs) =
-          let fs = (Interval.zero, true)::fs in
+          (*let fs = (Interval.zero, true)::fs in*)
           id, Some fs in
       let ap_fs = List.map update_ap_fs ap_fs in
       let ap_fs = Mitl_checking.propagate false ap_fs prop in

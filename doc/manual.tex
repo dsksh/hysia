@@ -40,7 +40,7 @@
 
 \section{Short Tutorial}
 
-Specification of a simple bouncing ball model:
+Specification of a simple bouncing ball model (\texttt{bb.ha}):
 \begin{lstlisting}
 let g = 1
 let c = 1
@@ -60,14 +60,21 @@ param t_max = 100
 param dump_interval = 0.1
 \end{lstlisting}
 
+A model with two locations (\texttt{bb1.ha}):
 \begin{lstlisting}
-at Raise wait vy, -g
+(* ... *)
+
+init  Fall, 1+pertb, -0+pertb
+
+at Fall wait vy, -g
+  watch F (y, vy) goto Rise then y, -c*vy
+end
+
+at Rise wait vy, -g
   watch F (vy, -y) goto Fall then y, vy
 end
 
-at Fall wait vy, -g
-  watch F (y, vy) goto Raise then y, -c*vy
-end
+(* ... *)
 \end{lstlisting}
 
 Command-line execution for simulating for 10 steps:
@@ -78,7 +85,7 @@ $ hysia bb.ha -n 10 -dump
 
 \section{Command-Line Tool}
 
-The basic syntax for the command-line execution is of the form below:
+The basic syntax for the command-line execution is as follows:
 \begin{grammar}
 <command> ::= `hysia' <options> <filename>
 \end{grammar}
@@ -90,7 +97,7 @@ The \texttt{hysia} command accepts the following options:
 \item[\texttt{-t}] Specify the max simulation time (default is $\infty$).
 \item[\texttt{-a}] Decide the simulation length automatically from the STL property.
 \item[\texttt{-g}] Sets the debug flag.
-\item[\texttt{-dump}] Sets to dump plot to the file ``pped.dat.''
+\item[\texttt{-dump}] Activates dumping plot to the file ``pped.dat.''
 \item[\texttt{-cm_thres}] Sets the threshold for character matrix selection.
 \end{description}
 
@@ -172,7 +179,7 @@ Comments are either enclosed between \texttt{(*} and \texttt{*)} (can be nested)
 
 The syntax for the toplevel of specifications is the following:
 \begin{grammar}
-<specification> ::= <statement>+ <property> <solver-param>*
+<specification> ::= <statement>+ <property>? <solver-param>*
 
 <statement> ::= 
 `let' <id> `=' <interval>

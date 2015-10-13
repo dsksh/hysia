@@ -54,7 +54,7 @@ public:
 		os << "u: " << m_u << std::endl;
 	}
 
-	capd::IVector hull() {
+	capd::IVector hull() const {
 		return m_x + m_A*m_u;
 	}
 

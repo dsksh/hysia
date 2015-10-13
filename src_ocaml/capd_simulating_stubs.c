@@ -39,13 +39,12 @@ value sim_set_param(value lid, value id, value v)
 	CAMLreturn(Val_unit);
 }
 
-/*value sim_check_prop(value lid, value apid)
+value sim_check_prop(value lid, value apid)
 {
 	CAMLparam2(lid, apid);
-	int res = checkProp(String_val(lid), Int_val(apid));
-	CAMLreturn(Val_bool(res));
+	int res = checkPropAtInitTime(String_val(lid), Int_val(apid));
+	CAMLreturn(Val_int(res));
 }
-*/
 
 value sim_find_inv_frontier(value lid, value iid)
 {

@@ -35,7 +35,7 @@ end
 
 (* BLTL property *)
 
-prop  F[0,100]G[0,200](!(75-x1) /\ !(75-x2))
+prop  F[0,100]G[0,200](!(x1-75) /\ !(x2-75))
 
 
 (* solving parameters *)

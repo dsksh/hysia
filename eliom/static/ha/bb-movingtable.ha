@@ -20,7 +20,7 @@ end
 
 (* BLTL property *)
 
-prop G[0,10](F[0,5](x-2))
+prop G[0,10](F[0,5](2-x))
 
 
 (* solving parameters *)

@@ -109,7 +109,7 @@ let test2 _ =
         (verify false [("x",Some [({inf=0.;sup=0.},true); ({inf=5.;sup=5.},false)])] "prop G[0,4] x");
     assert_equal (Some false)  
         (verify false [("x",Some [({inf=0.;sup=0.},true); ({inf=5.;sup=5.},false)])] "prop G[0,5] x");
-    assert_equal (Some true) (verify false
+    assert_equal (Some false) (verify false
             [("x", None);
              ("y", Some [({inf=0.;sup=0.},true); ({inf=5.;sup=5.},false)]) ]
             "prop G[0,10] x & G[0,4] y");

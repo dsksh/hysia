@@ -115,6 +115,13 @@ let set_param_ lid (id,bnd) =
 (* APs on the C/C++ side correspond to the indexes (id) of the AP list. 
  * On the OCaml side, APs should be paired with apid. 
  *)
+let check_prop_ lid id (apid,tlist) =
+  let res = check_prop lid id (* TODO *) in
+  match res with
+  | 1 -> ref true
+  | 0 -> ref false
+  | _ -> error FindZeroError
+
 let find_prop_frontier_ lid t0 tmax polar id (apid,tlist) =
 (*Printf.printf "fpf_ %d %f %f\n%!" apid t0 tmax;*)
   let tlist = ref tlist in
@@ -146,13 +153,13 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     print_pped true false;
 
     (* initialize ap boundaries list. *)
-    let curr_polar = List.map (fun _ -> ref true) aps in
-    let ap_fs = List.map (fun (apid,_) -> apid, []) aps in
-    (*let ap_fs = snd (List.fold_left 
-        (fun (i,ap_fs) _lid -> 
-            let fs = [] in
-            (i+1, List.append ap_fs [(i,fs)]) ) 
-        (0,ap_fs) ap_locs ) in*)
+    let curr_polar = mapi (check_prop_ !curr_loc) aps in
+    (*let curr_polar = List.map (fun _ -> ref true) aps in*)
+    (*let ap_fs = List.map (fun (apid,_) -> apid, [(Interval.zero, true)]) aps in*)
+    let ap_fs = List.map (fun ((apid,_), p) -> 
+        let fs = if !p then [(Interval.zero, true)] else [] in
+        apid, fs ) 
+        (List.combine aps curr_polar) in
     let ap_fs = List.append ap_fs (mapi (fun i _lid -> i,[]) ap_locs) in
     let ap_fs = ref ap_fs in
 

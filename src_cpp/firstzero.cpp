@@ -568,11 +568,10 @@ g_context->cout << endl;
 	int dim(g_model->dim);
 	Location *loc = g_model->locs[lid].get();
 	DerMap& der = loc->der;
-	//AuxMap& ap = *g_model->aps[apid];
-	AuxMap& ap = *g_model->locs[lid]->aps[apid];
+	AuxMap& ap = *loc->aps[apid];
 
 	AuxMapVec ap_norm;
-	ap_norm.push_back(g_model->locs[lid]->apNormals[apid]);
+	ap_norm.push_back(loc->apNormals[apid]);
 
 	Parallelepiped pped = g_context->pped;
 	interval time = g_context->time;
@@ -670,4 +669,23 @@ reduced += time_procd;
 
 	cInterval res = {reduced.leftBound(), reduced.rightBound()};
 	return res;
+}
+
+
+int checkPropAtInitTime(const char *lid, const int apid)
+{
+	Location *loc = g_model->locs[lid].get();
+	DerMap& der = loc->der;
+	AuxMap& ap = *loc->aps[apid];
+	ITaylor solver(der, g_params->order, g_params->h_min);
+
+	const IVector iv = g_context->pped.hull();
+	interval lhs = ap(iv)(1);
+//std::cout << "lhs: " << lhs << std::endl;
+	if (lhs.rightBound() < 0.)
+		return 1;
+	else if (lhs.leftBound() > 0.)
+		return 0;
+	else
+		return -1;
 }
