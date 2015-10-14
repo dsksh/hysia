@@ -164,6 +164,7 @@ let () =
     Capd_sending.send_model ha aps;
     let params = Model_common.MParam.add "dump_to_file" 
         (if !dump_to_file then 1. else 0.) params in
+    let params = Model_common.MParam.add "dump_math" 1. params in
     let params = match !cm_thres with
         | Some v -> Model_common.MParam.add "cm_thres" (float_of_int v) params
         | None   -> params in

@@ -359,6 +359,9 @@ void setSolvingParam(const char *id, const double value)
 	else if (strcmp(id, "dump_to_file") == 0) {
 		g_params->dump_to_file = value;
 	}
+	else if (strcmp(id, "dump_math") == 0) {
+		g_params->dump_math = value;
+	}
 	else {
 		std::cerr << "unknown param: " << id << std::endl;
 		// TODO

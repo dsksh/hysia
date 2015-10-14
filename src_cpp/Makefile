@@ -30,7 +30,7 @@ DOXYGEN = doxygen #@DOXYGEN@
 SRC     = $(wildcard *.c) $(wildcard *.cc) $(wildcard *.cpp)
 SRC_EX  = $(SRC) $(wildcard *.h)
 OBJECT  = $(foreach file, $(SRC), $(basename $(file)).o)
-OBJ_COMMON = MapEx.o Parallelepiped.o util.o sendingHandler.o firstzero.o simulatingHandler.o
+OBJ_COMMON = MapEx.o Parallelepiped.o util.o PrintDriverJson.o PrintDriverMath.o sendingHandler.o firstzero.o simulatingHandler.o
 
 DEP_FILE = $(OBJECT:.o=.d)
 

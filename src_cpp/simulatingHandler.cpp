@@ -15,35 +15,35 @@ using namespace capd;
 
 CtxPtr g_context;
 
+PrintDriverPtr g_print_dvr;
+
 typedef auto_ptr<ostream> fstreamPtr;
 fstreamPtr g_fstream;
 
 const cInterval cEmpty = { 1., -1. };
 const cInterval cError = { -1., -1. };
 
-///
-
-//capd::interval getCurrentTime()
-//{
-//	return g_context->time;
-//}
-
-///
+//
 
 void simInitialize()
 {
 	std::cout.precision(17);
 	std::cout.setf(ios::fixed,ios::floatfield);
-	
-if (g_params->dump_interval > 0) {
-	if (g_params->dump_to_file)
-		g_fstream = fstreamPtr(new ofstream("pped.dat"));
+
+	if (g_params->dump_math)
+		g_print_dvr = PrintDriverPtr(new PrintDriverMath());
 	else
-		g_fstream = fstreamPtr(new ostringstream());
-	g_fstream->precision(17);
-	g_fstream->setf(ios::fixed,ios::floatfield);
-} else
-	g_fstream = fstreamPtr(new ofstream(0));
+		g_print_dvr = PrintDriverPtr(new PrintDriverJson());
+	
+	if (g_params->dump_interval > 0) {
+		if (g_params->dump_to_file)
+			g_fstream = fstreamPtr(new ofstream("pped.dat"));
+		else
+			g_fstream = fstreamPtr(new ostringstream());
+		g_fstream->precision(17);
+		g_fstream->setf(ios::fixed,ios::floatfield);
+	} else
+		g_fstream = fstreamPtr(new ofstream(0));
 	
 	// reset evaluation caches
 	g_model->reset();

@@ -15,6 +15,7 @@ std::exception eh_ex;
 
 } // the end of the namespace capd
 
+
 void printPped(int is_lb, int is_last)
 {
 	if (g_params->dump_interval <= 0) return;
@@ -24,3 +25,4 @@ void printPped(int is_lb, int is_last)
 	if (!is_last)
 		g_context->fout << ',' << std::endl;
 }
+
