@@ -17,7 +17,7 @@ init  Loc, 0, 1+pertb, -0+pertb
 
 at Loc wait 1, vy, -g
 #at L wait 1, vy, -g - f*vy^2
-  watch F (y, vy) goto Loc then t, y, -c*vy
+  once (y, vy) goto Loc then t, y, -c*vy
 end
 
 param order = 20

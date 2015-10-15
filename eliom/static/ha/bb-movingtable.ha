@@ -8,13 +8,13 @@ var   x, vx, t
 init  Fall, 2+x0, 0, 0
 
 at Fall wait vx, -g + f*vx^2, 1
-  watch F (sin(t)-x, vx-cos(t), -c*vx + (c+1)*cos(t)) goto Fall then x, -c*vx + (c+1)*cos(t), t
-  watch F (sin(t)-x, vx-cos(t),  c*vx - (c+1)*cos(t)) goto Rise then x, -c*vx + (c+1)*cos(t), t
+  once (sin(t)-x, vx-cos(t), -c*vx + (c+1)*cos(t)) goto Fall then x, -c*vx + (c+1)*cos(t), t
+  once (sin(t)-x, vx-cos(t),  c*vx - (c+1)*cos(t)) goto Rise then x, -c*vx + (c+1)*cos(t), t
 end
 
 at Rise wait vx, -g - f*vx^2, 1
-  watch F (vx, true) goto Fall then x, vx, t
-  watch F (sin(t)-x, vx-cos(t)) goto Rise then x, -c*vx + (c+1)*cos(t), t
+  once (vx, true) goto Fall then x, vx, t
+  once (sin(t)-x, vx-cos(t)) goto Rise then x, -c*vx + (c+1)*cos(t), t
 end
 
 
@@ -25,5 +25,5 @@ prop G[0,10](F[0,5](2-x))
 
 (* solving parameters *)
 
-param order = 30
+param order = 20
 param epsilon = 1e-12

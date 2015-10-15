@@ -8,9 +8,9 @@ init  L, 0,40,1,0
 #init  L, 0,30,1,0
 
 at L wait vx, vy, -g*x/sqrt(x^2+y^2)^3, -g*y/sqrt(x^2+y^2)^3
-  watch (
+  once (
 		x^2+y^2-cr^2, 
-       2*vx*x + 2*vy*y )
+        2*vx*x + 2*vy*y )
 #       vy )
     goto L then 
 
@@ -25,8 +25,4 @@ param t_max = 50
 param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
-#param char_mtx = -1
-param char_mtx = 1
-#param char_mtx = 2
-#param qr_thres = 100
 param dump_interval = 1

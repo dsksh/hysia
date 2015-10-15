@@ -42,8 +42,8 @@
 %token END
 %token LET
 %token RANDOM
-%token WATCH
-%token CAP_F
+%token WHEN
+%token ONCE
 %token GOTO
 %token THEN
 %token PROP
@@ -164,13 +164,10 @@ invariant :
 ;
 
 edges :
-  /*| WATCH LP expr COM expr_list RP GOTO ID edges
-    { (mk_edge $3 $5 (mk_id $8) (mk_expr_l []))::$9 }
-  */
-  | WATCH LP expr COM expr_list RP GOTO ID THEN expr_list edges
+  | WHEN LP expr COM expr_list RP GOTO ID THEN expr_list edges
     { (mk_edge false $3 (mk_expr_l $5) (mk_id $8) (mk_expr_l $10))::$11 }
-  | WATCH CAP_F LP expr COM expr_list RP GOTO ID THEN expr_list edges
-    { (mk_edge true $4 (mk_expr_l $6) (mk_id $9) (mk_expr_l $11))::$12 }
+  | ONCE LP expr COM expr_list RP GOTO ID THEN expr_list edges
+    { (mk_edge true $3 (mk_expr_l $5) (mk_id $8) (mk_expr_l $10))::$11 }
 
   | { [] }
 ;
@@ -285,7 +282,6 @@ always :
 ;
 evently :
   | EVENTLY noun_interval { $2 }
-  | CAP_F noun_interval { $2 }
 ;
 until :
   | UNTIL noun_interval { $2 }

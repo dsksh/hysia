@@ -7,7 +7,7 @@ var   x,y,vx,vy
 init  Loc, 0,15,1,0
 
 at Loc wait vx, vy, -g*x/sqrt(x^2+y^2)^3, -g*y/sqrt(x^2+y^2)^3
-  watch (vy-5000, -vy)
+  once (vy-5000, -vy)
     goto Loc then 
 
     x,y,vx,vy
@@ -19,8 +19,4 @@ param h_min   = 0.1
 #param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
-#param char_mtx = -1
-param char_mtx = 1
-#param char_mtx = 2
-param qr_thres = 100
 param dump_interval = 100

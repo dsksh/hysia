@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 %\usepackage[english]{isodate}
-\usepackage[parfill]{parskip}
+%\usepackage[parfill]{parskip}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -24,7 +24,7 @@
     }%
 
 \lstset{emph={%  
-    let, var, init, at, wait, watch, goto, then, end, param%
+    let, var, init, at, wait, once, when, goto, then, end, param%
     },emphstyle={\color{blue}\bfseries}%
 }
 
@@ -45,14 +45,14 @@ Specification of a simple bouncing ball model (\texttt{bb.ha}):
 let g = 1
 let c = 1
 
-let pertb = 0.001
+let pertb = [-0.001, 0.001]
 
 var   y, vy
 
 init  Loc, 1+pertb, -0+pertb
 
 at Loc wait vy, -g
-  watch F (y, vy) goto Loc then y, -c*vy
+  once (y, vy) goto Loc then y, -c*vy
 end
 
 param order = 20
@@ -67,11 +67,11 @@ A model with two locations (\texttt{bb1.ha}):
 init  Fall, 1+pertb, -0+pertb
 
 at Fall wait vy, -g
-  watch F (y, vy) goto Rise then y, -c*vy
+  once (y, vy) goto Rise then y, -c*vy
 end
 
 at Rise wait vy, -g
-  watch F (vy, -y) goto Fall then y, vy
+  once (vy, -y) goto Fall then y, vy
 end
 
 (* ... *)
@@ -89,13 +89,13 @@ The basic syntax for the command-line execution is as follows:
 \begin{grammar}
 <command> ::= `hysia' <options> <filename>
 \end{grammar}
-
+%
 The \texttt{hysia} command accepts the following options:
 \begin{description}
 \item[\texttt{-h}, \texttt{-help}, or \texttt{--help}] Displays a summary of the options accepted by the command.
-\item[\texttt{-n}] Specify the number steps to simulate (default is $\infty$).
-\item[\texttt{-t}] Specify the max simulation time (default is $\infty$).
-\item[\texttt{-a}] Decide the simulation length automatically from the STL property.
+\item[\texttt{-n}] Specifies the number steps to simulate (default is $\infty$).
+\item[\texttt{-t}] Specifies the max simulation time (default is $\infty$).
+\item[\texttt{-a}] Decides the simulation length automatically from the STL property.
 \item[\texttt{-g}] Sets the debug flag.
 \item[\texttt{-dump}] Activates dumping plot to the file ``pped.dat.''
 \item[\texttt{-cm_thres}] Sets the threshold for character matrix selection.
@@ -123,7 +123,7 @@ The option \texttt{-cm_thres} specifies the character matrix $B$ to be used in t
 \item[\texttt{t_max}] Max time horizon assumed in the simulation of each step.
 \item[\texttt{h_min}] Min time CAPD integration can take.
 \item[\texttt{epsilon}] Specifies the precision of the event detection.
-\item[\texttt{dump_interval}] Set the precision of the dumped flowpipe data.
+\item[\texttt{dump_interval}] Sets the precision of the dumped flowpipe data.
 \item[\texttt{delta}] Parameter for the box inflation process.
 \item[\texttt{tau}] Parameter for the box inflation process.
 \item[\texttt{cm_thres}] Parameter for the character matrix selection.
@@ -197,7 +197,7 @@ The syntax for the toplevel of specifications is the following:
 
 <invariant> ::= `inv' <expr-list>
 
-<edge> ::= `watch' `F'? `(' <expr> `,' <expr-list> `)' `goto' <id> `then' <expr-list>
+<edge> ::= (`when' | `once') `(' <expr> `,' <expr-list> `)' `goto' <id> `then' <expr-list>
 \end{grammar}
 
 
@@ -247,8 +247,8 @@ The operators in formulae have the following priorities and associativities:
 		construct & associativity \\
 		\hline
 		`\texttt{->}' & right \\
-		`\texttt{||}' & right \\
-		`\texttt{\&\&}' & right \\
+		`\texttt{|}' & right \\
+		`\texttt{\&}' & right \\
 		`\texttt{U} [$\cdot$,$\cdot$]' & right \\
 		`\texttt{G} [$\cdot$,$\cdot$]', `\texttt{F} [$\cdot$,$\cdot$]' & --- \\
 		`\texttt{!}' & --- \\

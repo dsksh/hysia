@@ -10,7 +10,7 @@ var   t, y, dy
 init  L, 0, y0, 0
 
 at L wait 1, dy, -g + f*dy^2
-  watch (y, dy) goto L then t, y, -c*dy
+  once (y, dy) goto L then t, y, -c*dy
 end
 
 param order = 20
@@ -21,7 +21,3 @@ param epsilon = 1e-14
 param dump_interval = 1
 #param delta = 0.99
 #param tau = 1.01
-param char_mtx = -1
-#param char_mtx = 1
-#param char_mtx = 2
-param qr_thres = 100

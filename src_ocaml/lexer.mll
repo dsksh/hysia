@@ -25,19 +25,22 @@
       "flow", FLOW;
       "end", END;
       "let", LET;
-      "watch", WATCH;
+      "when", WHEN;
+      "watch", WHEN;
+      "once", ONCE;
+      "whenever", ONCE;
       "goto", GOTO;
       "then", THEN;
 
       "prop", PROP;
 
-      "F", CAP_F;
       "R", RANDOM;
 
       (*"L", LOC;*)
 
       "param", PARAM;
 
+      "F", EVENTLY;
       "G", ALWAYS;
       "U", UNTIL;
 
