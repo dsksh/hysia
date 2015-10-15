@@ -2,6 +2,7 @@ type error =
     DimMismatch of int * int
   | SyntaxError
   | UnknownId of string
+  | CheckPropError of int * int
   | FindZeroError
   | FindZeroMidError
   | SelectEarliestError of (float * float) * (float * float)

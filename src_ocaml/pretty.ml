@@ -54,6 +54,7 @@ module type Printer = sig
   val dexprs_of_loc  : location -> dexpr list
   val iexprs_of_loc  : location -> iexpr list
   val edges_of_loc : location -> edge list
+  val gf_of_edge  : edge -> bool
   val gh_of_edge  : edge -> gexpr
   val gg_of_edge  : edge -> gexpr list 
   val dst_of_edge : edge -> id
@@ -63,7 +64,8 @@ end
 module Make (P : Printer) =
 struct
   let print_edge fmt edge =
-    fprintf fmt "@;@[<hov 2>watch (%a, %a) @,goto %a @,then %a@]"
+    fprintf fmt "@;@[<hov 2>%s (%a, %a) @,goto %a @,then %a@]"
+      (if (P.gf_of_edge edge) then "once" else "when")
       P.print_gexpr (P.gh_of_edge edge) 
       (print_list "," P.print_gexpr) (P.gg_of_edge edge) 
       P.print_id (P.dst_of_edge edge)

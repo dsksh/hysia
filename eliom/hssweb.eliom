@@ -67,15 +67,15 @@ let default_pvalue spec =
       Capd_sending.send_solving_params params;
       Capd_sending_stubs.set_debug (*debug*) false;
 
-      let ap_fs = Simulating.simulate ha (aps,ap_locs) in
+      let ap_bs = Simulating.simulate ha (aps,ap_locs) in
 	  dump := Capd_simulating_stubs.get_dump_data ();
 
-      let update_ap_fs (id,fs) =
-          (*let fs = (Interval.zero, true)::fs in*)
-          id, Some fs in
-      let ap_fs = List.map update_ap_fs ap_fs in
-      let ap_fs = Mitl_checking.propagate false ap_fs prop in
-      begin match Mitl_checking.eval_at_zero ap_fs with
+      let ap_bs = List.map (fun (id,bs) -> 
+          let l = List.length bs in
+          id, if l > 0 then Some bs else None ) 
+          ap_bs in
+      let ap_bs = Mitl_checking.propagate false ap_bs prop in
+      begin match Mitl_checking.eval_at_zero ap_bs with
       | Some r -> Format.fprintf str_formatter "%b\n%!" r;
       | None   -> Format.fprintf str_formatter "unknown\n%!" end;
 

@@ -249,12 +249,10 @@ mitl_formula :
   | mitl_formula IMP mitl_formula
     /*{ Pnot (Pand ($1, Pnot $3)) }*/
     { Por (Pnot $1, $3) }
-  | LP mitl_formula RP
-    { $2 }
 ;
 
 mitl_formula_term :
-  | mitl_formula_term_sub until mitl_formula
+  | mitl_formula_term_sub until mitl_formula_term
     { Puntil ($2,$1,$3) }
   | mitl_formula_term_sub
     { $1 }
@@ -271,10 +269,12 @@ mitl_formula_term_sub :
     { Pexpr $1 }
   | NOT mitl_formula
     { Pnot $2 }
-  | evently mitl_formula
+  | evently mitl_formula_term_sub
     { Puntil ($1,Ptrue,$2) }
-  | always mitl_formula
+  | always mitl_formula_term_sub
     { Pnot (Puntil ($1,Ptrue,Pnot $2)) }
+  | LP mitl_formula RP
+    { $2 }
 ;
 
 always :

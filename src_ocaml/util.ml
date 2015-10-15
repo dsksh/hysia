@@ -6,6 +6,7 @@ type error =
   | DimMismatch of int * int
   | SyntaxError
   | UnknownId of string
+  | CheckPropError of int * int
   | FindZeroError
   | FindZeroMidError
   | SelectEarliestError of (float*float) * (float*float)
@@ -25,6 +26,8 @@ let report fmt = function
       fprintf fmt "syntax error"
   | UnknownId id ->
       fprintf fmt "id %s is unknown" id
+  | CheckPropError (id,apid) -> 
+      fprintf fmt "failed to evaluate the atomic property %d(%d) at init time" id apid
   | FindZeroError -> 
       fprintf fmt "failed to find a zero crossing"
   | FindZeroMidError -> 

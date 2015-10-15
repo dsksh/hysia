@@ -33,9 +33,9 @@ at OffOn0 wait -A1*x1 + B1*x2, H2 - A2*x2 + B2*x1
 end
 
 
-(* BLTL property *)
+(* STL property *)
 
-prop  F[0,100]G[0,200](!(x1-75) /\ !(x2-75))
+prop  F[0,100]G[0,200](75-x1 & 75-x2)
 
 
 (* solving parameters *)

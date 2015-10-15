@@ -18,7 +18,7 @@ at Rise wait vx, -g - f*vx^2, 1
 end
 
 
-(* BLTL property *)
+(* STL property *)
 
 prop G[0,10](F[0,5](2-x))
 

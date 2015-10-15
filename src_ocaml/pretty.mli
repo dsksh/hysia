@@ -31,6 +31,7 @@ module type Printer =
     val dexprs_of_loc : location -> dexpr list
     val iexprs_of_loc : location -> iexpr list
     val edges_of_loc : location -> edge list
+    val gf_of_edge : edge -> bool
     val gh_of_edge : edge -> gexpr
     val gg_of_edge : edge -> gexpr list
     val dst_of_edge : edge -> id

@@ -2,7 +2,7 @@ open Interval
 open Capd_simulating_stubs
 open Util
 
-let step_max = ref (-1)
+let step_max = ref max_int
 let time_max = ref infinity
 
 let loc_of_name id loc = id = Model.id_of_loc loc
@@ -120,7 +120,7 @@ let check_prop_ lid id (apid,tlist) =
   match res with
   | 1 -> ref true
   | 0 -> ref false
-  | _ -> error FindZeroError
+  | _ -> error (CheckPropError (id,apid))
 
 let find_prop_frontier_ lid t0 tmax polar id (apid,tlist) =
 (*Printf.printf "fpf_ %d %f %f\n%!" apid t0 tmax;*)
@@ -163,7 +163,7 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     let ap_fs = List.append ap_fs (mapi (fun i _lid -> i,[]) ap_locs) in
     let ap_fs = ref ap_fs in
 
-    while (!step_max < 0 || !curr_step < !step_max) && !curr_time_l <= !time_max do
+    while !curr_step < !step_max && !curr_time_l <= !time_max do
 Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !curr_loc;
         report_step !curr_step !curr_loc;
         incr curr_step;

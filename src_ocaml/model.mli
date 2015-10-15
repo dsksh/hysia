@@ -182,6 +182,7 @@ val id_of_loc : 'a * 'b * 'c * 'd * 'e * 'f -> 'a
 val dexprs_of_loc : 'a * 'b * 'c * 'd * 'e * 'f -> 'b
 val iexprs_of_loc : 'a * 'b * 'c * 'd * 'e * 'f -> 'c
 val edges_of_loc : 'a * 'b * 'c * 'd * 'e * 'f -> 'd
+val gf_of_edge : 'a * 'b * 'c * 'd * 'e -> 'a
 val gh_of_edge : 'a * 'b * 'c * 'd * 'e -> 'b
 val gg_of_edge : 'a * 'b * 'c * 'd * 'e -> 'c
 val dst_of_edge : 'a * 'b * 'c * 'd * 'e -> 'd

@@ -23,7 +23,7 @@ at Leave wait 0, 0, vx, vy, -vy, vx
   once ((x-cx)^2+(y-cy)^2-r*sqrt(3), true) goto Start then t,r,x,y,vx,vy
 end
 
-#prop  G[0,10](F[0,5](x-2))
+#prop  G[0,10](F[0,5](2-x))
 
 param order = 20
 param t_max = 100
@@ -34,3 +34,5 @@ param epsilon = 1e-14
 param dump_interval = 0.1
 #param delta = 0.99
 #param tau = 1.01
+
+param cm_thres = 0

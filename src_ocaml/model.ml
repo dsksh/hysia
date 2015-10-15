@@ -300,6 +300,7 @@ let id_of_loc      (e,_,_,_,_,_) = e
 let dexprs_of_loc  (_,e,_,_,_,_) = e
 let iexprs_of_loc  (_,_,e,_,_,_) = e
 let edges_of_loc   (_,_,_,e,_,_) = e
+let gf_of_edge     (e,_,_,_,_) = e
 let gh_of_edge     (_,e,_,_,_) = e
 let gg_of_edge     (_,_,e,_,_) = e
 let dst_of_edge    (_,_,_,e,_) = e 

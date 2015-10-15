@@ -40,7 +40,7 @@ DMatrix characteristic(const DMatrix& jA) {
 		    std::cout << "runtime_error from CAPD: " << e.what () << std::endl;
 		
 			// TODO: it won't recover
-			B_inv = DMatrix::Identity(B.numberOfColumns());
+			B = DMatrix::Identity(B.numberOfColumns());
 		}
 
 		if ( g_params->cm_thres == 1 ||
