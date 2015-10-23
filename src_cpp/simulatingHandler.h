@@ -21,6 +21,8 @@ cInterval findPropFrontier(const char *, const int, const int, const double, con
 cInterval findInvFrontier(const char *, const int);
 cInterval findFirstZero(const int, const char *, const int);
 int findFirstZeroMid(const char *, const int);
+int checkPropPolar(const char *, const int);
+cInterval findPropExtremum(const char *, const int, const double, const double);
 void simulateJump(const char *, const int, const cInterval);
 void simulateCont(const char *, const double time_max);
 void reportStep(int, const char *);

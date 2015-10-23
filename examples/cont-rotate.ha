@@ -24,7 +24,7 @@ at Loc wait (c1-c0+intv)*x1 + c2*x2, c3*x1 + (c1-c0+intv)*x2
 end
 
 #prop G[0,100] F[0,6.284]!(x2-1) (* 1<x2 *)
-#prop G[0,100] F[0,6.284](!(x2-1) & F[0,3.142]!(-x2-1))
+prop G[0,100] F[0,6.284](!(x2-1) & F[0,3.142]!(-x2-1))
 #prop G[0,100] F[0,6.284](!(x2-1) & F[0,1.571](!(-x2) & F[0,1.571](!(-x2-1) & F[0,1.571](-x2) )))
 #prop G[0,100]
 #  F[0,6.284](! (x2-1) & F[0,0.786]( (x2-0.707) & F[0,0.786](!(-x2) & F[0,0.786](!(-x2-0.707) & 
@@ -49,5 +49,3 @@ param epsilon = 1e-14
 #param epsilon = 0
 param dump_interval = 0.01
 #param dump_interval = 0.2
-param char_mtx = -1
-#param char_mtx = 3

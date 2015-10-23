@@ -93,6 +93,27 @@ value sim_find_first_zero_mid(value lid, value eid)
 	CAMLreturn(Val_bool(res));
 }
 
+value sim_check_prop_polar(value lid, value apid)
+{
+	CAMLparam2(lid, apid);
+	int res = checkPropPolar(String_val(lid), Int_val(apid));
+	CAMLreturn(Val_int(res));
+}
+
+value sim_find_prop_extremum(value lid, value apid, value time_lower, value time_max)
+{
+	CAMLparam4(lid, apid, time_lower, time_max);
+    CAMLlocal1(intv);
+
+	cInterval res = findPropExtremum(String_val(lid), Int_val(apid),
+									 Double_val(time_lower), Double_val(time_max));
+
+    intv = caml_alloc(2, 0);
+    Store_field(intv, 0, caml_copy_double(res.l));
+    Store_field(intv, 1, caml_copy_double(res.u));
+	CAMLreturn(intv);
+}
+
 value sim_simulate_jump(value lid, value eid, value zero_l, value zero_u)
 {
 	CAMLparam4(lid, eid, zero_l, zero_u);
