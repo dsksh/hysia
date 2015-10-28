@@ -1,5 +1,4 @@
 open Format
-open Model_common
 
 let rec print_list sp fmtr fmt list =
   fprintf fmt "%a" (print_list_ sp "" fmtr) list

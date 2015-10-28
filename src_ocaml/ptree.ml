@@ -24,9 +24,15 @@ and  mitl_node =
   | Ploc of ident
   | Pexpr of expr
   | Pnot of mitl_node
-  (*| Pand of mitl_node * mitl_node*)
-  | Por of mitl_node * mitl_node
+  | Pand of mitl_node * mitl_node
+  | Por  of mitl_node * mitl_node
+  | Pimp of mitl_node * mitl_node
   | Puntil of Interval.t * mitl_node * mitl_node
+  | Palw of Interval.t * mitl_node
+  | Pevt of Interval.t * mitl_node
+  | Puntil_ut of mitl_node * mitl_node
+  | Palw_ut of mitl_node
+  | Pevt_ut of mitl_node
 
 type id_l = loc * (id list)
 
@@ -73,11 +79,16 @@ and print_prop_node fmt = function
   | Ploc id -> fprintf fmt "L[%s]" id
   | Pexpr e -> fprintf fmt "%a" print_expr e
   | Pnot p -> fprintf fmt "!%a" print_prop_node p
-  (*| Pand (p1,p2) -> fprintf fmt "(%a /\\ %a)" print_prop_node p1 print_prop_node p2*)
+  | Pand (p1,p2) -> fprintf fmt "(%a /\\ %a)" print_prop_node p1 print_prop_node p2
   | Por (p1,p2) -> fprintf fmt "(%a \\/ %a)" print_prop_node p1 print_prop_node p2
+  | Pimp (p1,p2) -> fprintf fmt "(%a -> %a)" print_prop_node p1 print_prop_node p2
   | Puntil (v,p1,p2) -> fprintf fmt "(%a U%a %a)"
      print_prop_node p1 Interval.print_interval v print_prop_node p2
-  | Puntil (_,p1,p2) -> ()
+  | Palw (v,p) -> fprintf fmt "(G%a %a)" Interval.print_interval v print_prop_node p
+  | Pevt (v,p) -> fprintf fmt "(F%a %a)" Interval.print_interval v print_prop_node p
+  | Puntil_ut (p1,p2) -> fprintf fmt "(%a U %a)" print_prop_node p1 print_prop_node p2
+  | Palw_ut p -> fprintf fmt "(G %a)" print_prop_node p
+  | Pevt_ut p -> fprintf fmt "(F %a)" print_prop_node p
 
 let print_param fmt (_,(id,v)) = match v with
   | PVint v -> fprintf fmt "%s:=%a" id Interval.print_interval v

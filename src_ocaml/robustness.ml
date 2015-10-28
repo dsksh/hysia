@@ -1,3 +1,4 @@
+open Model
 open Interval
 open Capd_simulating_stubs
 open Simulating
@@ -10,8 +11,34 @@ let print_polar fmt = function
     | Fall    -> Format.fprintf fmt "Fall"
     | Unknown -> Format.fprintf fmt "Unknown"
 
+let invert_polar = function
+    | Rise -> Fall
+    | Fall -> Rise
+    | _ -> Unknown
 
-type flowpipe = (float * int * polarity) list
+
+type signal = Strue | Sfalse | Sexpr of string*int*polarity | Snot of signal
+
+type flowpipe = (float * signal list) list
+
+let rec print_signal fmt = function
+    | Strue  -> Format.fprintf fmt "true"
+    | Sfalse -> Format.fprintf fmt "false"
+    | Sexpr (lid,apid,polar) -> 
+            Format.fprintf fmt "expr[%s;%d;%a]" lid apid print_polar polar
+    | Snot s -> Format.fprintf fmt "!(%a)" print_signal s
+
+let rec print_signals fmt = function
+    | []    -> () (*Format.fprintf fmt "    []"*)
+    | s::[] -> Format.fprintf fmt "\n    %a" print_signal s
+    | s::r  -> Format.fprintf fmt "\n    %a" print_signal s;
+            print_signals fmt r
+    | _ -> ()
+
+let print_fp fmt fp = 
+    let pr (t,ss) = Format.fprintf fmt "  %f:%a\n" t print_signals ss in
+    let _ = List.map pr fp in 
+    ()
 
 
 let check_prop_polar_ lid id (apid,_tlist) =
@@ -22,28 +49,72 @@ Printf.printf "cpp_ %s %d" lid id;
         | _ -> (*error (CheckPropError (id,apid))*) Unknown
     in
 Format.printf ": %a\n%!" print_polar polar;
-    [0., [lid, id, polar]]
+    apid, [0., [Sexpr (lid,id,polar)]]
 
-let invert_polar = function
-    | Rise -> Fall
-    | Fall -> Rise
-    | _ -> Unknown
 
-let rec find_prop_extremum_ tmax apid fp = 
+let rec find_prop_extremum_ tmax (apid0, fp) = 
     match List.nth fp ((List.length fp)-1) with
-    | time_l, [lid, apid, polar] ->
+    | time_l, [Sexpr (lid,apid,polar)] ->
         let (l,u) = find_prop_extremum lid apid time_l tmax in
         if l<=u && l > time_l then begin
 Format.printf "fpe: %d [%f,%f]\n%!" apid l u;
-            let fp = List.append fp [(l, [lid,apid,Unknown]); 
-                                     (u, [lid,apid,invert_polar polar]) ] in
-            find_prop_extremum_ tmax apid fp
+            let fp = List.append fp [(l, [Sexpr (lid,apid,Unknown)]); 
+                                     (u, [Sexpr (lid,apid,invert_polar polar)]) ] in
+            find_prop_extremum_ tmax (apid0, fp)
         end else if l = -1. then
             error FindZeroError
         else
-            fp
+            (apid0, fp)
     | _ -> 
         assert false
+
+
+let get_time_u tmax = function
+    | (tu,_)::_ -> tu
+    | [] -> tmax
+
+let rec compare_signals_ neg1 neg2 tl tu = function
+    | Sfalse, _      -> tu, [Sfalse]
+    | _, Sfalse::_   -> tu, [Sfalse]
+    | Strue, ss2     -> tu, ss2
+    | s1, Strue::ss2 -> compare_signals_ neg1 false tl tu (s1,ss2)
+    | s1, []         -> tu, [s1]
+    | (Snot s1), ss2 ->
+            compare_signals_ (not neg1) neg2 tl tu (s1,ss2)
+    | s1, (Snot s2)::rest ->
+            compare_signals_ neg1 (not neg2) tl tu (s1,s2::rest)
+    | (Sexpr (lid1,_,_) as s1), (Sexpr (lid2,_,_))::rest when lid1 <> lid2 ->
+            compare_signals_ neg1 false tl tu (s1,rest)
+    | (Sexpr (lid1,apid1,polar1) as s1), 
+     ((Sexpr (lid2,apid2,polar2))::rest as ss2) (* when lid1 = lid2 *) ->
+            let apid, (ctl,ctu) = compare_signals lid1 apid1 apid2 tl tu in
+            let tu = if ctl > ctu (* no intersection *) then tu else ctl in
+            if apid = apid1 then 
+                compare_signals_ neg1 false tl tu (s1,rest)
+            else if apid = apid2 then
+                tu, ss2
+            else
+                tu, s1::ss2
+
+let rec merge_fps tl0 tmax fp1 fp2 =
+    match fp1, fp2 with
+    | (tl1,ss1)::rest1, (tl2,ss2)::rest2 ->
+        let tu1 = get_time_u tmax fp1 in
+        let tu2 = get_time_u tmax fp2 in
+        let tl = max tl0 (max tl1 tl2) in
+        let tu,rest1,rest2 = if tu1 < tu2 then tu1,rest1,fp2 else tu2,fp1,rest2 in
+        let tu_, ss = 
+            List.fold_left (fun (tu,ss2) s1 -> compare_signals_ false false tl tu (s1,ss2)) 
+            (tu,ss2) ss1 in
+        let rest = 
+            if tu_ = tu then
+                merge_fps 0. tmax rest1 rest2
+            else
+                merge_fps tu1 tmax fp1 fp2 
+        in
+        (tl,ss)::rest
+    | fp1, [] -> fp1
+    | [], fp2 -> fp2
 
 
 let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
@@ -55,7 +126,7 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     (*print_pped true false;*)
 
     (* initialize flowpipe *)
-    let fps = ref (mapi (check_prop_polar_ !curr_loc) aps) in
+    let ap_fps = ref (mapi (check_prop_polar_ !curr_loc) aps) in
 
     (*let ap_fs = List.map (fun ((apid,_), p) -> 
         let fs = if !p then [(Interval.zero, true)] else [] in
@@ -121,7 +192,7 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
         | None ->
 
             (* construct flowpipe *)
-            fps := mapi (find_prop_extremum_ !time_max) !fps;
+            ap_fps := List.map (find_prop_extremum_ !time_max) !ap_fps;
 
             simulate_cont !curr_loc !time_max;
 
@@ -130,4 +201,39 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
     print_pped true true;
     dispose ();
     (*Printf.printf "fpf: %d\n" !c_fpf;*)
-    !fps
+    !ap_fps
+
+let negate_signal = function
+    | Strue  -> Sfalse
+    | Sfalse -> Strue
+    | Sexpr _ as s -> Snot s
+    | Snot s -> s
+
+let rec propagate debug ap_fps = function
+    | Mtrue -> if debug then Printf.printf "  true\n"; 
+        [0., [Strue]]
+    (*| Mloc (id,_lid) ->*)
+    | Mexpr d -> 
+        let fp = snd (List.find (fun (apid,_fp) -> apid = d.Hashcons.tag) ap_fps) in
+        if debug then Format.printf "  expr %d\n%a" d.Hashcons.tag print_fp fp;
+        fp
+    | Mnot f -> 
+        let fp = propagate debug ap_fps f in
+        let fp = List.map (fun (t,ss) -> t, List.map negate_signal ss) fp in
+        if debug then Format.printf "  not\n%a" print_fp fp;
+        fp
+    | Mand (f1,f2) -> 
+        let fp = merge_fps 0. !time_max (propagate debug ap_fps f1) 
+                                        (propagate debug ap_fps f2) in
+        if debug then Format.printf "  and\n%a" print_fp fp;
+        fp
+    (*| Muntil (t,f1,f2) -> 
+        let bs1 = propagate debug ap_bs f1 in
+        let bs2 = propagate debug ap_bs f2 in
+        let bs  = shift_bs t bs1 bs2 in
+        if debug then Format.printf "  until %a\n%a" print_interval t print_bs bs;
+        bs
+    *)
+    | _ ->
+        assert false
+

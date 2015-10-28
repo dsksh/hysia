@@ -157,7 +157,7 @@ let () =
       printf "@[prop: %a@]\n@." Ptree.print_prop prop
     end *)
 
-    let ha,(aps,ap_locs,prop,len) = Model.make ha prop in
+    let ha,(aps,ap_locs,prop,len) = Model.make !robustness ha prop in
     if !debug then begin
         printf "@[%a@]@." PModel.print_ha ha;
 
@@ -185,7 +185,9 @@ let () =
 
     if !sprt then proc_sprt ha (aps,ap_locs) prop
     else if !robustness then
-        let _ = Robustness.simulate ha (aps,ap_locs) in ()
+        let fp = Robustness.simulate ha (aps,ap_locs) in
+        let fp = Robustness.propagate !debug fp prop in
+        ()
     else
         let ap_bs = Simulating.simulate ha (aps,ap_locs) in
         let ap_bs = List.map (fun (id,fs) -> 

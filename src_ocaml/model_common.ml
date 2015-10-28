@@ -1,15 +1,3 @@
-open Interval
-
-(*type interval = 
-  | Interval of Interval.t
-  | Empty
-
-let print_interval fmt = function
-  | Interval v -> Format.fprintf fmt "[%f;%f]" v.inf v.sup
-  (*| Point v -> Format.fprintf fmt "[%f]" v
-  | Universe -> Format.fprintf fmt "(-oo,oo)"*)
-  | Empty -> Format.fprintf fmt "(empty)"
-*)
 
 type rational = int * int
 

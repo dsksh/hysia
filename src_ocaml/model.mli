@@ -110,9 +110,13 @@ type mitl_formula =
   | Mloc of int * Model_common.ident
   | Mexpr of dual
   | Mnot of mitl_formula
+  | Mand of mitl_formula * mitl_formula
   | Mor of mitl_formula * mitl_formula
   | Muntil of Interval.t * mitl_formula * mitl_formula
+  | Muntil_ut of mitl_formula * mitl_formula
+  | Mevt_ut of mitl_formula
 val mk_mitl_formula :
+  bool ->
   Interval.t PMap.t ->
   Model_common.ident list ->
   (int * Hdual.key Hashcons.hash_consed) list ->
@@ -121,6 +125,7 @@ val mk_mitl_formula :
   (int * Hdual.key Hashcons.hash_consed) list * Model_common.ident list *
   mitl_formula * float
 val make :
+  bool ->
   ('a * (PMap.key * Ptree.pval)) list * ('b * Model_common.ident) list *
   Ptree.expr list *
   ('c *

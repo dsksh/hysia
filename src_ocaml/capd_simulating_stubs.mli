@@ -8,6 +8,7 @@ external find_first_zero: bool -> string -> int -> float*float = "sim_find_first
 external find_first_zero_mid: string -> int -> bool = "sim_find_first_zero_mid"
 external check_prop_polar: string -> int -> int = "sim_check_prop_polar"
 external find_prop_extremum: string -> int -> float -> float -> float*float = "sim_find_prop_extremum"
+external compare_signals: string -> int -> int -> float -> float -> int*(float*float) = "sim_compare_signals"
 external simulate_jump: string -> int -> float -> float -> unit = "sim_simulate_jump"
 external simulate_cont: string -> float -> unit = "sim_simulate_cont"
 external print_pped: bool -> bool -> unit = "sim_print_pped"

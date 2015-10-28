@@ -139,6 +139,7 @@ void DerMap::doneTree()
 	m_dtrees_idx = 0;
 }
 
+
 /* AuxMap implementation. */
 
 AuxMap::AuxMap(DerMap& dmap, int dim_f) 
@@ -157,8 +158,19 @@ AuxMap::AuxMap(DerMap& dmap, int dim_f)
 }
 
 inline AuxMap::AuxMap(const AuxMap& rhs)
-	: BasicFunction<ScalarType>(rhs), m_dmap(rhs.m_dmap), m_trees(rhs.m_trees)
+	: BasicFunction<ScalarType>(), m_dmap(rhs.m_dmap), 
+	  //m_trees(rhs.m_trees),
+	  m_trees(rhs.m_dim2,1) // TODO
+	  //m_trees(0,0) // TODO
 {
+	m_dim = rhs.m_dim;
+	m_dim2 = rhs.m_dmap.dimension();
+	m_dim_f = rhs.m_dim_f;
+	m_indexOfFirstParam = rhs.m_indexOfFirstParam;
+	m_order = rhs.m_order; 
+	m_size = rhs.m_size; 
+	m_val = new ScalarType[m_size];
+	std::fill(m_val, m_val+m_size, ScalarType(0.));
 //cout << "AM init: " << m_dim << "," << m_indexOfFirstParam << "," << m_dim2 << "," << m_order << "," << m_size << endl;
 }
 
@@ -258,6 +270,43 @@ AuxMap::MatrixType AuxMap::operator[](const AuxMap::VectorType& val)
 void AuxMap::setParameter(const char *name, const interval& val) 
 {
 	m_dmap.setParameter(name, val);
+}
+
+
+/* DiffMap implementation. */
+
+DiffMap::DiffMap(AuxMap& amap1, AuxMap& amap2) 
+	: AuxMap(amap1), m_amap1(amap1), m_amap2(amap2)
+{ }
+
+/*inline DiffMap::DiffMap(const DiffMap& rhs)
+	: AuxMap(rhs.m_amap1), m_amap1(rhs.m_amap1), m_amap2(rhs.m_amap2)
+{ }
+*/
+
+DiffMap::~DiffMap() 
+{
+	//cout << "dismiss CapdFun" << endl;
+}
+
+DiffMap::VectorType DiffMap::operator()()
+{
+	return m_amap1() - m_amap2();
+}
+
+DiffMap::MatrixType DiffMap::der()
+{
+	return m_amap1.der() - m_amap2.der();
+}
+
+DiffMap::VectorType DiffMap::operator()(const DiffMap::VectorType& val)
+{
+	return m_amap1(val) - m_amap2(val);
+}
+
+DiffMap::MatrixType DiffMap::operator[](const DiffMap::VectorType& val)
+{
+	return m_amap1[val] - m_amap2[val];
 }
 
 } // the end of the namespace capd

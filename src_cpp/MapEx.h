@@ -102,6 +102,25 @@ protected:
 	//using capd::map::BasicFunction<ScalarType>::m_size;
 };
 
+class DiffMap : public AuxMap
+{
+public:
+	typedef DerMap::VectorType VectorType;
+
+    DiffMap(AuxMap&, AuxMap&);
+	//DiffMap(const DiffMap&);
+	~DiffMap();
+
+	VectorType operator()();
+	VectorType operator()(const VectorType& val);
+	MatrixType der();
+	MatrixType operator[](const VectorType& val);
+
+protected:
+	AuxMap& m_amap1;
+	AuxMap& m_amap2;
+};
+
 } // the end of the namespace capd
 
 #endif // _CAPD_MAP_EX_H_ 
