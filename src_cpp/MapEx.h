@@ -80,10 +80,10 @@ public:
 	void putDTree(const int, const int, NodeType *node);
 
 	void reset();
-	VectorType operator()();
-	VectorType operator()(const VectorType& val);
-	MatrixType der();
-	MatrixType operator[](const VectorType& val);
+	virtual VectorType operator()();
+	virtual VectorType operator()(const VectorType& val);
+	virtual MatrixType der();
+	virtual MatrixType operator[](const VectorType& val);
 
 	void setParameter(const char *name, const interval& val);
 
@@ -111,10 +111,10 @@ public:
 	//DiffMap(const DiffMap&);
 	~DiffMap();
 
-	VectorType operator()();
-	VectorType operator()(const VectorType& val);
-	MatrixType der();
-	MatrixType operator[](const VectorType& val);
+	virtual VectorType operator()();
+	virtual VectorType operator()(const VectorType& val);
+	virtual MatrixType der();
+	virtual MatrixType operator[](const VectorType& val);
 
 protected:
 	AuxMap& m_amap1;

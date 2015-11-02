@@ -296,6 +296,8 @@ DiffMap::VectorType DiffMap::operator()()
 
 DiffMap::MatrixType DiffMap::der()
 {
+std::cout << "dmd" << std::endl;
+std::cout << m_amap1.der() << std::endl;
 	return m_amap1.der() - m_amap2.der();
 }
 

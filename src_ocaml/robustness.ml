@@ -85,36 +85,41 @@ let rec compare_signals_ neg1 neg2 tl tu = function
             compare_signals_ neg1 (not neg2) tl tu (s1,s2::rest)
     | (Sexpr (lid1,_,_) as s1), (Sexpr (lid2,_,_))::rest when lid1 <> lid2 ->
             compare_signals_ neg1 false tl tu (s1,rest)
-    | (Sexpr (lid1,apid1,polar1) as s1), 
-     ((Sexpr (lid2,apid2,polar2))::rest as ss2) (* when lid1 = lid2 *) ->
-            let apid, (ctl,ctu) = compare_signals lid1 apid1 apid2 tl tu in
-            let tu = if ctl > ctu (* no intersection *) then tu else ctl in
-            if apid = apid1 then 
-                compare_signals_ neg1 false tl tu (s1,rest)
-            else if apid = apid2 then
-                tu, ss2
-            else
-                tu, s1::ss2
 
-let rec merge_fps tl0 tmax fp1 fp2 =
+    | (Sexpr ( lid,apid1,polar1) as s1), 
+     ((Sexpr (_lid,apid2,polar2))::rest as ss2) (* when lid = _lid *) ->
+            let apid, (ctl,ctu) = compare_signals lid apid1 apid2 tl tu in
+Format.printf "cs: %d, [%f,%f]\n%!" apid ctl ctu;
+            let tu_ = if ctl > ctu (* no intersection *) then tu else ctl in
+            if apid = apid1 then 
+                compare_signals_ neg1 false tl tu_ (s1,rest)
+            else if apid = apid2 then
+                tu_, ss2
+            else if ctl > ctu then (* unknown segment *)
+                tu_, s1::ss2
+            else (* intersection segment *)
+                ctu, s1::ss2
+
+let rec merge_fps tl tmax fp1 fp2 =
     match fp1, fp2 with
     | (tl1,ss1)::rest1, (tl2,ss2)::rest2 ->
-        let tu1 = get_time_u tmax fp1 in
-        let tu2 = get_time_u tmax fp2 in
-        let tl = max tl0 (max tl1 tl2) in
+        let tu1 = get_time_u tmax rest1 in
+        let tu2 = get_time_u tmax rest2 in
+        (*let tl = max tl0 (max tl1 tl2) in*)
         let tu,rest1,rest2 = if tu1 < tu2 then tu1,rest1,fp2 else tu2,fp1,rest2 in
         let tu_, ss = 
-            List.fold_left (fun (tu,ss2) s1 -> compare_signals_ false false tl tu (s1,ss2)) 
-            (tu,ss2) ss1 in
+            List.fold_left 
+                (fun (tu,ss2) s1 -> compare_signals_ false false tl tu (s1,ss2)) 
+                (tu,ss2) ss1 in
         let rest = 
-            if tu_ = tu then
-                merge_fps 0. tmax rest1 rest2
+            if tu_ = tu then 
+                merge_fps tu_ tmax rest1 rest2
             else
-                merge_fps tu1 tmax fp1 fp2 
+                merge_fps tu_ tmax fp1 fp2 
         in
         (tl,ss)::rest
-    | fp1, [] -> fp1
-    | [], fp2 -> fp2
+    | fp1, [] -> []
+    | [], fp2 -> []
 
 
 let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =

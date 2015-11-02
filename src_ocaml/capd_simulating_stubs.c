@@ -127,7 +127,7 @@ value sim_compare_signals(value lid, value apid1, value apid2, value time_lower,
     Store_field(intv, 1, caml_copy_double(res.intv.u));
 
     pair = caml_alloc(2, 0);
-    Store_field(pair, 0, caml_copy_int32(res.apid));
+    Store_field(pair, 0, Val_int(res.apid));
     Store_field(pair, 1, intv);
 	CAMLreturn(pair);
 }

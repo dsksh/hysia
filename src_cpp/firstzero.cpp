@@ -17,7 +17,6 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 {
 	interval time_old;
 	do {
-
 		time_old = time;
 
 		// differentiation of h and g wrt time
@@ -825,31 +824,26 @@ cSigComp compareSignals(const char *lid, const int apid1, const int apid2,
 						const double time_lower, const double time_max)
 {
 g_context->cout << endl;
-g_context->cout << "*** compareSignals: " << lid << "," << apid1  << "," << apid2 << endl;
+g_context->cout << "*** compareSignals: " << lid << "," << apid1  << "," << apid2 << "; " << time_lower << ", " << time_max << endl;
 g_context->cout << endl;
+char c;
+//scanf("%c\n", &c);
 
 	cSigComp result = {-1, cEmpty};
-
-g_context->cout << "cs0" << endl;
 
 	int dim(g_model->dim);
 	Location *loc = g_model->locs[lid].get();
 	DerMap& der = loc->der;
 g_context->cout << loc->aps[apid1]->getDim() << ", " << loc->aps[apid2]->getDim() << endl;
 	DiffMap aps_diff(*loc->aps[apid1], *loc->aps[apid2]);
-g_context->cout << "cs0.3" << endl;
 	AuxMapVec empty_vec;
-
-g_context->cout << "cs1" << endl;
 
 	// initial value
 	Parallelepiped pped = g_context->pped;
 	interval time = g_context->time;
-g_context->cout << "TIME0: " << time << endl;
+//g_context->cout << "TIME0: " << time << endl;
 	double time_l(g_context->time.rightBound());
     interval time_procd(time_l);
-
-g_context->cout << "cs2" << endl;
 
 	interval reduced;
 
@@ -864,35 +858,36 @@ g_context->cout << "cs2" << endl;
 	// the solver:
 	ITaylor solver(der, g_params->order, g_params->h_min);
 	ITimeMap timeMap(solver);
-	//timeMap.stopAfterStep(true);
+	timeMap.stopAfterStep(true);
 
 	//IMatrix dx_prev(IMatrix::Identity(dim));
 	
 	while (true) {
- 		timeMap.moveSet(time_lower - time_l + 1e-8, capdPped); // TODO
-		time_procd = time_l + timeMap.getCurrentTime();
-		//dx_prev = IMatrix(capdPped);
+		timeMap.moveSet(time_lower - time_l, capdPped); // TODO
 		if (timeMap.completed()) break;
+		//time_procd = interval(0.,1.) * solver.getStep();
+		time_procd += timeMap.getCurrentTime();
 	}
 g_context->cout << "moved to time_l: " << time_lower << " - " << time_l << " " << time_procd << endl;
 
-g_context->cout << "cs3" << endl;
+	time_l = solver.getStep().rightBound();
 
-	if (time_procd.leftBound() >= time_max)
+	if (time_l + time_procd.rightBound() > time_max)
 		return result;
-
-	time_l = time_procd.rightBound();
 
 	// compare at the left bound.
 	const ITaylor::CurveType& curve = solver.getCurve();
 	interval lhs( aps_diff( curve(time_l) )(1) );
 	if (lhs.leftBound() > 0.)
-		result.apid = apid1;
-	else if (lhs.rightBound() < 0.)
 		result.apid = apid2;
+	else if (lhs.rightBound() < 0.)
+		result.apid = apid1;
 	else
 		result.apid = -1;
 	}
+
+	time_procd += time_l;
+	time_l = time_procd.rightBound();
 
 	ITaylor solver(der, g_params->order, g_params->h_min);
 	ITimeMap timeMap(solver);
@@ -900,7 +895,7 @@ g_context->cout << "cs3" << endl;
 
 	while (true) {
 
-//cout << "integrate: " << time_max - time_l << endl;
+//cout << "integrate: " << time_max - time_procd << endl;
 		// integrate 1 step.
  		timeMap.moveSet(time_max - time_l, capdPped);
 
@@ -918,9 +913,10 @@ g_context->cout << "dx: " << dx << endl;
 		bool res( reduceLower(der, aps_diff, empty_vec, curve, time, time_procd, reduced) );
 		if (res)
 			break;
-		else if (timeMap.completed())
+		else if (timeMap.completed()) {
+g_context->cout << "completed" << endl;
 			return result;
-		else {
+		} else {
 			time_procd = time_l + timeMap.getCurrentTime();
 			//dx_prev = IMatrix(capdPped);
 		}
@@ -933,6 +929,7 @@ g_context->cout << "GTIME: " << g_context->time << endl;
 reduced += time_procd;
 	} 
 	CATCH {
+g_context->cout << "error" << endl;
 		std::cerr << "exception caught! (4): " << eh_ex.what() << endl << endl;
 		result.intv = cError;
 		return result;
@@ -940,5 +937,11 @@ reduced += time_procd;
 
 	result.intv.l = reduced.leftBound();
 	result.intv.u = reduced.rightBound();
+
+	if (reduced.leftBound() - time_lower < g_params->epsilon) {
+		// intersection segment
+		result.apid = -1;
+	}
+
 	return result;
 }
