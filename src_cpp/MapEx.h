@@ -106,8 +106,9 @@ class DiffMap : public AuxMap
 {
 public:
 	typedef DerMap::VectorType VectorType;
+	typedef DerMap::ScalarType ScalarType;
 
-    DiffMap(AuxMap&, AuxMap&);
+    DiffMap(bool, bool, AuxMap&, AuxMap&);
 	//DiffMap(const DiffMap&);
 	~DiffMap();
 
@@ -117,6 +118,8 @@ public:
 	virtual MatrixType operator[](const VectorType& val);
 
 protected:
+	bool m_neg1;
+	bool m_neg2;
 	AuxMap& m_amap1;
 	AuxMap& m_amap2;
 };

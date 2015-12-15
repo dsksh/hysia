@@ -275,8 +275,8 @@ void AuxMap::setParameter(const char *name, const interval& val)
 
 /* DiffMap implementation. */
 
-DiffMap::DiffMap(AuxMap& amap1, AuxMap& amap2) 
-	: AuxMap(amap1), m_amap1(amap1), m_amap2(amap2)
+DiffMap::DiffMap(bool neg1, bool neg2, AuxMap& amap1, AuxMap& amap2) 
+	: AuxMap(amap1), m_neg1(neg1), m_neg2(neg2), m_amap1(amap1), m_amap2(amap2)
 { }
 
 /*inline DiffMap::DiffMap(const DiffMap& rhs)
@@ -291,24 +291,26 @@ DiffMap::~DiffMap()
 
 DiffMap::VectorType DiffMap::operator()()
 {
-	return m_amap1() - m_amap2();
+	ScalarType c1(m_neg1 ? -1 : 1), c2(m_neg2 ? -1 : 1);
+	return c1*m_amap1() - c2*m_amap2();
 }
 
 DiffMap::MatrixType DiffMap::der()
 {
-std::cout << "dmd" << std::endl;
-std::cout << m_amap1.der() << std::endl;
-	return m_amap1.der() - m_amap2.der();
+	ScalarType c1(m_neg1 ? -1 : 1), c2(m_neg2 ? -1 : 1);
+	return c1*m_amap1.der() - c2*m_amap2.der();
 }
 
 DiffMap::VectorType DiffMap::operator()(const DiffMap::VectorType& val)
 {
-	return m_amap1(val) - m_amap2(val);
+	ScalarType c1(m_neg1 ? -1 : 1), c2(m_neg2 ? -1 : 1);
+	return c1*m_amap1(val) - c2*m_amap2(val);
 }
 
 DiffMap::MatrixType DiffMap::operator[](const DiffMap::VectorType& val)
 {
-	return m_amap1[val] - m_amap2[val];
+	ScalarType c1(m_neg1 ? -1 : 1), c2(m_neg2 ? -1 : 1);
+	return c1*m_amap1[val] - c2*m_amap2[val];
 }
 
 } // the end of the namespace capd

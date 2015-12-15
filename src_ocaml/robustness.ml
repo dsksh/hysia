@@ -41,6 +41,13 @@ let print_fp fmt fp =
     ()
 
 
+let negate_signal = function
+    | Strue  -> Sfalse
+    | Sfalse -> Strue
+    | Sexpr _ as s -> Snot s
+    | Snot s -> s
+
+
 let check_prop_polar_ lid id (apid,_tlist) =
 Printf.printf "cpp_ %s %d" lid id;
     let polar = match check_prop_polar lid id (* TODO *) with
@@ -76,9 +83,10 @@ let get_time_u tmax = function
 let rec compare_signals_ neg1 neg2 tl tu = function
     | Sfalse, _      -> tu, [Sfalse]
     | _, Sfalse::_   -> tu, [Sfalse]
-    | Strue, ss2     -> tu, ss2
+    | Strue, (s2::rest as ss2) -> 
+                        tu, if neg2 then (Snot s2)::rest else ss2
     | s1, Strue::ss2 -> compare_signals_ neg1 false tl tu (s1,ss2)
-    | s1, []         -> tu, [s1]
+    | s1, []         -> tu, [if neg1 then Snot s1 else s1]
     | (Snot s1), ss2 ->
             compare_signals_ (not neg1) neg2 tl tu (s1,ss2)
     | s1, (Snot s2)::rest ->
@@ -86,17 +94,20 @@ let rec compare_signals_ neg1 neg2 tl tu = function
     | (Sexpr (lid1,_,_) as s1), (Sexpr (lid2,_,_))::rest when lid1 <> lid2 ->
             compare_signals_ neg1 false tl tu (s1,rest)
 
-    | (Sexpr ( lid,apid1,polar1) as s1), 
-     ((Sexpr (_lid,apid2,polar2))::rest as ss2) (* when lid = _lid *) ->
-            let apid, (ctl,ctu) = compare_signals lid apid1 apid2 tl tu in
+    | (Sexpr ( lid,apid1,_polar1) as s1), 
+     ((Sexpr (_lid,apid2,_polar2) as s2)::rest as ss2) (* when lid = _lid *) ->
+            let apid, (ctl,ctu) = compare_signals lid neg1 neg2 apid1 apid2 tl tu in
 Format.printf "cs: %d, [%f,%f]\n%!" apid ctl ctu;
-            let tu_ = if ctl > ctu (* no intersection *) then tu else ctl in
+            let tu = if ctl > ctu (* no intersection *) then tu else ctl in
             if apid = apid1 then 
-                compare_signals_ neg1 false tl tu_ (s1,rest)
-            else if apid = apid2 then
-                tu_, ss2
+                compare_signals_ neg1 false tl tu (s1,rest)
+            else
+            let s1 = if neg1 then Snot s1 else s1 in
+            let ss2 = if neg2 then (Snot s2)::rest else ss2 in
+            if apid = apid2 then
+                tu, ss2
             else if ctl > ctu then (* unknown segment *)
-                tu_, s1::ss2
+                tu, s1::ss2
             else (* intersection segment *)
                 ctu, s1::ss2
 
@@ -120,6 +131,14 @@ let rec merge_fps tl tmax fp1 fp2 =
         (tl,ss)::rest
     | fp1, [] -> []
     | [], fp2 -> []
+
+
+(*let proc_evt_ut_ tu (rest,z) p = match p, z with
+    | Sfalse, _ -> z
+    | Strue, _ -> Strue
+    | (tl,ss), _ -> z
+
+let proc_evt_ut tu (rest,z) p = match p, z with*)
 
 
 let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
@@ -208,12 +227,6 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
     (*Printf.printf "fpf: %d\n" !c_fpf;*)
     !ap_fps
 
-let negate_signal = function
-    | Strue  -> Sfalse
-    | Sfalse -> Strue
-    | Sexpr _ as s -> Snot s
-    | Snot s -> s
-
 let rec propagate debug ap_fps = function
     | Mtrue -> if debug then Printf.printf "  true\n"; 
         [0., [Strue]]
@@ -232,7 +245,12 @@ let rec propagate debug ap_fps = function
                                         (propagate debug ap_fps f2) in
         if debug then Format.printf "  and\n%a" print_fp fp;
         fp
-    (*| Muntil (t,f1,f2) -> 
+    (*| Mevt_ut f ->
+        let fp = propagate debug ap_fps f in
+        let fp = List.fold_right proc_evt_ut fp false in
+        if debug then Format.printf "  evt_ut\n%a" print_fp fp;
+        fp
+    | Muntil (t,f1,f2) -> 
         let bs1 = propagate debug ap_bs f1 in
         let bs2 = propagate debug ap_bs f2 in
         let bs  = shift_bs t bs1 bs2 in

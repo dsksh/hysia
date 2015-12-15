@@ -74,6 +74,10 @@ g_context->cout << polar << ", g[" << i << "]:\t" << g << endl;
 		}
 
 		time += offset;
+
+//g_context->cout << "hl: " << grd_h(curve(time.left())) << endl;
+//g_context->cout << "hu: " << grd_h(curve(time.right())) << endl;
+
 		// TODO: this is needed to fix a small perturbation caused by time - lb + lb
 		intersection(time_init, time, time);
 g_context->cout << "contracted lb:\t" << time+time_procd << endl;
@@ -141,6 +145,8 @@ g_context->cout << "inflated:\t" << time+time_procd << endl;
 	//} while (hausdorff(time_old, time) <= g_params->delta*d_old);
 	//} while (hausdorff(time_old, time) <= g_params->delta*d);
 	} while (d < g_params->delta*d_old);
+
+cout << "failed" << endl;
 
 	return false;
 }
@@ -288,6 +294,7 @@ g_context->fout << ',' << endl;
 
 	// verification of the result
 	if ( !verify(der, grd_h, curve, time, time_procd, reduced) ) {
+cout << "v failed" << endl;
 		THROW("verification failed");
 	}
 
@@ -349,6 +356,7 @@ reduced += time_procd;
 	//catch(exception& e)
 	CATCH
 	{
+cout << "caught" << endl;
 		std::cerr << "exception caught! (1): " << eh_ex.what() << endl << endl;
 		return cError;
 	}
@@ -820,13 +828,15 @@ reduced += time_procd;
 }
 
 
-cSigComp compareSignals(const char *lid, const int apid1, const int apid2, 
+cSigComp compareSignals(const char *lid, const int neg1, const int neg2, 
+						const int apid1, const int apid2, 
 						const double time_lower, const double time_max)
 {
 g_context->cout << endl;
 g_context->cout << "*** compareSignals: " << lid << "," << apid1  << "," << apid2 << "; " << time_lower << ", " << time_max << endl;
+g_context->cout << neg1 << ", " << neg2 << endl;
 g_context->cout << endl;
-char c;
+//char c;
 //scanf("%c\n", &c);
 
 	cSigComp result = {-1, cEmpty};
@@ -834,14 +844,13 @@ char c;
 	int dim(g_model->dim);
 	Location *loc = g_model->locs[lid].get();
 	DerMap& der = loc->der;
-g_context->cout << loc->aps[apid1]->getDim() << ", " << loc->aps[apid2]->getDim() << endl;
-	DiffMap aps_diff(*loc->aps[apid1], *loc->aps[apid2]);
+	DiffMap aps_diff(neg1, neg2, *loc->aps[apid1], *loc->aps[apid2]);
 	AuxMapVec empty_vec;
 
 	// initial value
 	Parallelepiped pped = g_context->pped;
 	interval time = g_context->time;
-//g_context->cout << "TIME0: " << time << endl;
+g_context->cout << "TIME0: " << time << endl;
 	double time_l(g_context->time.rightBound());
     interval time_procd(time_l);
 
@@ -865,22 +874,30 @@ g_context->cout << loc->aps[apid1]->getDim() << ", " << loc->aps[apid2]->getDim(
 	while (true) {
 		timeMap.moveSet(time_lower - time_l, capdPped); // TODO
 		if (timeMap.completed()) break;
-		//time_procd = interval(0.,1.) * solver.getStep();
-		time_procd += timeMap.getCurrentTime();
+		//time_procd += interval(0.,1.) * solver.getStep();
+		time_procd = timeMap.getCurrentTime();
 	}
 g_context->cout << "moved to time_l: " << time_lower << " - " << time_l << " " << time_procd << endl;
 
 	time_l = solver.getStep().rightBound();
 
+g_context->cout << "time_l: " << time_l + time_procd.rightBound() << endl;
 	if (time_l + time_procd.rightBound() > time_max)
 		return result;
 
-	// compare at the left bound.
+	// check the polarity at the left bound.
 	const ITaylor::CurveType& curve = solver.getCurve();
-	interval lhs( aps_diff( curve(time_l) )(1) );
-	if (lhs.leftBound() > 0.)
+
+	//const interval lhs( aps_diff( curve(time_l) )(1) );
+	const IVector x( curve(time_l) );
+	const IVector mid( midVector(x) );
+	//const interval lhs( aps_diff(mid) + aps_diff[x]*(x-mid) );
+	const interval lhs( aps_diff(mid)(1) + (aps_diff[x]*(x-mid))(1) );
+
+g_context->cout << "lhs: " << lhs << endl;
+	if (lhs.leftBound() >= 0.) // TODO
 		result.apid = apid2;
-	else if (lhs.rightBound() < 0.)
+	else if (lhs.rightBound() <= 0.)
 		result.apid = apid1;
 	else
 		result.apid = -1;
@@ -900,10 +917,21 @@ g_context->cout << "moved to time_l: " << time_lower << " - " << time_l << " " <
  		timeMap.moveSet(time_max - time_l, capdPped);
 
 		time = interval(0,1)*solver.getStep();
-g_context->cout << endl << "step made (4): " << time/*+time_procd*/ << endl;
+g_context->cout << endl << "step made (4): " << time+time_procd << endl;
 		//const interval time_init(time);
 		reduced = time;
 		const ITaylor::CurveType& curve = solver.getCurve();
+
+		// check the polarity
+		if (result.apid < 0) {
+			const interval lhs( aps_diff( curve(time.left()) )(1) );
+g_context->cout << "lhs: " << lhs << endl;
+			if (lhs.leftBound() >= 0.) // TODO
+				result.apid = apid2;
+			else if (lhs.rightBound() <= 0.)
+				result.apid = apid1;
+		}
+
 
 		IVector  dx( der(curve(time)) );
 g_context->cout << "x:  " << curve(time) << endl;

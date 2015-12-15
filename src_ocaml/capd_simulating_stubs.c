@@ -114,12 +114,14 @@ value sim_find_prop_extremum(value lid, value apid, value time_lower, value time
 	CAMLreturn(intv);
 }
 
-value sim_compare_signals(value lid, value apid1, value apid2, value time_lower, value time_max)
+value sim_compare_signals(value lid, value neg1, value neg2, value apid1, value apid2, value time_lower, value time_max)
 {
-	CAMLparam5(lid, apid1, apid2, time_lower, time_max);
+	CAMLparam5(lid, neg1, neg2, apid1, apid2);
+	CAMLxparam2(time_lower, time_max);
     CAMLlocal2(intv, pair);
 
-	cSigComp res = compareSignals(String_val(lid), Int_val(apid1), Int_val(apid2),
+	cSigComp res = compareSignals(String_val(lid), Bool_val(neg1), Bool_val(neg2),
+								  Int_val(apid1), Int_val(apid2),
 								  Double_val(time_lower), Double_val(time_max));
 
     intv = caml_alloc(2, 0);

@@ -1,13 +1,13 @@
 #let   intv = [-1e-3,1e-3]
-#let   intv = [-1e-4,1e-4]
+let   intv = [-1e-4,1e-4]
 #let   intv = [-1e-5,1e-5]
-let   intv = [-1e-6,1e-6]
+#let   intv = [-1e-6,1e-6]
 #let   intv = [-1e-12,1e-12]
 
-let   c = 1
-#let   c = 2
-#let   o = 0
-let   o = 0.1
+#let   c = 1
+let   c = 2
+let   o = 0
+#let   o = 0.01
 
 var   x1, x2, v
 
@@ -25,3 +25,4 @@ param h_min   = 1e-14
 param epsilon = 1e-14
 param dump_interval = 0.1
 #param dump_interval = -1
+param cm_thres = 100

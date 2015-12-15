@@ -13,6 +13,7 @@ let () =
   Arg.parse [
     ("-n", Arg.Int (fun n -> nv := n), "set the value of n");
     ("-rotated", Arg.Unit (fun () -> file := "nav_rotated.tmpl"), "generate a pi/4 rotated Navigation model");
+    ("-r30", Arg.Unit (fun () -> file := "nav_rotated30.tmpl"), "generate a pi/6 rotated Navigation model");
     ("-atm"), Arg.Unit (fun () -> file := "atm.tmpl"), "generate an ATM model"
   ] ignore "";
 

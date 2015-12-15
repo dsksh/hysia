@@ -23,8 +23,14 @@ init  Loc, 1, 0
 at Loc wait (c1-c0+intv)*x1 + c2*x2, c3*x1 + (c1-c0+intv)*x2
 end
 
-#prop !(x2-1)
-prop (x2) & (x1)
+#prop !(x2)
+#prop x1 & x2
+#prop x2 & x1
+prop x1 & x1
+#prop x1 & !x2
+#prop !x1 & !x2
+#prop true & x1
+#prop !false & x1
 #prop G[0,100] F[0,6.284]!(x2-1) (* 1<x2 *)
 #prop G[0,100] F[0,6.284](!(x2-1) & F[0,3.142]!(-x2-1))
 #prop G[0,100] F[0,6.284](!(x2-1) & F[0,1.571](!(-x2) & F[0,1.571](!(-x2-1) & F[0,1.571](-x2) )))
