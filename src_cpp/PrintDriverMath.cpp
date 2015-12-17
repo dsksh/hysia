@@ -72,7 +72,7 @@ void PrintDriverMath::printPped(std::ostream& out,
 	// B
 	out << "{ " << std::endl;
 	const_MatrixIterator<capd::IMatrix> it(B);
-	for (int i(1); i <= B.numberOfRows(); ++i) {
+	/*for (int i(1); i <= B.numberOfRows(); ++i) {
 		it = B.beginOfRow(i);
 		if (i > 1) out << ',' << std::endl;
 		out << '{';
@@ -81,6 +81,16 @@ void PrintDriverMath::printPped(std::ostream& out,
 			if (j > 1) out << ", ";
 			//out << '{' << (*it).leftBound() << ',' << (*it).rightBound() << '}';
 			out << (*it).leftBound();
+		}
+		out << '}';
+	}*/
+	for (int i(1); i <= B.numberOfRows(); ++i) {
+		if (i > 1) out << ',' << std::endl;
+		out << '{';
+		for (int j(1); j <= B.numberOfColumns(); ++j) {
+			it.moveToNextColumn();
+			if (j > 1) out << ", ";
+			out << B(i,j).leftBound();
 		}
 		out << '}';
 	}

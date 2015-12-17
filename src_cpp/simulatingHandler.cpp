@@ -146,11 +146,13 @@ IVector simulate_deriv(IMap& der, const IVector& x, const interval& time,
 	return result;
 }
 
+// FIXME: argument time0 is not used.
 void simulateJump(const char *lid, const int eid, const cInterval time0)
 {
 	int dim(g_model->dim);
 	LocPtr loc = g_model->locs[lid];
-	DerMap& der = loc->der;
+	LocPtr dest = g_model->locs[loc->edges[eid]->dest];
+	DerMap& der = dest->der;
 	AuxMap& jump = loc->edges[eid]->jump;
 
 	Parallelepiped& pped = g_context->pped;
@@ -169,10 +171,10 @@ const double tc_r(g_context->time.rightBound());
 	const IVector& dh     = g_context->dh;
 
 	// omega_mid
-	IVector delta_y_mid( jump(x_mid) );
-	IVector omega_mid( simulate(der, delta_y_mid, time.right()-time_mid) );
+	IVector sigma_y_mid( jump(x_mid) );
+	IVector omega_mid( simulate(der, sigma_y_mid, time.right()-time_mid) );
 
-g_context->cout << "omega_mid: " << omega_mid << endl;
+//g_context->cout << "omega_mid: " << omega_mid << endl;
 
 	// D_omega
 	IVector dh_dx_phi(dim);
@@ -192,7 +194,7 @@ g_context->cout << "omega_mid: " << omega_mid << endl;
 
 	const IVector dt( -dh_dx_phi / dh_dt_phi );
 
-g_context->cout << "Dt: " << dt_phi << endl;
+//g_context->cout << "Dt: " << dt << endl;
 
 
 	IMatrix dt_phi_dt(dim,dim);
@@ -203,14 +205,13 @@ g_context->cout << "Dt: " << dt_phi << endl;
 		}
 	}
 
-	const IMatrix d_delta( jump[x] );
-	const IMatrix delta( d_delta * (dx_phi+dt_phi_dt) );
+	const IMatrix d_sigma( jump[x] );
+	const IMatrix delta( d_sigma * (dx_phi+dt_phi_dt) );
 
-	const IVector delta_y( jump(x) );
+	const IVector sigma_y( jump(x) );
 	IMatrix dx_psi(dim,dim);
 	IVector dt_psi(dim);
-//std::cout << time-tc_r << std::endl;
-	simulate_deriv(der, delta_y, time-tc_r, dx_psi, dt_psi);
+	simulate_deriv(der, sigma_y, time-tc_r, dx_psi, dt_psi);
 
 	IMatrix dx_psi_delta( dx_psi * delta );
 
@@ -222,7 +223,7 @@ g_context->cout << "Dt: " << dt_phi << endl;
 	}
 
 	const IMatrix d_omega( dx_psi_delta - dt_psi_dt );
-g_context->cout << "D_omega: " << d_omega << endl;
+//g_context->cout << "D_omega: " << d_omega << endl;
 
 	pped = map_parallelepiped(pped, d_omega, omega_mid);
 }

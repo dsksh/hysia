@@ -209,6 +209,7 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
             (* FIXME *)
             let _ = find_first_zero true !curr_loc eid in
             if find_first_zero_mid !curr_loc eid then begin
+                (*simulate_jump !curr_loc eid l0 u0;*)
                 simulate_jump !curr_loc eid l0 u0;
                 print_pped false false;
                 curr_loc := dst_of_edge (List.nth es eid);

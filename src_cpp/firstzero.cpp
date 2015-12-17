@@ -30,15 +30,18 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 g_context->cout << endl << "contracting lb:\t" << time+time_procd << endl;
 if (time.left() < 0.) THROW("integration backward");
 
+		//const interval offset(time.left());
+		interval offset(time.left());
+		time -= offset;
+
 		// evaluate the guard h at the left bound.
-		const interval offset(time.left());
 		const interval h( grd_h(curve(offset))(1) );
 g_context->cout << "offset:\t" << offset << endl;
 g_context->cout << "h:\t" << h << endl;
 g_context->cout << "dh:\t" << dh << endl;
+//cout << "h':\t" << grd_h(curve(4.66414-time_procd.leftBound()))(1) << endl;
 
 		// enforce the Box consistency
-		time -= offset;
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
 		extDiv(-h, dh, gamma_l, gamma_u);
@@ -55,6 +58,9 @@ g_context->cout << "contracted lb:\t" << time+offset+time_procd << endl;
 
 		// evaluation of inequalities
 		for (int i(0); i < grd_g.size(); i++) {
+			offset += time.left();
+			time -= time.left();
+
 			// evaluate the guard g at the left bound.
 			const interval g( polar ?
 					(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) :
@@ -245,10 +251,13 @@ g_context->cout << endl << "step made (1): " << time+time_procd << endl;
 
 g_context->cout << "x:  " << curve(time) << endl;
 
+//cout << "h':\t" << grd_h(curve(4.7-time_procd.leftBound()))(1) << endl;
+//cout << "x:\t" << curve(2.5-time_procd.leftBound()) << endl;
+
 		// reduce the lower bound
 		//bool res( reduceLower(der, grd_h, grd_g, curve, time_init, time_procd, time) );
 		bool res( reduceLower(der, grd_h, grd_g, curve, time, time_procd, reduced) );
-g_context->cout << "TIME: " << time+time_procd << endl;
+//g_context->cout << "TIME: " << time+time_procd << endl;
 
 		// dump the trajectory paving.
 		if (selected && g_params->dump_interval > 0) {
@@ -294,7 +303,6 @@ g_context->fout << ',' << endl;
 
 	// verification of the result
 	if ( !verify(der, grd_h, curve, time, time_procd, reduced) ) {
-cout << "v failed" << endl;
 		THROW("verification failed");
 	}
 
@@ -337,11 +345,14 @@ if (selected) {
 //std::cout << "dx_phi" << g_context->dx_phi << std::endl;
 
 	g_context->dt_phi = der(g_context->x);
-	g_context->dh = grd_h.der()(1);
 
-	g_context->time = reduced;
-	g_context->time += time_procd;
-//std::cout << g_context->time << std::endl;
+	// TODO
+	//grd_h(g_context->x);
+	g_context->dh = grd_h.der()(1);
+	//g_context->dh = grd_h[g_context->x](1);
+
+	g_context->time = reduced + time_procd;
+	//g_context->time += time_procd;
 
 //g_context->pped = pped;
 
@@ -424,8 +435,7 @@ g_context->cout << "time_init:\t" << time_init+time_procd << endl;
 		const interval dh( grd_h.der()(1)*dx );
 g_context->cout << "contracting:\t" << time_mid+time_procd << endl;
 		//der(curve(time_mid.mid()));
-		time_mid = time_mid.mid() - 
-				grd_h(curve(time_mid.mid()))(1) / dh;
+		time_mid = time_mid.mid() - grd_h(curve(time_mid.mid()))(1) / dh;
 		intersection(time_init, time_mid, time_mid);
 g_context->cout << "contracted:\t" << time_mid+time_procd << endl;
 g_context->cout << time << "-" << time_procd << " cap " << time_mid << endl;
@@ -445,6 +455,9 @@ g_context->cout << "time_mid:\t" << time_mid << endl;
 	g_context->x_mid = curve(time_mid);
 	time_mid += time_procd;
 g_context->cout << endl << "mid:\t" << g_context->x_mid << " at " << time_mid << endl << endl;
+
+	// TODO
+	g_context->time_mid = time_mid;
 
 	} 
 	//catch (exception& e)
