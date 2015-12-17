@@ -1,11 +1,11 @@
 #let   intv = [-1e-3,1e-3]
 #let   intv = [-1e-4,1e-4]
-let   intv = [-1e-5,1e-5]
-#let   intv = [-1e-6,1e-6]
+#let   intv = [-1e-5,1e-5]
+let   intv = [-1e-6,1e-6]
 #let   intv = [-1e-8,1e-8]
 
-#let   c = 1
-let   c = 2
+let   c = 1
+#let   c = 2
 #let   o = 0
 let   o = 0.01
 
