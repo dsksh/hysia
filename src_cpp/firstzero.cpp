@@ -58,6 +58,7 @@ g_context->cout << "contracted lb:\t" << time+offset+time_procd << endl;
 
 		// evaluation of inequalities
 		for (int i(0); i < grd_g.size(); i++) {
+			// TODO
 			offset += time.left();
 			time -= time.left();
 
