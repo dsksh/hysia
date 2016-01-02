@@ -17,13 +17,17 @@ let invert_polar = function
     | _ -> Unknown
 
 
-type signal = Strue | Sfalse | Sexpr of string*int*polarity | Snot of signal
+type signal = Strue | Sfalse 
+    | Sconst of float*float 
+    | Sexpr of string*int*polarity | Snot of signal
 
 type flowpipe = (float * signal list) list
 
 let rec print_signal fmt = function
     | Strue  -> Format.fprintf fmt "true"
     | Sfalse -> Format.fprintf fmt "false"
+    | Sconst (vl,vu) -> 
+            Format.fprintf fmt "const[%f;%f]" vl vu
     | Sexpr (lid,apid,polar) -> 
             Format.fprintf fmt "expr[%s;%d;%a]" lid apid print_polar polar
     | Snot s -> Format.fprintf fmt "!(%a)" print_signal s
@@ -44,19 +48,25 @@ let print_fp fmt fp =
 let negate_signal = function
     | Strue  -> Sfalse
     | Sfalse -> Strue
+    | Sconst _ as s -> Snot s
     | Sexpr _ as s -> Snot s
     | Snot s -> s
 
 
 let check_prop_polar_ lid id (apid,_tlist) =
 Printf.printf "cpp_ %s %d" lid id;
-    let polar = match check_prop_polar lid id (* TODO *) with
+    match check_prop_kind lid id with
+    | 2, (vl,vu) -> 
+let _ = Format.printf ": Flat\n%!" in
+        apid, [0., [Sconst (vl,vu)]] 
+    | kind, _ ->
+        let polar = match kind with
         | 1 -> Rise
         | 0 -> Fall
         | _ -> (*error (CheckPropError (id,apid))*) Unknown
-    in
+        in
 Format.printf ": %a\n%!" print_polar polar;
-    apid, [0., [Sexpr (lid,id,polar)]]
+        apid, [0., [Sexpr (lid,id,polar)]]
 
 
 let rec find_prop_extremum_ tmax (apid0, fp) = 
@@ -80,19 +90,88 @@ let get_time_u tmax = function
     | (tu,_)::_ -> tu
     | [] -> tmax
 
-let rec compare_signals_ neg1 neg2 tl tu = function
-    | Sfalse, _      -> tu, [Sfalse]
-    | _, Sfalse::_   -> tu, [Sfalse]
+let rec minimize_signals_ neg1 neg2 tl tu = function
+    | Sfalse, ss2      -> 
+            if neg1 then
+                minimize_signals_ false neg2 tl tu (Strue,ss2)
+            else 
+                tu, [Sfalse]
+    | s1, Sfalse::ss2   -> 
+            if neg2 then
+                minimize_signals_ neg1 false tl tu (s1,Strue::ss2)
+            else
+                tu, [Sfalse]
     | Strue, (s2::rest as ss2) -> 
-                        tu, if neg2 then (Snot s2)::rest else ss2
-    | s1, Strue::ss2 -> compare_signals_ neg1 false tl tu (s1,ss2)
-    | s1, []         -> tu, [if neg1 then Snot s1 else s1]
+            if neg1 then
+                minimize_signals_ false neg2 tl tu (Sfalse,ss2)
+            else
+                tu, if neg2 then (Snot s2)::rest else ss2
+    | s1, Strue::ss2 -> 
+            if neg2 then
+                minimize_signals_ neg1 false tl tu (s1,Sfalse::ss2)
+            else
+                minimize_signals_ neg1 false tl tu (s1,ss2)
+
+    | s1, []         -> 
+            tu, [if neg1 then Snot s1 else s1]
+
     | (Snot s1), ss2 ->
-            compare_signals_ (not neg1) neg2 tl tu (s1,ss2)
+            minimize_signals_ (not neg1) neg2 tl tu (s1,ss2)
     | s1, (Snot s2)::rest ->
-            compare_signals_ neg1 (not neg2) tl tu (s1,s2::rest)
-    | (Sexpr (lid1,_,_) as s1), (Sexpr (lid2,_,_))::rest when lid1 <> lid2 ->
-            compare_signals_ neg1 false tl tu (s1,rest)
+            minimize_signals_ neg1 (not neg2) tl tu (s1,s2::rest)
+
+    | (Sconst (vl1,vu1) as s1), 
+      (Sconst (vl2,vu2) as s2)::rest ->
+            let vl1,vu1 = if neg1 then (-.vl1),(-.vu1) else vl1,vu1 in
+            let vl2,vu2 = if neg2 then (-.vl2),(-.vu2) else vl2,vu2 in
+            let s1 = Sconst (vl1,vu2) in
+            let ss2 = (Sconst (vl2,vu2))::rest in
+
+            if vu1 < vl2 then
+                minimize_signals_ neg1 false tl tu (s1,rest)
+            else if vl1 > vu2 then
+                tu, ss2
+            else (* overlap; unknown segment *)
+                tu, s1::ss2
+
+    |  Sconst (vl,vu), ((Sexpr (lid,apid,_polar) as s2)::rest as ss2) ->
+            let vl,vu = if neg1 then (-.vl),(-.vu) else vl,vu in
+            let s1 = Sconst (vl,vu) in
+
+            let res, (ctl,ctu) = find_intersection lid neg2 apid vl vu tl tu in
+            let tu = if ctl > ctu (* no intersection *) then tu else ctl in
+            if res > apid then (* ap is above vu *)
+                minimize_signals_ false false tl tu (s1,rest)
+            else
+                let ss2 = if neg2 then (Snot s2)::rest else ss2 in
+
+                if res = apid then
+                    tu, ss2
+                else if ctl > ctu then (* unknown segment *)
+                    tu, s1::ss2
+                else (* intersection segment *)
+                    ctu, s1::ss2
+
+    | (Sexpr ( lid,apid,_polar) as s1), (Sconst (vl,vu))::rest ->
+            let vl,vu = if neg2 then (-.vl),(-.vu) else vl,vu in
+            let ss2 = (Sconst (vl,vu))::rest in
+
+            let res, (ctl,ctu) = find_intersection lid neg1 apid vl vu tl tu in
+            let tu = if ctl > ctu (* no intersection *) then tu else ctl in
+            if res = apid then (* ap is below vu *)
+                minimize_signals_ neg1 false tl tu (s1,rest)
+            else
+                let s1 = if neg1 then Snot s1 else s1 in
+
+                if res > apid then
+                    tu, ss2
+                else if ctl > ctu then (* unknown segment *)
+                    tu, s1::ss2
+                else (* intersection segment *)
+                    ctu, s1::ss2
+
+    | (Sexpr (lid1,_,_) as s1), (Sexpr (lid2,_,_))::rest when lid1 <> lid2 -> (* TODO *)
+            minimize_signals_ neg1 false tl tu (s1,rest)
 
     | (Sexpr ( lid,apid1,_polar1) as s1), 
      ((Sexpr (_lid,apid2,_polar2) as s2)::rest as ss2) (* when lid = _lid *) ->
@@ -100,16 +179,17 @@ let rec compare_signals_ neg1 neg2 tl tu = function
 Format.printf "cs: %d, [%f,%f]\n%!" apid ctl ctu;
             let tu = if ctl > ctu (* no intersection *) then tu else ctl in
             if apid = apid1 then 
-                compare_signals_ neg1 false tl tu (s1,rest)
+                minimize_signals_ neg1 false tl tu (s1,rest)
             else
-            let s1 = if neg1 then Snot s1 else s1 in
-            let ss2 = if neg2 then (Snot s2)::rest else ss2 in
-            if apid = apid2 then
-                tu, ss2
-            else if ctl > ctu then (* unknown segment *)
-                tu, s1::ss2
-            else (* intersection segment *)
-                ctu, s1::ss2
+                let s1 = if neg1 then Snot s1 else s1 in
+                let ss2 = if neg2 then (Snot s2)::rest else ss2 in
+
+                if apid = apid2 then
+                    tu, ss2
+                else if ctl > ctu then (* unknown segment *)
+                    tu, s1::ss2
+                else (* intersection segment *)
+                    ctu, s1::ss2
 
 let rec merge_fps tl tmax fp1 fp2 =
     match fp1, fp2 with
@@ -120,7 +200,7 @@ let rec merge_fps tl tmax fp1 fp2 =
         let tu,rest1,rest2 = if tu1 < tu2 then tu1,rest1,fp2 else tu2,fp1,rest2 in
         let tu_, ss = 
             List.fold_left 
-                (fun (tu,ss2) s1 -> compare_signals_ false false tl tu (s1,ss2)) 
+                (fun (tu,ss2) s1 -> minimize_signals_ false false tl tu (s1,ss2)) 
                 (tu,ss2) ss1 in
         let rest = 
             if tu_ = tu then 
@@ -133,19 +213,33 @@ let rec merge_fps tl tmax fp1 fp2 =
     | [], fp2 -> []
 
 
-(*let proc_evt_ut_ tu (rest,z) p = match p, z with
-    | Sfalse, _ -> z
-    | Strue, _ -> Strue
+(*let proc_evt_ut_ tu (tl,ss) (rest,z) = match p, z with
+    | Sfalse, _ -> (tl,z)::rest, z
+    | Strue, _ -> (tl,Strue)::rest, z
     | (tl,ss), _ -> z
 
 let proc_evt_ut tu (rest,z) p = match p, z with*)
+
+
+(* preserve the parameter values. *)
+let param_values = Queue.create ()
+
+let get_param_value (id,bnd) =
+    id, (Random.float bnd)
+
+let set_param_ lid (id,value) = 
+    set_param lid id value
 
 
 let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     let curr_step = ref 0 in
     let curr_loc = ref iloc in
     let curr_time_l = ref 0. in
-    let _ = List.map (set_param_ !curr_loc) ps in
+
+    let pvs = List.map get_param_value ps in
+    Queue.add pvs param_values;
+    let _ = List.map (set_param_ !curr_loc) pvs in
+
     initialize ();
     (*print_pped true false;*)
 
@@ -164,7 +258,9 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
         report_step !curr_step !curr_loc;
         incr curr_step;
 
-        let _ = List.map (set_param_ !curr_loc) ps in
+        let pvs = List.map get_param_value ps in
+        Queue.add pvs param_values;
+        let _ = List.map (set_param_ !curr_loc) pvs in
 
         (* compute the earliest time reaching the inv frontier. *)
         let invs = Model.iexprs_of_loc (List.find (loc_of_name !curr_loc) locs) in
@@ -218,7 +314,7 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
             (* construct flowpipe *)
             ap_fps := List.map (find_prop_extremum_ !time_max) !ap_fps;
 
-            simulate_cont !curr_loc !time_max;
+            (*simulate_cont !curr_loc !time_max;*)
 
             curr_step := !step_max
     done;
@@ -226,6 +322,7 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
     dispose ();
     (*Printf.printf "fpf: %d\n" !c_fpf;*)
     !ap_fps
+
 
 let rec propagate debug ap_fps = function
     | Mtrue -> if debug then Printf.printf "  true\n"; 
@@ -259,4 +356,42 @@ let rec propagate debug ap_fps = function
     *)
     | _ ->
         assert false
+
+
+let rec dump_signal is_neg tl tu = function
+    | Strue  -> dump_bool is_neg tl tu
+    | Sfalse -> dump_bool (not is_neg) tl tu
+    | Sexpr (lid,apid,_polar) -> 
+            dump_ap lid apid is_neg tl tu
+    | Snot s -> 
+            dump_signal (not is_neg) tl tu s
+    | _ -> ()
+
+let rec dump_signals tmax = function 
+    | (tl,ss)::rest ->
+      let tu = get_time_u tmax rest in
+      let _ = List.map (dump_signal false tl tu) ss in
+      dump_signals tmax rest
+
+    | [] -> ()
+
+let dump_fp (ps,_var,(iloc,_ival),locs) fp (*(aps,ap_locs)*) =
+    (* turn on the dump function. *)
+    Capd_sending_stubs.set_solving_param "dump_to_file" 1.;
+
+    let curr_step = ref 0 in
+    let curr_loc = ref iloc in
+    let curr_time_l = ref 0. in
+
+    let pvs = Queue.take param_values in
+    let _ = List.map (set_param_ !curr_loc) pvs in
+
+    initialize ();
+
+    dump_signals !time_max fp;
+
+    (* TODO *)
+    print_pped true true;
+    dispose ();
+    ()
 

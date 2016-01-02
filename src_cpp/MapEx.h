@@ -124,6 +124,26 @@ protected:
 	AuxMap& m_amap2;
 };
 
+class TransMap : public AuxMap
+{
+public:
+	typedef DerMap::VectorType VectorType;
+	typedef DerMap::ScalarType ScalarType;
+
+    TransMap(bool, AuxMap&, interval);
+	~TransMap();
+
+	virtual VectorType operator()();
+	virtual VectorType operator()(const VectorType& val);
+	virtual MatrixType der();
+	virtual MatrixType operator[](const VectorType& val);
+
+protected:
+	bool m_neg;
+	//AuxMap& m_amap;
+	interval m_offset;
+};
+
 } // the end of the namespace capd
 
 #endif // _CAPD_MAP_EX_H_ 

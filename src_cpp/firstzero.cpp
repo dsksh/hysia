@@ -711,23 +711,30 @@ int checkPropAtInitTime(const char *lid, const int apid)
 		return -1;
 }
 
-int checkPropPolar(const char *lid, const int apid)
+int checkPropKind(const char *lid, const int apid, double *vl, double *vu)
 {
 	Location *loc = g_model->locs[lid].get();
 	DerMap& der = loc->der;
 	AuxMap& ap_norm = *loc->apNormals[apid];
 	ITaylor solver(der, g_params->order, g_params->h_min);
 
-	const IVector iv = g_context->pped.hull();
+	IVector iv = g_context->pped.hull();
 	interval lhs = ap_norm(iv)(1);
+	for (int i=0; i < iv.dimension(); ++i)
+		iv[i] = interval(-HUGE_VAL,HUGE_VAL);
+	interval lhs1 = ap_norm(iv)(1);
 //std::cout << "lhs: " << lhs << std::endl;
-	if (lhs.rightBound() > 0.)
+	if (0. < lhs.leftBound())
 		return 1;
-	else if (lhs.leftBound() < 0.)
+	else if (lhs.rightBound() < 0.)
 		return 0;
+	else if (lhs1.leftBound() == 0. && lhs1.rightBound() == 0.) { // TODO: constant function
+		interval v = (*loc->aps[apid])(iv)(1);
+		*vl = v.leftBound(); *vu = v.rightBound();
+		return 2;
+	}
 	else
-		return -1;
-	return -1;
+		return 4;
 }
 
 cInterval findPropExtremum(const char *lid, const int apid, 
@@ -961,6 +968,145 @@ g_context->cout << "completed" << endl;
 		} else {
 			time_procd = time_l + timeMap.getCurrentTime();
 			//dx_prev = IMatrix(capdPped);
+		}
+	}
+
+g_context->cout << "TIME: " << reduced << endl;
+g_context->cout << "GTIME: " << g_context->time << endl;
+
+// TODO
+reduced += time_procd;
+	} 
+	CATCH {
+g_context->cout << "error" << endl;
+		std::cerr << "exception caught! (4): " << eh_ex.what() << endl << endl;
+		result.intv = cError;
+		return result;
+	}
+
+	result.intv.l = reduced.leftBound();
+	result.intv.u = reduced.rightBound();
+
+	if (reduced.leftBound() - time_lower < g_params->epsilon) {
+		// intersection segment
+		result.apid = -1;
+	}
+
+	return result;
+}
+
+
+cSigComp findIntersection(const char *lid, const int neg, const int apid, 
+						  const double vl, const double vu,
+						  const double time_lower, const double time_max)
+{
+g_context->cout << endl;
+g_context->cout << "*** findIntersection: " << lid << "," << neg << ", " << apid << ", " << time_lower << ", " << time_max << endl;
+g_context->cout << endl;
+
+	cSigComp result = {-1, cEmpty};
+
+	int dim(g_model->dim);
+	Location *loc = g_model->locs[lid].get();
+	DerMap& der = loc->der;
+	TransMap aps_diff(neg, *loc->aps[apid], interval(vl,vu));
+	AuxMapVec empty_vec;
+
+	// initial value
+	Parallelepiped pped = g_context->pped;
+	interval time = g_context->time;
+g_context->cout << "TIME0: " << time << endl;
+	double time_l(g_context->time.rightBound());
+    interval time_procd(time_l);
+
+	interval reduced;
+
+	TRY {
+
+	// the initial value:
+	CapdPped capdPped(pped.toCapdPped());
+
+	{
+	// skip to the searched prefix time.
+
+	// the solver:
+	ITaylor solver(der, g_params->order, g_params->h_min);
+	ITimeMap timeMap(solver);
+	timeMap.stopAfterStep(true);
+
+	//IMatrix dx_prev(IMatrix::Identity(dim));
+	
+	while (true) {
+		timeMap.moveSet(time_lower - time_l, capdPped); // TODO
+		if (timeMap.completed()) break;
+		//time_procd += interval(0.,1.) * solver.getStep();
+		time_procd = timeMap.getCurrentTime();
+	}
+g_context->cout << "moved to time_l: " << time_lower << " - " << time_l << " " << time_procd << endl;
+
+	time_l = solver.getStep().rightBound();
+
+g_context->cout << "time_l: " << time_l + time_procd.rightBound() << endl;
+	if (time_l + time_procd.rightBound() > time_max)
+		return result;
+
+	// check the polarity at the left bound.
+	const ITaylor::CurveType& curve = solver.getCurve();
+
+	const IVector x( curve(time_l) );
+	const IVector mid( midVector(x) );
+	const interval lhs( aps_diff(mid)(1) + (aps_diff[x]*(x-mid))(1) );
+
+g_context->cout << "lhs: " << lhs << endl;
+	if (lhs.leftBound() >= 0.) // TODO
+		result.apid = apid+1;
+	else if (lhs.rightBound() <= 0.)
+		result.apid = apid;
+	else
+		result.apid = -1;
+	}
+
+	time_procd += time_l;
+	time_l = time_procd.rightBound();
+
+	ITaylor solver(der, g_params->order, g_params->h_min);
+	ITimeMap timeMap(solver);
+	timeMap.stopAfterStep(true);
+
+	while (true) {
+
+		// integrate 1 step.
+ 		timeMap.moveSet(time_max - time_l, capdPped);
+
+		time = interval(0,1)*solver.getStep();
+g_context->cout << endl << "step made (4): " << time+time_procd << endl;
+		reduced = time;
+		const ITaylor::CurveType& curve = solver.getCurve();
+
+		// check the polarity
+		if (result.apid < 0) {
+			const interval lhs( aps_diff( curve(time.left()) )(1) );
+g_context->cout << "lhs: " << lhs << endl;
+			if (lhs.leftBound() >= 0.) // TODO
+				result.apid = apid+1;
+			else if (lhs.rightBound() <= 0.)
+				result.apid = apid;
+		}
+
+
+		IVector  dx( der(curve(time)) );
+g_context->cout << "x:  " << curve(time) << endl;
+g_context->cout << "dx: " << dx << endl; 
+
+		// reduce the lower bound
+		bool res( reduceLower(der, aps_diff, empty_vec, curve, time, time_procd, reduced) );
+		if (res)
+			break;
+		else if (timeMap.completed()) {
+g_context->cout << "completed" << endl;
+			return result;
+		} else {
+			time_procd = time_l + timeMap.getCurrentTime();
 		}
 	}
 
