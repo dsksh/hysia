@@ -140,7 +140,7 @@ public:
 
 protected:
 	bool m_neg;
-	//AuxMap& m_amap;
+	AuxMap& m_amap;
 	interval m_offset;
 };
 

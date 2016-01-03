@@ -24,7 +24,7 @@ at Loc wait (c1-c0+intv)*x1 + c2*x2, c3*x1 + (c1-c0+intv)*x2
 end
 
 #prop 1
-prop -x1
+prop F x1
 #prop x1 & x2
 #prop x2 & x1
 #prop x1 & x1

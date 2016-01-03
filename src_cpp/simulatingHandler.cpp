@@ -291,10 +291,65 @@ g_context->cout << endl << "step made (6): " << time+time_procd << endl;
 	}
 }
 
+cInterval valueAt(const double t, const bool is_neg, const char *lid, const int apid)
+{
+g_context->cout << endl;
+g_context->cout << "*** valueAt: " << lid << endl;
+g_context->cout << endl;
+
+	int dim(g_model->dim);
+	LocPtr loc = g_model->locs[lid];
+	DerMap& der = loc->der;
+	AuxMap& ap = *loc->aps[apid];
+
+	Parallelepiped& pped = g_context->pped;
+	interval time = g_context->time;
+g_context->cout << "time: " << time << endl;
+	double time_l(time.rightBound());
+    interval time_procd(time_l);
+
+	interval v;
+
+ 	try {
+
+	// the initial value:
+	CapdPped capdPped(pped.toCapdPped());
+
+	// skip to the searched prefix time.
+
+	// the solver:
+	ITaylor solver(der, g_params->order, g_params->h_min);
+	ITimeMap timeMap(solver);
+	//timeMap.stopAfterStep(true);
+	
+	while (true) {
+ 		timeMap.moveSet(t - time_l, capdPped);
+		//time_procd = time_l + timeMap.getCurrentTime();
+		//dx_prev = IMatrix(capdPped);
+		if (timeMap.completed()) break;
+	}
+g_context->cout << "moved to time_l: " << t << " - " << time_l << " " << time_procd << endl;
+
+	//time_l = time_procd.rightBound();
+
+	const ITaylor::CurveType& curve = solver.getCurve();
+//cout << "apv: " << ap(curve(solver.getStep())) << endl;
+	v = ap(curve(solver.getStep()))(1);
+//cout << "v: " << v << endl;
+
+	} 
+	catch(exception& e) {
+		std::cerr << "exception caught! (7)\n" << e.what() << endl << endl;
+	}
+
+	cInterval res = {v.leftBound(), v.rightBound()};
+	return res;
+}
+
 void dumpAP(const char *lid, const int apid, const bool is_neg, const double time_lower, const double time_max)
 {
 g_context->cout << endl;
-g_context->cout << "*** simulateAP: " << lid << endl;
+g_context->cout << "*** dumpAP: " << lid << endl;
 g_context->cout << endl;
 
 	int dim(g_model->dim);
@@ -372,6 +427,16 @@ g_context->cout << endl << "step made (7): " << time+time_procd << endl;
 	catch(exception& e) {
 		std::cerr << "exception caught! (7)\n" << e.what() << endl << endl;
 	}
+}
+
+void dumpConst(const bool is_neg, const double vl, const double vu, const double tl, const double tu)
+{
+	IVector v(1);
+	v[0] = (is_neg ? -1 : 1)* interval(vl,vu);
+cout << "t:" << endl << interval(tl,tu) << endl;
+cout << "v:" << endl << v << endl;
+	printPipe(g_context->fout, interval(tl,tu), v);
+	g_context->fout << ',' << endl;
 }
 
 void dumpBool(const bool is_neg, const double tl, const double tu)

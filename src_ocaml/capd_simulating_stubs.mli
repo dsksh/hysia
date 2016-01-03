@@ -12,6 +12,8 @@ external compare_signals: string -> bool -> bool -> int -> int -> float -> float
 external find_intersection: string -> bool -> int -> float -> float -> float -> float -> int*(float*float) = "sim_find_intersection"
 external simulate_jump: string -> int -> float -> float -> unit = "sim_simulate_jump"
 external simulate_cont: string -> float -> unit = "sim_simulate_cont"
+external value_at: float -> bool -> string -> int -> float*float = "sim_value_at"
+external dump_const: bool -> float -> float -> float -> float -> unit = "sim_dump_const"
 external dump_ap: string -> int -> bool -> float -> float -> unit = "sim_dump_ap"
 external dump_bool: bool -> float -> float -> unit = "sim_dump_bool"
 external print_pped: bool -> bool -> unit = "sim_print_pped"

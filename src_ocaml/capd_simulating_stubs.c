@@ -182,6 +182,27 @@ value sim_simulate_cont(value lid, value time_max)
 	CAMLreturn(Val_unit);
 }
 
+value sim_value_at(value t, value is_neg, value lid, value apid)
+{
+	CAMLparam4(t, is_neg, lid, apid);
+    CAMLlocal1(intv);
+
+	cInterval res = valueAt(Double_val(t), Bool_val(is_neg), String_val(lid), Int_val(apid));
+
+    intv = caml_alloc(2, 0);
+    Store_field(intv, 0, caml_copy_double(res.l));
+    Store_field(intv, 1, caml_copy_double(res.u));
+
+	CAMLreturn(intv);
+}
+
+value sim_dump_const(value is_neg, value vl, value vu, value time_lower, value time_max)
+{
+	CAMLparam5(is_neg, vl, vu, time_lower, time_max);
+	dumpConst(Bool_val(is_neg), Double_val(vl), Double_val(vu), Double_val(time_lower), Double_val(time_max));
+	CAMLreturn(Val_unit);
+}
+
 value sim_dump_ap(value lid, value apid, value is_neg, value time_lower, value time_max)
 {
 	CAMLparam5(lid, apid, is_neg, time_lower, time_max);

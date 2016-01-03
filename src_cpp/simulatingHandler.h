@@ -33,6 +33,8 @@ cSigComp compareSignals(const char *, const int, const int, const int, const int
 cSigComp findIntersection(const char *, const int, const int, const double, const double, const double, const double);
 void simulateJump(const char *, const int, const cInterval);
 void simulateCont(const char *, const double);
+cInterval valueAt(const double, const bool, const char *, const int);
+void dumpConst(const bool, const double, const double, const double, const double);
 void dumpAP(const char *, const int, const bool, const double, const double);
 void dumpBool(const bool, const double tl, const double tu);
 void reportStep(int, const char *);

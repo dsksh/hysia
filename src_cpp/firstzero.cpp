@@ -1054,10 +1054,15 @@ g_context->cout << "time_l: " << time_l + time_procd.rightBound() << endl;
 	const ITaylor::CurveType& curve = solver.getCurve();
 
 	const IVector x( curve(time_l) );
+g_context->cout << "x: " << x << endl;
 	const IVector mid( midVector(x) );
-	const interval lhs( aps_diff(mid)(1) + (aps_diff[x]*(x-mid))(1) );
+g_context->cout << "mid: " << mid << endl;
 
+g_context->cout << "lhs1: " << aps_diff(mid) << endl;
+g_context->cout << "lhs2: " << aps_diff[x]*(x-mid) << endl;
+	const interval lhs( aps_diff(mid)(1) + (aps_diff[x]*(x-mid))(1) );
 g_context->cout << "lhs: " << lhs << endl;
+
 	if (lhs.leftBound() >= 0.) // TODO
 		result.apid = apid+1;
 	else if (lhs.rightBound() <= 0.)
