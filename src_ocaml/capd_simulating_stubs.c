@@ -126,13 +126,14 @@ value sim_find_prop_extremum(value lid, value apid, value time_lower, value time
 	CAMLreturn(intv);
 }
 
-value sim_compare_signals(value lid, value neg1, value neg2, value apid1, value apid2, value time_lower, value time_max)
+value sim_compare_signals(value lid, value neg1, value neg2, value st1, value st2, value apid1, value apid2, value time_lower, value time_max)
 {
-	CAMLparam5(lid, neg1, neg2, apid1, apid2);
-	CAMLxparam2(time_lower, time_max);
+	CAMLparam5(lid, neg1, neg2, st1, st2);
+	CAMLxparam4(apid1, apid2, time_lower, time_max);
     CAMLlocal2(intv, pair);
 
 	cSigComp res = compareSignals(String_val(lid), Bool_val(neg1), Bool_val(neg2),
+								  Double_val(st1), Double_val(st2),
 								  Int_val(apid1), Int_val(apid2),
 								  Double_val(time_lower), Double_val(time_max));
 
@@ -146,13 +147,13 @@ value sim_compare_signals(value lid, value neg1, value neg2, value apid1, value 
 	CAMLreturn(pair);
 }
 
-value sim_find_intersection(value lid, value neg, value apid, value vl, value vu, value time_lower, value time_max)
+value sim_find_intersection(value lid, value neg, value st, value apid, value vl, value vu, value time_lower, value time_max)
 {
-	CAMLparam5(lid, neg, apid, vl, vu);
-	CAMLxparam2(time_lower, time_max);
+	CAMLparam4(lid, neg, st, apid);
+	CAMLxparam4(vl, vu, time_lower, time_max);
     CAMLlocal2(intv, pair);
 
-	cSigComp res = findIntersection(String_val(lid), Bool_val(neg), Int_val(apid), 
+	cSigComp res = findIntersection(String_val(lid), Bool_val(neg), Double_val(st), Int_val(apid), 
 								    Double_val(vl), Double_val(vu),
 								    Double_val(time_lower), Double_val(time_max) );
 
@@ -203,10 +204,11 @@ value sim_dump_const(value is_neg, value vl, value vu, value time_lower, value t
 	CAMLreturn(Val_unit);
 }
 
-value sim_dump_ap(value lid, value apid, value is_neg, value time_lower, value time_max)
+value sim_dump_ap(value lid, value apid, value is_neg, value st, value time_lower, value time_max)
 {
-	CAMLparam5(lid, apid, is_neg, time_lower, time_max);
-	dumpAP(String_val(lid), Int_val(apid), Bool_val(is_neg), Double_val(time_lower), Double_val(time_max));
+	CAMLparam4(lid, apid, is_neg, st);
+	CAMLxparam2(time_lower, time_max);
+	dumpAP(String_val(lid), Int_val(apid), Bool_val(is_neg), Double_val(st), Double_val(time_lower), Double_val(time_max));
 	CAMLreturn(Val_unit);
 }
 

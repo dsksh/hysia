@@ -22,7 +22,9 @@ at Rise wait 1, vx, -g - f*vx^2
   once (sin(t)-x, vx-cos(t)) goto Rise then t, x, -c*vx + (c+1)*cos(t)
 end
 
-prop G[0,10](F[0,5](2-x))
+#prop G[0,10](F[0,5](2-x))
+prop 2-x
+#prop F (2-x)
 #prop  G[2,10]!(x-5)
 #prop  G[0,10](11-x)
 #prop  F[5,10](x-2)

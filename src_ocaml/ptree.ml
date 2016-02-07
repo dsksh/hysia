@@ -26,7 +26,7 @@ and  mitl_node =
   | Pnot of mitl_node
   | Pand of mitl_node * mitl_node
   | Por  of mitl_node * mitl_node
-  | Pimp of mitl_node * mitl_node
+  (*| Pimp of mitl_node * mitl_node*)
   | Puntil of Interval.t * mitl_node * mitl_node
   | Palw of Interval.t * mitl_node
   | Pevt of Interval.t * mitl_node
@@ -81,7 +81,7 @@ and print_prop_node fmt = function
   | Pnot p -> fprintf fmt "!%a" print_prop_node p
   | Pand (p1,p2) -> fprintf fmt "(%a /\\ %a)" print_prop_node p1 print_prop_node p2
   | Por (p1,p2) -> fprintf fmt "(%a \\/ %a)" print_prop_node p1 print_prop_node p2
-  | Pimp (p1,p2) -> fprintf fmt "(%a -> %a)" print_prop_node p1 print_prop_node p2
+  (*| Pimp (p1,p2) -> fprintf fmt "(%a -> %a)" print_prop_node p1 print_prop_node p2*)
   | Puntil (v,p1,p2) -> fprintf fmt "(%a U%a %a)"
      print_prop_node p1 Interval.print_interval v print_prop_node p2
   | Palw (v,p) -> fprintf fmt "(G%a %a)" Interval.print_interval v print_prop_node p

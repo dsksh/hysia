@@ -8,7 +8,8 @@ let   intv = 0
 let   c0 = 0.1
 #let   c1 = 0.1
 #let   c1 = R 0.2
-let   c1 = 0.14
+#let   c1 = 0.14
+let   c1 = 0.05
 let   c2 = -1
 let   c3 = 1
 #let   c4 = R 0.1
@@ -24,9 +25,10 @@ at Loc wait (c1-c0+intv)*x1 + c2*x2, c3*x1 + (c1-c0+intv)*x2
 end
 
 #prop 1
-prop F x1
-#prop x1 & x2
-#prop x2 & x1
+#prop !G (0.75-x2)
+#prop F x2-0.75
+#prop x1 | x2
+prop x2 & x1
 #prop x1 & x1
 #prop x1 & !x2
 #prop !x1 & !x2
@@ -51,7 +53,7 @@ prop F x1
 #  ((-x2+0.7071) U[0,1.571] ((!(x2+0.7071)) U[0,1.571] ((x2+0.7071) U[0,1.771] (!(-x2+0.7071)) )))
 #prop G[0,20] (F[0,6.284]( !(-x2+0.7071) U[0,0.786] ((-x2+0.7071) U[0,1.571] !(x2+0.7071) U[0,0.786] (!(x2+1) & (!(x2+0.7071) U[0,0.786] ((x2+0.7071) U[0,1.571] (!(-x2+0.7071) U[0,0.786] !(1-x2))))))))
 
-param order = 10
+param order = 20
 param t_max = 10
 param h_min   = 1e-14
 param epsilon = 1e-14

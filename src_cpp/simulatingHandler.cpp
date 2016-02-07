@@ -334,7 +334,7 @@ g_context->cout << "moved to time_l: " << t << " - " << time_l << " " << time_pr
 
 	const ITaylor::CurveType& curve = solver.getCurve();
 //cout << "apv: " << ap(curve(solver.getStep())) << endl;
-	v = ap(curve(solver.getStep()))(1);
+	v = (is_neg ? -1 : 1)* ap(curve(solver.getStep()))(1);
 //cout << "v: " << v << endl;
 
 	} 
@@ -346,7 +346,7 @@ g_context->cout << "moved to time_l: " << t << " - " << time_l << " " << time_pr
 	return res;
 }
 
-void dumpAP(const char *lid, const int apid, const bool is_neg, const double time_lower, const double time_max)
+void dumpAP(const char *lid, const int apid, const bool is_neg, const double st, const double time_lower, const double time_max)
 {
 g_context->cout << endl;
 g_context->cout << "*** dumpAP: " << lid << endl;
@@ -377,15 +377,15 @@ g_context->cout << "time: " << time << endl;
 	//timeMap.stopAfterStep(true);
 
 	while (true) {
- 		timeMap.moveSet(time_lower - time_l, capdPped);
+ 		timeMap.moveSet(time_lower+st - time_l, capdPped);
 		time_procd = time_l + timeMap.getCurrentTime();
 		//dx_prev = IMatrix(capdPped);
 		if (timeMap.completed()) break;
 	}
-g_context->cout << "moved to time_l: " << time_lower << " - " << time_l << " " << time_procd << endl;
+g_context->cout << "moved to time_l: " << time_lower+st << " - " << time_l << " " << time_procd << endl;
 
-	if (time_procd.leftBound() >= time_max)
-		cout << "ERROR: exceeds time_max!: " << time_procd.leftBound() << " vs. " << time_max << endl;
+	if (time_procd.leftBound() >= time_max+st)
+		cout << "ERROR: exceeds time_max!: " << time_procd.leftBound() << " vs. " << time_max+st << endl;
 		//return cEmpty;
 
 	time_l = time_procd.rightBound();
@@ -398,7 +398,7 @@ g_context->cout << "moved to time_l: " << time_lower << " - " << time_l << " " <
 
 	do {
 		// integrate 1 step.
- 		timeMap.moveSet(time_max - time_l + 1e-8, capdPped);
+ 		timeMap.moveSet(time_max+st - time_l + 1e-8, capdPped);
 
 		time = interval(0,1)*solver.getStep();
 g_context->cout << endl << "step made (7): " << time+time_procd << endl;

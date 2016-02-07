@@ -849,7 +849,9 @@ reduced += time_procd;
 }
 
 
+// TODO: implementation of time shifting evaluation
 cSigComp compareSignals(const char *lid, const int neg1, const int neg2, 
+						const double st1, const double st2,
 						const int apid1, const int apid2, 
 						const double time_lower, const double time_max)
 {
@@ -996,12 +998,12 @@ g_context->cout << "error" << endl;
 }
 
 
-cSigComp findIntersection(const char *lid, const int neg, const int apid, 
+cSigComp findIntersection(const char *lid, const int neg, const double st, const int apid, 
 						  const double vl, const double vu,
 						  const double time_lower, const double time_max)
 {
 g_context->cout << endl;
-g_context->cout << "*** findIntersection: " << lid << "," << neg << ", " << apid << ", " << time_lower << ", " << time_max << endl;
+g_context->cout << "*** findIntersection: " << lid << "," << neg << ", " << apid << ", " << time_lower+st << ", " << time_max+st << endl;
 g_context->cout << endl;
 
 	cSigComp result = {-1, cEmpty};
@@ -1037,17 +1039,17 @@ g_context->cout << "TIME0: " << time << endl;
 	//IMatrix dx_prev(IMatrix::Identity(dim));
 	
 	while (true) {
-		timeMap.moveSet(time_lower - time_l, capdPped); // TODO
+		timeMap.moveSet(time_lower+st - time_l, capdPped); // TODO
 		if (timeMap.completed()) break;
 		//time_procd += interval(0.,1.) * solver.getStep();
 		time_procd = timeMap.getCurrentTime();
 	}
-g_context->cout << "moved to time_l: " << time_lower << " - " << time_l << " " << time_procd << endl;
+g_context->cout << "moved to time_l: " << time_lower+st << " - " << time_l << " " << time_procd << endl;
 
 	time_l = solver.getStep().rightBound();
 
 g_context->cout << "time_l: " << time_l + time_procd.rightBound() << endl;
-	if (time_l + time_procd.rightBound() > time_max)
+	if (time_l + time_procd.rightBound() > time_max+st)
 		return result;
 
 	// check the polarity at the left bound.
@@ -1081,7 +1083,7 @@ g_context->cout << "lhs: " << lhs << endl;
 	while (true) {
 
 		// integrate 1 step.
- 		timeMap.moveSet(time_max - time_l, capdPped);
+ 		timeMap.moveSet(time_max+st - time_l, capdPped);
 
 		time = interval(0,1)*solver.getStep();
 g_context->cout << endl << "step made (4): " << time+time_procd << endl;
@@ -1131,7 +1133,7 @@ g_context->cout << "error" << endl;
 	result.intv.l = reduced.leftBound();
 	result.intv.u = reduced.rightBound();
 
-	if (reduced.leftBound() - time_lower < g_params->epsilon) {
+	if (reduced.leftBound() - time_lower+st < g_params->epsilon) {
 		// intersection segment
 		result.apid = -1;
 	}

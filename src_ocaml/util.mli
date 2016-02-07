@@ -7,12 +7,11 @@ type error =
   | FindZeroMidError
   | SelectEarliestError of (float * float) * (float * float)
   | UnknownOverlap
-
+  | Unsupported
 exception LError of error * Ptree.loc
 exception LWarning of error * Ptree.loc
 exception Error of error
 exception Warning of error
-
 val report : Format.formatter -> error -> unit
 val error : error -> 'a
 val warning : error -> 'a
