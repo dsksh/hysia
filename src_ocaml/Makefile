@@ -24,7 +24,8 @@ endif
 
 #OINCLUDES = -I /usr/lib/ocaml/oUnit
 #OINCLUDES = -I /opt/local/lib/ocaml/site-lib/oUnit
-OINCLUDES = -I ~/.opam/system/lib/oUnit
+#OINCLUDES = -I ~/.opam/system/lib/oUnit
+OINCLUDES = -I ~/.opam/4.01.0/lib/oUnit
 
 CXXDIR  = ../src_cpp
 LIBNAME = mycapd

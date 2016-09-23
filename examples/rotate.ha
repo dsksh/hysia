@@ -7,7 +7,7 @@ let   intv = [-1e-6,1e-6]
 let   c = 1
 #let   c = 2
 #let   o = 0
-let   o = 0.01
+let   o = 0.1
 
 var   x1, x2
 

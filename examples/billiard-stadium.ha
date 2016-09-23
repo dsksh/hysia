@@ -1,5 +1,5 @@
-let w = 0.6
 #let w = 0.6
+let w = 0.9
 
 var   x1,x2,vx1,vx2
 
