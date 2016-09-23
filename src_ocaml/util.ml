@@ -11,6 +11,7 @@ type error =
   | FindZeroMidError
   | SelectEarliestError of (float*float) * (float*float)
   | UnknownOverlap
+  | Unsupported
 
 exception LError of error * loc
 exception LWarning of error * loc
@@ -36,6 +37,8 @@ let report fmt = function
       fprintf fmt "failed to find the earliest discrete change"
   | UnknownOverlap -> 
       fprintf fmt "undecidable overlap of frontiers occurred"
+  | Unsupported ->
+      fprintf fmt "input contains an unsupported expression"
 
 let error e l = raise (LError (e,l))
 let warning e l = raise (LWarning (e,l))

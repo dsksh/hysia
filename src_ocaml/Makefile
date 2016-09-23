@@ -94,7 +94,7 @@ plugins: plugins.opt
 
 LIBGENERATED = lexer.ml parser.mli parser.ml
 
-LIBMODULES = hashcons interval model_common pretty ptree util model parser lexer capd_sending simulating mitl_checking robustness
+LIBMODULES = hashcons interval dlist model_common pretty ptree util model parser lexer capd_sending simulating mitl_checking robustness
 
 LIBML  = $(addsuffix .ml,  $(LIBMODULES))
 LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_sending_stubs.mli capd_simulating_stubs.mli

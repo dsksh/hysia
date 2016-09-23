@@ -313,4 +313,48 @@ DiffMap::MatrixType DiffMap::operator[](const DiffMap::VectorType& val)
 	return c1*m_amap1[val] - c2*m_amap2[val];
 }
 
+
+/* TransMap implementation. */
+
+TransMap::TransMap(bool neg, AuxMap& amap, interval offset) 
+	: AuxMap(amap), m_neg(neg), m_amap(amap), m_offset(offset)
+{ }
+
+TransMap::~TransMap() 
+{
+	//cout << "dismiss CapdFun" << endl;
+}
+
+TransMap::VectorType TransMap::operator()()
+{
+	ScalarType c(m_neg ? -1 : 1);
+	VectorType o(m_dim_f);
+	for (int i = 0; i < m_dim_f; ++i) o[i] = m_offset;
+	//return c*AuxMap::operator()() - o;
+	return c*m_amap() - o;
+}
+
+TransMap::MatrixType TransMap::der()
+{
+	ScalarType c(m_neg ? -1 : 1);
+	//return c*AuxMap::der();
+	return c*m_amap.der();
+}
+
+TransMap::VectorType TransMap::operator()(const TransMap::VectorType& val)
+{
+	ScalarType c(m_neg ? -1 : 1);
+	VectorType o(m_dim_f);
+	for (int i = 0; i < m_dim_f; ++i) o[i] = m_offset;
+	//return c*AuxMap::operator()(val) - o;
+	return c*m_amap(val) - o;
+}
+
+TransMap::MatrixType TransMap::operator[](const TransMap::VectorType& val)
+{
+	ScalarType c(m_neg ? -1 : 1);
+	//return c*AuxMap::operator[](val);
+	return c*m_amap[val];
+}
+
 } // the end of the namespace capd

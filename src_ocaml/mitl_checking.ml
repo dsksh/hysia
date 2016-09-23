@@ -283,6 +283,13 @@ let rec propagate debug ap_bs = function
         let bs  = shift_bs t bs1 bs2 in
         if debug then Format.printf "  until %a\n%a" print_interval t print_bs bs;
         bs
+    | Mevt (t,f) -> 
+        let bs = propagate debug ap_bs f in
+        let bs = shift_bs t None bs in
+        if debug then Format.printf "  evt %a\n%a" print_interval t print_bs bs;
+        bs
+    | _ ->
+        error Unsupported
 
 let eval_at_zero = function
     | None -> Some true

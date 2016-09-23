@@ -113,6 +113,7 @@ type mitl_formula =
   | Mand of mitl_formula * mitl_formula
   | Mor of mitl_formula * mitl_formula
   | Muntil of Interval.t * mitl_formula * mitl_formula
+  | Mevt of Interval.t * mitl_formula
   | Muntil_ut of mitl_formula * mitl_formula
   | Mevt_ut of mitl_formula
 val mk_mitl_formula :

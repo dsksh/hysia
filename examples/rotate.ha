@@ -6,8 +6,13 @@ let   intv = [-1e-6,1e-6]
 
 let   c = 1
 #let   c = 2
+<<<<<<< HEAD
 #let   o = 0
 let   o = 0.1
+=======
+let   o = 0
+#let   o = 0.01
+>>>>>>> ea77bf79096004c7cec8ac424c6d1a614c7cc8ad
 
 var   x1, x2
 

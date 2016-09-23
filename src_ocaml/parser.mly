@@ -248,8 +248,8 @@ mitl_formula :
     { Por ($1,$3) }
   | mitl_formula IMP mitl_formula
     /*{ Pnot (Pand ($1, Pnot $3)) }*/
-    /*{ Por (Pnot $1, $3) }*/
-    { Pimp ($1,$3) }
+    { Por (Pnot $1, $3) }
+    /*{ Pimp ($1,$3) }*/
 ;
 
 mitl_formula_term :

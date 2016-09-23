@@ -173,7 +173,7 @@ let () =
     (* process solving parameters *)
     Capd_sending.send_model ha aps;
     let params = Model_common.MParam.add "dump_to_file" 
-        (if !dump_to_file then 1. else 0.) params in
+        (if (!dump_to_file && not !robustness) then 1. else 0.) params in
     let params = Model_common.MParam.add "dump_math" 1. params in
     let params = match !cm_thres with
         | Some v -> Model_common.MParam.add "cm_thres" (float_of_int v) params
@@ -183,12 +183,16 @@ let () =
 
     let start = Sys.time () in
 
-    if !sprt then proc_sprt ha (aps,ap_locs) prop
-    else if !robustness then
+    if !sprt then 
+        proc_sprt ha (aps,ap_locs) prop
+
+    else if !robustness then begin
         let fp = Robustness.simulate ha (aps,ap_locs) in
         let fp = Robustness.propagate !debug fp prop in
+        if !dump_to_file then Robustness.dump_fp ha fp;
         ()
-    else
+
+    end else
         let ap_bs = Simulating.simulate ha (aps,ap_locs) in
         let ap_bs = List.map (fun (id,fs) -> 
             let l = List.length fs in
@@ -204,6 +208,7 @@ let () =
                 (*Printf.printf "unknown\n%!"*)
                 Printf.printf "unknown, " 
         end;
+
     (*Printf.printf "time: %fs\n%!" (Sys.time () -. start);*)
     Printf.printf "%f\n%!" (Sys.time () -. start);
     ()

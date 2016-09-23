@@ -31,5 +31,5 @@ param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
 #param delta= 100
-param dump_interval = 0.01
+param dump_interval = 0.005
 param cm_thres = 100
