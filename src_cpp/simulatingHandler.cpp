@@ -384,7 +384,7 @@ g_context->cout << "time: " << time << endl;
 	}
 g_context->cout << "moved to time_l: " << time_lower+st << " - " << time_l << " " << time_procd << endl;
 
-	if (time_procd.leftBound() >= time_max+st)
+	if (time_procd.leftBound() > time_max+st)
 		cout << "ERROR: exceeds time_max!: " << time_procd.leftBound() << " vs. " << time_max+st << endl;
 		//return cEmpty;
 
@@ -433,8 +433,6 @@ void dumpConst(const bool is_neg, const double vl, const double vu, const double
 {
 	IVector v(1);
 	v[0] = (is_neg ? -1 : 1)* interval(vl,vu);
-cout << "t:" << endl << interval(tl,tu) << endl;
-cout << "v:" << endl << v << endl;
 	printPipe(g_context->fout, interval(tl,tu), v);
 	g_context->fout << ',' << endl;
 }
@@ -443,7 +441,6 @@ void dumpBool(const bool is_neg, const double tl, const double tu)
 {
 	IVector v(1);
 	v[0] = (is_neg ? -1 : 1)* interval(HUGE_VAL);
-cout << "v:" << endl << v << endl;
 	printPipe(g_context->fout, interval(tl,tu), v);
 	g_context->fout << ',' << endl;
 }

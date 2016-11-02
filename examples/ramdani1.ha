@@ -18,8 +18,8 @@ end
 
 param order = 30
 param t_end = 10
-param h_min   = 0.00000000000001
-param epsilon = 0.00000000000001
+param h_min   = 1e-14
+param epsilon = 1e-14
 param delta = 0.9
 param tau   = 1.1
-param dump_interval = 0.01
+param dump_interval = 0.005

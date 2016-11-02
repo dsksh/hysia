@@ -59,10 +59,9 @@ let proc_not = function
 
 
 let check_prop_polar_ lid id (apid,_tlist) =
-Printf.printf "cpp_ %s %d\n%!" lid id;
+(*Printf.printf "cpp_ %s %d\n%!" lid id;*)
     match check_prop_kind lid id with
     | 2, (vl,vu) -> 
-        let _ = Format.printf ": Flat\n%!" in
         apid, [0., [Sconst {inf=vl;sup=vu}]] 
     | kind, _ ->
         let polar = match kind with
@@ -70,7 +69,7 @@ Printf.printf "cpp_ %s %d\n%!" lid id;
         | 0 -> Fall
         | _ -> (*error (CheckPropError (id,apid))*) Unknown
         in
-Format.printf ": %a\n%!" print_polar polar;
+(*Format.printf ": %a\n%!" print_polar polar;*)
         apid, [0., [Sexpr (lid,id,polar)]]
 
 
@@ -82,7 +81,7 @@ let rec find_prop_extremum_ tmax (apid0, fp) =
     | time_l, [Sexpr (lid,apid,polar)] ->
         let (l,u) = find_prop_extremum lid apid time_l tmax in
         if l<=u && l > time_l then begin
-Format.printf "fpe: %d [%f,%f]\n%!" apid l u;
+(*Format.printf "fpe: %d [%f,%f]\n%!" apid l u;*)
             let fp = List.append fp [(l, [Sexpr (lid,apid,Unknown)]); 
                                      (u, [Sexpr (lid,apid,invert_polar polar)]) ] in
             find_prop_extremum_ tmax (apid0, fp)
@@ -188,6 +187,7 @@ let rec minimize_signals_ neg0 neg1 neg2 st1 st2 tl tu = function
     | (Sexpr ( lid,apid1,_polar1) as s1), 
      ((Sexpr (_lid,apid2,_polar2) as s2)::rest as ss2) (* when lid = _lid *) ->
             let apid, (ctl,ctu) = compare_signals lid neg1 neg2 st1 st2 apid1 apid2 tl tu in
+(*Format.printf "compare_signals: %f %f\n%!" ctl ctu;*)
             let tu = if ctl > ctu (* no intersection *) then tu else ctl in
             if apid = apid1 then 
                 minimize_signals_ neg0 neg1 neg0 st1 st2 tl tu (s1,rest)
@@ -195,11 +195,12 @@ let rec minimize_signals_ neg0 neg1 neg2 st1 st2 tl tu = function
                 let s1 = if neg1 then Snot s1 else s1 in
                 let ss2 = if neg2 then (Snot s2)::rest else ss2 in
 
+(*Format.printf "apids: %d %d %d\n%!" apid apid1 apid2;*)
                 if apid = apid2 then
                     tu, ss2
                 else if ctl > ctu then (* unknown segment *)
                     tu, s1::ss2
-                else (* intersection segment *)
+                else (* intersection segment *) 
                     ctu, s1::ss2
 
 let rec proc_and tl tmax fp1 fp2 =
@@ -298,14 +299,14 @@ let rec proc_evt_ut_ neg tl tu rest z = function
                 proc_evt_ut_ false tl tu rest z ss
 
     | Strue::ss -> 
-Format.printf "peu: true\n%!";
+(*Format.printf "peu: true\n%!";*)
             if neg then
                 proc_evt_ut_ false tl tu rest z ss
             else
                 (tl,[Strue])::rest, Strue
 
     | (Sconst v)::ss ->
-Format.printf "peu: const %a\n%!" print_interval v;
+(*Format.printf "peu: const %a\n%!" print_interval v;*)
             let zv = value_at_ tu false z in
             let v = if neg then (-$)v else v in
             let s = Sconst v in
@@ -316,11 +317,11 @@ Format.printf "peu: const %a\n%!" print_interval v;
             end
 
     | (Sexpr (_lid,_apid,Rise) as s)::ss as ss0 ->
-Format.printf "peu: expr rise %b %f\n%!" neg tl;
+(*Format.printf "peu: expr rise %b %f\n%!" neg tl;*)
             let zvu = value_at_ tu false z in
             let  vu = value_at_ tu neg s in
             let res = compare_vs vu zvu in
-Format.printf "res: %d\n%!" res;
+(*Format.printf "res: %d\n%!" res;*)
             if neg then (* Fall *)
                 begin match res with
                 | 1 -> proc_evt_ut_ false tl tu rest (Snot s) ss
@@ -328,7 +329,7 @@ Format.printf "res: %d\n%!" res;
                     let zvl = value_at_ tl false z in
                     let  vl = value_at_ tl true s in
                     let res = compare_vs vl zvl in
-Format.printf "res: %d\n%!" res;
+(*Format.printf "res: %d\n%!" res;*)
                     begin match res with
                     | 0 -> proc_evt_ut_ false tl tu rest z ss
                     | _ ->
@@ -351,11 +352,11 @@ Format.printf "res: %d\n%!" res;
                 end
 
     | ((Sexpr (_lid,_apid,Fall) as s)::ss as ss0) ->
-Format.printf "peu: expr fall %b %f\n%!" neg tl;
+(*Format.printf "peu: expr fall %b %f\n%!" neg tl;*)
             let zvu = value_at_ tu false z in
             let  vu = value_at_ tu neg s in
             let res = compare_vs vu zvu in
-Format.printf "res: %d\n%!" res;
+(*Format.printf "res: %d\n%!" res;*)
             begin if neg then (* Rise *)
                 let s = Sconst vu in
                 match res with
@@ -370,12 +371,12 @@ Format.printf "res: %d\n%!" res;
                     let zvl = value_at_ tl false z in
                     let  vl = value_at_ tl neg s in
                     let res = compare_vs vl zvl in
-Format.printf "res: %d\n%!" res;
+(*Format.printf "res: %d\n%!" res;*)
                     begin match res with
                     | 0 -> proc_evt_ut_ false tl tu rest z ss
                     | _ ->
                         let ctl,ctu = find_intersection_ neg false s z tl tu in
-Format.printf "peu_: [%f,%f]\n%!" ctl ctu;
+(*Format.printf "peu_: [%f,%f]\n%!" ctl ctu;*)
                         if ctl > ctu (* no intersection *) then 
                             proc_evt_ut_ false tl tu rest z ss
                         else
@@ -385,7 +386,7 @@ Format.printf "peu_: [%f,%f]\n%!" ctl ctu;
             end
 
     | (Sexpr (_lid,_apid,Unknown) as s)::ss ->
-Format.printf "peu: expr unk %b %f\n%!" neg tl;
+(*Format.printf "peu: expr unk %b %f\n%!" neg tl;*)
             let zv = value_at_ tu false z in
             let  v = value_at_ tu neg s in
             begin match compare_vs v zv with
@@ -468,7 +469,6 @@ let rec propagate debug ap_fps = function
         [0., [Strue]]
     (*| Mloc (id,_lid) ->*)
     | Mexpr d -> 
-print_endline "expr";
         let fp = snd (List.find (fun (apid,_fp) -> apid = d.Hashcons.tag) ap_fps) in
         if debug then Format.printf "  expr %d\n%a" d.Hashcons.tag print_fp fp;
         fp
@@ -545,9 +545,9 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
         report_step !curr_step !curr_loc;
         incr curr_step;
 
-        let pvs = List.map get_param_value ps in
+        (*let pvs = List.map get_param_value ps in
         Queue.add pvs param_values;
-        let _ = List.map (set_param_ !curr_loc) pvs in
+        let _ = List.map (set_param_ !curr_loc) pvs in*)
 
         (* compute the earliest time reaching the inv frontier. *)
         let invs = Model.iexprs_of_loc (List.find (loc_of_name !curr_loc) locs) in
@@ -605,13 +605,12 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
 
             curr_step := !step_max
     done;
-    print_pped true true;
+    (*print_pped true true;*)
     dispose ();
     (*Printf.printf "fpf: %d\n" !c_fpf;*)
     !ap_fps
 
 
-(* TODO: dump const *)
 let rec dump_signal is_neg st tl tu = function
     | Strue  -> dump_bool is_neg tl tu
     | Sfalse -> dump_bool (not is_neg) tl tu
@@ -627,7 +626,7 @@ let rec dump_signal is_neg st tl tu = function
 let rec dump_signals tmax = function 
     | (tl,ss)::rest ->
       let tu = get_time_u tmax rest in
-Printf.printf "dump_sig: %f %f\n" tl tu;
+(*Printf.printf "dump_sig: %f %f\n" tl tu;*)
       let _ = List.map (dump_signal false 0. tl tu) ss in
       dump_signals tmax rest
 

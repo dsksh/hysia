@@ -17,12 +17,8 @@ at L wait vx, vy, 0, -g
     (-c*vy + cos(x)*(vx + c*vx + vy*cos(x))) / (1 + cos(x)^2)
 end
 
-param order = 100
-param t_max = 50
-#param h_min   = 0.1
+param order = 20
+param t_max = 1000
 param h_min   = 1e-14
 param epsilon = 1e-14
-#param epsilon = 0
 param dump_interval = 0.4
-#param delta = 0.99
-#param tau = 1.01

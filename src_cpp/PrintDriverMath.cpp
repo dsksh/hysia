@@ -30,9 +30,20 @@ void PrintDriverMath::printStep(std::ostream& out, const int stepId, const char 
 	//std::cout << "step " << stepId << " at " << lid << ", time: " << sim_time << " (sim), " << (getTime()/1000.) << " (exec)" << std::endl;
 }
 
+void printDouble(std::ostream& out, const double value) {
+    if (     value == -HUGE_VAL) out << "-Infinity";
+    else if (value ==  HUGE_VAL) out <<  "Infinity";
+    else out << value;
+
+}
+
 void PrintDriverMath::printInterval(std::ostream& out, const capd::interval& value)
 {
-	out << '{' << value.leftBound() << ',' << value.rightBound() << '}';
+	out << '{';
+    printDouble(out, value.leftBound());
+    out << ',';
+    printDouble(out, value.rightBound());
+    out << '}';
 	out.flush();
 }
 

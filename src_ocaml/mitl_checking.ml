@@ -259,7 +259,8 @@ let rec propagate debug ap_bs = function
     | Mloc (id,_lid) ->
         let bs = snd (List.nth ap_bs id) in
         if debug then Format.printf "  loc\n%a" print_bs bs;
-        if bs = Some [] then None else bs
+        (*if bs = Some [] then None else bs*)
+        bs
     | Mexpr d -> 
         let bs = snd (List.find (fun (apid,_bs) -> apid = d.Hashcons.tag) ap_bs) in
         let bs = match bs with

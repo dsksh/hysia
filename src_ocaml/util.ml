@@ -5,6 +5,7 @@ type error =
   (*| Unification of Type.t * Type.t*)
   | DimMismatch of int * int
   | SyntaxError
+  | SyntaxUnsupported of string
   | UnknownId of string
   | CheckPropError of int * int
   | FindZeroError
@@ -25,6 +26,8 @@ let report fmt = function
       fprintf fmt "dimensions %d and %d mismatched" d1 d2
   | SyntaxError -> 
       fprintf fmt "syntax error"
+  | SyntaxUnsupported msg ->
+      fprintf fmt "unsupported syntax: %s" msg
   | UnknownId id ->
       fprintf fmt "id %s is unknown" id
   | CheckPropError (id,apid) -> 

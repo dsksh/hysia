@@ -48,7 +48,7 @@
 %token THEN
 %token PROP
 
-/*%token LOC*/
+%token LOC
 
 %token PARAM
 
@@ -265,9 +265,8 @@ mitl_formula_term_sub :
     { Ptrue }
   | FALSE
     { Pnot Ptrue }
-  /*| LOC ID*/
-  | ID
-    { Ploc $1 }
+  | LOC ID
+    { Ploc $2 }
   | expr
     { Pexpr $1 }
   | NOT mitl_formula

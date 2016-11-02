@@ -1,6 +1,7 @@
 type error =
     DimMismatch of int * int
   | SyntaxError
+  | SyntaxUnsupported of string
   | UnknownId of string
   | CheckPropError of int * int
   | FindZeroError

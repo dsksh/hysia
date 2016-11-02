@@ -211,40 +211,37 @@ let rec mk_mitl_formula mode pm var aps ap_locs = function
        if mode then
            aps, ap_locs, Mand (p1, p2), max l1 l2
        else
-           aps, ap_locs, Mor (Mnot p1, Mnot p2), max l1 l2
+           aps, ap_locs, Mnot (Mor (Mnot p1, Mnot p2)), max l1 l2
   | Por (p1,p2) -> 
        let aps,ap_locs,p1,l1 = mk_mitl_formula mode pm var aps ap_locs p1 in
        let aps,ap_locs,p2,l2 = mk_mitl_formula mode pm var aps ap_locs p2 in
-       (*if mode then
-           aps, ap_locs, Mand (Mnot p1, Mnot p2), max l1 l2
-       else*)
-           aps, ap_locs, Mor (p1, p2), max l1 l2
+       aps, ap_locs, Mor (p1, p2), max l1 l2
+
   | Puntil (t,p1,p2) -> 
-       if mode then Util.error Util.SyntaxError;
+       if mode then Util.error (Util.SyntaxUnsupported "timed operators are suported only by the boolean semantics.");
        let aps,ap_locs,p1,l1 = mk_mitl_formula mode pm var aps ap_locs p1 in
        let aps,ap_locs,p2,l2 = mk_mitl_formula mode pm var aps ap_locs p2 in
        aps, ap_locs, Muntil (t,p1,p2), (max l1 l2) +. t.sup
   | Palw (t,p) -> 
-       if mode then Util.error Util.SyntaxError;
+       if mode then Util.error (Util.SyntaxUnsupported "timed operators are suported only by the boolean semantics.");
        let aps,ap_locs,p,l = mk_mitl_formula mode pm var aps ap_locs p in
-       (*aps, ap_locs, Mnot (Muntil (t,Mtrue,Mnot p)), l +. t.sup*)
        aps, ap_locs, Mnot (Mevt (t,Mnot p)), l +. t.sup
   | Pevt (t,p) -> 
-       (*if mode then Util.error Util.SyntaxError;*)
+       if mode then Util.error (Util.SyntaxUnsupported "timed operators are suported only by the boolean semantics.");
        let aps,ap_locs,p,l = mk_mitl_formula mode pm var aps ap_locs p in
-       (*aps, ap_locs, Muntil (t,Mtrue,p), l +. t.sup*)
        aps, ap_locs, Mevt (t,p), l +. t.sup
+
   | Puntil_ut (p1,p2) -> 
-       if not mode then Util.error Util.SyntaxError;
+       if not mode then Util.error (Util.SyntaxUnsupported "untimed operators are suported only by the quantitative semantics.");
        let aps,ap_locs,p1,l1 = mk_mitl_formula mode pm var aps ap_locs p1 in
        let aps,ap_locs,p2,l2 = mk_mitl_formula mode pm var aps ap_locs p2 in
        aps, ap_locs, Muntil_ut (p1,p2), max l1 l2
   | Palw_ut (p) -> 
-       if not mode then Util.error Util.SyntaxError;
+       if not mode then Util.error (Util.SyntaxUnsupported "untimed operators are suported only by the quantitative semantics.");
        let aps,ap_locs,p,l = mk_mitl_formula mode pm var aps ap_locs p in
        aps, ap_locs, Mnot (Mevt_ut (Mnot p)), l
   | Pevt_ut (p) -> 
-       if not mode then Util.error Util.SyntaxError;
+       if not mode then Util.error (Util.SyntaxUnsupported "untimed operators are suported only by the quantitative semantics.");
        let aps,ap_locs,p,l = mk_mitl_formula mode pm var aps ap_locs p in
        aps, ap_locs, Mevt_ut p, l
 
@@ -270,6 +267,7 @@ let make mode (ps,var,iloc::ival,locs) prop =
   let locs = List.map (mk_loc pm var aps) locs in
 
   (ps,var,(iloc,ival),locs), (aps,ap_locs,prop,len)
+
 
 (* for testing *)
 let make_prop var prop = 

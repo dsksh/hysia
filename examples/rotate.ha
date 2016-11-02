@@ -6,17 +6,11 @@ let   intv = [-1e-6,1e-6]
 
 let   c = 1
 #let   c = 2
-<<<<<<< HEAD
 #let   o = 0
 let   o = 0.1
-=======
-let   o = 0
-#let   o = 0.01
->>>>>>> ea77bf79096004c7cec8ac424c6d1a614c7cc8ad
 
 var   x1, x2
 
-#init  Loc1, 1+intv, intv
 init  Loc1, 1+intv, 0+intv
 
 at Loc1 wait -x2, x1
@@ -31,6 +25,4 @@ param order = 10
 param t_max = 100
 param h_min   = 1e-14
 param epsilon = 1e-14
-#param epsilon = 0
 param dump_interval = 0.1
-#param dump_interval = -1

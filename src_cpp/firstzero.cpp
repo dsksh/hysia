@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "Context.h"
 #include "Parallelepiped.h"
 #include "MapEx.h"
@@ -23,7 +25,7 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 		// states over the time interval.
 		const IVector dx( der(curve(time)) );
 		const interval dh( grd_h.der()(1)*dx );
-		interval dg[grd_g.size()];
+		vector<interval> dg(grd_g.size());
 		for (int i(0); i < grd_g.size(); i++)
 			dg[i] = grd_g[i]->der()(1)*dx;
 
@@ -859,8 +861,6 @@ g_context->cout << endl;
 g_context->cout << "*** compareSignals: " << lid << "," << apid1  << "," << apid2 << "; " << time_lower << ", " << time_max << endl;
 g_context->cout << neg1 << ", " << neg2 << endl;
 g_context->cout << endl;
-//char c;
-//scanf("%c\n", &c);
 
 	cSigComp result = {-1, cEmpty};
 
@@ -992,7 +992,11 @@ g_context->cout << "error" << endl;
 	if (reduced.leftBound() - time_lower < g_params->epsilon) {
 		// intersection segment
 		result.apid = -1;
+        // TODO
+        result.intv.u += g_params->epsilon;
 	}
+
+g_context->cout << "result: " << result.apid << endl;
 
 	return result;
 }

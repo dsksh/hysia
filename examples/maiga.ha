@@ -22,6 +22,4 @@ param order = 50
 param t_max = 100
 param h_min   = 1e-14
 param epsilon = 1e-14
-#param delta = 0.9
-#param tau   = 1.1
 param dump_interval = 0.01

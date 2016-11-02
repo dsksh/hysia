@@ -24,8 +24,8 @@ endif
 
 #OINCLUDES = -I /usr/lib/ocaml/oUnit
 #OINCLUDES = -I /opt/local/lib/ocaml/site-lib/oUnit
-#OINCLUDES = -I ~/.opam/system/lib/oUnit
-OINCLUDES = -I ~/.opam/4.01.0/lib/oUnit
+OINCLUDES = -I ~/.opam/system/lib/oUnit
+#OINCLUDES = -I ~/.opam/4.01.0/lib/oUnit
 
 CXXDIR  = ../src_cpp
 LIBNAME = mycapd
@@ -97,10 +97,10 @@ LIBGENERATED = lexer.ml parser.mli parser.ml
 LIBMODULES = hashcons interval dlist model_common pretty ptree util model parser lexer capd_sending simulating mitl_checking robustness
 
 LIBML  = $(addsuffix .ml,  $(LIBMODULES))
-LIBMLI = $(addsuffix .mli, $(LIBMODULES)) capd_sending_stubs.mli capd_simulating_stubs.mli
-LIBCMI = $(addsuffix .cmi, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating_stubs.cmi
-LIBCMO = $(addsuffix .cmo, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating_stubs.cmi
-LIBCMX = $(addsuffix .cmx, $(LIBMODULES)) capd_sending_stubs.cmi capd_simulating_stubs.cmi
+LIBMLI = capd_sending_stubs.mli capd_simulating_stubs.mli $(addsuffix .mli, $(LIBMODULES))
+LIBCMI = capd_sending_stubs.cmi capd_simulating_stubs.cmi $(addsuffix .cmi, $(LIBMODULES))
+LIBCMO = capd_sending_stubs.cmi capd_simulating_stubs.cmi $(addsuffix .cmo, $(LIBMODULES))
+LIBCMX = capd_sending_stubs.cmi capd_simulating_stubs.cmi $(addsuffix .cmx, $(LIBMODULES))
 
 #$(LIBCMO) $(LIBCMX): OINCLUDES += $(LIBINCLUDES)
 $(LIBCMX): OFLAGS += -for-pack Hss

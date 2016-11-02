@@ -141,11 +141,6 @@ let proc_sprt ha (aps,ap_locs) prop =
     Printf.printf "n: %d, x: %d, x': %d\n%!" !n !x !x_
 
 
-(*let proc_robustness ha (aps,ap_locs) prop =
-    ()
-*)
-
-
 let () =
     let lb = from_channel cin in 
     try 
@@ -197,7 +192,7 @@ let () =
         let ap_bs = List.map (fun (id,fs) -> 
             let l = List.length fs in
             Printf.printf "AP%d: %d\n%!" id l;
-            id, if l > 0 then Some fs else None ) 
+            id, if l > 0 then Some fs else (*None*) Some []) 
             ap_bs in
         let ap_bs = Mitl_checking.propagate !debug ap_bs prop in
         begin match Mitl_checking.eval_at_zero ap_bs with
