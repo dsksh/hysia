@@ -1,8 +1,0 @@
-var t, x, v;
-der 1, v, -sin(x);
-init 0, 1, 1;
-
-order = 10;
-t_end = 5;
-h_min = 0.1;
-h_max = 1;

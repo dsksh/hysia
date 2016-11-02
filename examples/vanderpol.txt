@@ -1,7 +1,0 @@
-param mu = 2;
-fun x y = (y, mu*(1-x^2)*y-x);
-val 0 = (2, 0);
-
-order = 5;
-t_max = 10;
-h_max = 1;
