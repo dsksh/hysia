@@ -48,7 +48,7 @@
 %token THEN
 %token PROP
 
-/*%token LOC*/
+%token LOC
 
 %token PARAM
 
@@ -241,19 +241,22 @@ mitl_formula :
   | mitl_formula_term
     { $1 }
   | mitl_formula AND mitl_formula
-    /*{ Pand ($1,$3) }*/
-    { Pnot (Por ((Pnot $1), (Pnot $3))) }
+    { Pand ($1,$3) }
+    /*{ Pnot (Por ((Pnot $1), (Pnot $3))) }*/
   | mitl_formula OR mitl_formula
     /*{ Pnot (Pand ((Pnot $1), (Pnot $3))) }*/
     { Por ($1,$3) }
   | mitl_formula IMP mitl_formula
     /*{ Pnot (Pand ($1, Pnot $3)) }*/
     { Por (Pnot $1, $3) }
+    /*{ Pimp ($1,$3) }*/
 ;
 
 mitl_formula_term :
   | mitl_formula_term_sub until mitl_formula_term
     { Puntil ($2,$1,$3) }
+  | mitl_formula_term_sub UNTIL mitl_formula_term
+    { Puntil_ut ($1,$3) }
   | mitl_formula_term_sub
     { $1 }
 ;
@@ -262,17 +265,22 @@ mitl_formula_term_sub :
     { Ptrue }
   | FALSE
     { Pnot Ptrue }
-  /*| LOC ID*/
-  | ID
-    { Ploc $1 }
+  | LOC ID
+    { Ploc $2 }
   | expr
     { Pexpr $1 }
   | NOT mitl_formula
     { Pnot $2 }
   | evently mitl_formula_term_sub
-    { Puntil ($1,Ptrue,$2) }
+    /*{ Puntil ($1,Ptrue,$2) }*/
+    { Pevt ($1,$2) }
+  | EVENTLY mitl_formula_term_sub
+    { Pevt_ut $2 }
   | always mitl_formula_term_sub
-    { Pnot (Puntil ($1,Ptrue,Pnot $2)) }
+    /*{ Pnot (Puntil ($1,Ptrue,Pnot $2)) }*/
+    { Palw ($1,$2) }
+  | ALWAYS mitl_formula_term_sub
+    { Palw_ut $2 }
   | LP mitl_formula RP
     { $2 }
 ;

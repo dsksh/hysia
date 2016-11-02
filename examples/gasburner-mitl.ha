@@ -20,8 +20,8 @@ end
 at OffOff0 wait -A1*x1 + B1*x2, -A2*x2 + B2*x1
   invariant x1-80, 100-x1, x2-80, 100-x2
 
-  watch (x1-80,  true)   goto OnOff0  then x1, x2
-  watch (x2-80,  true)   goto OffOn0  then x1, x2
+  watch (x1-80,  true)  goto OnOff0  then x1, x2
+  watch (x2-80,  true)  goto OffOn0  then x1, x2
 end
 
 at OffOn0 wait -A1*x1 + B1*x2, H2 - A2*x2 + B2*x1
@@ -43,8 +43,5 @@ prop  F[0,100]G[0,200](!(75-x1) /\ !(75-x2))
 param order = 20
 param t_max = 100
 param h_min   = 1e-14
-#param epsilon = 1e-14
-param epsilon = 1e-8
-#param delta = 1e-1
+param epsilon = 1e-14
 param dump_interval = 1
-param char_mtx = 3

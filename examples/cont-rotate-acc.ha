@@ -28,10 +28,7 @@ prop G[0,2] F[0,5]((x1+0.001) & G[0,0.5]!(x1-0.001))
 #  F[0,0.786](!(x2+1) & F[0,0.786]( (x2+0.7071) & F[0,0.786]( (x2) & F[0,0.786]  (x2+0.7071) )))))))
 
 param order = 10
-param t_max = 100
 param h_min   = 1e-14
 param epsilon = 1e-14
 #param epsilon = 0
 param dump_interval = 0.1
-#param char_mtx = -1
-param char_mtx = 1

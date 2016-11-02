@@ -23,6 +23,8 @@ let delta = ref 0.01
 let theta = ref 0.9
 let bht_thres = ref 100
 
+let robustness = ref false
+
 let spec = [
   "-n",  Arg.Int (fun n -> Simulating.step_max := n), 
                                 "sets the # steps to simulate";
@@ -50,6 +52,8 @@ let spec = [
                                 "sets the value theta";
   "-bht_thres", Arg.Int (fun v -> bht_thres := v),
                                 "sets the threshold for BHT";
+
+  "-robust",    Arg.Set robustness, "compute robustness";
 ]
 
 let file = ref "stdin"
@@ -138,8 +142,8 @@ let proc_sprt ha (aps,ap_locs) prop =
 
 
 let () =
-  let lb = from_channel cin in 
-  try 
+    let lb = from_channel cin in 
+    try 
     let (ha,prop),params = Parser.main Lexer.token lb in
     close_in cin;
     let ha = Ptree.simplify ha in
@@ -148,22 +152,23 @@ let () =
       printf "@[prop: %a@]\n@." Ptree.print_prop prop
     end *)
 
-    let ha,(aps,ap_locs,prop,len) = Model.make ha prop in
+    let ha,(aps,ap_locs,prop,len) = Model.make !robustness ha prop in
     if !debug then begin
-      printf "@[%a@]@." PModel.print_ha ha;
+        printf "@[%a@]@." PModel.print_ha ha;
 
-      let pp i (hash,ap) = 
-          printf "@[%d(%d): %a@." i hash Model.print_dual ap
-      in
-      let _ = Util.mapi pp aps in
-      printf "length: %f@]@." len
+        let pp i (hash,ap) = 
+            printf "@[%d(%d): %a@." i hash Model.print_dual ap
+        in
+        let _ = Util.mapi pp aps in
+        printf "length: %f@]@." len
     end;
 
     if !auto_length then Simulating.time_max := len;
 
+    (* process solving parameters *)
     Capd_sending.send_model ha aps;
     let params = Model_common.MParam.add "dump_to_file" 
-        (if !dump_to_file then 1. else 0.) params in
+        (if (!dump_to_file && not !robustness) then 1. else 0.) params in
     let params = Model_common.MParam.add "dump_math" 1. params in
     let params = match !cm_thres with
         | Some v -> Model_common.MParam.add "cm_thres" (float_of_int v) params
@@ -173,21 +178,23 @@ let () =
 
     let start = Sys.time () in
 
-    if !sprt then proc_sprt ha (aps,ap_locs) prop
-    else
+    if !sprt then 
+        proc_sprt ha (aps,ap_locs) prop
+
+    else if !robustness then begin
+        let fp = Robustness.simulate ha (aps,ap_locs) in
+        let fp = Robustness.propagate !debug fp prop in
+        if !dump_to_file then Robustness.dump_fp ha fp;
+        ()
+
+    end else
         let ap_bs = Simulating.simulate ha (aps,ap_locs) in
         let ap_bs = List.map (fun (id,fs) -> 
             let l = List.length fs in
             Printf.printf "AP%d: %d\n%!" id l;
-            id, if l > 0 then Some fs else None ) 
+            id, if l > 0 then Some fs else (*None*) Some []) 
             ap_bs in
-        (*let update_ap_bs (id,fs) =
-            (*let fs = (Interval.zero, true)::fs in*)
-            id, Some fs in
-        let ap_bs = List.map update_ap_bs ap_bs in*)
         let ap_bs = Mitl_checking.propagate !debug ap_bs prop in
-        (*print_endline "check done";*)
-        (*printf "%a" Mitl_checking.print_fs ap_bs;*)
         begin match Mitl_checking.eval_at_zero ap_bs with
         | Some res -> 
                 (*Printf.printf "%b\n%!" res*)
@@ -196,25 +203,26 @@ let () =
                 (*Printf.printf "unknown\n%!"*)
                 Printf.printf "unknown, " 
         end;
+
     (*Printf.printf "time: %fs\n%!" (Sys.time () -. start);*)
     Printf.printf "%f\n%!" (Sys.time () -. start);
     ()
-  with
+    with
     | Lexer.Lexical_error s -> 
-	  report (lexeme_start_p lb, lexeme_end_p lb);
-	  printf "lexical error: %s\n@." s;
- 	  exit 1
+	    report (lexeme_start_p lb, lexeme_end_p lb);
+	    printf "lexical error: %s\n@." s;
+ 	    exit 1
     | Parsing.Parse_error ->
-	  let  loc = (lexeme_start_p lb, lexeme_end_p lb) in
-	  report loc;
-      printf "syntax error\n@.";
-	  exit 1
+	    let  loc = (lexeme_start_p lb, lexeme_end_p lb) in
+	    report loc;
+        printf "syntax error\n@.";
+	    exit 1
     | Util.LError (e,l) -> 
-	  report l; 
-	  printf "lint error: %a\n@." Util.report e;
-	  exit 1
+	    report l; 
+	    printf "lint error: %a\n@." Util.report e;
+	    exit 1
     | Util.Error e -> 
-	  printf "error: %a\n@." Util.report e;
+	    printf "error: %a\n@." Util.report e;
     | _ ->
-      printf "unexpected error\n@.";
-      exit 1;
+        printf "unexpected error\n@.";
+        exit 1

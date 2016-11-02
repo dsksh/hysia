@@ -80,10 +80,10 @@ public:
 	void putDTree(const int, const int, NodeType *node);
 
 	void reset();
-	VectorType operator()();
-	VectorType operator()(const VectorType& val);
-	MatrixType der();
-	MatrixType operator[](const VectorType& val);
+	virtual VectorType operator()();
+	virtual VectorType operator()(const VectorType& val);
+	virtual MatrixType der();
+	virtual MatrixType operator[](const VectorType& val);
 
 	void setParameter(const char *name, const interval& val);
 
@@ -100,6 +100,48 @@ protected:
 	using capd::map::BasicFunction<ScalarType>::m_dim;
 	using capd::map::BasicFunction<ScalarType>::m_order;
 	//using capd::map::BasicFunction<ScalarType>::m_size;
+};
+
+class DiffMap : public AuxMap
+{
+public:
+	typedef DerMap::VectorType VectorType;
+	typedef DerMap::ScalarType ScalarType;
+
+    DiffMap(bool, bool, AuxMap&, AuxMap&);
+	//DiffMap(const DiffMap&);
+	~DiffMap();
+
+	virtual VectorType operator()();
+	virtual VectorType operator()(const VectorType& val);
+	virtual MatrixType der();
+	virtual MatrixType operator[](const VectorType& val);
+
+protected:
+	bool m_neg1;
+	bool m_neg2;
+	AuxMap& m_amap1;
+	AuxMap& m_amap2;
+};
+
+class TransMap : public AuxMap
+{
+public:
+	typedef DerMap::VectorType VectorType;
+	typedef DerMap::ScalarType ScalarType;
+
+    TransMap(bool, AuxMap&, interval);
+	~TransMap();
+
+	virtual VectorType operator()();
+	virtual VectorType operator()(const VectorType& val);
+	virtual MatrixType der();
+	virtual MatrixType operator[](const VectorType& val);
+
+protected:
+	bool m_neg;
+	AuxMap& m_amap;
+	interval m_offset;
 };
 
 } // the end of the namespace capd

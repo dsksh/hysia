@@ -160,10 +160,12 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
         let fs = if !p then [(Interval.zero, true)] else [] in
         apid, fs ) 
         (List.combine aps curr_polar) in
-    let ap_fs = List.append ap_fs (mapi (fun i _lid -> i,[]) ap_locs) in
+
+    let chk_iloc lid = if iloc = lid then [(Interval.zero, true)] else [] in
+    let ap_fs = List.append ap_fs (mapi (fun i lid -> i, chk_iloc lid) ap_locs) in
     let ap_fs = ref ap_fs in
 
-    while !curr_step < !step_max && !curr_time_l <= !time_max do
+    while !curr_step < !step_max && !curr_time_l < !time_max do
 Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !curr_loc;
         report_step !curr_step !curr_loc;
         incr curr_step;
@@ -198,10 +200,10 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
                     let dst = dst_of_edge (List.nth es eid) in
                     if !curr_loc = lid && dst <> lid then
                         apid, List.append tlist [({inf=l0;sup=u0},false)]
-                    else begin if dst = lid then
+                    else if !curr_loc <> lid && dst = lid then
                         apid, List.append tlist [({inf=l0;sup=u0},true)]
                     else 
-                        apid, tlist end
+                        apid, tlist
                 end
             in
             ap_fs := mapi fpf !ap_fs;
@@ -209,6 +211,7 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
             (* FIXME *)
             let _ = find_first_zero true !curr_loc eid in
             if find_first_zero_mid !curr_loc eid then begin
+                (*simulate_jump !curr_loc eid l0 u0;*)
                 simulate_jump !curr_loc eid l0 u0;
                 print_pped false false;
                 curr_loc := dst_of_edge (List.nth es eid);

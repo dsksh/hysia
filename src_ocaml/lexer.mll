@@ -6,7 +6,7 @@
 
   let id_or_keyword = 
     let h = Hashtbl.create 2 in
-      List.iter (fun (s,k) -> Hashtbl.add h s k)
+    List.iter (fun (s,k) -> Hashtbl.add h s k)
 	[ "sqrt", SQRT;
 	  "exp", EXP;
 	  "log", LOG;
@@ -34,23 +34,21 @@
 
       "prop", PROP;
 
-      "R", RANDOM;
-
-      (*"L", LOC;*)
-
       "param", PARAM;
-
-      "F", EVENTLY;
-      "G", ALWAYS;
-      "U", UNTIL;
 
       "true", TRUE;
       "false", FALSE;
 
-      (*"/\\", AND;*)
-	];
-      fun s -> 
-	try Hashtbl.find h s with Not_found -> ID s
+	  "R", RANDOM;
+
+      "loc", LOC;
+
+      "F", EVENTLY;
+      "G", ALWAYS;
+      "U", UNTIL;
+    ];
+    fun s -> 
+	  try Hashtbl.find h s with Not_found -> ID s
 
   let newline lexbuf =
     let pos = lexbuf.lex_curr_p in
@@ -84,6 +82,7 @@ rule token = parse
       { token lexbuf }
   | ident
       { id_or_keyword (Lexing.lexeme lexbuf) }
+
   | float1
       { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
   | float2

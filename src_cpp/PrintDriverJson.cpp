@@ -73,7 +73,7 @@ void PrintDriverJson::printPped(std::ostream& out,
 	// B
 	out << "    \"B\":[ " << std::endl;
 	const_MatrixIterator<capd::IMatrix> it(B);
-	for (int i(0); i < B.numberOfRows(); ++i) {
+	/*for (int i(0); i < B.numberOfRows(); ++i) {
 		it = B.beginOfRow(i+1);
 		if (i >= 1) out << ',' << std::endl;
 		out << '[';
@@ -81,6 +81,16 @@ void PrintDriverJson::printPped(std::ostream& out,
 			if (j >= 1) out << ", ";
 			//out << '{' << (*it).leftBound() << ',' << (*it).rightBound() << '}';
 			out << (*it).leftBound();
+			it.moveToNextColumn();
+		}
+		out << ']';
+	}*/
+	for (int i(1); i <= B.numberOfRows(); ++i) {
+		if (i > 1) out << ',' << std::endl;
+		out << '[';
+		for (int j(1); j <= B.numberOfColumns(); ++j) {
+			if (j > 1) out << ", ";
+			out << B(i,j).leftBound();
 			it.moveToNextColumn();
 		}
 		out << ']';

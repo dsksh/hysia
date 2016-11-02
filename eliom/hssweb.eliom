@@ -47,7 +47,7 @@ let default_pvalue spec =
     begin try 
       let (ha,prop),params = Parser.main Lexer.token lb in
       let ha = Ptree.simplify ha in
-      let ((_,vs,_,_) as ha),(aps,ap_locs,prop,len) = Model.make ha prop in
+      let ((_,vs,_,_) as ha),(aps,ap_locs,prop,len) = Model.make false ha prop in
 	  vars := vs;
 
       Simulating.step_max := pvalue.k;

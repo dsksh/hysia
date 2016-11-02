@@ -5,12 +5,14 @@ type error =
   (*| Unification of Type.t * Type.t*)
   | DimMismatch of int * int
   | SyntaxError
+  | SyntaxUnsupported of string
   | UnknownId of string
   | CheckPropError of int * int
   | FindZeroError
   | FindZeroMidError
   | SelectEarliestError of (float*float) * (float*float)
   | UnknownOverlap
+  | Unsupported
 
 exception LError of error * loc
 exception LWarning of error * loc
@@ -24,6 +26,8 @@ let report fmt = function
       fprintf fmt "dimensions %d and %d mismatched" d1 d2
   | SyntaxError -> 
       fprintf fmt "syntax error"
+  | SyntaxUnsupported msg ->
+      fprintf fmt "unsupported syntax: %s" msg
   | UnknownId id ->
       fprintf fmt "id %s is unknown" id
   | CheckPropError (id,apid) -> 
@@ -36,6 +40,8 @@ let report fmt = function
       fprintf fmt "failed to find the earliest discrete change"
   | UnknownOverlap -> 
       fprintf fmt "undecidable overlap of frontiers occurred"
+  | Unsupported ->
+      fprintf fmt "input contains an unsupported expression"
 
 let error e l = raise (LError (e,l))
 let warning e l = raise (LWarning (e,l))

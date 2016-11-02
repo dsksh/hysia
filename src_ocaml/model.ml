@@ -1,4 +1,3 @@
-
 open Format
 open Hashcons
 open Model_common
@@ -182,11 +181,14 @@ type mitl_formula =
   | Mloc of int * ident
   | Mexpr of dual
   | Mnot of mitl_formula
-  (*| Mand of mitl_formula * mitl_formula*)
-  | Mor of mitl_formula * mitl_formula
+  | Mand of mitl_formula * mitl_formula
+  | Mor  of mitl_formula * mitl_formula
   | Muntil of Interval.t * mitl_formula * mitl_formula
+  | Mevt   of Interval.t * mitl_formula
+  | Muntil_ut of mitl_formula * mitl_formula
+  | Mevt_ut   of mitl_formula
 
-let rec mk_mitl_formula pm var aps ap_locs = function
+let rec mk_mitl_formula mode pm var aps ap_locs = function
   | Ptrue -> aps, ap_locs, Mtrue, 0.
   | Ploc lid ->
        let id = List.length ap_locs in
@@ -198,27 +200,53 @@ let rec mk_mitl_formula pm var aps ap_locs = function
        else
            aps, ap_locs, Mexpr d, 0.
   | Pnot (Pnot p) -> 
-       let aps,ap_locs,p,l = mk_mitl_formula pm var aps ap_locs p in
+       let aps,ap_locs,p,l = mk_mitl_formula mode pm var aps ap_locs p in
        aps, ap_locs, p, l
   | Pnot p -> 
-       let aps,ap_locs,p,l = mk_mitl_formula pm var aps ap_locs p in
+       let aps,ap_locs,p,l = mk_mitl_formula mode pm var aps ap_locs p in
        aps, ap_locs, Mnot p, l
-  (*| Pand (p1,p2) -> 
-       let aps,ap_locs,p1,l1 = mk_mitl_formula pm var aps ap_locs p1 in
-       let aps,ap_locs,p2,l2 = mk_mitl_formula pm var aps ap_locs p2 in
-       aps, ap_locs, Mand (p1,p2), max l1 l2*)
+  | Pand (p1,p2) -> 
+       let aps,ap_locs,p1,l1 = mk_mitl_formula mode pm var aps ap_locs p1 in
+       let aps,ap_locs,p2,l2 = mk_mitl_formula mode pm var aps ap_locs p2 in
+       if mode then
+           aps, ap_locs, Mand (p1, p2), max l1 l2
+       else
+           aps, ap_locs, Mnot (Mor (Mnot p1, Mnot p2)), max l1 l2
   | Por (p1,p2) -> 
-       let aps,ap_locs,p1,l1 = mk_mitl_formula pm var aps ap_locs p1 in
-       let aps,ap_locs,p2,l2 = mk_mitl_formula pm var aps ap_locs p2 in
-       aps, ap_locs, Mor (p1,p2), max l1 l2
+       let aps,ap_locs,p1,l1 = mk_mitl_formula mode pm var aps ap_locs p1 in
+       let aps,ap_locs,p2,l2 = mk_mitl_formula mode pm var aps ap_locs p2 in
+       aps, ap_locs, Mor (p1, p2), max l1 l2
+
   | Puntil (t,p1,p2) -> 
-       let aps,ap_locs,p1,l1 = mk_mitl_formula pm var aps ap_locs p1 in
-       let aps,ap_locs,p2,l2 = mk_mitl_formula pm var aps ap_locs p2 in
+       if mode then Util.error (Util.SyntaxUnsupported "timed operators are suported only by the boolean semantics.");
+       let aps,ap_locs,p1,l1 = mk_mitl_formula mode pm var aps ap_locs p1 in
+       let aps,ap_locs,p2,l2 = mk_mitl_formula mode pm var aps ap_locs p2 in
        aps, ap_locs, Muntil (t,p1,p2), (max l1 l2) +. t.sup
-  | Puntil _ -> assert false
+  | Palw (t,p) -> 
+       if mode then Util.error (Util.SyntaxUnsupported "timed operators are suported only by the boolean semantics.");
+       let aps,ap_locs,p,l = mk_mitl_formula mode pm var aps ap_locs p in
+       aps, ap_locs, Mnot (Mevt (t,Mnot p)), l +. t.sup
+  | Pevt (t,p) -> 
+       if mode then Util.error (Util.SyntaxUnsupported "timed operators are suported only by the boolean semantics.");
+       let aps,ap_locs,p,l = mk_mitl_formula mode pm var aps ap_locs p in
+       aps, ap_locs, Mevt (t,p), l +. t.sup
+
+  | Puntil_ut (p1,p2) -> 
+       if not mode then Util.error (Util.SyntaxUnsupported "untimed operators are suported only by the quantitative semantics.");
+       let aps,ap_locs,p1,l1 = mk_mitl_formula mode pm var aps ap_locs p1 in
+       let aps,ap_locs,p2,l2 = mk_mitl_formula mode pm var aps ap_locs p2 in
+       aps, ap_locs, Muntil_ut (p1,p2), max l1 l2
+  | Palw_ut (p) -> 
+       if not mode then Util.error (Util.SyntaxUnsupported "untimed operators are suported only by the quantitative semantics.");
+       let aps,ap_locs,p,l = mk_mitl_formula mode pm var aps ap_locs p in
+       aps, ap_locs, Mnot (Mevt_ut (Mnot p)), l
+  | Pevt_ut (p) -> 
+       if not mode then Util.error (Util.SyntaxUnsupported "untimed operators are suported only by the quantitative semantics.");
+       let aps,ap_locs,p,l = mk_mitl_formula mode pm var aps ap_locs p in
+       aps, ap_locs, Mevt_ut p, l
 
 
-let make (ps,var,iloc::ival,locs) prop = 
+let make mode (ps,var,iloc::ival,locs) prop = 
   (*let nv,nd = List.length var, List.length der in
   if nv <> nd then error (DimMismatch (nv,nd)) loc
   else*)
@@ -232,13 +260,14 @@ let make (ps,var,iloc::ival,locs) prop =
   let var = List.map snd var in
 
   (*let aps = APMap.empty in*)
-  let aps,ap_locs,prop,len = mk_mitl_formula pm var [] [] (snd prop) in
+  let aps,ap_locs,prop,len = mk_mitl_formula mode pm var [] [] (snd prop) in
 
   let iloc = get_lid iloc in
   let ival = List.map (mk_expr pm) ival in
   let locs = List.map (mk_loc pm var aps) locs in
 
   (ps,var,(iloc,ival),locs), (aps,ap_locs,prop,len)
+
 
 (* for testing *)
 let make_prop var prop = 
@@ -249,7 +278,7 @@ let make_prop var prop =
   in
   let ps,pm = List.fold_left add_param ([],PMap.empty) ps in*)
 
-  mk_mitl_formula PMap.empty var [] [] (snd prop)
+  mk_mitl_formula true PMap.empty var [] [] (snd prop)
 
 type param = string * float
 type id = ident
@@ -290,11 +319,14 @@ let rec print_prop fmt = function
   | Mloc (id,lid) -> fprintf fmt "L[%s]" lid
   | Mexpr d -> fprintf fmt "%a" print_dual d
   | Mnot p -> fprintf fmt "!%a" print_prop p
-  (*| Mand (p1,p2) -> fprintf fmt "(%a /\\ %a)" print_prop p1 print_prop p2*)
+  | Mand (p1,p2) -> fprintf fmt "(%a /\\ %a)" print_prop p1 print_prop p2
   | Mor (p1,p2) ->  fprintf fmt "(%a \\/ %a)" print_prop p1 print_prop p2
   | Muntil (v,p1,p2) -> fprintf fmt "%a U%a %a"
                                      print_prop p1 print_interval v print_prop p2
-  | Muntil (_,p1,p2) -> ()
+  | Mevt (v,p) -> fprintf fmt "F%a %a" print_interval v print_prop p
+  | Muntil_ut (p1,p2) -> fprintf fmt "%a U %a"
+                                     print_prop p1 print_prop p2
+  | Mevt_ut p -> fprintf fmt "F %a" print_prop p
 
 let id_of_loc      (e,_,_,_,_,_) = e
 let dexprs_of_loc  (_,e,_,_,_,_) = e

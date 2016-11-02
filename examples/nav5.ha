@@ -319,9 +319,8 @@ at L5_5 wait v1, v2,
 
 end
 
-prop  G[0,10](!L L3_3) & F[0,10](L L5_2)
+prop  G[0,10](! loc L3_3) & F[0,10](loc L5_3)
 
 param order = 20
 param t_max = 10
 param dump_interval = 0.1
-
