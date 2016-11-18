@@ -4,8 +4,8 @@
 let   intv = 0
 
 let   c0 = 0.1
-#let   c1 = 0.1
-let   c1 = R 0.2
+let   c1 = 0.1
+#let   c1 = R 0.2
 let   c2 = -1
 let   c3 = 1
 
@@ -18,13 +18,14 @@ end
 
 #prop 0 (* 0>0 *)
 #prop 1 (* 1>0 *)
-#prop x1 (* x1>0 *)
-#prop !(x2) (* x2>0 *)
-#prop !(x2-0.1) (* not x2-0.1>0 <=> x2<=0.1 *)
+#prop x2 (* x2>0 *)
+#prop x2-0.75
+#prop !(x2) (* not x2>0 <=> x2<=0 *)
+#prop !(x2-0.1) (* x2 <= 0.1 *)
 #prop !(x2+0.1) (* x2 >= -0.1 *)
 #prop !G (0.75-x2)
-#prop F x2-0.75
-#prop G F x2-0.75
+prop F x2-0.75
+#prop G (F x2-0.75)
 #prop x1 | x2
 #prop x2 & x1
 #prop !x1-0.1 | !x2-0.1
@@ -37,7 +38,7 @@ end
 #prop 1 & x1
 #prop !false & x1
 
-prop G[0,100] F[0,6.284] ! 1-x2 (* x2>1 *)
+#prop G[0,100] F[0,6.284] ! 1-x2 (* x2>1 *)
 
 #prop G[0,100] F[0,6.284]( ! 1-x2 & F[0,3.142] ! x2+1 )
 

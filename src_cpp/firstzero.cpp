@@ -747,9 +747,11 @@ int checkPropKind(const char *lid, const int apid, double *vl, double *vu)
 		iv[i] = interval(-HUGE_VAL,HUGE_VAL);
 	interval lhs1 = ap_norm(iv)(1);
 //std::cout << "lhs: " << lhs << std::endl;
-	if (0. < lhs.leftBound())
+	//if (0. < lhs.leftBound())
+	if (lhs.rightBound() < 0.)
 		return 1;
-	else if (lhs.rightBound() < 0.)
+	//else if (lhs.rightBound() < 0.)
+	else if (lhs.leftBound() > 0.)
 		return 0;
 	else if (lhs1.leftBound() == 0. && lhs1.rightBound() == 0.) { // TODO: constant function
 		interval v = (*loc->aps[apid])(iv)(1);
@@ -831,7 +833,7 @@ g_context->cout << "x:  " << curve(time) << endl;
 g_context->cout << "dx: " << dx << endl; 
 
 		// reduce the lower bound
-		bool res( reduceLower(der, ap_norm, empty_vec, curve, time, time_procd, reduced) );
+        bool res( reduceLower(der, ap_norm, empty_vec, curve, time, time_procd, reduced) );
 		if (res)
 			break;
 		else if (timeMap.completed())

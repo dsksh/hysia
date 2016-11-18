@@ -40,11 +40,13 @@ val find_intersection_ :
   bool -> bool -> signal -> signal -> float -> float -> float * float
 val proc_evt_ut_ :
   bool ->
+  bool ->
   float ->
   float ->
   (float * signal list) list ->
   signal -> signal list -> (float * signal list) list * signal
 val proc_evt_ut :
+  bool ->
   float ->
   float * signal list ->
   (float * signal list) list * signal -> (float * signal list) list * signal
