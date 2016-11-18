@@ -15,7 +15,7 @@ init  Loc, 1,2+pertb,0,0
 
 at Loc wait vx,vy,0,-g
 
-  once (x^2-y, vy-2*x*vx) goto Loc then 
+  once (x^2-y, 2*x*vx-vy) goto Loc then 
     x,y,
     vx + (4*x*(vy - 2*x*vx)) / (4*x^2 + 1),
     vy - (2*(vy - 2*x*vx)) / (4*x^2 + 1)

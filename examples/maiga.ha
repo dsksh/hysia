@@ -10,7 +10,7 @@ init L1, 1.1, 0.1, 0
 at L1 wait 1 - (b1+1)*x1 + a1*x1^2*x2, 
            b1*x1 - a1*x1^2*x2, 
            1
-  once (-4*x1 + x2 + 2, -4*x1 + x2) goto L2 then x1, x2, t
+  once (-4*x1 + x2 + 2, 4*x1 - x2) goto L2 then x1, x2, t
 end
 
 at L2 wait 1 - (b2+1)*x1 + a2*x1^2*x2, 

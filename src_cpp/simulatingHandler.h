@@ -22,6 +22,7 @@ extern const cInterval cError;
 void simInitialize();
 void simDispose();
 void setParam(const char *, const char *, const double);
+int checkInvAtInitTime(const char *, const int);
 int checkPropAtInitTime(const char *, const int);
 cInterval findPropFrontier(const char *, const int, const int, const double, const double);
 cInterval findInvFrontier(const char *, const int);

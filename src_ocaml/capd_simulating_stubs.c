@@ -39,6 +39,13 @@ value sim_set_param(value lid, value id, value v)
 	CAMLreturn(Val_unit);
 }
 
+/*value sim_check_inv(value lid, value iid)
+{
+	CAMLparam2(lid, iid);
+	int res = checkInvAtInitTime(String_val(lid), Int_val(iid));
+	CAMLreturn(Val_bool(res));
+}*/
+
 value sim_check_prop(value lid, value apid)
 {
 	CAMLparam2(lid, apid);

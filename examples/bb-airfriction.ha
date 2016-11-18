@@ -9,11 +9,11 @@ var   t, y, dy
 init  Fall, 0, y0, 0
 
 at Fall wait 1, dy, -g + f*dy^2
-  once (y, dy) goto Rise then t, y, -c*dy
+  once (y, -dy) goto Rise then t, y, -c*dy
 end
 
 at Rise wait 1, dy, -g - f*dy^2
-  once (dy, -g - f*dy^2) goto Fall then t, y, dy
+  once (dy, g + f*dy^2) goto Fall then t, y, dy
 end
 
 param order = 20

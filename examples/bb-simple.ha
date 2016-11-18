@@ -13,7 +13,7 @@ var   t, y, vy
 init  Loc, 0, 1+pertb, -0+pertb
 
 at Loc wait 1, vy, -g
-  once (y, vy) goto Loc then t, y, -c*vy
+  once (y, -vy) goto Loc then t, y, -c*vy
 end
 
 param order = 20

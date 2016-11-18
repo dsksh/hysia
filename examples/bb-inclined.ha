@@ -13,7 +13,7 @@ var   x, y, vx, vy
 init  L, x0, y0, vx0, vy0
 
 at L wait vx, vy, 0, -g
-  once (x + y, coeff*vx + coeff*vy) goto L
+  once (x + y, -coeff*vx - coeff*vy) goto L
   then x, y, (vx-vy-c*(vx+vy))/2, (-vx+vy-c*(vx+vy))/2
 end
 

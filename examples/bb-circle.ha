@@ -12,7 +12,7 @@ init  L, 0,40,1,0
 at L wait vx, vy, -g*x/sqrt(x^2+y^2)^3, -g*y/sqrt(x^2+y^2)^3
   once (
 		x^2+y^2-cr^2, 
-        2*vx*x + 2*vy*y )
+        -2*vx*x - 2*vy*y )
     goto L then 
 
     x,y,

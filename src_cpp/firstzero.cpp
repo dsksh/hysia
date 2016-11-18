@@ -65,9 +65,12 @@ g_context->cout << "contracted lb:\t" << time+offset+time_procd << endl;
 			time -= time.left();
 
 			// evaluate the guard g at the left bound.
+			//const interval g( polar ?
+			//		(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) :
+			//		(*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) );
 			const interval g( polar ?
-					(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) :
-					(*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) );
+					(*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) :
+					(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) );
 g_context->cout << polar << ", g[" << i << "]:\t" << g << endl;
 
 			// enforce the Box consistency
@@ -333,7 +336,8 @@ g_context->cout << "GTIME: " << g_context->time << endl;
 	}
 
 	for (int i(0); i < grd_g.size(); i++) {
-		if ( (*grd_g[i])(curve(reduced))(1).rightBound() >= 0 )
+		//if ( (*grd_g[i])(curve(reduced))(1).rightBound() >= 0 )
+		if ( (*grd_g[i])(curve(reduced))(1).rightBound() <= 0 )
 			THROW("inequality condition is not satisfied at last");
 	}
 
@@ -695,6 +699,23 @@ reduced += time_procd;
 }
 
 
+/*int checkInvAtInitTime(const char *lid, const int iid)
+{
+	Location *loc = g_model->locs[lid].get();
+	DerMap& der = loc->der;
+	AuxMap& invariant = *g_model->locs[lid]->invariant[iid];
+	ITaylor solver(der, g_params->order, g_params->h_min);
+
+	const IVector iv = g_context->pped.hull();
+	interval lhs = invariant(iv)(1);
+    // invariant: lhs > 0
+    // negation holds strongly
+	if (lhs.rightBound() < 0.)
+		return 0;
+	else
+		return 1;
+}*/
+
 int checkPropAtInitTime(const char *lid, const int apid)
 {
 	Location *loc = g_model->locs[lid].get();
@@ -705,9 +726,9 @@ int checkPropAtInitTime(const char *lid, const int apid)
 	const IVector iv = g_context->pped.hull();
 	interval lhs = ap(iv)(1);
 //std::cout << "lhs: " << lhs << std::endl;
-	if (lhs.rightBound() < 0.)
+	if (lhs.leftBound() >= 0.)
 		return 1;
-	else if (lhs.leftBound() > 0.)
+	else if (lhs.rightBound() <= 0.)
 		return 0;
 	else
 		return -1;

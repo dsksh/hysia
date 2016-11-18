@@ -6,11 +6,8 @@ var   x1,x2,vx1,vx2
 init  L, 0,0, w,1
 
 at L wait vx1, vx2, 0, 0
-  once (
-		x1^2 + 16*x2^4 - 1,
-
-		-2*vx1*x1 - 64*vx2*x2^3
-	)
+  once ( x1^2 + 16*x2^4 - 1,
+		 2*vx1*x1 + 64*vx2*x2^3 )
     goto L then 
 
     x1,x2,

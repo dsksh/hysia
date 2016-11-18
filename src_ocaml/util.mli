@@ -3,6 +3,7 @@ type error =
   | SyntaxError
   | SyntaxUnsupported of string
   | UnknownId of string
+  | CheckInvError of string * int
   | CheckPropError of int * int
   | FindZeroError
   | FindZeroMidError

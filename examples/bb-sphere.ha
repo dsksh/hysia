@@ -16,7 +16,7 @@ at L wait vx, vy, vz,
 		x^2+y^2+z^2
         #-(x*y*z)^2
         -cr^2, 
-        2*vx*x + 2*vy*y + 2*vz*z )
+        -2*vx*x - 2*vy*y - 2*vz*z )
     goto L then 
 
     x,y,z,

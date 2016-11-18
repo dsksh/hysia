@@ -15,7 +15,7 @@ init  Loc,
 at Loc wait vy,vx1,vx2,
             -g,0,0
   once (x1^2/2+x2^2/2-y,
-        vy-2*x1*vx1/2-2*x2*vx2/2) goto Loc then 
+        2*x1*vx1/2+2*x2*vx2/2-vy) goto Loc then 
     y,x1,x2,
     vy  - (2*2*(2*vy - 2*x1*vx1 - 2*x2*vx2)) / (2^2 + 4*x1^2 + 4*x2^2),
     vx1 + (4*x1*(2*vy - 2*x1*vx1 - 2*x2*vx2)) / (2^2 + 4*x1^2 + 4*x2^2),

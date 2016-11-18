@@ -232,7 +232,7 @@ const double tc_r(g_context->time.rightBound());
 void simulateCont(const char *lid, const double time_max)
 {
 g_context->cout << endl;
-g_context->cout << "*** simulateCont: " << lid << endl;
+g_context->cout << "*** simulateCont: " << lid << ", time_max: " << time_max << endl;
 g_context->cout << endl;
 
 	int dim(g_model->dim);

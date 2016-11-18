@@ -15,17 +15,17 @@ var   th, x1, x2
 init  No_rods, 0+intv, Tr+intv, 0+intv
 
 at No_rods wait Vr, 1, 1
-  once (Tmax-th, Tr-x1) goto Rod1 then th, x1, x2
-  once (Tmax-th, Tr-x2) goto Rod2 then th, x1, x2
-  once (Tmax-th, -(x1-Tr)*(x2-Tr)) goto Shutdown then 0, 0, 0
+  once (Tmax-th, x1-Tr) goto Rod1 then th, x1, x2
+  once (Tmax-th, x2-Tr) goto Rod2 then th, x1, x2
+  once (Tmax-th, (x1-Tr)*(x2-Tr)) goto Shutdown then 0, 0, 0
 end
 
 at Rod1 wait -V1, 1, 1
-  once (th-Tmin, -th) goto No_rods then th, 0, x2
+  once (th-Tmin, th) goto No_rods then th, 0, x2
 end
 
 at Rod2 wait -V2, 1, 1
-  once (th-Tmin, -th) goto No_rods then th, x1, 0
+  once (th-Tmin, th) goto No_rods then th, x1, 0
 end
 
 at Shutdown wait 0, 0, 0 end

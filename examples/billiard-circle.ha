@@ -9,7 +9,7 @@ init  L, 0,0.5, 1,1
 at L wait vx, vy, 0, 0
   once (
 		x^2+y^2-cr^2, 
-        -2*vx*x - 2*vy*y )
+        2*vx*x + 2*vy*y )
     goto L then 
 
     x,y,

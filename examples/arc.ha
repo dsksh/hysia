@@ -11,7 +11,7 @@ var   x1, x2, v
 init  Loc, 1+intv, intv, 1
 
 at Loc wait -v*x2, v*x1, 0
-  once (c*x1-x2+o, -v*x1) goto Loc then x1, x2, -v
+  once (c*x1-x2+o, v*x1) goto Loc then x1, x2, -v
 end
 
 param order = 10

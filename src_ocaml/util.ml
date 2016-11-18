@@ -7,6 +7,7 @@ type error =
   | SyntaxError
   | SyntaxUnsupported of string
   | UnknownId of string
+  | CheckInvError of string * int
   | CheckPropError of int * int
   | FindZeroError
   | FindZeroMidError
@@ -30,8 +31,11 @@ let report fmt = function
       fprintf fmt "unsupported syntax: %s" msg
   | UnknownId id ->
       fprintf fmt "id %s is unknown" id
+  | CheckInvError (lid,iid) -> 
+      fprintf fmt "failed to evaluate the invariant %d at location %s" iid lid
   | CheckPropError (id,apid) -> 
-      fprintf fmt "failed to evaluate the atomic property %d(%d) at init time" id apid
+      (*fprintf fmt "failed to evaluate the atomic property %d(%d) at init time" id apid*)
+      fprintf fmt "atomic property %d(%d) does not hold at init time" id apid
   | FindZeroError -> 
       fprintf fmt "failed to find a zero crossing"
   | FindZeroMidError -> 
