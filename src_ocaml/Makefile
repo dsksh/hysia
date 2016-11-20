@@ -22,9 +22,11 @@ endif
 #DATADIR = $(DESTDIR)${prefix}/share
 #MANDIR  = $(DESTDIR)${datarootdir}/man
 
-#OINCLUDES = -I /usr/lib/ocaml/oUnit
-#OINCLUDES = -I /opt/local/lib/ocaml/site-lib/oUnit
-OINCLUDES = -I ~/.opam/system/lib/oUnit
+ifdef OUNITLIB
+  OINCLUDES = -I $(OUNITLIB)
+else
+  OINCLUDES =
+endif
 
 CXXDIR  = ../src_cpp
 LIBNAME = mycapd
