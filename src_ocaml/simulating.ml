@@ -7,6 +7,13 @@ let time_max = ref infinity
 
 let loc_of_name id loc = id = Model.id_of_loc loc
 
+(*let check_inv_ lid iid _inv = 
+(*Printf.printf "ci %s %d\n%!" lid iid;*)
+    let res = check_inv lid iid in
+    if not res then
+        error (CheckInvError (lid,iid))
+*)
+
 let find_inv_frontier_ lid iid _inv = 
 (*Printf.printf "fif %s %d\n%!" lid iid;*)
     iid, (find_inv_frontier lid iid)
@@ -84,10 +91,10 @@ let select_earliest_grd _lid invs es earliest (eid,(l,u)) =
 
 let filter_invariant _lid invs es tmax (eid,(l,u)) =
     match tmax with
-    | Some (iid,(lm,_um)), _None -> 
-(*Printf.printf "4: %d,[%f,%f] vs. %d,[%f,%f]\n%!" iid lm um eid l u;*)
+    | Some (iid,(lm,um)), _None -> 
+Printf.printf "4: %d,[%f,%f] vs. %d,[%f,%f]\n%!" iid lm um eid l u;
         let (_,gh,_,_,_) = List.nth es eid in
-(*Printf.printf "%b\n%!" (fst (List.nth invs iid) = gh);*)
+Printf.printf "%b\n%!" (fst (List.nth invs iid) = gh);
         if (fst (List.nth invs iid) = gh) then true
         else 
           l<=u && u < lm
@@ -119,7 +126,8 @@ let check_prop_ lid id (apid,tlist) =
   let res = check_prop lid id (* TODO *) in
   match res with
   | 1 -> ref true
-  | 0 -> ref false
+  | 0 -> (*ref false*)
+         error (CheckPropError (id,apid))
   | _ -> error (CheckPropError (id,apid))
 
 let find_prop_frontier_ lid t0 tmax polar id (apid,tlist) =
@@ -129,7 +137,7 @@ let find_prop_frontier_ lid t0 tmax polar id (apid,tlist) =
   (*let polar = ref polar in*)
   while !time_l >= 0. && !time_l < tmax do
 (*let _ = incr c_fpf in*)
-    let (l,u) = find_prop_frontier lid id !polar !time_l tmax in
+    let (l,u) = find_prop_frontier lid id (not !polar) !time_l tmax in
     (*let (l,u) = find_prop_frontier lid id true !time_l tmax in*)
 (*Printf.printf "fpf %f %f %f\n%!" l u !time_l;*)
     if l<=u && l > !time_l then begin
@@ -152,6 +160,9 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
     initialize ();
     print_pped true false;
 
+    (*let invs = Model.iexprs_of_loc (List.find (loc_of_name !curr_loc) locs) in
+    let _ = mapi (check_inv_ !curr_loc) invs in*)
+
     (* initialize ap boundaries list. *)
     let curr_polar = mapi (check_prop_ !curr_loc) aps in
     (*let curr_polar = List.map (fun _ -> ref true) aps in*)
@@ -160,10 +171,12 @@ let simulate (ps,_var,(iloc,_ival),locs) (aps,ap_locs) =
         let fs = if !p then [(Interval.zero, true)] else [] in
         apid, fs ) 
         (List.combine aps curr_polar) in
-    let ap_fs = List.append ap_fs (mapi (fun i _lid -> i,[]) ap_locs) in
+
+    let chk_iloc lid = if iloc = lid then [(Interval.zero, true)] else [] in
+    let ap_fs = List.append ap_fs (mapi (fun i lid -> i, chk_iloc lid) ap_locs) in
     let ap_fs = ref ap_fs in
 
-    while !curr_step < !step_max && !curr_time_l <= !time_max do
+    while !curr_step < !step_max && !curr_time_l < !time_max do
 Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !curr_loc;
         report_step !curr_step !curr_loc;
         incr curr_step;
@@ -174,6 +187,8 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
         let invs = Model.iexprs_of_loc (List.find (loc_of_name !curr_loc) locs) in
         let fs = mapi (find_inv_frontier_ !curr_loc) invs in
         let tmax = List.fold_left select_earliest None fs in
+
+        assert (tmax = None);
     
         (* find zero for each edge *)
         let es = Model.edges_of_loc (List.find (loc_of_name !curr_loc) locs) in
@@ -198,10 +213,10 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
                     let dst = dst_of_edge (List.nth es eid) in
                     if !curr_loc = lid && dst <> lid then
                         apid, List.append tlist [({inf=l0;sup=u0},false)]
-                    else begin if dst = lid then
+                    else if !curr_loc <> lid && dst = lid then
                         apid, List.append tlist [({inf=l0;sup=u0},true)]
                     else 
-                        apid, tlist end
+                        apid, tlist
                 end
             in
             ap_fs := mapi fpf !ap_fs;
@@ -209,6 +224,7 @@ Printf.printf "step %d (%f < %f) at %s\n%!" !curr_step !curr_time_l !time_max !c
             (* FIXME *)
             let _ = find_first_zero true !curr_loc eid in
             if find_first_zero_mid !curr_loc eid then begin
+                (*simulate_jump !curr_loc eid l0 u0;*)
                 simulate_jump !curr_loc eid l0 u0;
                 print_pped false false;
                 curr_loc := dst_of_edge (List.nth es eid);

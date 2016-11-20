@@ -40,20 +40,20 @@ let spec = [
   "-cm_thres",  Arg.Int (fun v -> cm_thres := Some v),   
                                 "sets the threshold for character matrix selection";
 
-  "-sprt",      Arg.Set sprt,   "use SPRT";
-  "-bht",       Arg.Set bht,    "use BHT";
+  "-sprt",      Arg.Set sprt,   "[experimental] use SPRT";
+  "-bht",       Arg.Set bht,    "[experimental] use BHT";
   "-alpha",     Arg.Float (fun v -> alpha := v), 
-                                "sets the value alpha";
+                                "[experimental] sets the value alpha";
   "-beta",      Arg.Float (fun v -> beta  := v),
-                                "sets the value beta";
+                                "[experimental] sets the value beta";
   "-delta",     Arg.Float (fun v -> delta := v),
-                                "sets the value delta";
+                                "[experimental] sets the value delta";
   "-theta",     Arg.Float (fun v -> theta := v),
-                                "sets the value theta";
+                                "[experimental] sets the value theta";
   "-bht_thres", Arg.Int (fun v -> bht_thres := v),
-                                "sets the threshold for BHT";
+                                "[experimental] sets the threshold for BHT";
 
-  "-robust",    Arg.Set robustness, "compute robustness";
+  "-robust",    Arg.Set robustness, "[experimental] compute robustness";
 ]
 
 let file = ref "stdin"
@@ -141,11 +141,6 @@ let proc_sprt ha (aps,ap_locs) prop =
     Printf.printf "n: %d, x: %d, x': %d\n%!" !n !x !x_
 
 
-(*let proc_robustness ha (aps,ap_locs) prop =
-    ()
-*)
-
-
 let () =
     let lb = from_channel cin in 
     try 
@@ -173,7 +168,7 @@ let () =
     (* process solving parameters *)
     Capd_sending.send_model ha aps;
     let params = Model_common.MParam.add "dump_to_file" 
-        (if !dump_to_file then 1. else 0.) params in
+        (if (!dump_to_file && not !robustness) then 1. else 0.) params in
     let params = Model_common.MParam.add "dump_math" 1. params in
     let params = match !cm_thres with
         | Some v -> Model_common.MParam.add "cm_thres" (float_of_int v) params
@@ -183,17 +178,21 @@ let () =
 
     let start = Sys.time () in
 
-    if !sprt then proc_sprt ha (aps,ap_locs) prop
-    else if !robustness then
+    if !sprt then 
+        proc_sprt ha (aps,ap_locs) prop
+
+    else if !robustness then begin
         let fp = Robustness.simulate ha (aps,ap_locs) in
         let fp = Robustness.propagate !debug fp prop in
+        if !dump_to_file then Robustness.dump_fp ha fp;
         ()
-    else
+
+    end else
         let ap_bs = Simulating.simulate ha (aps,ap_locs) in
         let ap_bs = List.map (fun (id,fs) -> 
             let l = List.length fs in
-            Printf.printf "AP%d: %d\n%!" id l;
-            id, if l > 0 then Some fs else None ) 
+            (*Printf.printf "AP%d: %d\n%!" id l;*)
+            id, if l > 0 then Some fs else (*None*) Some []) 
             ap_bs in
         let ap_bs = Mitl_checking.propagate !debug ap_bs prop in
         begin match Mitl_checking.eval_at_zero ap_bs with
@@ -204,6 +203,7 @@ let () =
                 (*Printf.printf "unknown\n%!"*)
                 Printf.printf "unknown, " 
         end;
+
     (*Printf.printf "time: %fs\n%!" (Sys.time () -. start);*)
     Printf.printf "%f\n%!" (Sys.time () -. start);
     ()

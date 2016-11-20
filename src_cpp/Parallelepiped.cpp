@@ -92,6 +92,7 @@ Parallelepiped map_parallelepiped(const Parallelepiped& piped,
 	}
 
 //std::cout << "jA: " << B << std::endl;
+//std::cout << "JA: " << JA << std::endl;
 
 	if (g_params->cm_thres != 0)
 		B = characteristic(B);
@@ -117,7 +118,9 @@ Parallelepiped map_parallelepiped(const Parallelepiped& piped,
 
 	IVector v( B_inv*JA * piped.u() + B_inv*(y - capd::vectalg::midVector(y)) );
 
-	return Parallelepiped(IB, v, capd::vectalg::midVector(y));
+	Parallelepiped pped(IB, v, capd::vectalg::midVector(y));
+
+	return pped;
 }
 
 } // the end of the namespace capd

@@ -39,6 +39,13 @@ value sim_set_param(value lid, value id, value v)
 	CAMLreturn(Val_unit);
 }
 
+/*value sim_check_inv(value lid, value iid)
+{
+	CAMLparam2(lid, iid);
+	int res = checkInvAtInitTime(String_val(lid), Int_val(iid));
+	CAMLreturn(Val_bool(res));
+}*/
+
 value sim_check_prop(value lid, value apid)
 {
 	CAMLparam2(lid, apid);
@@ -93,11 +100,23 @@ value sim_find_first_zero_mid(value lid, value eid)
 	CAMLreturn(Val_bool(res));
 }
 
-value sim_check_prop_polar(value lid, value apid)
+value sim_check_prop_kind(value lid, value apid)
 {
 	CAMLparam2(lid, apid);
-	int res = checkPropPolar(String_val(lid), Int_val(apid));
-	CAMLreturn(Val_int(res));
+    CAMLlocal2(intv, pair);
+
+	double vl, vu;
+	int res = checkPropKind(String_val(lid), Int_val(apid), &vl, &vu);
+
+    intv = caml_alloc(2, 0);
+    Store_field(intv, 0, caml_copy_double(vl));
+    Store_field(intv, 1, caml_copy_double(vu));
+
+    pair = caml_alloc(2, 0);
+    Store_field(pair, 0, Val_int(res));
+    Store_field(pair, 1, intv);
+
+	CAMLreturn(pair);
 }
 
 value sim_find_prop_extremum(value lid, value apid, value time_lower, value time_max)
@@ -114,15 +133,36 @@ value sim_find_prop_extremum(value lid, value apid, value time_lower, value time
 	CAMLreturn(intv);
 }
 
-value sim_compare_signals(value lid, value neg1, value neg2, value apid1, value apid2, value time_lower, value time_max)
+value sim_compare_signals(value lid, value neg1, value neg2, value st1, value st2, value apid1, value apid2, value time_lower, value time_max)
 {
-	CAMLparam5(lid, neg1, neg2, apid1, apid2);
-	CAMLxparam2(time_lower, time_max);
+	CAMLparam5(lid, neg1, neg2, st1, st2);
+	CAMLxparam4(apid1, apid2, time_lower, time_max);
     CAMLlocal2(intv, pair);
 
 	cSigComp res = compareSignals(String_val(lid), Bool_val(neg1), Bool_val(neg2),
+								  Double_val(st1), Double_val(st2),
 								  Int_val(apid1), Int_val(apid2),
 								  Double_val(time_lower), Double_val(time_max));
+
+    intv = caml_alloc(2, 0);
+    Store_field(intv, 0, caml_copy_double(res.intv.l));
+    Store_field(intv, 1, caml_copy_double(res.intv.u));
+
+    pair = caml_alloc(2, 0);
+    Store_field(pair, 0, Val_int(res.apid));
+    Store_field(pair, 1, intv);
+	CAMLreturn(pair);
+}
+
+value sim_find_intersection(value lid, value neg, value st, value apid, value vl, value vu, value time_lower, value time_max)
+{
+	CAMLparam4(lid, neg, st, apid);
+	CAMLxparam4(vl, vu, time_lower, time_max);
+    CAMLlocal2(intv, pair);
+
+	cSigComp res = findIntersection(String_val(lid), Bool_val(neg), Double_val(st), Int_val(apid), 
+								    Double_val(vl), Double_val(vu),
+								    Double_val(time_lower), Double_val(time_max) );
 
     intv = caml_alloc(2, 0);
     Store_field(intv, 0, caml_copy_double(res.intv.l));
@@ -147,6 +187,42 @@ value sim_simulate_cont(value lid, value time_max)
 {
 	CAMLparam2(lid, time_max);
 	simulateCont(String_val(lid), Double_val(time_max));
+	CAMLreturn(Val_unit);
+}
+
+value sim_value_at(value t, value is_neg, value lid, value apid)
+{
+	CAMLparam4(t, is_neg, lid, apid);
+    CAMLlocal1(intv);
+
+	cInterval res = valueAt(Double_val(t), Bool_val(is_neg), String_val(lid), Int_val(apid));
+
+    intv = caml_alloc(2, 0);
+    Store_field(intv, 0, caml_copy_double(res.l));
+    Store_field(intv, 1, caml_copy_double(res.u));
+
+	CAMLreturn(intv);
+}
+
+value sim_dump_const(value is_neg, value vl, value vu, value time_lower, value time_max)
+{
+	CAMLparam5(is_neg, vl, vu, time_lower, time_max);
+	dumpConst(Bool_val(is_neg), Double_val(vl), Double_val(vu), Double_val(time_lower), Double_val(time_max));
+	CAMLreturn(Val_unit);
+}
+
+value sim_dump_ap(value lid, value apid, value is_neg, value st, value time_lower, value time_max)
+{
+	CAMLparam4(lid, apid, is_neg, st);
+	CAMLxparam2(time_lower, time_max);
+	dumpAP(String_val(lid), Int_val(apid), Bool_val(is_neg), Double_val(st), Double_val(time_lower), Double_val(time_max));
+	CAMLreturn(Val_unit);
+}
+
+value sim_dump_bool(value is_neg, value tl, value tu)
+{
+	CAMLparam3(is_neg, tl, tu);
+	dumpBool(Bool_val(is_neg), Double_val(tl), Double_val(tu));
 	CAMLreturn(Val_unit);
 }
 

@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "Context.h"
 #include "Parallelepiped.h"
 #include "MapEx.h"
@@ -23,22 +25,25 @@ inline bool reduceLower(DerMap& der, AuxMap& grd_h, AuxMapVec& grd_g,
 		// states over the time interval.
 		const IVector dx( der(curve(time)) );
 		const interval dh( grd_h.der()(1)*dx );
-		interval dg[grd_g.size()];
+		vector<interval> dg(grd_g.size());
 		for (int i(0); i < grd_g.size(); i++)
 			dg[i] = grd_g[i]->der()(1)*dx;
 
 g_context->cout << endl << "contracting lb:\t" << time+time_procd << endl;
 if (time.left() < 0.) THROW("integration backward");
 
+		//const interval offset(time.left());
+		interval offset(time.left());
+		time -= offset;
+
 		// evaluate the guard h at the left bound.
-		const interval offset(time.left());
 		const interval h( grd_h(curve(offset))(1) );
 g_context->cout << "offset:\t" << offset << endl;
 g_context->cout << "h:\t" << h << endl;
 g_context->cout << "dh:\t" << dh << endl;
+//cout << "h':\t" << grd_h(curve(4.66414-time_procd.leftBound()))(1) << endl;
 
 		// enforce the Box consistency
-		time -= offset;
 		interval *gamma_l(&time);
 		interval *gamma_u(NULL);
 		extDiv(-h, dh, gamma_l, gamma_u);
@@ -55,10 +60,17 @@ g_context->cout << "contracted lb:\t" << time+offset+time_procd << endl;
 
 		// evaluation of inequalities
 		for (int i(0); i < grd_g.size(); i++) {
+			// TODO
+			offset += time.left();
+			time -= time.left();
+
 			// evaluate the guard g at the left bound.
+			//const interval g( polar ?
+			//		(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) :
+			//		(*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) );
 			const interval g( polar ?
-					(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) :
-					(*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) );
+					(*grd_g[i])(curve(offset))(1) + interval(0,INFINITY) :
+					(*grd_g[i])(curve(offset))(1) - interval(0,INFINITY) );
 g_context->cout << polar << ", g[" << i << "]:\t" << g << endl;
 
 			// enforce the Box consistency
@@ -245,10 +257,13 @@ g_context->cout << endl << "step made (1): " << time+time_procd << endl;
 
 g_context->cout << "x:  " << curve(time) << endl;
 
+//cout << "h':\t" << grd_h(curve(4.7-time_procd.leftBound()))(1) << endl;
+//cout << "x:\t" << curve(2.5-time_procd.leftBound()) << endl;
+
 		// reduce the lower bound
 		//bool res( reduceLower(der, grd_h, grd_g, curve, time_init, time_procd, time) );
 		bool res( reduceLower(der, grd_h, grd_g, curve, time, time_procd, reduced) );
-g_context->cout << "TIME: " << time+time_procd << endl;
+//g_context->cout << "TIME: " << time+time_procd << endl;
 
 		// dump the trajectory paving.
 		if (selected && g_params->dump_interval > 0) {
@@ -294,7 +309,6 @@ g_context->fout << ',' << endl;
 
 	// verification of the result
 	if ( !verify(der, grd_h, curve, time, time_procd, reduced) ) {
-cout << "v failed" << endl;
 		THROW("verification failed");
 	}
 
@@ -322,7 +336,8 @@ g_context->cout << "GTIME: " << g_context->time << endl;
 	}
 
 	for (int i(0); i < grd_g.size(); i++) {
-		if ( (*grd_g[i])(curve(reduced))(1).rightBound() >= 0 )
+		//if ( (*grd_g[i])(curve(reduced))(1).rightBound() >= 0 )
+		if ( (*grd_g[i])(curve(reduced))(1).rightBound() <= 0 )
 			THROW("inequality condition is not satisfied at last");
 	}
 
@@ -337,11 +352,14 @@ if (selected) {
 //std::cout << "dx_phi" << g_context->dx_phi << std::endl;
 
 	g_context->dt_phi = der(g_context->x);
-	g_context->dh = grd_h.der()(1);
 
-	g_context->time = reduced;
-	g_context->time += time_procd;
-//std::cout << g_context->time << std::endl;
+	// TODO
+	//grd_h(g_context->x);
+	g_context->dh = grd_h.der()(1);
+	//g_context->dh = grd_h[g_context->x](1);
+
+	g_context->time = reduced + time_procd;
+	//g_context->time += time_procd;
 
 //g_context->pped = pped;
 
@@ -424,8 +442,7 @@ g_context->cout << "time_init:\t" << time_init+time_procd << endl;
 		const interval dh( grd_h.der()(1)*dx );
 g_context->cout << "contracting:\t" << time_mid+time_procd << endl;
 		//der(curve(time_mid.mid()));
-		time_mid = time_mid.mid() - 
-				grd_h(curve(time_mid.mid()))(1) / dh;
+		time_mid = time_mid.mid() - grd_h(curve(time_mid.mid()))(1) / dh;
 		intersection(time_init, time_mid, time_mid);
 g_context->cout << "contracted:\t" << time_mid+time_procd << endl;
 g_context->cout << time << "-" << time_procd << " cap " << time_mid << endl;
@@ -445,6 +462,9 @@ g_context->cout << "time_mid:\t" << time_mid << endl;
 	g_context->x_mid = curve(time_mid);
 	time_mid += time_procd;
 g_context->cout << endl << "mid:\t" << g_context->x_mid << " at " << time_mid << endl << endl;
+
+	// TODO
+	g_context->time_mid = time_mid;
 
 	} 
 	//catch (exception& e)
@@ -679,6 +699,23 @@ reduced += time_procd;
 }
 
 
+/*int checkInvAtInitTime(const char *lid, const int iid)
+{
+	Location *loc = g_model->locs[lid].get();
+	DerMap& der = loc->der;
+	AuxMap& invariant = *g_model->locs[lid]->invariant[iid];
+	ITaylor solver(der, g_params->order, g_params->h_min);
+
+	const IVector iv = g_context->pped.hull();
+	interval lhs = invariant(iv)(1);
+    // invariant: lhs > 0
+    // negation holds strongly
+	if (lhs.rightBound() < 0.)
+		return 0;
+	else
+		return 1;
+}*/
+
 int checkPropAtInitTime(const char *lid, const int apid)
 {
 	Location *loc = g_model->locs[lid].get();
@@ -689,31 +726,40 @@ int checkPropAtInitTime(const char *lid, const int apid)
 	const IVector iv = g_context->pped.hull();
 	interval lhs = ap(iv)(1);
 //std::cout << "lhs: " << lhs << std::endl;
-	if (lhs.rightBound() < 0.)
+	if (lhs.leftBound() >= 0.)
 		return 1;
-	else if (lhs.leftBound() > 0.)
+	else if (lhs.rightBound() <= 0.)
 		return 0;
 	else
 		return -1;
 }
 
-int checkPropPolar(const char *lid, const int apid)
+int checkPropKind(const char *lid, const int apid, double *vl, double *vu)
 {
 	Location *loc = g_model->locs[lid].get();
 	DerMap& der = loc->der;
 	AuxMap& ap_norm = *loc->apNormals[apid];
 	ITaylor solver(der, g_params->order, g_params->h_min);
 
-	const IVector iv = g_context->pped.hull();
+	IVector iv = g_context->pped.hull();
 	interval lhs = ap_norm(iv)(1);
+	for (int i=0; i < iv.dimension(); ++i)
+		iv[i] = interval(-HUGE_VAL,HUGE_VAL);
+	interval lhs1 = ap_norm(iv)(1);
 //std::cout << "lhs: " << lhs << std::endl;
-	if (lhs.rightBound() > 0.)
+	//if (0. < lhs.leftBound())
+	if (lhs.rightBound() < 0.)
 		return 1;
-	else if (lhs.leftBound() < 0.)
+	//else if (lhs.rightBound() < 0.)
+	else if (lhs.leftBound() > 0.)
 		return 0;
+	else if (lhs1.leftBound() == 0. && lhs1.rightBound() == 0.) { // TODO: constant function
+		interval v = (*loc->aps[apid])(iv)(1);
+		*vl = v.leftBound(); *vu = v.rightBound();
+		return 2;
+	}
 	else
-		return -1;
-	return -1;
+		return 4;
 }
 
 cInterval findPropExtremum(const char *lid, const int apid, 
@@ -787,7 +833,7 @@ g_context->cout << "x:  " << curve(time) << endl;
 g_context->cout << "dx: " << dx << endl; 
 
 		// reduce the lower bound
-		bool res( reduceLower(der, ap_norm, empty_vec, curve, time, time_procd, reduced) );
+        bool res( reduceLower(der, ap_norm, empty_vec, curve, time, time_procd, reduced) );
 		if (res)
 			break;
 		else if (timeMap.completed())
@@ -828,7 +874,9 @@ reduced += time_procd;
 }
 
 
+// TODO: implementation of time shifting evaluation
 cSigComp compareSignals(const char *lid, const int neg1, const int neg2, 
+						const double st1, const double st2,
 						const int apid1, const int apid2, 
 						const double time_lower, const double time_max)
 {
@@ -836,8 +884,6 @@ g_context->cout << endl;
 g_context->cout << "*** compareSignals: " << lid << "," << apid1  << "," << apid2 << "; " << time_lower << ", " << time_max << endl;
 g_context->cout << neg1 << ", " << neg2 << endl;
 g_context->cout << endl;
-//char c;
-//scanf("%c\n", &c);
 
 	cSigComp result = {-1, cEmpty};
 
@@ -967,6 +1013,154 @@ g_context->cout << "error" << endl;
 	result.intv.u = reduced.rightBound();
 
 	if (reduced.leftBound() - time_lower < g_params->epsilon) {
+		// intersection segment
+		result.apid = -1;
+        // TODO
+        result.intv.u += g_params->epsilon;
+	}
+
+g_context->cout << "result: " << result.apid << endl;
+
+	return result;
+}
+
+
+cSigComp findIntersection(const char *lid, const int neg, const double st, const int apid, 
+						  const double vl, const double vu,
+						  const double time_lower, const double time_max)
+{
+g_context->cout << endl;
+g_context->cout << "*** findIntersection: " << lid << "," << neg << ", " << apid << ", " << time_lower+st << ", " << time_max+st << endl;
+g_context->cout << endl;
+
+	cSigComp result = {-1, cEmpty};
+
+	int dim(g_model->dim);
+	Location *loc = g_model->locs[lid].get();
+	DerMap& der = loc->der;
+	TransMap aps_diff(neg, *loc->aps[apid], interval(vl,vu));
+	AuxMapVec empty_vec;
+
+	// initial value
+	Parallelepiped pped = g_context->pped;
+	interval time = g_context->time;
+g_context->cout << "TIME0: " << time << endl;
+	double time_l(g_context->time.rightBound());
+    interval time_procd(time_l);
+
+	interval reduced;
+
+	TRY {
+
+	// the initial value:
+	CapdPped capdPped(pped.toCapdPped());
+
+	{
+	// skip to the searched prefix time.
+
+	// the solver:
+	ITaylor solver(der, g_params->order, g_params->h_min);
+	ITimeMap timeMap(solver);
+	timeMap.stopAfterStep(true);
+
+	//IMatrix dx_prev(IMatrix::Identity(dim));
+	
+	while (true) {
+		timeMap.moveSet(time_lower+st - time_l, capdPped); // TODO
+		if (timeMap.completed()) break;
+		//time_procd += interval(0.,1.) * solver.getStep();
+		time_procd = timeMap.getCurrentTime();
+	}
+g_context->cout << "moved to time_l: " << time_lower+st << " - " << time_l << " " << time_procd << endl;
+
+	time_l = solver.getStep().rightBound();
+
+g_context->cout << "time_l: " << time_l + time_procd.rightBound() << endl;
+	if (time_l + time_procd.rightBound() > time_max+st)
+		return result;
+
+	// check the polarity at the left bound.
+	const ITaylor::CurveType& curve = solver.getCurve();
+
+	const IVector x( curve(time_l) );
+g_context->cout << "x: " << x << endl;
+	const IVector mid( midVector(x) );
+g_context->cout << "mid: " << mid << endl;
+
+g_context->cout << "lhs1: " << aps_diff(mid) << endl;
+g_context->cout << "lhs2: " << aps_diff[x]*(x-mid) << endl;
+	const interval lhs( aps_diff(mid)(1) + (aps_diff[x]*(x-mid))(1) );
+g_context->cout << "lhs: " << lhs << endl;
+
+	if (lhs.leftBound() >= 0.) // TODO
+		result.apid = apid+1;
+	else if (lhs.rightBound() <= 0.)
+		result.apid = apid;
+	else
+		result.apid = -1;
+	}
+
+	time_procd += time_l;
+	time_l = time_procd.rightBound();
+
+	ITaylor solver(der, g_params->order, g_params->h_min);
+	ITimeMap timeMap(solver);
+	timeMap.stopAfterStep(true);
+
+	while (true) {
+
+		// integrate 1 step.
+ 		timeMap.moveSet(time_max+st - time_l, capdPped);
+
+		time = interval(0,1)*solver.getStep();
+g_context->cout << endl << "step made (4): " << time+time_procd << endl;
+		reduced = time;
+		const ITaylor::CurveType& curve = solver.getCurve();
+
+		// check the polarity
+		if (result.apid < 0) {
+			const interval lhs( aps_diff( curve(time.left()) )(1) );
+g_context->cout << "lhs: " << lhs << endl;
+			if (lhs.leftBound() >= 0.) // TODO
+				result.apid = apid+1;
+			else if (lhs.rightBound() <= 0.)
+				result.apid = apid;
+		}
+
+
+		IVector  dx( der(curve(time)) );
+g_context->cout << "x:  " << curve(time) << endl;
+g_context->cout << "dx: " << dx << endl; 
+
+		// reduce the lower bound
+		bool res( reduceLower(der, aps_diff, empty_vec, curve, time, time_procd, reduced) );
+		if (res)
+			break;
+		else if (timeMap.completed()) {
+g_context->cout << "completed" << endl;
+			return result;
+		} else {
+			time_procd = time_l + timeMap.getCurrentTime();
+		}
+	}
+
+g_context->cout << "TIME: " << reduced << endl;
+g_context->cout << "GTIME: " << g_context->time << endl;
+
+// TODO
+reduced += time_procd;
+	} 
+	CATCH {
+g_context->cout << "error" << endl;
+		std::cerr << "exception caught! (4): " << eh_ex.what() << endl << endl;
+		result.intv = cError;
+		return result;
+	}
+
+	result.intv.l = reduced.leftBound();
+	result.intv.u = reduced.rightBound();
+
+	if (reduced.leftBound() - time_lower+st < g_params->epsilon) {
 		// intersection segment
 		result.apid = -1;
 	}

@@ -191,8 +191,8 @@ public:
 		dump_interval(0.1),
 		dump_to_file(0),
 		dump_math(0),
-		epsilon(1e-12),
-		abs_infl(1e-12),
+		epsilon(1e-14),
+		abs_infl(1e-14),
 		delta(0.99),
 		tau(1.1),
 		cm_thres(100)

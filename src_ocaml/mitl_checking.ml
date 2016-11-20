@@ -259,7 +259,8 @@ let rec propagate debug ap_bs = function
     | Mloc (id,_lid) ->
         let bs = snd (List.nth ap_bs id) in
         if debug then Format.printf "  loc\n%a" print_bs bs;
-        if bs = Some [] then None else bs
+        (*if bs = Some [] then None else bs*)
+        bs
     | Mexpr d -> 
         let bs = snd (List.find (fun (apid,_bs) -> apid = d.Hashcons.tag) ap_bs) in
         let bs = match bs with
@@ -283,6 +284,13 @@ let rec propagate debug ap_bs = function
         let bs  = shift_bs t bs1 bs2 in
         if debug then Format.printf "  until %a\n%a" print_interval t print_bs bs;
         bs
+    | Mevt (t,f) -> 
+        let bs = propagate debug ap_bs f in
+        let bs = shift_bs t None bs in
+        if debug then Format.printf "  evt %a\n%a" print_interval t print_bs bs;
+        bs
+    | _ ->
+        error Unsupported
 
 let eval_at_zero = function
     | None -> Some true

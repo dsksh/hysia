@@ -21,11 +21,12 @@ val filter_invariant :
   'a ->
   ('b * 'c) list ->
   ('d * 'b * 'e * 'f * 'g) list ->
-  (int * ('h * 'i)) option * (int * ('h * 'h)) option ->
-  int * ('h * 'h) -> bool
+  (int * (float * float)) option * (int * (float * float)) option ->
+  int * (float * float) -> bool
 val select_random : ('a * ('b * 'b)) list -> ('a * ('b * 'b)) option
 val dst_of_edge : 'a * 'b * 'c * 'd * 'e -> 'd
 val set_param_ : string -> string * float -> unit
+val check_prop_ : string -> int -> int * 'a -> bool ref
 val find_prop_frontier_ :
   string ->
   float ->
