@@ -5,6 +5,8 @@
 %\usepackage[english]{isodate}
 %\usepackage[parfill]{parskip}
 
+\usepackage{graphicx}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{bm}
@@ -31,7 +33,7 @@
 \begin{document}
 
 \title{HySIA Manual (beta version)}
-\author{Daisuke Ishii}
+\author{Daisuke Ishii \quad \texttt{dsksh@acm.org}}
 
 \maketitle
 
@@ -40,13 +42,20 @@
 
 \section{Short Tutorial}
 
-Specification of a simple bouncing ball model (\texttt{bb.ha}):
+HySIA provides a specification language for \emph{hybrid automata} (HA) and temporal logic properties.
+An HA is simulated and analyzed about a property using the \verb|hysia| command.
+This section exemplifies the modeling, simulation, and verification of HA using HySIA.
+
+\subsection{Modeling Hybrid Automata}
+
+Below is an example specification that describes a simple bouncing ball model (\texttt{bb.ha}):
 \begin{lstlisting}
+(* first part *)
 let g = 1
-let c = 1
+let c = 0.9
+let pertb = [-1e-5, 1e-5]
 
-let pertb = [-0.001, 0.001]
-
+(* second part *)
 var   y, vy
 
 init  Loc, 1+pertb, -0+pertb
@@ -55,15 +64,29 @@ at Loc wait vy, -g
   once (y, vy) goto Loc then y, -c*vy
 end
 
+(* third part *)
 param order = 20
 param t_max = 100
 param dump_interval = 0.1
 \end{lstlisting}
+%
+The specification consists of three parts.
+The first part (Lines~1--4) defines three constants \verb|g|, \verb|c|, and \verb|pertb| to be used in the second part.
+The values of constants can be either real values or intervals.
 
-A model with two locations (\texttt{bb1.ha}):
+The second part (Lines~6--13) describes an HA.
+Line~7 declared the state variables \verb|y| and \verb|vy| of the HA, which are evaluated over timeline.
+Line~9 describes the initial state as a comma-separated list of a location and values for each state variable.
+Lines~11--13 defines a location named \verb|Loc|.
+After the keyward \verb|wait|, the derivatives of the state variable are specified as $\frac{d}{dt}\mathtt{y} = \mathtt{vy}$ and $\frac{d}{dt}\mathtt{vy} = -\mathtt{g}$.
+At Line~12, an inter-location transition is specified.
+The tuple after \verb|once| tells that the guard condition for this transition is $\mathtt{y} = 0 ~\land~ \mathtt{vy} > 0$. (Only the left-hand side of the implicit form is described.)
+Whenever the guard is satisfied, an execution will transit to the same location \verb|Loc| with a reset of the state variables as $\mathtt{y} := \mathtt{y}$ and $\mathtt{vy} := -\mathtt{c}\,\mathtt{vy}$.
+
+The last part (Lines~15--18) configures some parameters of the simulator implementation, i.e., the order \verb|order| of Taylor coefficient expansion, the time horizon \verb|t_max| of a continuous state evolution, and \verb|dump_interval| that bounds the step size when computing a dumped data.
+
+In general, an HA consists of multiple locations. The bouncing ball system can be modeled with two locations by modelling the second part as follows: %(\texttt{bb1.ha}):
 \begin{lstlisting}
-(* ... *)
-
 init  Fall, 1+pertb, -0+pertb
 
 at Fall wait vy, -g
@@ -73,17 +96,85 @@ end
 at Rise wait vy, -g
   once (vy, -y) goto Fall then y, vy
 end
-
-(* ... *)
 \end{lstlisting}
 
-Command-line execution for simulating for 10 steps:
+\subsection{Simulation of a Model}
+
+Once a specification is prepared, a user can simulate the model for 10 transitions with the following command:
 \begin{verbatim}
 $ hysia bb.ha -n 10 -dump
 \end{verbatim}
+The option \verb|-dump| let HySIA to output the result of the simulation to the file \verb|pped.dat| in a JSON format.
+The output data consists of a set of \emph{boxes} (interval vectors) that encloses the trajectories of the HA.
+(In this example, the interval value \verb|pertb| allows perturbation of trajectories; these trajectories are enclosed within the boxes.)
+The result can be visualized as shown in Figure~\ref{f:bb}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\linewidth]{bb.eps}
+\caption{Dumped trajectory enclosure of the bouncing ball example}
+\label{f:bb}
+\end{figure}
+
+Simulation and verification of HySIA are all computed with validated interval analysis.
+Thus, a resulting interval enclosure of a system's state expands as longer the simulation length and more the \emph{wrapping effect} occurs.
+However, thanks to the underlying \emph{parallelotope}-based simulation method for wrapping effect reduction, HySIA is able to simulate a large number of jumps for various HA.
+Indeed, for the bouncing ball model, when we modify the parameter values as \verb|c = 1| and \verb|pertb = 0|, HySIA can simulate for more than a thousand steps.
+
+As we have seen so far, HySIA allows models to involve some uncertainties derived by interval values.
+HySIA computes (the overapproximation of) the reachable region with respect to the uncertainties.
+However, here we may encounter a drawback of HySIA; a simulation is not always successful but may result in an error.
+%
+When we modify the value of \verb|pertb| to a slightly large interval \verb|[-1e-4, 1e-4]| and run a simulation, \verb|hysia| will output as follows:
+\begin{verbatim}
+$ hysia bb.ha -n 10 -dump
+step 0 (0.000000 < inf) at Loc
+step 1 (1.414043 < inf) at Loc
+step 2 (3.959155 < inf) at Loc
+step 3 (6.249714 < inf) at Loc
+step 4 (8.310768 < inf) at Loc
+step 5 (10.163552 < inf) at Loc
+step 6 (11.809965 < inf) at Loc
+libc++abi.dylib: terminating with uncaught exception of type std::
+runtime_error: zero in the derivative
+Abort trap: 6
+\end{verbatim}
+The simulation fails after the sixth jump. The output implies that HySIA fails in the detection of a discrete change because a state enclosure becomes too large.
+In fact, in each detection, HySIA checks whether the orientaion between the trajectory and the guard is regular enough so that it is sure that each trajectory within an enclosure satisfies the guard.
 
 
-\section{Command-Line Tool}
+\subsection{Verification of STL Properties}
+
+HySIA provides a function for verifying properties described in the \emph{signal temporal logic} (STL).
+For example, we can add an STL property 
+\begin{lstlisting}
+G[0,10] F[0,1] y-0.5
+\end{lstlisting}
+in the above mentioned model.
+(It should be added in between the second and third parts.)
+The verification can be done with the following command:
+\begin{verbatim}
+$ hysia bb.ha -a
+\end{verbatim}
+The \verb|hysia| command calculates the \emph{necessary} simulation length for the verification, performs a simulation, and evaluates the satisfiability of this property.
+Accordingly, the verification succeeds with the following output:
+\begin{verbatim}
+\end{verbatim}
+
+
+\section{Installation Instructions}
+
+TBD.
+
+
+\section{Examples}
+
+TBD.
+
+
+\section{Reference Manual}
+
+\subsection{Command-Line Tool}
 
 The basic syntax for the command-line execution is as follows:
 \begin{grammar}
@@ -116,7 +207,7 @@ The option \texttt{-cm_thres} specifies the character matrix $B$ to be used in t
 \end{itemize}
 
 
-\section{Solving Parameters}
+\subsection{Solving Parameters}
 
 \begin{description}
 \item[\texttt{order}] Order of Taylor expansion.
@@ -130,12 +221,12 @@ The option \texttt{-cm_thres} specifies the character matrix $B$ to be used in t
 \end{description}
 
 
-\section{Specification Language}
+\subsection{Specification Language}
 
 This section describes the grammar of the specification language of HySIA.
 A specification consists of the definition of a hybrid automaton, an STL formula, and solving parameter configurations.
 
-\subsection{Lexical conventions}
+\subsubsection{Lexical conventions}
 
 The lexical class of digits, letters, and identifiers is the following:
 \begin{grammar}
@@ -175,7 +266,7 @@ The syntax of various numeral expressions is as follows:
 Comments are either enclosed between \texttt{(*} and \texttt{*)} (can be nested) or prefixed with \texttt{\#}.
 
 
-\subsection{Toplevel syntax}
+\subsubsection{Toplevel syntax}
 
 The syntax for the toplevel of specifications is the following:
 \begin{grammar}
@@ -201,7 +292,7 @@ The syntax for the toplevel of specifications is the following:
 \end{grammar}
 
 
-\subsection{Expressions}
+\subsubsection{Expressions}
 
 The operators and function application in expressions have the priorities and associativities as shown in the table below (from lowest to greatest priority):
 \begin{table}[ht]
@@ -236,7 +327,7 @@ The syntax for expressions is the following:
 \end{grammar}
 
 
-\subsection{STL formulae}
+\subsubsection{STL formulae}
 
 The operators in formulae have the following priorities and associativities:
 \begin{table}[ht]
