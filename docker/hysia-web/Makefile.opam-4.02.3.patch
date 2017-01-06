@@ -1,0 +1,13 @@
+--- Makefile.orig	2017-01-06 12:35:45.000000000 +0900
++++ Makefile	2017-01-06 17:38:51.000000000 +0900
+@@ -42,8 +42,9 @@
+ OCAMLLEX  = ocamllex
+ OCAMLYACC = ocamlyacc
+ OCAMLDOC  = ocamldoc
+-OCAMLLIB  = /usr/local/lib/ocaml
++#OCAMLLIB  = /usr/local/lib/ocaml
+ #OCAMLLIB  = /usr/lib/ocaml
++OCAMLLIB  = /home/opam/.opam/4.02.3/lib/ocaml
+ OCAMLBEST = opt
+ 
+ CAMLP5O   = camlp5o

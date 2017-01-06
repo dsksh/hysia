@@ -3,10 +3,10 @@
 ## Requirements
 
 * CAPD-DynSys-3.0 http://capd.ii.uj.edu.pl/
-* OCaml (tested with ver. 3.12--4.02)
-* C/C++ (tested with gcc ver. 4.7.4--4.8.4)
+* OCaml (tested with ver. 3.12–4.02)
+* C/C++ (tested with gcc ver. 4.7.4–4.8.4)
 
-Tested on Linux ver. 3.2.0--4.4.39 on amd64 and Mac OS X ver. 10.9.5--10.11.6.
+Tested on Linux ver. 3.2.0–4.4.39 on amd64 and Mac OS X ver. 10.9.5–10.11.6.
 
 ## Install
 
@@ -49,7 +49,7 @@ If you have Mathematica, you can use a notebook file `plot.nb` to visualize a du
 
 ## Reference
 
-A. Goldsztejn, D. Ishii: A Parallelotope Method for Hybrid System Simulation. Reliable Computing, 23:163--185, 2016.
+A. Goldsztejn, D. Ishii: A Parallelotope Method for Hybrid System Simulation. Reliable Computing, 23:163–185, 2016.
 
 D. Ishii, N. Yonezaki, A. Goldsztejn. Monitoring Temporal Properties using Interval Analysis. IEICE Transactions on Fundamentals of Electronics, Communications and Computer Sciences, E99-A(2):442–453, 2016.
 

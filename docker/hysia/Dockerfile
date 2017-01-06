@@ -1,5 +1,5 @@
 FROM ocaml/ocaml:ubuntu-14.04
-MAINTAINER Daisuke ISHII <dsksh@acm.org>
+#MAINTAINER Daisuke ISHII <dsksh@acm.org>
 WORKDIR /root
 RUN apt-get update && \
     apt-get install -y wget libboost-dev && \
