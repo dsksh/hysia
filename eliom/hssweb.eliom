@@ -6,7 +6,6 @@
   open Printf
 }}
 
-
 type t_param = { order:int; tmax:float; hmin:float; eps:float; hdump:float;
 				 k:int; tsim:float; cm:int; }
 
@@ -19,7 +18,6 @@ let record_of_pdata ((*_data,*)(spec,(order,(tmax,(hmin,(eps,(hdump,(k,(tsim,(cm
 let default_pvalue spec = 
   let pvalue = {order=20; tmax=100.; hmin=1e-14; eps=1e-14; hdump=0.1; k=10000; tsim=10.;cm=100;} in
   {spec=spec;param=pvalue;yvar=0;fontsize=1.;}
-
 
 {server{
   open Format
@@ -144,8 +142,8 @@ let examples = [
   ("Gas burner", "gasburner.ha");
   ("ATM 4", "atm4.ha");
   ("C. Rotation", "cont-rotate.ha");
-  ("C. Lorenz", "cont-lorenz.ha");
   ("C. Van der Pol", "cont-vanderpol.ha");
+  ("C. Lorenz", "cont-lorenz.ha");
 ]
 
 let example_services =
@@ -187,32 +185,36 @@ let create_input_form vars v_dump v_res v_tsim v_spec pvalue v_yvar v_fontsize =
     let submenu = div ~a:[ a_id "submenu" ] 
 	  [ example_list () ] in
 
-	let spec_ta =
-	  Html5.D.textarea ~a:[ a_id "spec"; 
-							a_style ("font-size:"^(string_of_float v_fontsize)^"em;"); ] 
+    let spec_ta =
+	  Html5.D.Form.textarea ~a:[ a_id "spec"; 
+				     a_style ("font-size:"^(string_of_float v_fontsize)^"0em;"); ] 
 					   ~name:spec ~value:v_spec () in
     let left = div ~a:[ a_id "left" ] [ spec_ta ] in 
 
 	let res_ta =
 	  Html5.D.Raw.(textarea ~a:[ a_id "result";
-								 a_style ("font-size:"^(string_of_float v_fontsize)^"em;"); ]
+			             a_style ("font-size:"^(string_of_float v_fontsize)^"0em;"); ]
 					   (pcdata v_res) ) in
 
 	let create_input l input =
       div ~a:[ a_class ["param_input"] ] 
   	    [pcdata l; input] in
     let int_input l n v =
-	  create_input l (Html5.D.int_input ~input_type:`Text ~name:n ~value:v ()) in
+	  (*create_input l (Html5.D.int_input ~input_type:`Text ~name:n ~value:v ()) in*)
+	  create_input l (Html5.D.Form.input ~input_type:`Text ~name:n ~value:v Html5.D.Form.int) in
     let flt_input l n v =
-	  create_input l (Html5.D.float_input ~input_type:`Text ~name:n ~value:v ()) in
+	  (*create_input l (Html5.D.float_input ~input_type:`Text ~name:n ~value:v ()) in*)
+	  create_input l (Html5.D.Form.input ~input_type:`Text ~name:n ~value:v Html5.D.Form.float) in
 	let yv_input =
 	  match vars with
 	  | [] ->
-	    Html5.D.(int_select ~name:yvar (Option ([], 0, Some (pcdata ""), true)) [])
+	    (*Html5.D.(int_select ~name:yvar (Option ([], 0, Some (pcdata ""), true)) [])*)
+	    Html5.D.Form.(select ~name:yvar int (Option ([], 0, Some (pcdata ""), true)) [])
 	  | v0::vs ->
-	    Html5.D.(int_select ~name:yvar
-	      (Option ([], 0, Some (pcdata v0), v_yvar=0))
-	      (List.mapi (fun i l -> Option ([], (i+1), Some (pcdata l), v_yvar=(i+1))) vs) ) in
+	    (*Html5.D.(int_select ~name:yvar*)
+	    Html5.D.Form.(select ~name:yvar int (Option ([], 0, Some (pcdata v0), v_yvar=0))
+	      (List.mapi (fun i l -> Option ([], (i+1), Some (pcdata l), v_yvar=(i+1))) vs) )
+	      in
 	let _ = {unit{
 	  let open Lwt_js_events in
 	  let inp = Html5.To_dom.of_select %yv_input in
@@ -225,10 +227,10 @@ let create_input_form vars v_dump v_res v_tsim v_spec pvalue v_yvar v_fontsize =
 	}} in
 	let fs_input = 
 	  let eq f1 f2 = abs_float (f1-.f2) < 1e-12 in
-	  Html5.D.(float_select ~name:fontsize
+	  Html5.D.Form.(select ~name:fontsize float
 		(Option ([], 0.6, Some (pcdata "0.6"), (eq v_fontsize 0.6)))
 		(List.map (fun s -> Option ([], s, Some (pcdata (string_of_float s)), (eq v_fontsize s)))
-		[1.;1.1;1.2;1.3;1.4] )) in
+		[0.8;1.;1.2;1.4] )) in
 	let _ = {unit{
 	  let open Lwt_js_events in
 	  let inp = Html5.To_dom.of_select %fs_input in
@@ -236,8 +238,8 @@ let create_input_form vars v_dump v_res v_tsim v_spec pvalue v_yvar v_fontsize =
 	  let rta  = Html5.To_dom.of_textarea %res_ta in
 	  async (fun () -> changes inp (fun _ _ ->
 	    let s = Js.to_string (inp##value) in
-	    sta##style##fontSize <- Js.string (s^"em");
-	    rta##style##fontSize <- Js.string (s^"em");
+	    sta##style##fontSize <- Js.string (s^"0em");
+	    rta##style##fontSize <- Js.string (s^"0em");
 		Lwt.return ()
 	  ))
 	}} in
@@ -252,7 +254,7 @@ let create_input_form vars v_dump v_res v_tsim v_spec pvalue v_yvar v_fontsize =
 		  int_input "#steps: " k     pvalue.k;
 		  flt_input "Tsim: "   tsim  pvalue.tsim;
 		  br ();
-		  Html5.D.input ~input_type:`Submit ~value:"Run" ();
+		  Html5.D.Form.(input ~input_type:`Submit ~value:"Run" string);
 		  br ();
       	  div ~a:[ a_class ["param_input"] ] [ pcdata "Yvar: "; yv_input ];
       	  div ~a:[ a_class ["param_input"] ] [ pcdata "Fontsize: "; fs_input ];
@@ -281,7 +283,7 @@ let gen_frontend phandler {spec=spec; param=pvalue; yvar=yvar; fontsize=fontsize
 
   let title_text = "HySIA (beta)" in
   let p_holder = div ~a:[ a_id "plot" ] [] in
-  let iform = (Html5.D.post_form phandler 
+  let iform = (Html5.D.Form.post_form phandler 
 	(create_input_form vars dump res tsim spec pvalue yvar fontsize) ()) in
 
   Lwt.return
@@ -299,7 +301,7 @@ let gen_frontend phandler {spec=spec; param=pvalue; yvar=yvar; fontsize=fontsize
 				];
 				iform;
 				div ~a:[ a_id "bottom" ] 
-				  [ pcdata "Copyright(C) 2015 "; 
+				  [ pcdata "Copyright(C) 2015-2016 "; 
 					Html5.F.Raw.a
 					  ~a:[a_href (Xml.uri_of_string "http://www.dsksh.com/")]
 					  [pcdata "Daisuke Ishii"]; pcdata ". All rights reserved." ];

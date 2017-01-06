@@ -11,7 +11,7 @@ init  Loc, 2, 0
 at Loc wait x2, mu*(1-x1^2)*x2 - x1
 end
 
-#prop G[0,10](F[0,5](x1-0.8))
+prop G[0,10] F[0,5] x1-0.8
 
 param order = 11
 param t_max = 100

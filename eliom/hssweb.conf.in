@@ -21,11 +21,7 @@
     <host hostfilter="*">
       <static dir="%%STATICDIR%%" />
       <static dir="%%ELIOMSTATICDIR%%" />
-      <!--<eliommodule module="%%LIBDIR%%/capd_sending_stubs.o" />
-      <eliommodule module="%%LIBDIR%%/capd_simulating_stubs.o" />
-      <eliommodule module="%%LIBDIR%%/libmycapd.a" />
-	  <eliommodule module="/usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a" />-->
-      <eliommodule module="%%LIBDIR%%/%%PROJECT_NAME%%.cmxs" />
+      <eliommodule module="%%LIBDIR%%/%%PROJECT_NAME%%.cma" />
       <eliom/>
     </host>
   </server>

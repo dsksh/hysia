@@ -10,19 +10,19 @@ var   x, y
 init  On, low, 0
 
 at On wait (rateIn-x/rr)/cc, 0
-  once (x-high, -x) goto Sw_off then x, 0
+  once (x-high, x) goto Sw_off then x, 0
 end
 
 at Sw_off wait (rateIn-x/rr)/cc, 1
-  once (y-delay, -y) goto Off then x, 0
+  once (y-delay, y) goto Off then x, 0
 end
 
 at Off wait -(x/rr)/cc, 0
-  once (x-low, -x) goto Sw_on then x, 0
+  once (x-low, x) goto Sw_on then x, 0
 end
 
 at Sw_on wait -(x/rr)/cc, 1 
-  once (y-delay, -y) goto On then x, 0 
+  once (y-delay, y) goto On then x, 0 
 end
 
 

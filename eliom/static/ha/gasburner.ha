@@ -7,38 +7,33 @@ let B2 = 0.005
 
 var   x1, x2
 
-init  OnOff0, 0, [50,50]
+init  OnOff, 0, [50,50]
 
-at OnOff0 wait H1 - A1*x1 + B1*x2, -A2*x2 + B2*x1
-  invariant x1, 100-x1, x2, 100-x2
-
-  when (100-x1, x2-80) goto OffOn0  then x1, x2
-  when (100-x1, true)  goto OffOff0 then x1, x2
-  when (x2,     20-x1) goto OffOn0  then x1, x2
+at OnOff wait H1 - A1*x1 + B1*x2, -A2*x2 + B2*x1
+  once (x1-100, 80-x2)  goto OffOn  then x1, x2
+  once (x1-100, x1-80, x2-80) goto OffOff then x1, x2
+  once (x2,     x1-20)  goto OffOn  then x1, x2
 end
 
-at OffOff0 wait -A1*x1 + B1*x2, -A2*x2 + B2*x1
-  invariant x1-80, 100-x1, x2-80, 100-x2
-
-  when (x1-80,  true)   goto OnOff0  then x1, x2
-  when (x2-80,  true)   goto OffOn0  then x1, x2
+at OffOff wait -A1*x1 + B1*x2, -A2*x2 + B2*x1
+  once (x1-80,  true)   goto OnOff  then x1, x2
+  once (x2-80,  true)   goto OffOn  then x1, x2
 end
 
-at OffOn0 wait -A1*x1 + B1*x2, H2 - A2*x2 + B2*x1
-  invariant x1, 100-x1, x2, 100-x2
-
-  when (100-x2, true)  goto OffOff0 then x1, x2
-  when (100-x2, x2-80) goto OnOff0  then x1, x2
-  when (x1,     20-x2) goto OnOff0  then x1, x2
+at OffOn wait -A1*x1 + B1*x2, H2 - A2*x2 + B2*x1
+  once (x2-100, x1-80, x2-80) goto OffOff then x1, x2
+  once (x2-100, 80-x1)  goto OnOff  then x1, x2
+  once (x1,     20-x2)  goto OnOff  then x1, x2
 end
 
 
-(* STL property *)
+(* MITL property to satisfy *)
 
-prop  F[0,100]G[0,200](75-x1 & 75-x2)
+prop  F[0,100]G[0,200](!(75-x1) /\ !(75-x2))
 
 
-(* solving parameters *)
-
-param epsilon = 1e-8
-param dump_interval = 1
+param order = 10
+param t_max = 100
+param h_min   = 1e-14
+param epsilon = 1e-14
+param dump_interval = 10

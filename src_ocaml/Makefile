@@ -59,12 +59,15 @@ endif
 # external libraries common to all binaries
 
 #EXTOBJS =
-EXTLIBS = str unix nums dynlink oUnitAdvanced oUnit
-
+EXTLIBS = str unix nums dynlink
 EXTCMA	= $(addsuffix .cma,$(EXTLIBS)) #$(addsuffix .cmo,$(EXTOBJS))
 EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(EXTOBJS)
 #		  $(addsuffix .cmx,$(EXTOBJS))
 #		  /usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
+
+OUNITMODS = oUnitAdvanced oUnit 
+OUNITCMA  = $(addsuffix .cma,$(OUNITMODS))
+OUNITCMXA = $(addsuffix .cmxa,$(OUNITMODS))
 
 # C/C++
 CC  = gcc
@@ -198,11 +201,11 @@ opt:  test_mitl_checking.opt
 
 test_mitl_checking.byte: hss.cma test_mitl_checking.cmo
 	$(if $(QUIET),@echo 'Linking  $@' &&) \
-	    $(OCAMLC) $(BFLAGS) -o $@ $(EXTCMA) $^
+	    $(OCAMLC) $(BFLAGS) -o $@ $(EXTCMA) $(OUNITCMA) $^
 
 test_mitl_checking.opt: hss.cmxa test_mitl_checking.cmx
 	$(if $(QUIET),@echo 'Linking  $@' &&) \
-	    $(OCAMLOPT) $(OFLAGS) -o $@ $(EXTCMXA) $^
+	    $(OCAMLOPT) $(OFLAGS) -o $@ $(EXTCMXA) $(OUNITCMXA) $^
 	$(STRIP) $@
 
 test_mitl_checking.cmo: hss.cma

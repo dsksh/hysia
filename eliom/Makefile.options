@@ -19,8 +19,8 @@ CLIENT_PACKAGES :=
 LOCAL_STATIC = static
 
 # The backend for persistent data. Can be dbm or sqlite.
-#PERSISTENT_DATA_BACKEND = dbm
-PERSISTENT_DATA_BACKEND = sqlite
+PERSISTENT_DATA_BACKEND = dbm
+#PERSISTENT_DATA_BACKEND = sqlite
 
 # Debug application (yes/no): Debugging info in compilation,
 # JavaScript, ocsigenserver
@@ -34,13 +34,14 @@ WWWGROUP := www-data
 PORT := 80
 
 # Port for testing (make test.*)
-#TEST_PORT := 8080
-TEST_PORT := 9000
+TEST_PORT := 8888
 
 # Root of installation (must end with /)
-PREFIX := /
+PREFIX := /usr/local/
 
 # Local folder for make test.* (must end with /)
+# Do not add files manually in this directory.
+# It is just here to test your installation before installing in /
 TEST_PREFIX := local/
 
 # The installation tree (relative to $(PREFIX) when
@@ -48,8 +49,8 @@ TEST_PREFIX := local/
 # Configuration file $(PROJECT_NAME).conf
 ETCDIR := etc/${PROJECT_NAME}
 # Project's library $(PROJECT_NAME).cma (cmxs)
-LIBDIR := var/lib/${PROJECT_NAME}
-# Command pipe, eg. $ echo restart > $(INSTALL_PREFIX)$(CMDPIPE)
+LIBDIR := lib/${PROJECT_NAME}
+# Command pipe, eg. $ echo reload > $(INSTALL_PREFIX)$(CMDPIPE)
 CMDPIPE := var/run/${PROJECT_NAME}-cmd
 # Ocsigenserver's logging files
 LOGDIR := var/log/${PROJECT_NAME}

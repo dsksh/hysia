@@ -48,7 +48,7 @@ DEPSDIR := _deps
 ifeq ($(DEBUG),yes)
   GENERATE_DEBUG ?= -g
   RUN_DEBUG ?= "-v"
-  DEBUG_JS ?= -jsopt --pretty -jsopt --noinline -jsopt --debuginfo
+  DEBUG_JS ?= -jsopt -pretty -jsopt -noinline -jsopt -debuginfo
 endif
 
 ##----------------------------------------------------------------------
@@ -202,8 +202,6 @@ ${ELIOM_SERVER_DIR}/%.cmx: %.ml
 ${ELIOM_SERVER_DIR}/%.cmx: %.eliom
 	${ELIOMOPT} ${ELIOMFLAGS} -c ${SERVER_INC} $(GENERATE_DEBUG) $<
 
-.c.o: 
-	$(if $(QUIET),@echo 'Compiling $<' &&) $(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
 ##----------------------------------------------------------------------
 ## Client side compilation
