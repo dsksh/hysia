@@ -309,7 +309,9 @@ if debug then Format.printf "peu: const %a\n%!" print_interval v;
             begin match compare_vs v zv with
             | 0 -> proc_evt_ut_ debug neg tl tu rest z ss
             | 1 -> proc_evt_ut_ debug neg tl tu rest s ss
-            | _ -> proc_evt_ut_ debug neg tl tu rest z ss (* TODO *)
+            | _ -> 
+                let s = Sconst (join v zv) in
+                proc_evt_ut_ debug neg tl tu rest s ss (* TODO *)
             end
 
     | (Sexpr (_lid,_apid,Rise) as s)::ss as ss0 ->
@@ -321,7 +323,7 @@ if debug then Format.printf "peu: expr rise %b %f\n%!" neg tl;
             if neg then (* Fall *)
                 begin match res with
                 | 1 -> proc_evt_ut_ debug false tl tu rest (Snot s) ss
-                | 0 -> 
+                | _ -> 
                     let zvl = value_at_ tl false z in
                     let  vl = value_at_ tl true s in
                     let res = compare_vs vl zvl in
@@ -331,20 +333,21 @@ if debug then Format.printf "peu: expr rise %b %f\n%!" neg tl;
                     | _ ->
                         let ctl,ctu = find_intersection_ true false s z tl tu in
 (*Format.printf "cs_: %d, [%f,%f]\n%!" apid ctl ctu;*)
-                        begin if ctl > ctu (* no intersection *) then 
+                        begin if ctl+.1e-8 > ctu (* no intersection *) then (* TODO *)
                             proc_evt_ut_ debug false tl tu rest z ss
                         else
                             proc_evt_ut_ debug true tl ctl ((ctl,[z])::rest) (Snot s) ss0
                         end
                     end
-                | _ -> proc_evt_ut_ debug false tl tu rest (Snot s) ss (* TODO *)
+                (*| _ -> proc_evt_ut_ debug false tl tu rest (Snot s) ss (* TODO *)*)
                 end
             else (* Rise *)
-                let s = Sconst vu in
                 begin match res with
-                | 0 -> proc_evt_ut_ debug false tl tu rest z ss
-                | 1 -> proc_evt_ut_ debug false tl tu rest s ss
-                | _ -> proc_evt_ut_ debug false tl tu rest z ss (* TODO *)
+                | 0 -> proc_evt_ut_ debug false tl tu rest (Sconst zvu) ss
+                | 1 -> proc_evt_ut_ debug false tl tu rest (Sconst vu) ss
+                | _ -> 
+                    let s = Sconst (join vu zvu) in
+                    proc_evt_ut_ debug false tl tu rest s ss (* TODO *)
                 end
 
     | ((Sexpr (_lid,_apid,Fall) as s)::ss as ss0) ->
@@ -352,43 +355,47 @@ if debug then Format.printf "peu: expr fall %b %f\n%!" neg tl;
             let zvu = value_at_ tu false z in
             let  vu = value_at_ tu neg s in
             let res = compare_vs vu zvu in
-(*Format.printf "res: %d\n%!" res;*)
+(*Format.printf "res1: %d\n%!" res;*)
             begin if neg then (* Rise *)
-                let s = Sconst vu in
                 match res with
-                | 0 -> proc_evt_ut_ debug false tl tu rest z ss
-                | 1 -> proc_evt_ut_ debug false tl tu rest s ss
-                | _ -> proc_evt_ut_ debug false tl tu rest z ss (* TODO *)
+                | 0 -> proc_evt_ut_ debug false tl tu rest (Sconst zvu) ss
+                | 1 -> proc_evt_ut_ debug false tl tu rest (Sconst vu) ss
+                | _ -> 
+                    let s = Sconst (join vu zvu) in
+                    proc_evt_ut_ debug false tl tu rest s ss (* TODO *)
 
             else (* Fall *)
                 match res with
                 | 1 -> proc_evt_ut_ debug false tl tu rest s ss
-                | 0 ->
+                | _ ->
                     let zvl = value_at_ tl false z in
                     let  vl = value_at_ tl neg s in
                     let res = compare_vs vl zvl in
-(*Format.printf "res: %d\n%!" res;*)
+(*Format.printf "res2: %d\n%!" res;*)
                     begin match res with
                     | 0 -> proc_evt_ut_ debug false tl tu rest z ss
                     | _ ->
                         let ctl,ctu = find_intersection_ neg false s z tl tu in
 (*Format.printf "peu_: [%f,%f]\n%!" ctl ctu;*)
-                        if ctl > ctu (* no intersection *) then 
+                        if ctl+.1e-8 > ctu (* no intersection *) then (* TODO *)
                             proc_evt_ut_ debug false tl tu rest z ss
                         else
                             proc_evt_ut_ debug false tl ctl ((ctl,[z])::rest) s ss0
                     end
-                | _ -> proc_evt_ut_ debug false tl tu rest s ss (* TODO *)
+                (*| _ -> proc_evt_ut_ debug false tl tu rest z ss (* TODO *)*)
             end
 
     | (Sexpr (_lid,_apid,Unknown) as s)::ss ->
 if debug then Format.printf "peu: expr unk %b %f\n%!" neg tl;
             let zv = value_at_ tu false z in
             let  v = value_at_ tu neg s in
-            begin match compare_vs v zv with
+            let res = compare_vs v zv in
+(*Format.printf "res: %d\n%!" res;*)
+            (*begin match compare_vs v zv with*)
+            begin match res with
             | 0 -> proc_evt_ut_ debug false tl tu rest (Sconst zv) ss
             | 1 -> proc_evt_ut_ debug false tl tu rest (Sconst  v) ss
-            | _ -> proc_evt_ut_ debug false tl tu rest (Sconst zv) ss (* TODO *)
+            | _ -> proc_evt_ut_ debug false tl tu rest (Sconst  v) ss (* TODO *)
             end
 
     | _::_ss ->
@@ -486,7 +493,7 @@ let rec propagate debug ap_fps = function
     | Mevt_ut f ->
         let fp = propagate debug ap_fps f in
         let fp,_ = List.fold_right (proc_evt_ut debug !time_max) fp ([],Sfalse) in
-        if debug then Format.printf "  evt_ut\n%a" print_fp fp;
+        if debug then Format.printf "  evt_ut\n%a\n" print_fp fp;
         fp
     (*| Muntil (t,f1,f2) -> 
         let bs1 = propagate debug ap_bs f1 in
