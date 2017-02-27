@@ -1,4 +1,4 @@
-\documentclass[10pt,a4paper]{article}
+\documentclass[12pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
@@ -9,6 +9,7 @@
 
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{newtxtext,newtxmath}
 \usepackage{bm}
 \usepackage{listings}
 \usepackage{color}
@@ -26,13 +27,16 @@
     }%
 
 \lstset{emph={%  
-    let, var, init, at, wait, once, when, goto, then, end, param%
+    let, var, init, at, wait, once, when, goto, then, end, prop, param%
     },emphstyle={\color{blue}\bfseries}%
 }
 
+\newcommand{\LNCS}[1]{\textit{LNCS}~#1}
+\newcommand{\ENTCS}[1]{\textit{ENTCS}~#1}
+
 \begin{document}
 
-\title{HySIA Manual (beta version)}
+\title{HySIA Manual (version~0.1.1)}
 \author{Daisuke Ishii \quad \texttt{dsksh@acm.org}}
 
 \maketitle
@@ -40,28 +44,58 @@
 \setlength{\grammarparsep}{8pt plus 1pt minus 1pt} % increase separation between rules
 \setlength{\grammarindent}{8em} % increase separation between LHS/RHS 
 
+\emph{HySIA} is a reliable simulator and verifier for hybrid systems.
+%
+HySIA supports nonlinear \emph{hybrid automata} (HAs) whose ODEs, guards, and reset functions are specified with nonlinear expressions. It assumes a deterministic class of HA; a transition to another location happens whenever a guard condition holds.
+%
+Main functionalities of HySIA are as follows:
+
+\textbf{Simulation}.
+%
+HySIA simulates an HA based on interval analysis;
+it computes an overapproximation of a bounded trajectory that is composed of \emph{boxes} (i.e., closed interval vectors) and \emph{parallelotopes} (linear transformation of boxes).
+%
+Intensive use of interval analysis techniques distinguishes HySIA from other reachability analysis tools.
+%
+First, the simulation process carefully reduces \emph{wrapping effect} that can expand an enclosure interval. As a result, HySIA is able to simulate HA for more number of steps than other overapproximation-based tools; e.g., it can simulate a periodic bouncing ball for more than a thousand steps.
+%
+Second, HySIA assures the soundness of each interval computation, so that the resulting overapproximation is verified to contain a theoretical trajectory.
+%This verification often fails, e.g., when an ODE is \emph{stiff} or when a trajectory and a guard are close to tangent.
+%Thanks to this \emph{quasi-complete} manner, the simulation process of HySIA is decidable and performs efficiently.
+%
+See Reference~\cite{GI2016} for details of the underlying method.
+
+\textbf{Monitoring}.
+%
+HySIA takes a temporal property as an input and monitors whether a simulated trajectory satisfies the property; otherwise, HySIA computes (an interval overapproximation of) a robustness signal for the property.
+The verification process is based on a monitoring procedure of the \emph{signal temporal logic} (STL) formulas~\cite{Maler2004}, which is extended to handle overapproximation of trajectories.
+%The soundness of interval computation is again utilized here to evaluate the logical negation against an approximated trajectory.
+%
+See Reference~\cite{Ishii2016IEICE} for more details.
+
+
 \section{Short Tutorial}
 
-HySIA provides a specification language for \emph{hybrid automata} (HA) and temporal logic properties.
+HySIA provides a specification language for hybrid automata and temporal logic properties.
 An HA is simulated and analyzed about a property using the \verb|hysia| command.
-This section exemplifies the modeling, simulation, and verification of HA using HySIA.
+This section exemplifies the modeling, simulation, and verification of an HA using HySIA.
 
 \subsection{Modeling Hybrid Automata}
 
 Below is an example specification that describes a simple bouncing ball model (\texttt{bb.ha}):
 \begin{lstlisting}
 (* first part *)
-let g = 1
-let c = 0.9
-let pertb = [-1e-5, 1e-5]
+let   g = 1
+let   c = 0.9
+let   pertb = [-1e-5, 1e-5]
 
 (* second part *)
 var   y, vy
 
-init  Loc, 1+pertb, -0+pertb
+init  Loc, 1+pertb, 0+pertb
 
 at Loc wait vy, -g
-  once (y, vy) goto Loc then y, -c*vy
+      once (y, -vy) goto Loc then y, -c*vy
 end
 
 (* third part *)
@@ -90,11 +124,11 @@ In general, an HA consists of multiple locations. The bouncing ball system can b
 init  Fall, 1+pertb, -0+pertb
 
 at Fall wait vy, -g
-  once (y, vy) goto Rise then y, -c*vy
+      once (y, vy) goto Rise then y, -c*vy
 end
 
 at Rise wait vy, -g
-  once (vy, -y) goto Fall then y, vy
+      once (vy, -y) goto Fall then y, vy
 end
 \end{lstlisting}
 
@@ -140,7 +174,7 @@ runtime_error: zero in the derivative
 Abort trap: 6
 \end{verbatim}
 The simulation fails after the sixth jump. The output implies that HySIA fails in the detection of a discrete change because a state enclosure becomes too large.
-In fact, in each detection, HySIA checks whether the orientaion between the trajectory and the guard is regular enough so that it is sure that each trajectory within an enclosure satisfies the guard.
+In fact, in each detection, HySIA checks whether the orientation between the trajectory and the guard is regular enough so that it is sure that each trajectory within an enclosure satisfies the guard.
 
 
 \subsection{Verification of STL Properties}
@@ -148,26 +182,116 @@ In fact, in each detection, HySIA checks whether the orientaion between the traj
 HySIA provides a function for verifying properties described in the \emph{signal temporal logic} (STL).
 For example, we can add an STL property 
 \begin{lstlisting}
-G[0,10] F[0,1] y-0.5
+prop G[0,10] F[0,1] y-0.3
 \end{lstlisting}
 in the above mentioned model.
 (It should be added in between the second and third parts.)
+The property intuitively claims that, for the duration of $10$ time units, the height of the ball (\verb|y|) goes beyond $0.3$ (\verb|y-0.3| is interpreted as $\texttt{y} - 0.3 > 0$) within every duration of $1$ time unit.
+
 The verification can be done with the following command:
 \begin{verbatim}
 $ hysia bb.ha -a
 \end{verbatim}
-The \verb|hysia| command calculates the \emph{necessary} simulation length for the verification, performs a simulation, and evaluates the satisfiability of this property.
+The \verb|hysia| command calculates the \emph{necessary} simulation length for the verification (in this case, 11 time units), performs a simulation, and evaluates the satisfiability of this property.
 Accordingly, the verification succeeds with the following output:
 \begin{verbatim}
+$ hysia bb.ha -a
+step 0 (0.000000 < 11.000000) at Loc
+step 1 (1.414196 < 11.000000) at Loc
+step 2 (3.959734 < 11.000000) at Loc
+step 3 (6.250722 < 11.000000) at Loc
+step 4 (8.312608 < 11.000000) at Loc
+step 5 (10.168295 < 11.000000) at Loc
+true, 0.036239
 \end{verbatim}
 
 
-\section{Installation Instructions}
+\section{Getting the Tool}
 
-TBD.
+The HySIA tool can be obtained and used in three ways.
+
+\subsection{Web Demonstration}
+
+A web demonstration site is available at:
+\begin{quote}
+\url{http://bit.ly/hysia}
+\end{quote}
+%
+Through a web browser, you can access a GUI, load the basic examples, modify the HA/STL specification, simulate, and verify the specification.
+
+
+\subsection{Docker Image}
+
+For those who are familier with \emph{Docker},\footnote{\url{https://www.docker.com/}} Docker containers are available at: 
+\begin{quote}        
+\url{https://hub.docker.com/r/dsksh/}
+\end{quote}        
+
+The image \verb|dsksh/hysia-web| contains the server program for the web demonstration. A container can be launched by:
+\begin{verbatim}
+$ docker run -p 8080:80 dsksh/hysia-web
+\end{verbatim}
+Then, the server will be available at:
+\begin{quote}
+\url{http://localhost:8080}
+\end{quote}
+
+
+\subsection{Source Distribution}
+
+The HySIA source code is distributed via GitHub:
+\begin{quote}
+\url{https://github.com/dsksh/hysia}.
+\end{quote}
+
+\subsubsection*{Requirements}
+
+In addition to a standard UNIX-like environment, the following softwares are required to compile HySIA:
+\begin{itemize}
+    \item \emph{C/C++ compiler}.
+        We have compiled with both \verb|gcc| (versions~4.7.4–4.8.4) and \verb|clang| (Apple LLVM version~8).
+        %
+    \item \emph{OCaml compiler}.
+        We have tested with versions~3.12–4.02.
+        %
+    \item \emph{CAPD library}.\footnote{http://capd.ii.uj.edu.pl/}
+        HySIA is built on an old release of the CAPD-DynSys 3.0 library, which was distributed around 2014, and is not available on the official site.
+        A (slightly modified) source package is available at:
+        \begin{quote}
+        \url{https://www.dropbox.com/s/3uf7t2nsizfebno/capdDynSys-201406.zip}
+        \end{quote}
+        %
+    \item \emph{Boost library}.\footnote{http://www.boost.org/}
+        \verb|shared_ptr| is used.
+        %
+    \item \emph{OUnit}.\footnote{http://ounit.forge.ocamlcore.org/} Optional for test cases compilation.
+    \item \emph{Eliom}.\footnote{http://ocsigen.org/eliom/} Optional for building the web application.
+\end{itemize}
+
+
+\subsubsection*{Build}
+
+In the root directory of the source code, HySIA can be compiled with:
+\begin{verbatim}
+$ make
+\end{verbatim}
+
+Some modification, e.g., specification of compiler options and library pathes, might be needed in \verb|Makefile|.
+
+When compilation succeeds, the program file
+\begin{verbatim}
+src_ocaml/hss.opt
+\end{verbatim}
+is generated.
 
 
 \section{Examples}
+
+\subsection{Simple Rotation System}
+
+TBD.
+
+\subsection{Bouncing Planet}
 
 TBD.
 
@@ -357,5 +481,35 @@ The syntax for formulae is the following:
 \alt <stl-formula> `U' <noun-interval> <stl-formula>
 \alt `(' <stl-formula> `)'
 \end{grammar}
+
+
+\begin{thebibliography}{99}
+\bibitem{Donze2013}
+    A. Donz\'{e}, T. Ferr\`{e}re, O. Maler: 
+    {Efficient Robust Monitoring for STL},
+    Proc. of CAV, pp.~264--279, \LNCS{8044}, 2013.
+
+\bibitem{GI2016}
+    A. Goldsztejn, D. Ishii: 
+    {A Parallelotope Method for Hybrid System Simulation},
+    Reliable Computing, 23:163--185, 2016.
+
+\bibitem{Ishii2016IEICE}
+    D. Ishii, N. Yonezaki, A. Goldsztejn: 
+    {Monitoring Temporal Properties using Interval Analysis}. 
+    IEICE Transactions on Fundamentals of Electronics, Communications and Computer Sciences,
+    E99-A, 2016.
+
+\bibitem{Ishii2015-NSV}
+    D. Ishii, N. Yonezaki, A. Goldsztejn: 
+    {Monitoring Bounded LTL Properties Using Interval Analysis}. 
+    Proc. of 8th International Workshop on Numerical Software Verification (NSV), 
+    \ENTCS{317}, pp.~85--100, 2015.
+
+\bibitem{Maler2004}
+    O. Maler and D. Nickovic:
+    Monitoring Temporal Properties of Continuous Signals,
+    Proc. of FORMATS, pp.~152--166, \LNCS{3253}, 2004.
+\end{thebibliography}
 
 \end{document}
