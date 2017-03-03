@@ -1,5 +1,3 @@
-VERSION=0.0.1
-
 VERBOSEMAKE ?= yes
 
 ifeq ($(VERBOSEMAKE),yes)
@@ -7,8 +5,6 @@ ifeq ($(VERBOSEMAKE),yes)
 else
   QUIET = yes
 endif
-
--include Makefile.options
 
 ## install the binaries
 #DESTDIR =
@@ -22,31 +18,33 @@ endif
 #DATADIR = $(DESTDIR)${prefix}/share
 #MANDIR  = $(DESTDIR)${datarootdir}/man
 
-ifdef OUNITLIB
-  OINCLUDES = -I $(OUNITLIB)
-else
-  OINCLUDES =
-endif
+BINDIR    = $(DESTDIR)${exec_prefix}/bin
 
-CXXDIR  = ../src_cpp
-LIBNAME = mycapd
+CXXDIR    = ../src_cpp
+LIBNAME   = mycapd
 
 # OS specific stuff
-EXE   = 
-STRIP = strip
+EXE       = @EXE@
+STRIP     = @STRIP@
 
 # other variables
-OCAMLC    = ocamlc
-OCAMLOPT  = ocamlopt
-OCAMLDEP  = ocamldep
-OCAMLLEX  = ocamllex
-OCAMLYACC = ocamlyacc
-OCAMLDOC  = ocamldoc
-OCAMLLIB  = /usr/local/lib/ocaml
+CC        = @CC@
+OCAMLC    = @OCAMLC@
+OCAMLOPT  = @OCAMLOPT@
+OCAMLDEP  = @OCAMLDEP@
+OCAMLLEX  = @OCAMLLEX@
+OCAMLYACC = @OCAMLYACC@
+OCAMLDOC  = @OCAMLDOC@
+OCAMLLIB  = @OCAMLLIB@
+#OCAMLLIB  = /usr/local/lib/ocaml
 #OCAMLLIB  = /usr/lib/ocaml
-OCAMLBEST = opt
 
-CAMLP5O   = camlp5o
+CC        = @CC@
+
+OUNITLIB  = @OUNITLIB@
+ifdef OUNITLIB
+  OINCLUDES = -I $(OUNITLIB)/oUnit
+endif
 
 BFLAGS = -w Aer-29 -dtypes -g -I . $(OINCLUDES)
 OFLAGS = -w Aer-29 -dtypes -g -I . $(OINCLUDES)
@@ -65,20 +63,10 @@ EXTCMXA = $(addsuffix .cmxa,$(EXTLIBS)) $(EXTOBJS)
 #		  $(addsuffix .cmx,$(EXTOBJS))
 #		  /usr/local/lib/gcc/x86_64-apple-darwin13.2.0/4.8.2/libstdc++.a
 
-OUNITMODS = oUnitAdvanced oUnit 
-OUNITCMA  = $(addsuffix .cma,$(OUNITMODS))
-OUNITCMXA = $(addsuffix .cmxa,$(OUNITMODS))
+INCLUDES := -I$(OCAMLLIB) -I../src_cpp
+LDFLAGS := -lcapd -fPIC
 
-# C/C++
-CC  = gcc
-CXX = g++
-
-CAPD_DIR := /usr/local
-
-INCLUDES := -I$(OCAMLLIB) -I$(CAPD_DIR)/include -I../src_cpp
-LDFLAGS := -L$(CAPD_DIR)/lib -lcapd -fPIC
-
-CFLAGS   = -O3 -g -ansi -pedantic -Wall -frounding-math -fPIC
+CFLAGS   = -O3 -g -ansi -pedantic -Wall @RMATH_CXXFLAGS@ -fPIC
 CXXFLAGS = $(CFLAGS)
 
 ###############
@@ -167,7 +155,7 @@ clean::
 	rm -f .depend.lib
 
 ##################
-# hss binary
+# hysia binary
 ##################
 
 byte: hss.byte
@@ -182,7 +170,7 @@ hss.opt: hss.cmxa main.cmx
 	    $(OCAMLOPT) $(OFLAGS) -o $@ $(EXTCMXA) $^
 	$(STRIP) $@
 
-hss: hss.opt
+hysia: hss.opt
 	ln -sf hss.opt $@
 
 main.cmo: hss.cma
@@ -190,11 +178,16 @@ main.cmx: hss.cmxs
 
 clean::
 	rm -f main.cm[iox] main.annot main.o
-	rm -f hss.byte hss.opt hss
+	rm -f hss.byte hss.opt hysia hss
 
 #############
 # test
 #############
+
+ifdef OUNITLIB
+OUNITMODS = oUnitAdvanced oUnit 
+OUNITCMA  = $(addsuffix .cma,$(OUNITMODS))
+OUNITCMXA = $(addsuffix .cmxa,$(OUNITMODS))
 
 byte: test_mitl_checking.byte
 opt:  test_mitl_checking.opt
@@ -214,6 +207,7 @@ test_mitl_checking.cmx: hss.cmxs
 clean::
 	rm -f test_mitl_checking.cm[iox] test_mitl_checking.annot test_mitl_checking.o
 	rm -f test_mitl_checking.byte test_mitl_checking.opt
+endif
 
 ################
 # generic rules
@@ -240,8 +234,8 @@ clean::
 .c.o: 
 	$(if $(QUIET),@echo 'Compiling $<' &&) $(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
-.cpp.o:
-	$(if $(QUIET),@echo 'Compiling $<' &&) $(CXX) $(CXXFLAGS) $(INCLUDES) -c -o $@ $<
+#.cpp.o:
+#	$(if $(QUIET),@echo 'Compiling $<' &&) $(CXX) $(CXXFLAGS) $(INCLUDES) -c -o $@ $<
 
 ###################
 # clean and depend

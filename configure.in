@@ -1,0 +1,184 @@
+# Autoconf script for HySIA.
+
+# Some code is taken from:
+#
+# autoconf input for Objective Caml programs
+# Copyright (C) 2001 Jean-Christophe Filli�tre
+#   from a first script by Georges Mariano 
+# 
+# which is distributed under LGPL.
+
+
+AC_PREREQ([2.69])
+AC_INIT([HySIA], [0.1])
+#AC_CONFIG_SRCDIR([src_cpp,src_ocaml])
+AC_CONFIG_HEADERS([src_cpp/config.h])
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+#AC_PROG_LEX
+#AC_PROG_YACC
+#AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+AC_PROG_SED
+
+AC_CHECK_PROG(AR,ar,ar,no)
+AC_CHECK_PROG(MV,mv,mv,no)
+AC_CHECK_PROG(RM,rm,rm,no)
+AC_CHECK_PROG(LN,ln,ln,no)
+AC_CHECK_PROG(STRIP,strip,strip,no)
+
+RMATH_CXXFLAGS=;
+if `$CXX -v 2>&1 | grep 'gcc version' >/dev/null 2>&1` ; then
+    RMATH_CXXFLAGS="-frounding-math"
+fi
+AC_SUBST(RMATH_CXXFLAGS)
+
+
+# Checks for libraries.
+
+# FIXME: Replace `main' with a function in `-lcapd':
+#AC_CHECK_LIB([capd], [main])
+
+# Check CAPD.
+AC_MSG_CHECKING([for CAPD])
+AC_LANG_PUSH(C++)
+SAVE_LIBS="$LIBS"
+LIBS="$LIBS -lcapd"
+AC_TRY_LINK([#include "capd/capdlib.h"], 
+            [capd::IMap vf;],
+            has_capd_lib=1,
+            has_capd_lib=0 )
+AC_LANG_POP(C++)
+if test $has_capd_lib = 0; then
+    AC_MSG_RESULT([no])
+    AC_MSG_ERROR("ERROR: cannot find CAPD.")
+else
+    AC_MSG_RESULT([yes])
+fi
+
+# Check Boost.
+AC_MSG_CHECKING([for boost/shared_ptr.hpp])
+AC_LANG_PUSH(C++)
+#SAVE_LIBS="$LIBS"
+#LIBS="$LIBS -lcapd"
+AC_TRY_LINK([#include <boost/shared_ptr.hpp>], 
+            [boost::shared_ptr<int> sp;],
+            has_boost=1,
+            has_boost=0 )
+AC_LANG_POP(C++)
+if test $has_boost = 0; then
+    AC_MSG_RESULT([no])
+    AC_MSG_ERROR("ERROR: cannot find Boost.")
+else
+    AC_MSG_RESULT([yes])
+fi
+
+# Checks for header files.
+AC_CHECK_HEADERS([fenv.h stdlib.h string.h sys/time.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_CHECK_HEADER_STDBOOL
+AC_C_INLINE
+AC_TYPE_SIZE_T
+
+# Checks for library functions.
+AC_CHECK_FUNCS([fesetround gettimeofday sqrt])
+
+
+# Check for Ocaml compilers.
+
+# ocamlc
+AC_CHECK_PROG(OCAMLC,ocamlc,ocamlc,no)
+if test "$OCAMLC" = no ; then
+    AC_MSG_ERROR(Cannot find ocamlc.)
+fi
+
+# check the version number
+OCAMLVERSION=`$OCAMLC -v | sed -n -e 's|.*version* *\(.*\)$|\1|p' `
+echo "ocaml version is $OCAMLVERSION"
+
+case "$OCAMLVERSION" in
+  0.*|1.*|2.*|3.*|4.00.*)
+    AC_MSG_ERROR(You need Objective Caml 4.01.0 or higher);;
+esac
+
+# OCaml library path
+OCAMLLIB=`$OCAMLC -where | tr -d '\\r'`
+echo "ocaml library path is $OCAMLLIB"
+AC_SUBST(OCAMLLIB)
+
+# ocamlopt
+AC_CHECK_PROG(OCAMLOPT,ocamlopt,ocamlopt,no)
+if test "$OCAMLOPT" = no ; then
+	AC_MSG_WARN(Cannot find ocamlopt; bytecode compilation only)
+else
+	AC_MSG_CHECKING(ocamlopt version)
+	TMPVERSION=`$OCAMLOPT -v | sed -n -e 's|.*version* *\(.*\)$|\1|p' `
+	if test "$TMPVERSION" != "$OCAMLVERSION" ; then
+	    AC_MSG_ERROR(ocamlopt version differs from ocamlc)
+	else
+	    AC_MSG_RESULT(ok)
+	fi
+fi
+
+# ocamldep
+AC_CHECK_PROG(OCAMLDEP,ocamldep,ocamldep,no)
+if test "$OCAMLDEP" = no ; then
+   AC_MSG_ERROR(Cannot find ocamldep.)
+else
+   AC_CHECK_PROG(OCAMLDEPDOTOPT,ocamldep.opt,ocamldep.opt,no)
+   if test "$OCAMLDEPDOTOPT" != no ; then
+      OCAMLDEP=$OCAMLDEPDOTOPT
+   fi
+fi
+
+# ocamllex
+AC_CHECK_PROG(OCAMLLEX,ocamllex,ocamllex,no)
+if test "$OCAMLLEX" = no ; then
+	AC_MSG_ERROR(Cannot find ocamllex.)
+else
+    AC_CHECK_PROG(OCAMLLEXDOTOPT,ocamllex.opt,ocamllex.opt,no)
+    if test "$OCAMLLEXDOTOPT" != no ; then
+	OCAMLLEX=$OCAMLLEXDOTOPT
+    fi
+fi
+
+# ocamlyacc
+AC_CHECK_PROG(OCAMLYACC,ocamlyacc,ocamlyacc,no)
+if test "$OCAMLYACC" = no ; then
+	AC_MSG_ERROR(Cannot find ocamlyacc.)
+fi
+
+# ocamldoc
+AC_CHECK_PROG(OCAMLDOC,ocamldoc,ocamldoc,true)
+if test "$OCAMLDOC" = true ; then
+    AC_MSG_WARN(Cannot find ocamldoc)
+else
+    AC_CHECK_PROG(OCAMLDOCOPT,ocamldoc.opt,ocamldoc.opt,no)
+    if test "$OCAMLDOCOPT" != no ; then
+	OCAMLDOC=$OCAMLDOCOPT
+    fi
+fi
+
+# ounit
+OUNITLIB=$OCAMLLIB
+AC_ARG_WITH([ounit],
+            [AS_HELP_STRING([--with-ounit=path : oUnit library path])],
+            [OUNITLIB=$withval],
+            [] )
+echo "oUnit library path is $OUNITLIB"
+AC_SUBST(OUNITLIB)
+
+AC_CHECK_FILE($OUNITLIB/oUnit/oUnitAdvanced.cma,OUNIT=yes,OUNIT=no)
+if test "$OUNIT" = no ; then
+	AC_MSG_WARN(Cannot find oUnit library)
+    OUNITLIB=""
+fi
+
+# Generate Makefiles.
+AC_CONFIG_FILES([src_cpp/Makefile src_ocaml/Makefile])
+AC_OUTPUT

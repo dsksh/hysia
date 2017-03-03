@@ -2,31 +2,25 @@
 .SUFFIXES: .o .cpp .h .d .l .y
 .PHONY : doc clean
 
-#CMD		= integrate
 LIB		= libmycapd.a
 
 TARGET	= $(LIB)
 
-CAPD_DIR = /usr/local
-
-INCLUDES = -I$(CAPD_DIR)/include -I/opt/local/include
 #CFLAGS	= -O3 -g -ansi -pedantic -Wall -frounding-math -fno-fast-math $(INCLUDES)
-CFLAGS	= -O3 -g -frounding-math -fPIC $(INCLUDES)
+CFLAGS	= -O3 -g @RMATH_CXXFLAGS@ -fPIC $(INCLUDES)
 #CFLAGS += -D__USE_FILIB__
 #CFLAGS += -DEXCEPTION_HACK=1
 LDFLAGS = -L$(CAPD_DIR)/lib -fPIC
 LIBS	= -lcapd
 
-CXX     = g++ #@CXX@
-SED     = sed #@SED@
-MV      = mv #@MV@
-AR      = ar #@AR@
-RANLIB  = ranlib #@RANLIB@
-RM      = rm #@RM@
-LN      = ln #@LN@
-LEX     = flex #@FLEX@
-YACC    = bison #@BISON@
-DOXYGEN = doxygen #@DOXYGEN@
+CXX     = @CXX@
+SED     = @SED@
+MV      = @MV@
+AR      = @AR@
+RANLIB  = @RANLIB@
+RM      = @RM@
+LN      = @LN@
+#DOXYGEN = @DOXYGEN@
 
 SRC     = $(wildcard *.c) $(wildcard *.cc) $(wildcard *.cpp)
 SRC_EX  = $(SRC) $(wildcard *.h)
@@ -47,15 +41,9 @@ ifneq "$(MAKECMDGOALS)" "clean"
   -include $(DEP_FILE)
 endif
 
-#$(CMD): $(OBJECT)
-#	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $@.o $(OBJ_COMMON) $(LIBS)
-
 $(LIB): $(OBJECT)
 	$(AR) cru $@ $(OBJ_COMMON)
-#	$(AR) d $@ integrate.o
 	$(RANLIB) $@
-
-#$(OBJECT): util.h
 
 .c.o .cc.o .cpp.o:
 	$(CXX) $(CFLAGS) -c $<
