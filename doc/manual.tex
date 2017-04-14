@@ -257,12 +257,13 @@ In addition to a standard UNIX-like environment, the following softwares are req
     \item \emph{CAPD library}.\footnote{http://capd.ii.uj.edu.pl/}
         HySIA is built on an old release of the CAPD-DynSys 3.0 library, which was distributed around 2014, and is not available on the official site.
         A (slightly modified) source package is available at:
-        \begin{quote}
+        \begin{quote}\small
+        \hspace{-4em}
         \url{https://www.dropbox.com/s/3uf7t2nsizfebno/capdDynSys-201406.zip}
         \end{quote}
         %
     \item \emph{Boost library}.\footnote{http://www.boost.org/}
-        \verb|shared_ptr| is used.
+        HySIA uses \verb|shared_ptr|.
         %
     \item \emph{OUnit}.\footnote{http://ounit.forge.ocamlcore.org/} Optional for test cases compilation.
     \item \emph{Eliom}.\footnote{http://ocsigen.org/eliom/} Optional for building the web application.
@@ -273,10 +274,8 @@ In addition to a standard UNIX-like environment, the following softwares are req
 
 In the root directory of the source code, HySIA can be compiled with:
 \begin{verbatim}
-$ make
+$ ./configure; make
 \end{verbatim}
-
-Some modification, e.g., specification of compiler options and library pathes, might be needed in \verb|Makefile|.
 
 When compilation succeeds, the program file
 \begin{verbatim}

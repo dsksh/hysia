@@ -8,6 +8,10 @@
 
 Tested on Linux ver. 3.2.0–4.4.39 on amd64 and Mac OS X ver. 10.9.5–10.11.6.
 
+## Web Demonstration
+
+Available at: https://dsksh.github.io/hysia/
+
 ## Install
 
 `$(CAPD_DIR)` or `$(HS_DIR)` represents the path to the unpacked directory of CAPD-DynSys or HySIA, respectively.
@@ -26,6 +30,7 @@ Tested on Linux ver. 3.2.0–4.4.39 on amd64 and Mac OS X ver. 10.9.5–10.11.6.
 3. Build HySIA.
     ```
     $ cd $(HS_DIR)
+    $ ./configure
     $ make
     ```
 
@@ -46,6 +51,16 @@ You can also use the option `-n N` (where `N` is a positive integer) to specify 
 
 A file `pped.dat` will be generated in the current directory which contains a dumped data of the witness trajectory.
 If you have Mathematica, you can use a notebook file `plot.nb` to visualize a dump file.
+
+## Docker Image
+
+Docker containers are available at: https://hub.docker.com/r/dsksh/
+
+The image `dsksh/hysia-web` contains the server program for the web demonstration. A container can be launched by:
+```
+$ docker run -p 8080:80 dsksh/hysia-web
+```
+Then, the server will be available at: http://localhost:8080
 
 ## Reference
 
