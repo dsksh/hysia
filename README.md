@@ -30,6 +30,7 @@ Available at: https://dsksh.github.io/hysia/
 3. Build HySIA.
     ```
     $ cd $(HS_DIR)
+    $ autoconf
     $ ./configure
     $ make
     ```
