@@ -132,14 +132,17 @@ let main_service =
 
 
 let examples = [
-  ("Arc", "arc.ha");
-  ("Disk", "disk.ha");
+  (*("Arc", "arc.ha");*)
+  (*("Disk", "disk.ha");*)
   ("Rotation", "rotate.ha");
-  ("Water tank", "watertank.ha");
   ("BB (simple)", "bb-simple.ha");
   ("BB (parabola)", "bb-parabola.ha");
-  ("BB (movingtable)", "bb-movingtable.ha");
+  ("BB (sin)", "bb-movingtable.ha");
+  ("BB (sphere)", "bb-sphere.ha");
+  ("Water tank", "watertank.ha");
   ("Gas burner", "gasburner.ha");
+  ("Nav 5x5", "navigation.ha");
+  ("Lotka-Volterra", "pred-prey.ha");
   ("ATM 4", "atm4.ha");
   ("C. Rotation", "cont-rotate.ha");
   ("C. Van der Pol", "cont-vanderpol.ha");
@@ -281,7 +284,7 @@ let gen_frontend phandler {spec=spec; param=pvalue; yvar=yvar; fontsize=fontsize
 		Js.Unsafe.inject %tsim; |];
   }} in
 
-  let title_text = "HySIA (beta)" in
+  let title_text = "HySIA Demo" in
   let p_holder = div ~a:[ a_id "plot" ] [] in
   let iform = (Html5.D.Form.post_form phandler 
 	(create_input_form vars dump res tsim spec pvalue yvar fontsize) ()) in
@@ -301,7 +304,7 @@ let gen_frontend phandler {spec=spec; param=pvalue; yvar=yvar; fontsize=fontsize
 				];
 				iform;
 				div ~a:[ a_id "bottom" ] 
-				  [ pcdata "Copyright(C) 2015-2016 "; 
+				  [ pcdata "Copyright(C) 2015-2017 "; 
 					Html5.F.Raw.a
 					  ~a:[a_href (Xml.uri_of_string "http://www.dsksh.com/")]
 					  [pcdata "Daisuke Ishii"]; pcdata ". All rights reserved." ];
